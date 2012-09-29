@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Examples &mdash; llvmpy 0.8.2 documentation</title>
+    <title>Examples &mdash; numba 0.8.2 documentation</title>
     
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -26,8 +26,7 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <link rel="top" title="llvmpy 0.8.2 documentation" href="../index.html" />
-    <link rel="next" title="First Example" href="firstexample.html" />
+    <link rel="top" title="numba 0.8.2 documentation" href="../index.html" />
     <link rel="prev" title="User Guide" href="userguide.html" /> 
   </head>
   <body>
@@ -38,12 +37,9 @@
           <a href="../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="firstexample.html" title="First Example"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
           <a href="userguide.html" title="User Guide"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">llvmpy 0.8.2 documentation</a> &raquo;</li> 
+        <li><a href="../index.html">numba 0.8.2 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -54,10 +50,33 @@
             
   <div class="section" id="examples">
 <h1>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h1>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="firstexample.html">First Example</a></li>
-</ul>
+<div class="section" id="a-simple-function">
+<h2>A Simple Function<a class="headerlink" href="#a-simple-function" title="Permalink to this headline">¶</a></h2>
+<p>Suppose we want to write an image-processing function in Python.  Here&#8217;s how it might look.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">filter2d</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">filt</span><span class="p">):</span>
+    <span class="n">M</span><span class="p">,</span> <span class="n">N</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">Mf</span><span class="p">,</span> <span class="n">Nf</span> <span class="o">=</span> <span class="n">filt</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">Mf2</span> <span class="o">=</span> <span class="n">Mf</span> <span class="o">//</span> <span class="mi">2</span>
+    <span class="n">Nf2</span> <span class="o">=</span> <span class="n">Nf</span> <span class="o">//</span> <span class="mi">2</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Mf2</span><span class="p">,</span> <span class="n">M</span> <span class="o">-</span> <span class="n">Mf2</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Nf2</span><span class="p">,</span> <span class="n">N</span> <span class="o">-</span> <span class="n">Nf2</span><span class="p">):</span>
+            <span class="n">num</span> <span class="o">=</span> <span class="mf">0.0</span>
+            <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Mf</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">jj</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Nf</span><span class="p">):</span>
+                    <span class="n">num</span> <span class="o">+=</span> <span class="p">(</span><span class="n">filt</span><span class="p">[</span><span class="n">Mf</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">ii</span><span class="p">,</span> <span class="n">Nf</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">jj</span><span class="p">]</span> <span class="o">*</span> <span class="n">image</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="n">Mf2</span><span class="o">+</span><span class="n">ii</span><span class="p">,</span> <span class="n">j</span><span class="o">-</span><span class="n">Nf2</span><span class="o">+</span><span class="n">jj</span><span class="p">])</span>
+            <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">num</span>
+    <span class="k">return</span> <span class="n">result</span>
+</pre></div>
+</div>
+<p>This kind of quadruply-nested for-loop is going to be quite slow.  Using Numba we can compile this code to LLVM which then gets compiled to machine code:</p>
+<div class="highlight-python"><pre>from numba *
+
+fastfilter_2d = jit(argtypes = [double[:,:], double[:,:]], restype=double[:,:])(filter2d)
+
+# Now fastfilter_2d runs at speeds as if you had translated it to C
+res = fastfilter_2d(image, filt)</pre>
+</div>
 </div>
 </div>
 
@@ -67,12 +86,17 @@
       </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Examples</a><ul>
+<li><a class="reference internal" href="#a-simple-function">A Simple Function</a></li>
+</ul>
+</li>
+</ul>
+
   <h4>Previous topic</h4>
   <p class="topless"><a href="userguide.html"
                         title="previous chapter">User Guide</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="firstexample.html"
-                        title="next chapter">First Example</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="../_sources/doc/examples.txt"
@@ -102,12 +126,9 @@
           <a href="../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="firstexample.html" title="First Example"
-             >next</a> |</li>
-        <li class="right" >
           <a href="userguide.html" title="User Guide"
              >previous</a> |</li>
-        <li><a href="../index.html">llvmpy 0.8.2 documentation</a> &raquo;</li> 
+        <li><a href="../index.html">numba 0.8.2 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

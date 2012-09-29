@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>User Guide &mdash; llvmpy 0.8.2 documentation</title>
+    <title>User Guide &mdash; numba 0.8.2 documentation</title>
     
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -26,7 +26,7 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <link rel="top" title="llvmpy 0.8.2 documentation" href="../index.html" />
+    <link rel="top" title="numba 0.8.2 documentation" href="../index.html" />
     <link rel="next" title="Examples" href="examples.html" />
     <link rel="prev" title="Documentation for numba" href="../index.html" /> 
   </head>
@@ -43,7 +43,7 @@
         <li class="right" >
           <a href="../index.html" title="Documentation for numba"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">llvmpy 0.8.2 documentation</a> &raquo;</li> 
+        <li><a href="../index.html">numba 0.8.2 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -54,10 +54,111 @@
             
   <div class="section" id="user-guide">
 <h1>User Guide<a class="headerlink" href="#user-guide" title="Permalink to this headline">¶</a></h1>
-<p>numba converts Python code to LLVM code and then allows it to be executed</p>
+<p>Numba compiles Python code with LLVM to code which can be natively executed
+at runtime. This happens by decorating Python functions, which allows users
+to create native functions for different input types, or to create them
+on the fly:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="nd">@jit</span><span class="p">(</span><span class="n">restype</span><span class="o">=</span><span class="n">double</span><span class="p">,</span> <span class="n">argtypes</span><span class="o">=</span><span class="p">[</span><span class="n">double</span><span class="p">[:,</span> <span class="p">:]])</span>
+<span class="k">def</span> <span class="nf">sum1d</span><span class="p">(</span><span class="n">my_double_array</span><span class="p">):</span>
+    <span class="nb">sum</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">my_double_array</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+        <span class="nb">sum</span> <span class="o">+=</span> <span class="n">my_double_array</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="k">return</span> <span class="nb">sum</span>
+</pre></div>
+</div>
+<p>To make the above example work for any compatile input types automatically,
+we can create a function that specializes automatically:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@autojit</span><span class="p">()</span>
+<span class="k">def</span> <span class="nf">sum1d</span><span class="p">(</span><span class="n">my_array</span><span class="p">):</span>
+    <span class="o">...</span>
+</pre></div>
+</div>
+<div class="section" id="specifying-types">
+<h2>Specifying Types<a class="headerlink" href="#specifying-types" title="Permalink to this headline">¶</a></h2>
+<p>User elementary types are summarized in the table below and can be found
+in the <tt class="docutils literal"><span class="pre">numba</span></tt> namespace. These types
+can be further used to specify arrays in a similar manner to Cython&#8217;s
+memoryviews.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="34%" />
+<col width="66%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Type Name</th>
+<th class="head">Result Type</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>float_</td>
+<td>float32</td>
+</tr>
+<tr class="row-odd"><td>double</td>
+<td>float64</td>
+</tr>
+<tr class="row-even"><td>longdouble</td>
+<td>float128</td>
+</tr>
+<tr class="row-odd"><td>char</td>
+<td>signed char</td>
+</tr>
+<tr class="row-even"><td>int8</td>
+<td>int8 (char)</td>
+</tr>
+<tr class="row-odd"><td>int16</td>
+<td>int16</td>
+</tr>
+<tr class="row-even"><td>int32</td>
+<td>int32</td>
+</tr>
+<tr class="row-odd"><td>int64</td>
+<td>int64</td>
+</tr>
+<tr class="row-even"><td>complex64</td>
+<td>float complex</td>
+</tr>
+<tr class="row-odd"><td>complex128</td>
+<td>double complex</td>
+</tr>
+<tr class="row-even"><td>complex256</td>
+<td>long double complex</td>
+</tr>
+</tbody>
+</table>
+<p>Unsigned integer counterparts are available under the name <tt class="docutils literal"><span class="pre">uint8</span></tt> etc.</p>
+<div class="section" id="specifying-arrays">
+<h3>Specifying Arrays<a class="headerlink" href="#specifying-arrays" title="Permalink to this headline">¶</a></h3>
+<p>Arrays may be specified strided or C or Fortran contiguous. For instance,
+<tt class="docutils literal"><span class="pre">float[:,</span> <span class="pre">:]</span></tt> specifies a strided 2D array of floats. <tt class="docutils literal"><span class="pre">float[:,</span> <span class="pre">::1]</span></tt>
+specifies that the array is C contiguous (row-major), and <tt class="docutils literal"><span class="pre">float[::1,</span> <span class="pre">:]</span></tt>
+specifies that the array is Fortran contiguous (column-major).</p>
+</div>
+</div>
+<div class="section" id="translator-backends">
+<h2>Translator Backends<a class="headerlink" href="#translator-backends" title="Permalink to this headline">¶</a></h2>
+<p>Then <tt class="docutils literal"><span class="pre">autojit</span></tt> decorator takes <tt class="docutils literal"><span class="pre">backend</span></tt> as an optional argument, which
+may be set to <strong>bytecode</strong> or <strong>ast</strong>. Both backends currently have different
+capabilities, but the next release plans for the ast backend to supersede
+the bytecode backend. The default is <strong>bytecode</strong>.</p>
+<p>For instance the bytecode backend supports complex
+numbers, whereas the ast backend has limited support for Python objects (
+conversions to and from native data and objects, attribute access and calling
+functions).</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Currently the bytecode translator does not support returning arrays
+from the function. The ast backend does handle this.</p>
+</div>
+</div>
+<div class="section" id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<p>For get a better feel of what numba can do, see <em class="xref std std-ref">Examples</em>.</p>
 <div class="toctree-wrapper compound">
 <ul class="simple">
 </ul>
+</div>
 </div>
 </div>
 
@@ -67,6 +168,21 @@
       </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">User Guide</a><ul>
+<li><a class="reference internal" href="#specifying-types">Specifying Types</a><ul>
+<li><a class="reference internal" href="#specifying-arrays">Specifying Arrays</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#translator-backends">Translator Backends</a></li>
+<li><a class="reference internal" href="#examples">Examples</a><ul>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
   <h4>Previous topic</h4>
   <p class="topless"><a href="../index.html"
                         title="previous chapter">Documentation for numba</a></p>
@@ -107,7 +223,7 @@
         <li class="right" >
           <a href="../index.html" title="Documentation for numba"
              >previous</a> |</li>
-        <li><a href="../index.html">llvmpy 0.8.2 documentation</a> &raquo;</li> 
+        <li><a href="../index.html">numba 0.8.2 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
