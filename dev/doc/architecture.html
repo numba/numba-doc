@@ -1,0 +1,333 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Numba Architecture &mdash; numba 0.3 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.3',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="numba 0.3 documentation" href="../index.html" />
+    <link rel="next" title="Numba Module Reference" href="reference.html" />
+    <link rel="prev" title="Examples" href="examples.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="reference.html" title="Numba Module Reference"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="examples.html" title="Examples"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">numba 0.3 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="numba-architecture">
+<h1><a class="toc-backref" href="#id1">Numba Architecture</a><a class="headerlink" href="#numba-architecture" title="Permalink to this headline">¶</a></h1>
+<div class="contents topic" id="contents">
+<p class="topic-title first">Contents</p>
+<ul class="simple">
+<li><a class="reference internal" href="#numba-architecture" id="id1">Numba Architecture</a><ul>
+<li><a class="reference internal" href="#introduction" id="id2">Introduction</a></li>
+<li><a class="reference internal" href="#core-entry-points" id="id3">Core Entry Points</a><ul>
+<li><a class="reference internal" href="#run-time-translation" id="id4">Run-time Translation</a></li>
+<li><a class="reference internal" href="#call-time-specialization" id="id5">Call-time Specialization</a></li>
+<li><a class="reference internal" href="#extension-types" id="id6">Extension Types</a></li>
+<li><a class="reference internal" href="#compile-time-translation" id="id7">Compile-time Translation</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#translation-internals" id="id8">Translation Internals</a><ul>
+<li><a class="reference internal" href="#towards-more-modular-pipelines" id="id9">Towards More Modular Pipelines</a><ul>
+<li><a class="reference internal" href="#modularity" id="id10">Modularity</a></li>
+<li><a class="reference internal" href="#diagram" id="id11">Diagram</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#discussion-pipeline-composition" id="id12"><em>Discussion: Pipeline Composition</em></a></li>
+<li><a class="reference internal" href="#discussion-pipeline-environments" id="id13"><em>Discussion: Pipeline Environments</em></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#terms-and-definitions" id="id14">Terms and Definitions</a></li>
+<li><a class="reference internal" href="#appendix" id="id15">Appendix</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="introduction">
+<h2><a class="toc-backref" href="#id2">Introduction</a><a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<p>This document serves two purposes: to introduce other developers to
+the high-level design of Numba&#8217;s internals, and as a point for
+discussion and synchronization for current Numba developers.</p>
+</div>
+<div class="section" id="core-entry-points">
+<h2><a class="toc-backref" href="#id3">Core Entry Points</a><a class="headerlink" href="#core-entry-points" title="Permalink to this headline">¶</a></h2>
+<p>Numba has several modes of use:</p>
+<ol class="arabic simple">
+<li>As a run-time translator of Python functions into low-level
+functions.</li>
+<li>As a call-time specializer of Python functions into low-level
+functions.</li>
+<li>As a run-time builder of extension types.</li>
+<li>As a compile-time translator of Python modules into shared object
+libraries.</li>
+</ol>
+<p>The following subsections describe the primary entry points for these
+modes of use.  Each usage mode corresponds to a specific set of definitions provided in the top-level numba module.</p>
+<div class="section" id="run-time-translation">
+<h3><a class="toc-backref" href="#id4">Run-time Translation</a><a class="headerlink" href="#run-time-translation" title="Permalink to this headline">¶</a></h3>
+<p>Users denote run-time translation of a function using the <a class="reference internal" href="modules/numba.html#numba.jit" title="numba.jit"><tt class="xref py py-func docutils literal"><span class="pre">numba.jit()</span></tt></a> decorator.</p>
+</div>
+<div class="section" id="call-time-specialization">
+<h3><a class="toc-backref" href="#id5">Call-time Specialization</a><a class="headerlink" href="#call-time-specialization" title="Permalink to this headline">¶</a></h3>
+<p>Users denote call-time specialization of a function using the <a class="reference internal" href="modules/numba.html#numba.autojit" title="numba.autojit"><tt class="xref py py-func docutils literal"><span class="pre">numba.autojit()</span></tt></a>
+decorator.</p>
+</div>
+<div class="section" id="extension-types">
+<h3><a class="toc-backref" href="#id6">Extension Types</a><a class="headerlink" href="#extension-types" title="Permalink to this headline">¶</a></h3>
+<p>Numba supports building extension types using the <a class="reference internal" href="modules/numba.html#numba.jit" title="numba.jit"><tt class="xref py py-func docutils literal"><span class="pre">numba.jit()</span></tt></a> decorator on a class.</p>
+</div>
+<div class="section" id="compile-time-translation">
+<h3><a class="toc-backref" href="#id7">Compile-time Translation</a><a class="headerlink" href="#compile-time-translation" title="Permalink to this headline">¶</a></h3>
+<p>Users denote compile-time translation of a function using the <a class="reference internal" href="modules/numba.html#numba.export" title="numba.export"><tt class="xref py py-func docutils literal"><span class="pre">numba.export()</span></tt></a>
+and <a class="reference internal" href="modules/numba.html#numba.exportmany" title="numba.exportmany"><tt class="xref py py-func docutils literal"><span class="pre">numba.exportmany()</span></tt></a> decorators.</p>
+</div>
+</div>
+<div class="section" id="translation-internals">
+<h2><a class="toc-backref" href="#id8">Translation Internals</a><a class="headerlink" href="#translation-internals" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="towards-more-modular-pipelines">
+<h3><a class="toc-backref" href="#id9">Towards More Modular Pipelines</a><a class="headerlink" href="#towards-more-modular-pipelines" title="Permalink to this headline">¶</a></h3>
+<p>The end goal of building a more modular pipeline is to decouple
+stages of compilation and make a more modular way of composing
+transformations.</p>
+<ul>
+<li><dl class="first docutils">
+<dt>State threaded through the pipeline</dt>
+<dd><p class="first">1) AST - Abstract syntax tree, possibly mutated as a
+side-effect of a pass.</p>
+<p class="last">2) Structured Environment - A dict like object which holds
+the intermediate forms and data produced as a result of data.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Composition of Stages</dt>
+<dd><ul class="first last simple">
+<li>Sequencing</li>
+<li>Composition Operator</li>
+<li>Error handling and reporting in pass failure.</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p class="first">Pre/Post Condition Checking</p>
+<blockquote>
+<div><ul class="simple">
+<li>Stages should have attached pre / post conditions to check
+the success criterion of the pass for the inputted or
+resulting ast and environment. Failure to meet this
+conditions should cause the pipeline to halt.</li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+<div class="section" id="modularity">
+<h4><a class="toc-backref" href="#id10">Modularity</a><a class="headerlink" href="#modularity" title="Permalink to this headline">¶</a></h4>
+<p>Note: recursive definitions</p>
+<div class="highlight-python"><pre>jit     := parse o link o jit
+pycc    := parse o emit o link
+autojit := cache o autojit
+cache   := pipeline o jit
+
+blaze   := mapast o jit</pre>
+</div>
+</div>
+<div class="section" id="diagram">
+<h4><a class="toc-backref" href="#id11">Diagram</a><a class="headerlink" href="#diagram" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-python"><pre>Block diagram:
+                 Input
+                    |
++----------------------+
+|          pass 1      |
++--------|----------|--+
+       context     ast
+         |          |
+  postcondition     |
+         |          |
+  precondition      |
+         |          |
++--------|----------|--+
+|          pass 2      |
++--------|----------|--+
+       context     ast
+         |          |
+  postcondition     |
+         |          |
+  precondition      |
+         |          |
++--------|----------|--+
+|          pass 3      |
++--------|----------|--+
+       context     ast
+         |          |
+  precondition      |
+         |          |
+         +----------+-----&gt; Output</pre>
+</div>
+</div>
+</div>
+<div class="section" id="discussion-pipeline-composition">
+<h3><a class="toc-backref" href="#id12"><em>Discussion: Pipeline Composition</em></a><a class="headerlink" href="#discussion-pipeline-composition" title="Permalink to this headline">¶</a></h3>
+<p>We can do composition in a functional way:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">compose_stages</span><span class="p">(</span><span class="n">stage1</span><span class="p">,</span> <span class="n">stage2</span><span class="p">):</span>
+  <span class="k">def</span> <span class="nf">composition</span><span class="p">(</span><span class="n">ast</span><span class="p">,</span> <span class="n">env</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">stage2</span><span class="p">(</span><span class="n">stage1</span><span class="p">(</span><span class="n">ast</span><span class="p">,</span> <span class="n">env</span><span class="p">),</span> <span class="n">env</span><span class="p">)</span>
+  <span class="k">return</span> <span class="n">composition</span>
+
+<span class="n">pipeline</span> <span class="o">=</span> <span class="n">compose_stages</span><span class="p">(</span><span class="o">...</span><span class="n">compose_stages</span><span class="p">(</span><span class="n">parse</span><span class="p">,</span> <span class="o">...</span><span class="p">),</span> <span class="o">...</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Or, we can do composition using iteration:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">for</span> <span class="n">stage</span> <span class="ow">in</span> <span class="n">stages</span><span class="p">:</span>
+  <span class="n">ast</span> <span class="o">=</span> <span class="n">stage</span><span class="p">(</span><span class="n">ast</span><span class="p">,</span> <span class="n">env</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Whether the end result is a function or a class is also still up for
+discussion.</p>
+<p>Proposal 1: We replace the Pipeline class to use a list of stages,
+but these can either be functions or subclasses of the
+<tt class="docutils literal"><span class="pre">PipelineStage</span></tt> class.</p>
+</div>
+<div class="section" id="discussion-pipeline-environments">
+<h3><a class="toc-backref" href="#id13"><em>Discussion: Pipeline Environments</em></a><a class="headerlink" href="#discussion-pipeline-environments" title="Permalink to this headline">¶</a></h3>
+<p>Proposal 1: We present an ad hoc environment.  This provides the most
+flexibility for developers to patch the environment as they see fit.</p>
+<p>Proposal 2: We present a well defined environment class.  The class
+will have well defined properties that are documented and type-checked
+when the internal stage checking flag is set.</p>
+</div>
+</div>
+<div class="section" id="terms-and-definitions">
+<h2><a class="toc-backref" href="#id14">Terms and Definitions</a><a class="headerlink" href="#terms-and-definitions" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="appendix">
+<h2><a class="toc-backref" href="#id15">Appendix</a><a class="headerlink" href="#appendix" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Numba Architecture</a><ul>
+<li><a class="reference internal" href="#introduction">Introduction</a></li>
+<li><a class="reference internal" href="#core-entry-points">Core Entry Points</a><ul>
+<li><a class="reference internal" href="#run-time-translation">Run-time Translation</a></li>
+<li><a class="reference internal" href="#call-time-specialization">Call-time Specialization</a></li>
+<li><a class="reference internal" href="#extension-types">Extension Types</a></li>
+<li><a class="reference internal" href="#compile-time-translation">Compile-time Translation</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#translation-internals">Translation Internals</a><ul>
+<li><a class="reference internal" href="#towards-more-modular-pipelines">Towards More Modular Pipelines</a><ul>
+<li><a class="reference internal" href="#modularity">Modularity</a></li>
+<li><a class="reference internal" href="#diagram">Diagram</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#discussion-pipeline-composition"><em>Discussion: Pipeline Composition</em></a></li>
+<li><a class="reference internal" href="#discussion-pipeline-environments"><em>Discussion: Pipeline Environments</em></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#terms-and-definitions">Terms and Definitions</a></li>
+<li><a class="reference internal" href="#appendix">Appendix</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="examples.html"
+                        title="previous chapter">Examples</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="reference.html"
+                        title="next chapter">Numba Module Reference</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/doc/architecture.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="reference.html" title="Numba Module Reference"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="examples.html" title="Examples"
+             >previous</a> |</li>
+        <li><a href="../index.html">numba 0.3 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, Mahadevan R (2008-2010), Continuum Analytics (2012).
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

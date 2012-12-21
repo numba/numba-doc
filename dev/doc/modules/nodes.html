@@ -1,0 +1,419 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>numba.nodes &mdash; numba 0.3 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.3',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="numba 0.3 documentation" href="../../index.html" />
+    <link rel="up" title="Numba Module Reference" href="../reference.html" />
+    <link rel="next" title="numba.pipeline" href="pipeline.html" />
+    <link rel="prev" title="numba.ndarray_helpers" href="ndarray_helpers.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="pipeline.html" title="numba.pipeline"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="ndarray_helpers.html" title="numba.ndarray_helpers"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">numba 0.3 documentation</a> &raquo;</li>
+          <li><a href="../reference.html" accesskey="U">Numba Module Reference</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-numba.nodes">
+<span id="numba-nodes"></span><h1>numba.nodes<a class="headerlink" href="#module-numba.nodes" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="numba.nodes.ArrayNewEmptyNode">
+<em class="property">class </em><tt class="descclassname">numba.nodes.</tt><tt class="descname">ArrayNewEmptyNode</tt><big>(</big><em>type</em>, <em>shape</em>, <em>is_fortran=False</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#numba.nodes.ArrayNewEmptyNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allocate a new array with data.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.ArrayNewNode">
+<em class="property">class </em><tt class="descclassname">numba.nodes.</tt><tt class="descname">ArrayNewNode</tt><big>(</big><em>type</em>, <em>data</em>, <em>shape</em>, <em>strides</em>, <em>base=None</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#numba.nodes.ArrayNewNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allocate a new array given the attributes.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.CTypesCallNode">
+<em class="property">class </em><tt class="descclassname">numba.nodes.</tt><tt class="descname">CTypesCallNode</tt><big>(</big><em>signature</em>, <em>args</em>, <em>ctypes_func_type</em>, <em>py_func=None</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#numba.nodes.CTypesCallNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Call a ctypes function</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.CheckErrorNode">
+<em class="property">class </em><tt class="descclassname">numba.nodes.</tt><tt class="descname">CheckErrorNode</tt><big>(</big><em>return_value</em>, <em>badval=None</em>, <em>goodval=None</em>, <em>exc_type=None</em>, <em>exc_msg=None</em>, <em>exc_args=None</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#numba.nodes.CheckErrorNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check for an exception.</p>
+<blockquote>
+<div>badval: if this value is returned, propagate an error
+goodval: if this value is not returned, propagate an error</div></blockquote>
+<p>If exc_type, exc_msg and optionally exc_args are given, an error is
+raised instead of propagating it.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.CloneNode">
+<em class="property">class </em><tt class="descclassname">numba.nodes.</tt><tt class="descname">CloneNode</tt><big>(</big><em>node</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#numba.nodes.CloneNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clone a CloneableNode. This allows the node&#8217;s sub-expressions to be
+re-used without re-evaluating them.</p>
+<p>The CloneableNode must be evaluated before the CloneNode is evaluated!</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.CloneableNode">
+<em class="property">class </em><tt class="descclassname">numba.nodes.</tt><tt class="descname">CloneableNode</tt><big>(</big><em>node</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#numba.nodes.CloneableNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a node that can be cloned. This allows sub-expressions to be
+re-used without re-evaluating them.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.ClosureCallNode">
+<em class="property">class </em><tt class="descclassname">numba.nodes.</tt><tt class="descname">ClosureCallNode</tt><big>(</big><em>closure_type</em>, <em>call_node</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#numba.nodes.ClosureCallNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Call to closure or inner function.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.ClosureNode">
+<em class="property">class </em><tt class="descclassname">numba.nodes.</tt><tt class="descname">ClosureNode</tt><big>(</big><em>func_def</em>, <em>closure_type</em>, <em>outer_py_func</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#numba.nodes.ClosureNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Inner functions or closures.</p>
+<p>When coerced to an object, a wrapper PyMethodDef gets created, and at
+call time a function is dynamically created with the closure scope.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.ClosureScopeLoadNode">
+<em class="property">class </em><tt class="descclassname">numba.nodes.</tt><tt class="descname">ClosureScopeLoadNode</tt><big>(</big><em>**kwargs</em><big>)</big><a class="headerlink" href="#numba.nodes.ClosureScopeLoadNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load the closure scope for the function or NULL</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.CoerceToNative">
+<em class="property">class </em><tt class="descclassname">numba.nodes.</tt><tt class="descname">CoerceToNative</tt><big>(</big><em>node</em>, <em>dst_type</em>, <em>name=''</em><big>)</big><a class="headerlink" href="#numba.nodes.CoerceToNative" title="Permalink to this definition">¶</a></dt>
+<dd><p>Coerce objects to native values</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.CoerceToObject">
+<em class="property">class </em><tt class="descclassname">numba.nodes.</tt><tt class="descname">CoerceToObject</tt><big>(</big><em>node</em>, <em>dst_type</em>, <em>name=''</em><big>)</big><a class="headerlink" href="#numba.nodes.CoerceToObject" title="Permalink to this definition">¶</a></dt>
+<dd><p>Coerce native values to objects</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.CoercionNode">
+<em class="property">class </em><tt class="descclassname">numba.nodes.</tt><tt class="descname">CoercionNode</tt><big>(</big><em>node</em>, <em>dst_type</em>, <em>name=''</em><big>)</big><a class="headerlink" href="#numba.nodes.CoercionNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Coerce a node to a different type</p>
+<dl class="method">
+<dt id="numba.nodes.CoercionNode.coerce_numpy_attribute">
+<tt class="descname">coerce_numpy_attribute</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.nodes.CoercionNode.coerce_numpy_attribute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Numpy array attributes, such as &#8216;data&#8217;, get rewritten to direct
+accesses. Since they are being coerced back to objects, use a generic
+attribute access instead.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="numba.nodes.CoercionNode.dst_type">
+<tt class="descname">dst_type</tt><a class="headerlink" href="#numba.nodes.CoercionNode.dst_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>dst_type is always the same as type, and &#8216;type&#8217; is kept consistent
+with Variable.type</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.ComplexConjugateNode">
+<em class="property">class </em><tt class="descclassname">numba.nodes.</tt><tt class="descname">ComplexConjugateNode</tt><big>(</big><em>complex_node</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#numba.nodes.ComplexConjugateNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>mycomplex.conjugate()</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.ConstNode">
+<em class="property">class </em><tt class="descclassname">numba.nodes.</tt><tt class="descname">ConstNode</tt><big>(</big><em>pyval</em>, <em>type=None</em><big>)</big><a class="headerlink" href="#numba.nodes.ConstNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wrap a constant.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.DeferredCoercionNode">
+<em class="property">class </em><tt class="descclassname">numba.nodes.</tt><tt class="descname">DeferredCoercionNode</tt><big>(</big><em>node</em>, <em>variable</em><big>)</big><a class="headerlink" href="#numba.nodes.DeferredCoercionNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Coerce to the type of the given variable. The type of the variable may
+change in the meantime (e.g. may be promoted or demoted).</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.DereferenceNode">
+<em class="property">class </em><tt class="descclassname">numba.nodes.</tt><tt class="descname">DereferenceNode</tt><big>(</big><em>pointer</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#numba.nodes.DereferenceNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dereference a pointer</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.ExpressionNode">
+<em class="property">class </em><tt class="descclassname">numba.nodes.</tt><tt class="descname">ExpressionNode</tt><big>(</big><em>stmts</em>, <em>expr</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#numba.nodes.ExpressionNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Node that allows an expression to execute a bunch of statements first.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.FunctionWrapperNode">
+<em class="property">class </em><tt class="descclassname">numba.nodes.</tt><tt class="descname">FunctionWrapperNode</tt><big>(</big><em>wrapped_function</em>, <em>signature</em>, <em>orig_py_func</em>, <em>fake_pyfunc</em><big>)</big><a class="headerlink" href="#numba.nodes.FunctionWrapperNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>This code is a wrapper function callable from Python using PyCFunction:</p>
+<blockquote>
+<div>PyObject <em>(</em>)(PyObject <a href="#id1"><span class="problematic" id="id2">*</span></a>self, PyObject <a href="#id3"><span class="problematic" id="id4">*</span></a>args)</div></blockquote>
+<p>It unpacks the tuple to native types, calls the wrapped function, and
+coerces the return type back to an object.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.LLMacroNode">
+<em class="property">class </em><tt class="descclassname">numba.nodes.</tt><tt class="descname">LLMacroNode</tt><big>(</big><em>signature</em>, <em>macro</em>, <em>*args</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#numba.nodes.LLMacroNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Inject a low-level macro in the function at the call site.</p>
+<p>Low-level macros are Python functions that take a FunctionCache
+instance, a LLVM builder instance, and a set of arguments,
+construct LLVM code, and return some kind of LLVM value result.
+The passed signature should reflect the Numba types of the
+expected input parameters, and the type of the resulting value
+(this does not restrict polymorphism at the LLVM type level in the
+macro expansion function).</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.LLVMExternalFunctionNode">
+<em class="property">class </em><tt class="descclassname">numba.nodes.</tt><tt class="descname">LLVMExternalFunctionNode</tt><big>(</big><em>signature</em>, <em>fname</em><big>)</big><a class="headerlink" href="#numba.nodes.LLVMExternalFunctionNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>For calling an external llvm function where you only have the 
+signature and the function name.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.LLVMIntrinsicNode">
+<em class="property">class </em><tt class="descclassname">numba.nodes.</tt><tt class="descname">LLVMIntrinsicNode</tt><big>(</big><em>signature</em>, <em>args</em>, <em>func_name</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#numba.nodes.LLVMIntrinsicNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Call an llvm intrinsic function</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.LLVMValueRefNode">
+<em class="property">class </em><tt class="descclassname">numba.nodes.</tt><tt class="descname">LLVMValueRefNode</tt><big>(</big><em>type</em>, <em>llvm_value</em><big>)</big><a class="headerlink" href="#numba.nodes.LLVMValueRefNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wrap an LLVM value.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.LowLevelBasicBlockNode">
+<em class="property">class </em><tt class="descclassname">numba.nodes.</tt><tt class="descname">LowLevelBasicBlockNode</tt><big>(</big><em>body</em>, <em>label='unnamed'</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#numba.nodes.LowLevelBasicBlockNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Evaluate a statement or expression in a new LLVM basic block.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.MathCallNode">
+<em class="property">class </em><tt class="descclassname">numba.nodes.</tt><tt class="descname">MathCallNode</tt><big>(</big><em>signature</em>, <em>args</em>, <em>llvm_func</em>, <em>py_func=None</em>, <em>badval=None</em>, <em>goodval=None</em>, <em>exc_type=None</em>, <em>exc_msg=None</em>, <em>exc_args=None</em>, <em>skip_self=False</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#numba.nodes.MathCallNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Low level call a libc math function</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.MathNode">
+<em class="property">class </em><tt class="descclassname">numba.nodes.</tt><tt class="descname">MathNode</tt><big>(</big><em>py_func</em>, <em>signature</em>, <em>arg</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#numba.nodes.MathNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Represents a high-level call to a math function.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.NativeFunctionCallNode">
+<em class="property">class </em><tt class="descclassname">numba.nodes.</tt><tt class="descname">NativeFunctionCallNode</tt><big>(</big><em>signature</em>, <em>function_node</em>, <em>args</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#numba.nodes.NativeFunctionCallNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Call a function which is given as a node</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.NewExtObjectNode">
+<em class="property">class </em><tt class="descclassname">numba.nodes.</tt><tt class="descname">NewExtObjectNode</tt><big>(</big><em>ext_type</em>, <em>args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#numba.nodes.NewExtObjectNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Instantiate an extension type. Currently unused.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.Node">
+<em class="property">class </em><tt class="descclassname">numba.nodes.</tt><tt class="descname">Node</tt><big>(</big><em>**kwargs</em><big>)</big><a class="headerlink" href="#numba.nodes.Node" title="Permalink to this definition">¶</a></dt>
+<dd><p>Superclass for Numba AST nodes</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.NoneNode">
+<em class="property">class </em><tt class="descclassname">numba.nodes.</tt><tt class="descname">NoneNode</tt><big>(</big><em>**kwargs</em><big>)</big><a class="headerlink" href="#numba.nodes.NoneNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return None.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.ObjectInjectNode">
+<em class="property">class </em><tt class="descclassname">numba.nodes.</tt><tt class="descname">ObjectInjectNode</tt><big>(</big><em>object</em>, <em>type=None</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#numba.nodes.ObjectInjectNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Refer to a Python object in the llvm code.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.ObjectTempNode">
+<em class="property">class </em><tt class="descclassname">numba.nodes.</tt><tt class="descname">ObjectTempNode</tt><big>(</big><em>node</em>, <em>incref=False</em><big>)</big><a class="headerlink" href="#numba.nodes.ObjectTempNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Coerce a node to a temporary which is reference counted.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.ObjectTempRefNode">
+<em class="property">class </em><tt class="descclassname">numba.nodes.</tt><tt class="descname">ObjectTempRefNode</tt><big>(</big><em>obj_temp_node</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#numba.nodes.ObjectTempRefNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reference an ObjectTempNode, without evaluating its subexpressions.
+The ObjectTempNode must already have been evaluated.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.PointerFromObject">
+<em class="property">class </em><tt class="descclassname">numba.nodes.</tt><tt class="descname">PointerFromObject</tt><big>(</big><em>node</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#numba.nodes.PointerFromObject" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bitcast objects to void *</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.PromotionNode">
+<em class="property">class </em><tt class="descclassname">numba.nodes.</tt><tt class="descname">PromotionNode</tt><big>(</big><em>**kwargs</em><big>)</big><a class="headerlink" href="#numba.nodes.PromotionNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Coerces a variable of some type to another type for a phi node in a
+successor block.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.PropagateNode">
+<em class="property">class </em><tt class="descclassname">numba.nodes.</tt><tt class="descname">PropagateNode</tt><big>(</big><em>**kwargs</em><big>)</big><a class="headerlink" href="#numba.nodes.PropagateNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Propagate an exception (jump to the error label).</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.nodes.PyArray_NewFromDescr">
+<tt class="descclassname">numba.nodes.</tt><tt class="descname">PyArray_NewFromDescr</tt><big>(</big><em>args</em><big>)</big><a class="headerlink" href="#numba.nodes.PyArray_NewFromDescr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Low-level specialized equivalent of ArrayNewNode</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.StructVariable">
+<em class="property">class </em><tt class="descclassname">numba.nodes.</tt><tt class="descname">StructVariable</tt><big>(</big><em>node</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#numba.nodes.StructVariable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tells the type inferencer that the node is actually a valid struct that
+we can mutate. For instance</p>
+<blockquote>
+<div>func().a = 2</div></blockquote>
+<p>is wrong if func() returns a struct by value. So we only allow references
+like struct.a = 2 and array[i].a = 2.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.TempNode">
+<em class="property">class </em><tt class="descclassname">numba.nodes.</tt><tt class="descname">TempNode</tt><big>(</big><em>type</em>, <em>name=None</em><big>)</big><a class="headerlink" href="#numba.nodes.TempNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a temporary to store values in. Does not perform reference counting.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.WithNoPythonNode">
+<em class="property">class </em><tt class="descclassname">numba.nodes.</tt><tt class="descname">WithNoPythonNode</tt><big>(</big><em>**kwargs</em><big>)</big><a class="headerlink" href="#numba.nodes.WithNoPythonNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>with nopython: ...</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.WithPythonNode">
+<em class="property">class </em><tt class="descclassname">numba.nodes.</tt><tt class="descname">WithPythonNode</tt><big>(</big><em>**kwargs</em><big>)</big><a class="headerlink" href="#numba.nodes.WithPythonNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>with python: ...</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.nodes.call_pyfunc">
+<tt class="descclassname">numba.nodes.</tt><tt class="descname">call_pyfunc</tt><big>(</big><em>py_func</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.nodes.call_pyfunc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate an object call for a python function given during compilation time</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.nodes.is_name">
+<tt class="descclassname">numba.nodes.</tt><tt class="descname">is_name</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.nodes.is_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns whether the given node is a Name</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="ndarray_helpers.html"
+                        title="previous chapter">numba.ndarray_helpers</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="pipeline.html"
+                        title="next chapter">numba.pipeline</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../_sources/doc/modules/nodes.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="pipeline.html" title="numba.pipeline"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="ndarray_helpers.html" title="numba.ndarray_helpers"
+             >previous</a> |</li>
+        <li><a href="../../index.html">numba 0.3 documentation</a> &raquo;</li>
+          <li><a href="../reference.html" >Numba Module Reference</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, Mahadevan R (2008-2010), Continuum Analytics (2012).
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

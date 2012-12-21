@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Static Compilation of Numba Functions &mdash; numba 0.3 documentation</title>
+    <title>Closures &mdash; numba 0.3 documentation</title>
     
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -27,8 +27,8 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="top" title="numba 0.3 documentation" href="../index.html" />
-    <link rel="next" title="Numba Module Reference" href="reference.html" />
-    <link rel="prev" title="Examples" href="examples.html" /> 
+    <link rel="next" title="Static Compilation of Numba Functions" href="pycc.html" />
+    <link rel="prev" title="Classes" href="extension_types.html" /> 
   </head>
   <body>
     <div class="related">
@@ -41,10 +41,10 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="reference.html" title="Numba Module Reference"
+          <a href="pycc.html" title="Static Compilation of Numba Functions"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="examples.html" title="Examples"
+          <a href="extension_types.html" title="Classes"
              accesskey="P">previous</a> |</li>
         <li><a href="../index.html">numba 0.3 documentation</a> &raquo;</li> 
       </ul>
@@ -55,33 +55,34 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="static-compilation-of-numba-functions">
-<h1>Static Compilation of Numba Functions<a class="headerlink" href="#static-compilation-of-numba-functions" title="Permalink to this headline">¶</a></h1>
-<p><tt class="docutils literal"><span class="pre">pycc</span></tt> allows users to compile Numba functions into a shared library.
-The user writes the functions, exports them and the compiler will import
-the module, collect the exported functions and compile them to a shared
-library. Below is an example:</p>
-<div class="highlight-python"><pre>from numba import *
+  <div class="section" id="closures">
+<h1>Closures<a class="headerlink" href="#closures" title="Permalink to this headline">¶</a></h1>
+<p>Numba supports closures (nested functions), and keeps the variable scopes
+alive for the lifetime of the closures.
+Variables that are closed over by the closures (<tt class="docutils literal"><span class="pre">cell</span> <span class="pre">variables</span></tt>) have
+one consistent type throughout the entirety of the function. This means
+differently typed variables can only be assigned if they are unifyable,
+such as for instance ints and floats:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@autojit</span>
+<span class="k">def</span> <span class="nf">outer</span><span class="p">(</span><span class="n">arg1</span><span class="p">,</span> <span class="n">arg2</span><span class="p">):</span>
+    <span class="n">arg1</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">arg1</span> <span class="o">=</span> <span class="mf">0.0</span>      <span class="c"># This is fine</span>
+    <span class="n">arg1</span> <span class="o">=</span> <span class="s">&quot;hello&quot;</span>  <span class="c"># ERROR! arg1 must have a single type</span>
 
-def mult(a, b):
-    return a * b
+    <span class="n">arg2</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">arg2</span> <span class="o">=</span> <span class="s">&quot;hello&quot;</span>  <span class="c"># FINE! Not a cell variable</span>
 
-export('mult f8(f8, f8)'))(mult)
-export(['multf f4(f4, f4)', 'multi i4(i4, i4)'])(mult)
-export('multc c16(c16, c16)'))(mult)</pre>
+    <span class="k">def</span> <span class="nf">inner</span><span class="p">():</span>
+        <span class="k">print</span> <span class="n">arg1</span>
+
+    <span class="k">return</span> <span class="n">inner</span>
+</pre></div>
 </div>
-<p>This defines a trivial function and exports four specializations under
-different names. The code can be compiled as follows:</p>
-<div class="highlight-python"><pre>pycc thefile.py</pre>
-</div>
-<p>Which will create a pure shared library for your platform which can be
-linked against any other program.  This is <strong>not</strong> a Python extension.
-You would have to use ctypes to load the code that is created.
-Multiple files may be given to compile them simulteneously into a
-shared library. Options exist to compile to native object files
-instead of a shared library, to emit LLVM code or to generate a C
-header file with function prototypes. For more information on the
-available command line options, see <tt class="docutils literal"><span class="pre">pycc</span> <span class="pre">-h</span></tt>.</p>
+<p>Calling an inner function directly in the body of <tt class="docutils literal"><span class="pre">outer</span></tt> will result in
+a direct, native call of the closure. In the future it is likely that passing
+around the closure will still result in a native call in other places.</p>
+<p>Like Python closures, closures can be arbitrarily nested, and follow the same
+scoping rules.</p>
 </div>
 
 
@@ -91,14 +92,14 @@ available command line options, see <tt class="docutils literal"><span class="pr
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
   <h4>Previous topic</h4>
-  <p class="topless"><a href="examples.html"
-                        title="previous chapter">Examples</a></p>
+  <p class="topless"><a href="extension_types.html"
+                        title="previous chapter">Classes</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="reference.html"
-                        title="next chapter">Numba Module Reference</a></p>
+  <p class="topless"><a href="pycc.html"
+                        title="next chapter">Static Compilation of Numba Functions</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
-    <li><a href="../_sources/doc/pycc.txt"
+    <li><a href="../_sources/doc/closures.txt"
            rel="nofollow">Show Source</a></li>
   </ul>
 <div id="searchbox" style="display: none">
@@ -128,10 +129,10 @@ available command line options, see <tt class="docutils literal"><span class="pr
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="reference.html" title="Numba Module Reference"
+          <a href="pycc.html" title="Static Compilation of Numba Functions"
              >next</a> |</li>
         <li class="right" >
-          <a href="examples.html" title="Examples"
+          <a href="extension_types.html" title="Classes"
              >previous</a> |</li>
         <li><a href="../index.html">numba 0.3 documentation</a> &raquo;</li> 
       </ul>

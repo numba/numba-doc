@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Static Compilation of Numba Functions &mdash; numba 0.3 documentation</title>
+    <title>Numba Module Reference &mdash; numba 0.3 documentation</title>
     
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -27,8 +27,8 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="top" title="numba 0.3 documentation" href="../index.html" />
-    <link rel="next" title="Numba Module Reference" href="reference.html" />
-    <link rel="prev" title="Examples" href="examples.html" /> 
+    <link rel="next" title="numba" href="modules/numba.html" />
+    <link rel="prev" title="Numba Architecture" href="architecture.html" /> 
   </head>
   <body>
     <div class="related">
@@ -41,10 +41,10 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="reference.html" title="Numba Module Reference"
+          <a href="modules/numba.html" title="numba"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="examples.html" title="Examples"
+          <a href="architecture.html" title="Numba Architecture"
              accesskey="P">previous</a> |</li>
         <li><a href="../index.html">numba 0.3 documentation</a> &raquo;</li> 
       </ul>
@@ -55,33 +55,35 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="static-compilation-of-numba-functions">
-<h1>Static Compilation of Numba Functions<a class="headerlink" href="#static-compilation-of-numba-functions" title="Permalink to this headline">¶</a></h1>
-<p><tt class="docutils literal"><span class="pre">pycc</span></tt> allows users to compile Numba functions into a shared library.
-The user writes the functions, exports them and the compiler will import
-the module, collect the exported functions and compile them to a shared
-library. Below is an example:</p>
-<div class="highlight-python"><pre>from numba import *
-
-def mult(a, b):
-    return a * b
-
-export('mult f8(f8, f8)'))(mult)
-export(['multf f4(f4, f4)', 'multi i4(i4, i4)'])(mult)
-export('multc c16(c16, c16)'))(mult)</pre>
+  <div class="section" id="numba-module-reference">
+<h1>Numba Module Reference<a class="headerlink" href="#numba-module-reference" title="Permalink to this headline">¶</a></h1>
+<p>Contents:</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules/numba.html">numba</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/ast_constant_folding.html">numba.ast_constant_folding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/ast_translate.html">numba.ast_translate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/ast_type_inference.html">numba.ast_type_inference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/cfg.html">numba.cfg</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/closure.html">numba.closure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/decorators.html">numba.decorators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/functions.html">numba.functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/llvm_types.html">numba.llvm_types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/minivect.html">numba.minivect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/multiarray_api.html">numba.multiarray_api</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/naming.html">numba.naming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/ndarray_helpers.html">numba.ndarray_helpers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/nodes.html">numba.nodes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/pipeline.html">numba.pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/pycc.html">numba.pycc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/stdio_util.html">numba.stdio_util</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/symtab.html">numba.symtab</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/transforms.html">numba.transforms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/translate.html">numba.translate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/utils.html">numba.utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/visitors.html">numba.visitors</a></li>
+</ul>
 </div>
-<p>This defines a trivial function and exports four specializations under
-different names. The code can be compiled as follows:</p>
-<div class="highlight-python"><pre>pycc thefile.py</pre>
-</div>
-<p>Which will create a pure shared library for your platform which can be
-linked against any other program.  This is <strong>not</strong> a Python extension.
-You would have to use ctypes to load the code that is created.
-Multiple files may be given to compile them simulteneously into a
-shared library. Options exist to compile to native object files
-instead of a shared library, to emit LLVM code or to generate a C
-header file with function prototypes. For more information on the
-available command line options, see <tt class="docutils literal"><span class="pre">pycc</span> <span class="pre">-h</span></tt>.</p>
 </div>
 
 
@@ -91,14 +93,14 @@ available command line options, see <tt class="docutils literal"><span class="pr
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
   <h4>Previous topic</h4>
-  <p class="topless"><a href="examples.html"
-                        title="previous chapter">Examples</a></p>
+  <p class="topless"><a href="architecture.html"
+                        title="previous chapter">Numba Architecture</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="reference.html"
-                        title="next chapter">Numba Module Reference</a></p>
+  <p class="topless"><a href="modules/numba.html"
+                        title="next chapter">numba</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
-    <li><a href="../_sources/doc/pycc.txt"
+    <li><a href="../_sources/doc/reference.txt"
            rel="nofollow">Show Source</a></li>
   </ul>
 <div id="searchbox" style="display: none">
@@ -128,10 +130,10 @@ available command line options, see <tt class="docutils literal"><span class="pr
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="reference.html" title="Numba Module Reference"
+          <a href="modules/numba.html" title="numba"
              >next</a> |</li>
         <li class="right" >
-          <a href="examples.html" title="Examples"
+          <a href="architecture.html" title="Numba Architecture"
              >previous</a> |</li>
         <li><a href="../index.html">numba 0.3 documentation</a> &raquo;</li> 
       </ul>

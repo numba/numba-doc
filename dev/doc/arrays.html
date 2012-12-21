@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Static Compilation of Numba Functions &mdash; numba 0.3 documentation</title>
+    <title>Arrays &mdash; numba 0.3 documentation</title>
     
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -27,7 +27,7 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="top" title="numba 0.3 documentation" href="../index.html" />
-    <link rel="next" title="Numba Module Reference" href="reference.html" />
+    <link rel="next" title="Types and Variables" href="types.html" />
     <link rel="prev" title="Examples" href="examples.html" /> 
   </head>
   <body>
@@ -41,7 +41,7 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="reference.html" title="Numba Module Reference"
+          <a href="types.html" title="Types and Variables"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="examples.html" title="Examples"
@@ -55,33 +55,54 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="static-compilation-of-numba-functions">
-<h1>Static Compilation of Numba Functions<a class="headerlink" href="#static-compilation-of-numba-functions" title="Permalink to this headline">¶</a></h1>
-<p><tt class="docutils literal"><span class="pre">pycc</span></tt> allows users to compile Numba functions into a shared library.
-The user writes the functions, exports them and the compiler will import
-the module, collect the exported functions and compile them to a shared
-library. Below is an example:</p>
-<div class="highlight-python"><pre>from numba import *
+  <div class="section" id="arrays">
+<h1>Arrays<a class="headerlink" href="#arrays" title="Permalink to this headline">¶</a></h1>
+<p>Numba has support for fast indexing and understands NumPy arrays and infers
+types for various calls of the NumPy API.</p>
+<div class="section" id="limitations">
+<h2>Limitations<a class="headerlink" href="#limitations" title="Permalink to this headline">¶</a></h2>
+<p>Unfortunately, there are a few pitfalls. We hope to resolve these in the
+future, and to document them in the meantime:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="33%" />
+<col width="67%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Operation</th>
+<th class="head">Example</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>Boundschecking</td>
+<td><tt class="docutils literal"><span class="pre">array[N]</span></tt>, with N &lt; 0 or N &gt; array.shape[0]</td>
+</tr>
+<tr class="row-odd"><td>Wraparound</td>
+<td><tt class="docutils literal"><span class="pre">array[-1]</span></tt></td>
+</tr>
+<tr class="row-even"><td>Calls to imported functions</td>
+<td><p class="first">Importing things from <tt class="docutils literal"><span class="pre">numpy</span></tt></p>
+<div class="last highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">zeros</span>
 
-def mult(a, b):
-    return a * b
-
-export('mult f8(f8, f8)'))(mult)
-export(['multf f4(f4, f4)', 'multi i4(i4, i4)'])(mult)
-export('multc c16(c16, c16)'))(mult)</pre>
+<span class="nd">@autojit</span>
+<span class="k">def</span> <span class="nf">func</span><span class="p">():</span>
+    <span class="n">array</span> <span class="o">=</span> <span class="n">zeros</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+</pre></div>
 </div>
-<p>This defines a trivial function and exports four specializations under
-different names. The code can be compiled as follows:</p>
-<div class="highlight-python"><pre>pycc thefile.py</pre>
+</td>
+</tr>
+<tr class="row-odd"><td>Calling without a dtype</td>
+<td><p class="first">Calling <tt class="docutils literal"><span class="pre">zeros</span></tt>, <tt class="docutils literal"><span class="pre">ones</span></tt> or <tt class="docutils literal"><span class="pre">empty</span></tt>
+without a dtype or with lists</p>
+<div class="last highlight-python"><div class="highlight"><pre><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">M</span><span class="p">,</span> <span class="n">N</span><span class="p">))</span>                  <span class="c"># No dtype!</span>
+<span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">M</span><span class="p">,</span> <span class="n">N</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">double</span><span class="p">)</span> <span class="c"># Not a tuple or int!</span>
+</pre></div>
 </div>
-<p>Which will create a pure shared library for your platform which can be
-linked against any other program.  This is <strong>not</strong> a Python extension.
-You would have to use ctypes to load the code that is created.
-Multiple files may be given to compile them simulteneously into a
-shared library. Options exist to compile to native object files
-instead of a shared library, to emit LLVM code or to generate a C
-header file with function prototypes. For more information on the
-available command line options, see <tt class="docutils literal"><span class="pre">pycc</span> <span class="pre">-h</span></tt>.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
 </div>
 
 
@@ -90,15 +111,23 @@ available command line options, see <tt class="docutils literal"><span class="pr
       </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Arrays</a><ul>
+<li><a class="reference internal" href="#limitations">Limitations</a></li>
+</ul>
+</li>
+</ul>
+
   <h4>Previous topic</h4>
   <p class="topless"><a href="examples.html"
                         title="previous chapter">Examples</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="reference.html"
-                        title="next chapter">Numba Module Reference</a></p>
+  <p class="topless"><a href="types.html"
+                        title="next chapter">Types and Variables</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
-    <li><a href="../_sources/doc/pycc.txt"
+    <li><a href="../_sources/doc/arrays.txt"
            rel="nofollow">Show Source</a></li>
   </ul>
 <div id="searchbox" style="display: none">
@@ -128,7 +157,7 @@ available command line options, see <tt class="docutils literal"><span class="pr
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="reference.html" title="Numba Module Reference"
+          <a href="types.html" title="Types and Variables"
              >next</a> |</li>
         <li class="right" >
           <a href="examples.html" title="Examples"

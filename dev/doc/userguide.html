@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>User Guide &mdash; numba 0.2 documentation</title>
+    <title>User Guide &mdash; numba 0.3 documentation</title>
     
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.2',
+        VERSION:     '0.3',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,9 +26,9 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <link rel="top" title="numba 0.2 documentation" href="../index.html" />
+    <link rel="top" title="numba 0.3 documentation" href="../index.html" />
     <link rel="next" title="Examples" href="examples.html" />
-    <link rel="prev" title="Documentation for numba" href="../index.html" /> 
+    <link rel="prev" title="Release Notes" href="releases.html" /> 
   </head>
   <body>
     <div class="related">
@@ -38,12 +38,15 @@
           <a href="../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
           <a href="examples.html" title="Examples"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="../index.html" title="Documentation for numba"
+          <a href="releases.html" title="Release Notes"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">numba 0.2 documentation</a> &raquo;</li> 
+        <li><a href="../index.html">numba 0.3 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -58,9 +61,7 @@
 at runtime. This happens by decorating Python functions, which allows users
 to create native functions for different input types, or to create them
 on the fly:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="o">*</span>
-
-<span class="nd">@jit</span><span class="p">(</span><span class="n">restype</span><span class="o">=</span><span class="n">double</span><span class="p">,</span> <span class="n">argtypes</span><span class="o">=</span><span class="p">[</span><span class="n">double</span><span class="p">[:,</span> <span class="p">:]])</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@jit</span><span class="p">(</span><span class="s">&#39;f8(f8[:])&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">sum1d</span><span class="p">(</span><span class="n">my_double_array</span><span class="p">):</span>
     <span class="nb">sum</span> <span class="o">=</span> <span class="mf">0.0</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">my_double_array</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
@@ -127,7 +128,32 @@ memoryviews.</p>
 </tr>
 </tbody>
 </table>
-<p>Unsigned integer counterparts are available under the name <tt class="docutils literal"><span class="pre">uint8</span></tt> etc.</p>
+<p>Unsigned integer counterparts are available under the name <tt class="docutils literal"><span class="pre">uint8</span></tt>
+etc.   Also, short-names are available with the style &#8216;&lt;char&gt;N&#8217; where
+char is &#8216;b&#8217;, &#8216;i&#8217;, &#8216;u&#8217;, &#8216;f&#8217;, and &#8216;c&#8217; for boolean, integer, unsigned,
+float and complex types respectively with &#8216;N&#8217; indicating the number of
+bytes in the type.    Thus, f8 is equivalent to float32, and c16 is
+equivalent to double complex.</p>
+<p>Native platform-dependent types are also available under names such as
+<tt class="docutils literal"><span class="pre">int_</span></tt>, <tt class="docutils literal"><span class="pre">short</span></tt>, <tt class="docutils literal"><span class="pre">ulonglong</span></tt>, etc.</p>
+<p>Types are names that can be imported from the numba namespace.
+Alternatively, they can be specified in strings in the jit decorator.</p>
+<p>The jit decorator can take keyword arguments: restype, and argtypes to
+specify the function signature.  Alternatively, the signature can be
+expressed by passing a single argument to jit either as a string as
+shown above or directly (assuming the type names have been imported
+from the numba module):</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">f8</span><span class="p">,</span> <span class="n">jit</span>
+
+<span class="nd">@jit</span><span class="p">(</span><span class="n">f8</span><span class="p">(</span><span class="n">f8</span><span class="p">[:]))</span>
+<span class="k">def</span> <span class="nf">sum</span><span class="p">(</span><span class="n">arr</span><span class="p">):</span>
+    <span class="o">...</span>
+</pre></div>
+</div>
+<p>Notice how the argument types are passed in as arguments to the return
+type treated as a python function.    Previously, this same syntax was
+used but embedded in a string which avoids having to import f8 from
+numba directly.</p>
 <div class="section" id="specifying-arrays">
 <h3>Specifying Arrays<a class="headerlink" href="#specifying-arrays" title="Permalink to this headline">¶</a></h3>
 <p>Arrays may be specified strided or C or Fortran contiguous. For instance,
@@ -141,22 +167,15 @@ specifies that the array is Fortran contiguous (column-major).</p>
 <p>Then <tt class="docutils literal"><span class="pre">autojit</span></tt> decorator takes <tt class="docutils literal"><span class="pre">backend</span></tt> as an optional argument, which
 may be set to <strong>bytecode</strong> or <strong>ast</strong>. Both backends currently have different
 capabilities, but the next release plans for the ast backend to supersede
-the bytecode backend. The default is <strong>bytecode</strong>.</p>
-<p>For instance the bytecode backend supports complex
-numbers, whereas the ast backend has limited support for Python objects (
-conversions to and from native data and objects, attribute access and calling
-functions).</p>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">Currently the bytecode translator does not support returning arrays
-from the function. The ast backend does handle this.</p>
-</div>
+the bytecode backend. The default is <strong>ast</strong> and the bytecode backend
+has been deprecated and will be removed in the next release.</p>
 </div>
 <div class="section" id="examples">
 <h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
 <p>For get a better feel of what numba can do, see <a class="reference internal" href="examples.html#id1"><em>Examples</em></a>.</p>
 <div class="toctree-wrapper compound">
-<ul class="simple">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
 </ul>
 </div>
 </div>
@@ -184,8 +203,8 @@ from the function. The ast backend does handle this.</p>
 </ul>
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="../index.html"
-                        title="previous chapter">Documentation for numba</a></p>
+  <p class="topless"><a href="releases.html"
+                        title="previous chapter">Release Notes</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="examples.html"
                         title="next chapter">Examples</a></p>
@@ -218,17 +237,20 @@ from the function. The ast backend does handle this.</p>
           <a href="../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
           <a href="examples.html" title="Examples"
              >next</a> |</li>
         <li class="right" >
-          <a href="../index.html" title="Documentation for numba"
+          <a href="releases.html" title="Release Notes"
              >previous</a> |</li>
-        <li><a href="../index.html">numba 0.2 documentation</a> &raquo;</li> 
+        <li><a href="../index.html">numba 0.3 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2012, Mahadevan R (2008-2010), Continuum Analytics (2012).
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>
 </html>

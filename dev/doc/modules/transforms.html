@@ -1,0 +1,237 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>numba.transforms &mdash; numba 0.3 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.3',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="numba 0.3 documentation" href="../../index.html" />
+    <link rel="up" title="Numba Module Reference" href="../reference.html" />
+    <link rel="next" title="numba.translate" href="translate.html" />
+    <link rel="prev" title="numba.symtab" href="symtab.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="translate.html" title="numba.translate"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="symtab.html" title="numba.symtab"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">numba 0.3 documentation</a> &raquo;</li>
+          <li><a href="../reference.html" accesskey="U">Numba Module Reference</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-numba.transforms">
+<span id="numba-transforms"></span><h1>numba.transforms<a class="headerlink" href="#module-numba.transforms" title="Permalink to this headline">¶</a></h1>
+<p>This module provides a variety of transforms that transform the AST
+into a final form ready for code generation.</p>
+<p>Below follows an explanation and justification of the design of the main
+compilation stages in numba.</p>
+<p>We start with a Python AST, compiled from source code or decompiled from
+bytecode using meta. We run the following transformations:</p>
+<blockquote>
+<div><ol class="arabic">
+<li><p class="first">Type inference</p>
+<blockquote>
+<div><p>Infer types of all expressions, and fix the types of all local
+variables. Local variable types are promoted (for instance float
+to double), but cannot change (e.g. string cannot be assigned to
+float).</p>
+<p>When the type inferencer cannot determine a type, such as when it
+calls a Python function or method that is not a Numba function, it
+assumes type object. Object variables may be coerced to and from
+most native types.</p>
+<p>The type inferencer inserts CoercionNode nodes that perform such
+coercions, as well as coercions between promotable native types.
+It also resolves the return type of many math functions called
+in the numpy, math and cmath modules.</p>
+<p>Each AST expression node has a Variable that holds the type of
+the expression, as well as any meta-data such as constant values
+that have been determined.</p>
+</div></blockquote>
+</li>
+<li><p class="first">Transform for loops</p>
+<blockquote>
+<div><p>Provides some transformations of for loops over arrays to loops
+over a range. Iteration over range/xrange is resolved at
+compilation time.</p>
+<p>What I would like to see is the generation of a RangeNode holding
+a ast.Compare and an iteration variable incrementing ast.BinOp.</p>
+</div></blockquote>
+</li>
+<li><p class="first">Low level specializations (LateSpecializer)</p>
+<blockquote>
+<div><p>This stage performs low-level specializations. For instance it
+resolves coercions to and from object into calls such as
+PyFloat_FromDouble, with a fallback to Py_BuildValue/PyArg_ParseTuple.</p>
+<p>This specializer also has the responsibility to ensure that new
+references are accounted for by refcounting ObjectTempNode nodes.
+This node absorbs the references and lets parent nodes borrow the
+reference. At function cleanup, it decrefs its value. In loops,
+it also decrefs any previous value, if set. Hence, these temporaries
+must be initialized to NULL.</p>
+<p>An object temporary is specific to one specific sub-expression, and
+they are not reused (like in Cython).</p>
+<p>It also rewrites object attribute access and method calls into
+PyObject_GetAttrString etc.</p>
+</div></blockquote>
+</li>
+<li><p class="first">Code generation</p>
+<blockquote>
+<div><p>Generate LLVM code from the transformed AST.</p>
+<p>This should be as minimal as possible, and should <em>not</em> contain
+blobs of code performing complex operations. Instead, complex
+operations should be broken down by AST transformers into
+fundamental operations that are already supported by the AST.</p>
+<p>This way we maximize code reuse, and make potential future additions
+of different code generation backends easier. This can be taken
+only so far, since low-level transformations must also tailor to
+limitations of the code generation backend, such as intrinsic LLVM
+calls or calls into libc. However, code reuse is especially convenient
+in the face of type coercions, which LLVM does not provide any
+leniency for.</p>
+</div></blockquote>
+</li>
+</ol>
+</div></blockquote>
+<dl class="class">
+<dt id="numba.transforms.BuiltinResolverMixinBase">
+<em class="property">class </em><tt class="descclassname">numba.transforms.</tt><tt class="descname">BuiltinResolverMixinBase</tt><a class="headerlink" href="#numba.transforms.BuiltinResolverMixinBase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base class for mixins resolving calls to built-in functions.</p>
+<p>Methods called _resolve_&lt;built-in name&gt; are called to handle calls
+to the built-in of that name.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.transforms.LateBuiltinResolverMixin">
+<em class="property">class </em><tt class="descclassname">numba.transforms.</tt><tt class="descname">LateBuiltinResolverMixin</tt><a class="headerlink" href="#numba.transforms.LateBuiltinResolverMixin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform final low-level transformations such as abs(value) -&gt; fabs(value)</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.transforms.MathMixin">
+<em class="property">class </em><tt class="descclassname">numba.transforms.</tt><tt class="descname">MathMixin</tt><a class="headerlink" href="#numba.transforms.MathMixin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resolve calls to math functions.</p>
+<p>During type inference this produces MathNode nodes, and during
+final specialization it produces LLVMIntrinsicNode and MathCallNode
+nodes.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.transforms.TransformForIterable">
+<em class="property">class </em><tt class="descclassname">numba.transforms.</tt><tt class="descname">TransformForIterable</tt><big>(</big><em>context</em>, <em>func</em>, <em>ast</em>, <em>func_signature=None</em>, <em>nopython=0</em>, <em>symtab=None</em>, <em>locals=None</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#numba.transforms.TransformForIterable" title="Permalink to this definition">¶</a></dt>
+<dd><p>This transforms for loops such as loops over 1D arrays:</p>
+<blockquote>
+<div><blockquote>
+<div><dl class="docutils">
+<dt>for value in my_array:</dt>
+<dd>...</dd>
+</dl>
+</div></blockquote>
+<p>into</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>for i in my_array.shape[0]:</dt>
+<dd>value = my_array[i]</dd>
+</dl>
+</div></blockquote>
+</div></blockquote>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="symtab.html"
+                        title="previous chapter">numba.symtab</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="translate.html"
+                        title="next chapter">numba.translate</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../_sources/doc/modules/transforms.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="translate.html" title="numba.translate"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="symtab.html" title="numba.symtab"
+             >previous</a> |</li>
+        <li><a href="../../index.html">numba 0.3 documentation</a> &raquo;</li>
+          <li><a href="../reference.html" >Numba Module Reference</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, Mahadevan R (2008-2010), Continuum Analytics (2012).
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>
