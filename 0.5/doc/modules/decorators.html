@@ -1,0 +1,168 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>numba.decorators &mdash; numba 0.5.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.5.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="numba 0.5.0 documentation" href="../../index.html" />
+    <link rel="up" title="Numba Module Reference" href="../reference.html" />
+    <link rel="next" title="numba.functions" href="functions.html" />
+    <link rel="prev" title="numba.closure" href="closure.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="functions.html" title="numba.functions"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="closure.html" title="numba.closure"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">numba 0.5.0 documentation</a> &raquo;</li>
+          <li><a href="../reference.html" accesskey="U">Numba Module Reference</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-numba.decorators">
+<span id="numba-decorators"></span><h1>numba.decorators<a class="headerlink" href="#module-numba.decorators" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="numba.decorators.autojit">
+<tt class="descclassname">numba.decorators.</tt><tt class="descname">autojit</tt><big>(</big><em>template_signature=None</em>, <em>backend='ast'</em>, <em>target='cpu'</em>, <em>nopython=False</em>, <em>locals=None</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#numba.decorators.autojit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a function that dispatches to type-specialized LLVM
+functions based on the input argument types.  If no specialized
+function exists for a set of input argument types, the dispatcher
+creates and caches a new specialized function at call time.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.decorators.jit">
+<tt class="descclassname">numba.decorators.</tt><tt class="descname">jit</tt><big>(</big><em>restype=None</em>, <em>argtypes=None</em>, <em>backend='ast'</em>, <em>target='cpu'</em>, <em>nopython=False</em>, <em>**kws</em><big>)</big><a class="headerlink" href="#numba.decorators.jit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compile a function given the input and return types.</p>
+<p>There are multiple ways to specify the type signature:</p>
+<ul class="simple">
+<li>Using the restype and argtypes arguments, passing Numba types.</li>
+<li>By constructing a Numba function type and passing that as the
+first argument to the decorator.  You can create a function type
+by calling an exisiting Numba type, which is the return type,
+and the arguments to that call define the argument types.  For
+example, <tt class="docutils literal"><span class="pre">f8(f8)</span></tt> would create a Numba function type that
+takes a single double-precision floating point value argument,
+and returns a double-precision floating point value.</li>
+<li>As above, but using a string instead of a constructed function
+type.  Example: <tt class="docutils literal"><span class="pre">jit(&quot;f8(f8)&quot;)</span></tt>.</li>
+</ul>
+<p>If backend=&#8217;bytecode&#8217; the bytecode translator is used, if
+backend=&#8217;ast&#8217; the AST translator is used.  By default, the AST
+translator is used.  <em>Note that the bytecode translator is
+deprecated as of the 0.3 release.</em></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.decorators.export">
+<tt class="descclassname">numba.decorators.</tt><tt class="descname">export</tt><big>(</big><em>signature</em>, <em>**kws</em><big>)</big><a class="headerlink" href="#numba.decorators.export" title="Permalink to this definition">¶</a></dt>
+<dd><p>Construct a decorator that takes a function and exports one</p>
+<p>A signature is a string with</p>
+<p>name ret_type(arg_type, argtype, ...)</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.decorators.exportmany">
+<tt class="descclassname">numba.decorators.</tt><tt class="descname">exportmany</tt><big>(</big><em>signatures</em>, <em>**kws</em><big>)</big><a class="headerlink" href="#numba.decorators.exportmany" title="Permalink to this definition">¶</a></dt>
+<dd><p>A Decorator that exports many signatures for a single function</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="closure.html"
+                        title="previous chapter">numba.closure</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="functions.html"
+                        title="next chapter">numba.functions</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../_sources/doc/modules/decorators.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="functions.html" title="numba.functions"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="closure.html" title="numba.closure"
+             >previous</a> |</li>
+        <li><a href="../../index.html">numba 0.5.0 documentation</a> &raquo;</li>
+          <li><a href="../reference.html" >Numba Module Reference</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012-2013, Continuum Analytics.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

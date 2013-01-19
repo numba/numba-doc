@@ -1,0 +1,252 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>numba.closure &mdash; numba 0.5.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.5.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="numba 0.5.0 documentation" href="../../index.html" />
+    <link rel="up" title="Numba Module Reference" href="../reference.html" />
+    <link rel="next" title="numba.decorators" href="decorators.html" />
+    <link rel="prev" title="numba.cfg" href="cfg.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="decorators.html" title="numba.decorators"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="cfg.html" title="numba.cfg"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">numba 0.5.0 documentation</a> &raquo;</li>
+          <li><a href="../reference.html" accesskey="U">Numba Module Reference</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-numba.closure">
+<span id="numba-closure"></span><h1>numba.closure<a class="headerlink" href="#module-numba.closure" title="Permalink to this headline">¶</a></h1>
+<p>This module provides support for closures and inner functions.</p>
+<p>&#64;autojit
+def outer():</p>
+<blockquote>
+<div><p>a = 10 # this is a cellvar</p>
+<p>&#64;jit(&#8216;void()&#8217;)
+def inner():</p>
+<blockquote>
+<div>print a # this is a freevar</div></blockquote>
+<p>inner()
+a = 12
+return inner</p>
+</div></blockquote>
+<p>The &#8216;inner&#8217; function closes over the outer scope. Each function with
+cellvars packs them into a heap-allocated structure, the closure scope.</p>
+<p>The closure scope is passed into &#8216;inner&#8217; when called from within outer.</p>
+<dl class="docutils">
+<dt>The execution of &#8216;def&#8217; creates a NumbaFunction, which has itself as the</dt>
+<dd>m_self attribute. So when &#8216;inner&#8217; is invoked from Python, the numba
+wrapper function gets called with NumbaFunction object and the args
+tuple. The closure scope is then set in NumbaFunction.func_closure.</dd>
+</dl>
+<p>The closure scope is an extension type with the cellvars as attributes.
+Closure scopes are chained together, since multiple inner scopes may need
+to share a single outer scope. E.g.</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>def outer(a):</dt>
+<dd><dl class="first docutils">
+<dt>def inner(b):</dt>
+<dd><dl class="first docutils">
+<dt>def inner_inner():</dt>
+<dd>print a, b</dd>
+</dl>
+<p class="last">return inner_inner</p>
+</dd>
+</dl>
+<p class="last">return inner(1), inner(2)</p>
+</dd>
+</dl>
+</div></blockquote>
+<p>We have three live closure scopes here:</p>
+<blockquote>
+<div>scope_outer = { &#8216;a&#8217;: a }  # call to &#8216;outer&#8217;
+scope_inner_1 = { &#8216;scope_outer&#8217;: scope_outer, &#8216;b&#8217;: 1 } # call to &#8216;inner&#8217; with b=1
+scope_inner_2 = { &#8216;scope_outer&#8217;: scope_outer, &#8216;b&#8217;: 2 } # call to &#8216;inner&#8217; with b=2</div></blockquote>
+<p>Function &#8216;inner_inner&#8217; defines no new scope, since it contains no cellvars.
+But it does contain a freevar from scope_outer and scope_inner, so it gets
+scope_inner passed as first argument. scope_inner has a reference to scope
+outer, so all variables can be resolved.</p>
+<p>These scopes are instances of a numba extension class.</p>
+<dl class="class">
+<dt id="numba.closure.ClosureCompilingMixin">
+<em class="property">class </em><tt class="descclassname">numba.closure.</tt><tt class="descname">ClosureCompilingMixin</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#numba.closure.ClosureCompilingMixin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Runs during late specialization.</p>
+<blockquote>
+<div><ul class="simple">
+<li>Instantiates the closure scope and makes the necessary assignments</li>
+<li>Rewrites local variable accesses to accesses on the instantiated scope</li>
+<li>Instantiate function with closure scope</li>
+</ul>
+</div></blockquote>
+<dl class="method">
+<dt id="numba.closure.ClosureCompilingMixin.assign_closure">
+<tt class="descname">assign_closure</tt><big>(</big><em>func_call</em>, <em>node</em><big>)</big><a class="headerlink" href="#numba.closure.ClosureCompilingMixin.assign_closure" title="Permalink to this definition">¶</a></dt>
+<dd><p>Assign closure to its name. NOT USED, already happened in CFG</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.closure.ClosureCompilingMixin.visit_ClosureNode">
+<tt class="descname">visit_ClosureNode</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.closure.ClosureCompilingMixin.visit_ClosureNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compile the inner function.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.closure.ClosureCompilingMixin.visit_InstantiateClosureScope">
+<tt class="descname">visit_InstantiateClosureScope</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.closure.ClosureCompilingMixin.visit_InstantiateClosureScope" title="Permalink to this definition">¶</a></dt>
+<dd><p>Instantiate a closure scope.</p>
+<p>After instantiation, assign the parent scope and all function
+arguments that belong in the scope to the scope.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.closure.ClosureCompilingMixin.visit_Name">
+<tt class="descname">visit_Name</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.closure.ClosureCompilingMixin.visit_Name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resolve cellvars and freevars</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.closure.ClosureMixin">
+<em class="property">class </em><tt class="descclassname">numba.closure.</tt><tt class="descname">ClosureMixin</tt><a class="headerlink" href="#numba.closure.ClosureMixin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handles closures during type inference. Mostly performs error checking
+for closure signatures.</p>
+<p>Generates ClosureNodes that hold inner functions. When visited, they
+do not recurse into the inner functions themselves!</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.closure.ClosureTypeInferer">
+<em class="property">class </em><tt class="descclassname">numba.closure.</tt><tt class="descname">ClosureTypeInferer</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#numba.closure.ClosureTypeInferer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Runs just after type inference after the outer variables types are
+resolved.</p>
+<ol class="arabic simple">
+<li>run type inferencer on inner functions</li>
+<li>build scope extension types pre-order</li>
+<li>generate nodes to instantiate scope extension type at call time</li>
+</ol>
+<dl class="method">
+<dt id="numba.closure.ClosureTypeInferer.update_closures">
+<tt class="descname">update_closures</tt><big>(</big><em>func_def</em>, <em>scope_type</em>, <em>ext_type</em><big>)</big><a class="headerlink" href="#numba.closure.ClosureTypeInferer.update_closures" title="Permalink to this definition">¶</a></dt>
+<dd><p>Patch closures to get the closure scope as the first argument.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.closure.lookup_scope_attribute">
+<tt class="descclassname">numba.closure.</tt><tt class="descname">lookup_scope_attribute</tt><big>(</big><em>cur_scope</em>, <em>var_name</em>, <em>ctx=None</em><big>)</big><a class="headerlink" href="#numba.closure.lookup_scope_attribute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Look up a variable in the closure scope</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.closure.process_closures">
+<tt class="descclassname">numba.closure.</tt><tt class="descname">process_closures</tt><big>(</big><em>context</em>, <em>outer_func_def</em>, <em>outer_symtab</em>, <em>**kwds</em><big>)</big><a class="headerlink" href="#numba.closure.process_closures" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process closures recursively and for each variable in each function
+determine whether it is a freevar, a cellvar, a local or otherwise.</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="cfg.html"
+                        title="previous chapter">numba.cfg</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="decorators.html"
+                        title="next chapter">numba.decorators</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../_sources/doc/modules/closure.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="decorators.html" title="numba.decorators"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="cfg.html" title="numba.cfg"
+             >previous</a> |</li>
+        <li><a href="../../index.html">numba 0.5.0 documentation</a> &raquo;</li>
+          <li><a href="../reference.html" >Numba Module Reference</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012-2013, Continuum Analytics.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>
