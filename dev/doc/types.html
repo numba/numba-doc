@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Types and Variables &mdash; numba 0.3 documentation</title>
+    <title>Types and Variables &mdash; numba 0.5.0 documentation</title>
     
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.3',
+        VERSION:     '0.5.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,7 +26,7 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <link rel="top" title="numba 0.3 documentation" href="../index.html" />
+    <link rel="top" title="numba 0.5.0 documentation" href="../index.html" />
     <link rel="next" title="Primitive values and Interfacing with C" href="interface_c.html" />
     <link rel="prev" title="Arrays" href="arrays.html" /> 
   </head>
@@ -46,7 +46,7 @@
         <li class="right" >
           <a href="arrays.html" title="Arrays"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">numba 0.3 documentation</a> &raquo;</li> 
+        <li><a href="../index.html">numba 0.5.0 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -79,6 +79,21 @@ point precision).</p>
 <p>Cases where the type inferencer doesn&#8217;t know the type is often when you call
 a Python function or method that is not a numba function and numba doesn&#8217;t
 otherwise recognize.</p>
+<p>Numba allows you to obtain the type of a expression or variable through
+the typeof function in a Numba function. This type can then be used for
+instance to cast other values:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nb">type</span> <span class="o">=</span> <span class="n">numba</span><span class="o">.</span><span class="n">typeof</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">y</span><span class="p">)</span>
+<span class="n">value</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>When used outside of a Numba function, it returns the type the type inferencer
+would infer for that value:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">numba</span><span class="o">.</span><span class="n">typeof</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span>
+<span class="go">double</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">numba</span><span class="o">.</span><span class="n">typeof</span><span class="p">(</span><span class="n">cmath</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+<span class="go">complex128</span>
+</pre></div>
+</div>
 <div class="section" id="variables-declared-in-locals">
 <span id="variables"></span><h2>Variables declared in Locals<a class="headerlink" href="#variables-declared-in-locals" title="Permalink to this headline">¶</a></h2>
 <p>Variables declared in the <tt class="docutils literal"><span class="pre">locals</span></tt> dict have a single type throughout
@@ -411,11 +426,11 @@ by indexing <tt class="docutils literal"><span class="pre">fielddict</span></tt>
         <li class="right" >
           <a href="arrays.html" title="Arrays"
              >previous</a> |</li>
-        <li><a href="../index.html">numba 0.3 documentation</a> &raquo;</li> 
+        <li><a href="../index.html">numba 0.5.0 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2012, Mahadevan R (2008-2010), Continuum Analytics (2012).
+        &copy; Copyright 2012-2013, Continuum Analytics.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>
