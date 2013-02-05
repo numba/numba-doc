@@ -1,0 +1,193 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Classes &mdash; numba 0.5.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.5.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="numba 0.5.0 documentation" href="../index.html" />
+    <link rel="next" title="Closures" href="closures.html" />
+    <link rel="prev" title="Primitive values and Interfacing with C" href="interface_c.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="closures.html" title="Closures"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="interface_c.html" title="Primitive values and Interfacing with C"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">numba 0.5.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="classes">
+<h1>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h1>
+<p>Numba supports classes similar to Python classes and extension types.
+Currently the methods have static signatures, but in the future they
+we will likely support multiple inheritance and autojitting methods.</p>
+<p>One can refer to the extension type as a type by accessing its <tt class="docutils literal"><span class="pre">exttype</span></tt>
+attribute:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@jit</span>
+<span class="k">class</span> <span class="nc">MyExtension</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="o">...</span>
+
+<span class="nd">@jit</span><span class="p">(</span><span class="n">MyExtension</span><span class="o">.</span><span class="n">exttype</span><span class="p">(</span><span class="n">double</span><span class="p">))</span>
+<span class="k">def</span> <span class="nf">create_ext</span><span class="p">(</span><span class="n">arg</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">MyExtension</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>It is not yet possible to refer to the extension type in the class body or
+methods of that extension type.</p>
+<p>An example of extension classes and their capabilities and limitations
+is shown below:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Example for extension classes.</span>
+
+<span class="sd">Things that work:</span>
+
+<span class="sd">    - overriding Numba methods in Numba (all methods are virtual)</span>
+<span class="sd">    - inheritance</span>
+<span class="sd">    - instance attributes</span>
+<span class="sd">    - subclassing in python and calling overridden methods in Python</span>
+<span class="sd">    - arbitrary new attributes on extension classes and objects</span>
+<span class="sd">    - weakrefs to extension objects</span>
+
+<span class="sd">Things that do NOT (yet) work:</span>
+
+<span class="sd">    - overriding methods in Python and calling the method from Numba</span>
+<span class="sd">    - multiple inheritance of Numba classes</span>
+<span class="sd">        (multiple inheritance with Python classes should work)</span>
+<span class="sd">    - subclassing variable sized objects like &#39;str&#39; or &#39;tuple&#39;</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">jit</span><span class="p">,</span> <span class="n">void</span><span class="p">,</span> <span class="n">int_</span><span class="p">,</span> <span class="n">double</span>
+
+<span class="c"># All methods must be given signatures</span>
+
+<span class="nd">@jit</span>
+<span class="k">class</span> <span class="nc">Shrubbery</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="nd">@void</span><span class="p">(</span><span class="n">int_</span><span class="p">,</span> <span class="n">int_</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">):</span>
+        <span class="c"># All instance attributes must be defined in the initializer</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">w</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="n">h</span>
+
+        <span class="c"># Types can be explicitly specified through casts</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">some_attr</span> <span class="o">=</span> <span class="n">double</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span>
+
+    <span class="nd">@int_</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">area</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span>
+
+    <span class="nd">@void</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">describe</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&quot;This shrubbery is &quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">,</span>
+              <span class="s">&quot;by&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">,</span> <span class="s">&quot;cubits.&quot;</span><span class="p">)</span>
+ 
+<span class="n">shrub</span> <span class="o">=</span> <span class="n">Shrubbery</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">shrub</span><span class="o">.</span><span class="n">area</span><span class="p">())</span>
+<span class="n">shrub</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
+<span class="k">print</span><span class="p">(</span><span class="n">shrub</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="n">shrub</span><span class="o">.</span><span class="n">height</span><span class="p">)</span>
+<span class="n">shrub</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="mi">30</span>
+<span class="k">print</span><span class="p">(</span><span class="n">shrub</span><span class="o">.</span><span class="n">area</span><span class="p">())</span>
+<span class="k">print</span><span class="p">(</span><span class="n">shrub</span><span class="o">.</span><span class="n">_numba_attrs</span><span class="o">.</span><span class="n">_fields_</span><span class="p">)</span> <span class="c"># This is an internal attribute subject to change!</span>
+
+<span class="k">class</span> <span class="nc">MyClass</span><span class="p">(</span><span class="n">Shrubbery</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">newmethod</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&quot;This is a new method.&quot;</span><span class="p">)</span>
+
+<span class="n">shrub2</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span><span class="mi">40</span><span class="p">)</span>
+<span class="n">shrub2</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
+<span class="n">shrub2</span><span class="o">.</span><span class="n">newmethod</span><span class="p">()</span>
+<span class="k">print</span><span class="p">(</span><span class="n">shrub</span><span class="o">.</span><span class="n">_numba_attrs</span><span class="o">.</span><span class="n">_fields_</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="interface_c.html"
+                        title="previous chapter">Primitive values and Interfacing with C</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="closures.html"
+                        title="next chapter">Closures</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/doc/extension_types.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="closures.html" title="Closures"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="interface_c.html" title="Primitive values and Interfacing with C"
+             >previous</a> |</li>
+        <li><a href="../index.html">numba 0.5.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012-2013, Continuum Analytics.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>
