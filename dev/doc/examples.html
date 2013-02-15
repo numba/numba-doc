@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Examples &mdash; numba 0.5.0 documentation</title>
+    <title>Examples &mdash; numba 0.6.0 documentation</title>
     
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.5.0',
+        VERSION:     '0.6.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,7 +26,7 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <link rel="top" title="numba 0.5.0 documentation" href="../index.html" />
+    <link rel="top" title="numba 0.6.0 documentation" href="../index.html" />
     <link rel="next" title="Numba Architecture" href="architecture.html" />
     <link rel="prev" title="Using doctest with Numba" href="doctest.html" /> 
   </head>
@@ -46,7 +46,7 @@
         <li class="right" >
           <a href="doctest.html" title="Using doctest with Numba"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">numba 0.5.0 documentation</a> &raquo;</li> 
+        <li><a href="../index.html">numba 0.6.0 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -60,7 +60,9 @@
 <div class="section" id="a-simple-function">
 <span id="id1"></span><h2>A Simple Function<a class="headerlink" href="#a-simple-function" title="Permalink to this headline">¶</a></h2>
 <p>Suppose we want to write an image-processing function in Python.  Here&#8217;s how it might look.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">filter2d</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">filt</span><span class="p">):</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">numpy</span>
+
+<span class="k">def</span> <span class="nf">filter2d</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">filt</span><span class="p">):</span>
     <span class="n">M</span><span class="p">,</span> <span class="n">N</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">shape</span>
     <span class="n">Mf</span><span class="p">,</span> <span class="n">Nf</span> <span class="o">=</span> <span class="n">filt</span><span class="o">.</span><span class="n">shape</span>
     <span class="n">Mf2</span> <span class="o">=</span> <span class="n">Mf</span> <span class="o">//</span> <span class="mi">2</span>
@@ -74,15 +76,19 @@
                     <span class="n">num</span> <span class="o">+=</span> <span class="p">(</span><span class="n">filt</span><span class="p">[</span><span class="n">Mf</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">ii</span><span class="p">,</span> <span class="n">Nf</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">jj</span><span class="p">]</span> <span class="o">*</span> <span class="n">image</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="n">Mf2</span><span class="o">+</span><span class="n">ii</span><span class="p">,</span> <span class="n">j</span><span class="o">-</span><span class="n">Nf2</span><span class="o">+</span><span class="n">jj</span><span class="p">])</span>
             <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">num</span>
     <span class="k">return</span> <span class="n">result</span>
-</pre></div>
-</div>
-<p>This kind of quadruply-nested for-loop is going to be quite slow.  Using Numba we can compile this code to LLVM which then gets compiled to machine code:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">double</span>
+
+<span class="c"># This kind of quadruply-nested for-loop is going to be quite slow.</span>
+<span class="c"># Using Numba we can compile this code to LLVM which then gets</span>
+<span class="c"># compiled to machine code:</span>
+
+<span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">double</span><span class="p">,</span> <span class="n">jit</span>
 
 <span class="n">fastfilter_2d</span> <span class="o">=</span> <span class="n">jit</span><span class="p">(</span><span class="n">double</span><span class="p">[:,:](</span><span class="n">double</span><span class="p">[:,:],</span> <span class="n">double</span><span class="p">[:,:]))(</span><span class="n">filter2d</span><span class="p">)</span>
 
 <span class="c"># Now fastfilter_2d runs at speeds as if you had first translated</span>
 <span class="c"># it to C, compiled the code and wrapped it with Python</span>
+<span class="n">image</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">((</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">))</span>
+<span class="n">filt</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">((</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
 <span class="n">res</span> <span class="o">=</span> <span class="n">fastfilter_2d</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">filt</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -213,7 +219,7 @@ numba functions to eliminate all python overhead in function calling.</p>
 <span class="c"># Notice inferred return type</span>
 <span class="k">print</span> <span class="n">hypot</span><span class="o">.</span><span class="n">signature</span>
 <span class="c"># Notice native sqrt calls and for.body direct access to memory...</span>
-<span class="k">print</span> <span class="n">hypot</span><span class="o">.</span><span class="n">lfunc</span>
+<span class="c">#print hypot.lfunc</span>
 </pre></div>
 </div>
 </div>
@@ -436,7 +442,7 @@ numba functions to eliminate all python overhead in function calling.</p>
         <li class="right" >
           <a href="doctest.html" title="Using doctest with Numba"
              >previous</a> |</li>
-        <li><a href="../index.html">numba 0.5.0 documentation</a> &raquo;</li> 
+        <li><a href="../index.html">numba 0.6.0 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
