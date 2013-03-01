@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Classes &mdash; numba 0.6.0 documentation</title>
+    <title>Python Functionality &mdash; numba 0.6.0-366-ge78575e documentation</title>
     
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.6.0',
+        VERSION:     '0.6.0-366-ge78575e',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,9 +26,9 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <link rel="top" title="numba 0.6.0 documentation" href="../index.html" />
-    <link rel="next" title="Closures" href="closures.html" />
-    <link rel="prev" title="Primitive values and Interfacing with C" href="interface_c.html" /> 
+    <link rel="top" title="numba 0.6.0-366-ge78575e documentation" href="../index.html" />
+    <link rel="next" title="Arrays" href="arrays.html" />
+    <link rel="prev" title="Types and Variables" href="types.html" /> 
   </head>
   <body>
     <div class="related">
@@ -41,12 +41,12 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="closures.html" title="Closures"
+          <a href="arrays.html" title="Arrays"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="interface_c.html" title="Primitive values and Interfacing with C"
+          <a href="types.html" title="Types and Variables"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">numba 0.6.0 documentation</a> &raquo;</li> 
+        <li><a href="../index.html">numba 0.6.0-366-ge78575e documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -55,8 +55,10 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="classes">
-<h1>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="python-functionality">
+<h1>Python Functionality<a class="headerlink" href="#python-functionality" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="extension-types-classes">
+<h2>Extension Types (Classes)<a class="headerlink" href="#extension-types-classes" title="Permalink to this headline">¶</a></h2>
 <p>Numba supports classes similar to Python classes and extension types.
 Currently the methods have static signatures, but in the future they
 we will likely support multiple inheritance and autojitting methods.</p>
@@ -138,6 +140,93 @@ is shown below:</p>
 </pre></div>
 </div>
 </div>
+<div class="section" id="closures">
+<h2>Closures<a class="headerlink" href="#closures" title="Permalink to this headline">¶</a></h2>
+<p>Numba supports closures (nested functions), and keeps the variable scopes
+alive for the lifetime of the closures.
+Variables that are closed over by the closures (<tt class="docutils literal"><span class="pre">cell</span> <span class="pre">variables</span></tt>) have
+one consistent type throughout the entirety of the function. This means
+differently typed variables can only be assigned if they are unifyable,
+such as for instance ints and floats:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@autojit</span>
+<span class="k">def</span> <span class="nf">outer</span><span class="p">(</span><span class="n">arg1</span><span class="p">,</span> <span class="n">arg2</span><span class="p">):</span>
+    <span class="n">arg1</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">arg1</span> <span class="o">=</span> <span class="mf">0.0</span>      <span class="c"># This is fine</span>
+    <span class="n">arg1</span> <span class="o">=</span> <span class="s">&quot;hello&quot;</span>  <span class="c"># ERROR! arg1 must have a single type</span>
+
+    <span class="n">arg2</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">arg2</span> <span class="o">=</span> <span class="s">&quot;hello&quot;</span>  <span class="c"># FINE! Not a cell variable</span>
+
+    <span class="k">def</span> <span class="nf">inner</span><span class="p">():</span>
+        <span class="k">print</span> <span class="n">arg1</span>
+
+    <span class="k">return</span> <span class="n">inner</span>
+</pre></div>
+</div>
+<p>Calling an inner function directly in the body of <tt class="docutils literal"><span class="pre">outer</span></tt> will result in
+a direct, native call of the closure. In the future it is likely that passing
+around the closure will still result in a native call in other places.</p>
+<p>Like Python closures, closures can be arbitrarily nested, and follow the same
+scoping rules.</p>
+</div>
+<div class="section" id="typed-containers">
+<h2>Typed Containers<a class="headerlink" href="#typed-containers" title="Permalink to this headline">¶</a></h2>
+<p>Numba ships implementations of various typed containers, which allow fast
+execution and memory-efficient storage.</p>
+<p>We hope to support the following container types:</p>
+<blockquote>
+<div><ul class="simple">
+<li>list, tuple</li>
+<li>dict, ordereddict</li>
+<li>set, orderedset</li>
+<li>&lt;your idea here&gt;</li>
+</ul>
+</div></blockquote>
+<p>There are many more data structure that can be implemented, but future releases
+of numba will make it easier (nearly trivial) for people to implement those
+data structure themselves while supporting full data polymorphism.</p>
+<p>Currently implemented:</p>
+<blockquote>
+<div><ul class="simple">
+<li>typedlist</li>
+<li>typedtuple</li>
+</ul>
+</div></blockquote>
+<p>These data structures work exactly like their python equivalents, but take a
+first parameter which specifies the element type:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">numba</span><span class="o">.</span><span class="n">typedlist</span><span class="p">(</span><span class="n">int32</span><span class="p">,</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+<span class="go">[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">numba</span><span class="o">.</span><span class="n">typedlist</span><span class="p">(</span><span class="n">float32</span><span class="p">,</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+<span class="go">[0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0]</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tlist</span> <span class="o">=</span> <span class="n">numba</span><span class="o">.</span><span class="n">typedlist</span><span class="p">(</span><span class="n">int32</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tlist</span>
+<span class="go">[]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tlist</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tlist</span>
+<span class="go">[3, 1, 2, 3]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tlist</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="go">2L</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tlist</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="go">3L</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tlist</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+<span class="go">3L</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tlist</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tlist</span>
+<span class="go">[1, 2, 3]</span>
+</pre></div>
+</div>
+<p>Things that are not yet implemented:</p>
+<blockquote>
+<div><ul class="simple">
+<li>Methods <tt class="docutils literal"><span class="pre">remove</span></tt>, <tt class="docutils literal"><span class="pre">insert</span></tt></li>
+<li>Slicing</li>
+</ul>
+</div></blockquote>
+<p>Typed containers can be used from Python or from numba code. Using them from numba code
+will result in fast calls without boxing and unboxing.</p>
+</div>
+</div>
 
 
           </div>
@@ -145,15 +234,25 @@ is shown below:</p>
       </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Python Functionality</a><ul>
+<li><a class="reference internal" href="#extension-types-classes">Extension Types (Classes)</a></li>
+<li><a class="reference internal" href="#closures">Closures</a></li>
+<li><a class="reference internal" href="#typed-containers">Typed Containers</a></li>
+</ul>
+</li>
+</ul>
+
   <h4>Previous topic</h4>
-  <p class="topless"><a href="interface_c.html"
-                        title="previous chapter">Primitive values and Interfacing with C</a></p>
+  <p class="topless"><a href="types.html"
+                        title="previous chapter">Types and Variables</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="closures.html"
-                        title="next chapter">Closures</a></p>
+  <p class="topless"><a href="arrays.html"
+                        title="next chapter">Arrays</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
-    <li><a href="../_sources/doc/extension_types.txt"
+    <li><a href="../_sources/doc/pythonstuff.txt"
            rel="nofollow">Show Source</a></li>
   </ul>
 <div id="searchbox" style="display: none">
@@ -183,12 +282,12 @@ is shown below:</p>
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="closures.html" title="Closures"
+          <a href="arrays.html" title="Arrays"
              >next</a> |</li>
         <li class="right" >
-          <a href="interface_c.html" title="Primitive values and Interfacing with C"
+          <a href="types.html" title="Types and Variables"
              >previous</a> |</li>
-        <li><a href="../index.html">numba 0.6.0 documentation</a> &raquo;</li> 
+        <li><a href="../index.html">numba 0.6.0-366-ge78575e documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
