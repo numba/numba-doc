@@ -1,0 +1,176 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>numba.ast_constant_folding &mdash; numba 0.7.0-2-g2474b9c documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.7.0-2-g2474b9c',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="numba 0.7.0-2-g2474b9c documentation" href="../../index.html" />
+    <link rel="up" title="Numba Module Reference" href="../reference.html" />
+    <link rel="next" title="numba.ast_translate" href="ast_translate.html" />
+    <link rel="prev" title="numba" href="numba.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="ast_translate.html" title="numba.ast_translate"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="numba.html" title="numba"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">numba 0.7.0-2-g2474b9c documentation</a> &raquo;</li>
+          <li><a href="../reference.html" accesskey="U">Numba Module Reference</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-numba.ast_constant_folding">
+<span id="numba-ast-constant-folding"></span><h1>numba.ast_constant_folding<a class="headerlink" href="#module-numba.ast_constant_folding" title="Permalink to this headline">¶</a></h1>
+<p>This module implements constant folding on the AST.  It handles simple cases
+such as</p>
+<ul>
+<li><p class="first">1 + 2 -&gt; 3</p>
+</li>
+<li><p class="first">2 ** 10 -&gt; 1024</p>
+</li>
+<li><dl class="first docutils">
+<dt>N=1; N + 1 -&gt; 2  (for N is assigned as global variable or a variable </dt>
+<dd><p class="first last">that&#8217;s only assigned once)</p>
+</dd>
+</dl>
+</li>
+</ul>
+<dl class="class">
+<dt id="numba.ast_constant_folding.ConstantFolder">
+<em class="property">class </em><tt class="descclassname">numba.ast_constant_folding.</tt><tt class="descname">ConstantFolder</tt><big>(</big><em>*args</em>, <em>**kws</em><big>)</big><a class="headerlink" href="#numba.ast_constant_folding.ConstantFolder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform constant folding on AST.</p>
+<p>NOTE: Forbids assignment to True, False, None.</p>
+<dl class="method">
+<dt id="numba.ast_constant_folding.ConstantFolder.eval_binary_operation">
+<tt class="descname">eval_binary_operation</tt><big>(</big><em>op</em>, <em>left</em>, <em>right</em><big>)</big><a class="headerlink" href="#numba.ast_constant_folding.ConstantFolder.eval_binary_operation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Evaluate the constant expression and return a ast.Num instance
+containing the result.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.ast_constant_folding.ConstantFolder.valueof">
+<tt class="descname">valueof</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.ast_constant_folding.ConstantFolder.valueof" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get constant value from AST node.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.ast_constant_folding.ConstantFolder.visit_Assign">
+<tt class="descname">visit_Assign</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.ast_constant_folding.ConstantFolder.visit_Assign" title="Permalink to this definition">¶</a></dt>
+<dd><p>Store the rhs value so we can inline them in future reference.</p>
+<p>TODO: Remove assignment of constant</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.ast_constant_folding.ConstantMarker">
+<em class="property">class </em><tt class="descclassname">numba.ast_constant_folding.</tt><tt class="descname">ConstantMarker</tt><big>(</big><em>*args</em>, <em>**kws</em><big>)</big><a class="headerlink" href="#numba.ast_constant_folding.ConstantMarker" title="Permalink to this definition">¶</a></dt>
+<dd><p>A conservative constant marker.  Conservative because we handle the
+simplest cases only.</p>
+<dl class="method">
+<dt id="numba.ast_constant_folding.ConstantMarker.get_constants">
+<tt class="descname">get_constants</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.ast_constant_folding.ConstantMarker.get_constants" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a set of constant variable names</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="numba.html"
+                        title="previous chapter">numba</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="ast_translate.html"
+                        title="next chapter">numba.ast_translate</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../_sources/doc/modules/ast_constant_folding.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="ast_translate.html" title="numba.ast_translate"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="numba.html" title="numba"
+             >previous</a> |</li>
+        <li><a href="../../index.html">numba 0.7.0-2-g2474b9c documentation</a> &raquo;</li>
+          <li><a href="../reference.html" >Numba Module Reference</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012-2013, Continuum Analytics.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,144 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Static Compilation (pycc) &mdash; numba 0.7.0-2-g2474b9c documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.7.0-2-g2474b9c',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="numba 0.7.0-2-g2474b9c documentation" href="../index.html" />
+    <link rel="next" title="Adding Type Inference for External Code" href="type_inference.html" />
+    <link rel="prev" title="Interfacing with C" href="interface_c.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="type_inference.html" title="Adding Type Inference for External Code"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="interface_c.html" title="Interfacing with C"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">numba 0.7.0-2-g2474b9c documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="static-compilation-pycc">
+<h1>Static Compilation (pycc)<a class="headerlink" href="#static-compilation-pycc" title="Permalink to this headline">¶</a></h1>
+<p><tt class="docutils literal"><span class="pre">pycc</span></tt> allows users to compile Numba functions into a shared library.
+The user writes the functions, exports them and the compiler will import
+the module, collect the exported functions and compile them to a shared
+library. Below is an example:</p>
+<div class="highlight-python"><pre>from numba import *
+
+def mult(a, b):
+    return a * b
+
+export('mult f8(f8, f8)'))(mult)
+export(['multf f4(f4, f4)', 'multi i4(i4, i4)'])(mult)
+export('multc c16(c16, c16)'))(mult)</pre>
+</div>
+<p>This defines a trivial function and exports four specializations under
+different names. The code can be compiled as follows:</p>
+<div class="highlight-python"><pre>pycc thefile.py</pre>
+</div>
+<p>Which will create a pure shared library for your platform which can be
+linked against any other program.  This is <strong>not</strong> a Python extension.
+You would have to use ctypes to load the code that is created.
+Multiple files may be given to compile them simulteneously into a
+shared library. Options exist to compile to native object files
+instead of a shared library, to emit LLVM code or to generate a C
+header file with function prototypes. For more information on the
+available command line options, see <tt class="docutils literal"><span class="pre">pycc</span> <span class="pre">-h</span></tt>.</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="interface_c.html"
+                        title="previous chapter">Interfacing with C</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="type_inference.html"
+                        title="next chapter">Adding Type Inference for External Code</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/doc/pycc.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="type_inference.html" title="Adding Type Inference for External Code"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="interface_c.html" title="Interfacing with C"
+             >previous</a> |</li>
+        <li><a href="../index.html">numba 0.7.0-2-g2474b9c documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012-2013, Continuum Analytics.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

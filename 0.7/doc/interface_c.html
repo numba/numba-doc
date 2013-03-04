@@ -1,0 +1,266 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Interfacing with C &mdash; numba 0.7.0-2-g2474b9c documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.7.0-2-g2474b9c',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="numba 0.7.0-2-g2474b9c documentation" href="../index.html" />
+    <link rel="next" title="Static Compilation (pycc)" href="pycc.html" />
+    <link rel="prev" title="Arrays" href="arrays.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="pycc.html" title="Static Compilation (pycc)"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="arrays.html" title="Arrays"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">numba 0.7.0-2-g2474b9c documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="interfacing-with-c">
+<span id="c"></span><h1>Interfacing with C<a class="headerlink" href="#interfacing-with-c" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="ctypes-and-cffi">
+<h2>Ctypes and CFFI<a class="headerlink" href="#ctypes-and-cffi" title="Permalink to this headline">¶</a></h2>
+<p>Numba supports jitting ctypes and CFFI function calls. Numba will automatically
+figure out the signatures of the functions and data. Below is a gibbs sampling
+code that accesses ctypes (or CFFI) functions defined in another module (
+<tt class="docutils literal"><span class="pre">rk_seed</span></tt>,  <tt class="docutils literal"><span class="pre">rk_gamma</span></tt> and <tt class="docutils literal"><span class="pre">rk_normal</span></tt>), and that passes in a pointer to a struct
+also allocated with ctypes (<tt class="docutils literal"><span class="pre">state_p</span></tt>):</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">gibbs</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">thin</span><span class="p">):</span>
+    <span class="n">rng</span><span class="o">.</span><span class="n">rk_seed</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">rng</span><span class="o">.</span><span class="n">state_p</span><span class="p">)</span>
+
+    <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">samples</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">N</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">thin</span><span class="p">):</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">rk_gamma</span><span class="p">(</span><span class="n">rng</span><span class="o">.</span><span class="n">state_p</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="o">/</span><span class="p">(</span><span class="n">y</span><span class="o">**</span><span class="mi">2</span><span class="o">+</span><span class="mi">4</span><span class="p">))</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">rk_normal</span><span class="p">(</span><span class="n">rng</span><span class="o">.</span><span class="n">state_p</span><span class="p">,</span> <span class="mf">1.0</span><span class="o">/</span><span class="p">(</span><span class="n">x</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span> <span class="mf">1.0</span><span class="o">/</span><span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="o">+</span><span class="mi">2</span><span class="o">*</span><span class="n">x</span><span class="p">))</span>
+
+        <span class="n">samples</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span>
+        <span class="n">samples</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">y</span>
+
+    <span class="k">return</span> <span class="n">samples</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Passing in ctypes or CFFI libraries to autojit functions does not yet work.
+However, passing in individual functions does.</p>
+</div>
+</div>
+<div class="section" id="writing-low-level-code">
+<h2>Writing Low-level Code<a class="headerlink" href="#writing-low-level-code" title="Permalink to this headline">¶</a></h2>
+<p>Numba allows users to deal with high-level as well as low-level C-like code.
+Users can access and define new or external stucts, deal with pointers, and
+call C functions natively.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Type declarations are covered in in <a class="reference internal" href="types.html#types"><em>Types and Variables</em></a>.</p>
+</div>
+<div class="section" id="structs">
+<h3>Structs<a class="headerlink" href="#structs" title="Permalink to this headline">¶</a></h3>
+<p>Structs can be declared on the stack, passed in as arguments,
+returned from external or Numba
+functions, or originate from record arrays. Structs currently have
+copy-by-value semantics, but this is likely to change.</p>
+<p>Struct fields can accessed as follows:</p>
+<blockquote>
+<div><ul class="simple">
+<li><tt class="docutils literal"><span class="pre">struct.attr</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">struct['attr']</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">struct[field_index]</span></tt></li>
+</ul>
+</div></blockquote>
+<p>An example is shown below:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">struct</span><span class="p">,</span> <span class="n">jit</span><span class="p">,</span> <span class="n">double</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+<span class="n">record_type</span> <span class="o">=</span> <span class="n">struct</span><span class="p">([(</span><span class="s">&#39;x&#39;</span><span class="p">,</span> <span class="n">double</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;y&#39;</span><span class="p">,</span> <span class="n">double</span><span class="p">)])</span>
+<span class="n">record_dtype</span> <span class="o">=</span> <span class="n">record_type</span><span class="o">.</span><span class="n">get_dtype</span><span class="p">()</span>
+<span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">),</span> <span class="p">(</span><span class="mf">3.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">)],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">record_dtype</span><span class="p">)</span>
+
+<span class="nd">@jit</span><span class="p">(</span><span class="n">argtypes</span><span class="o">=</span><span class="p">[</span><span class="n">record_type</span><span class="p">[:]])</span>
+<span class="k">def</span> <span class="nf">hypot</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="c"># return types of numpy functions are inferred</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty_like</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span> 
+    <span class="c"># notice access to structure elements &#39;x&#39; and &#39;y&#39; via attribute access</span>
+    <span class="c"># You can also index by field name or field index:</span>
+    <span class="c">#       data[i].x == data[i][&#39;x&#39;] == data[i][0]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+        <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">y</span> <span class="o">*</span> <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">result</span>
+
+<span class="k">print</span> <span class="n">hypot</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+
+<span class="c"># Notice inferred return type</span>
+<span class="k">print</span> <span class="n">hypot</span><span class="o">.</span><span class="n">signature</span>
+<span class="c"># Notice native sqrt calls and for.body direct access to memory...</span>
+<span class="c">#print hypot.lfunc</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="pointers">
+<h3>Pointers<a class="headerlink" href="#pointers" title="Permalink to this headline">¶</a></h3>
+<p>Pointers in Numba can be used in a similar way to C. They can be cast,
+indexed and operated on with pointer arithmetic. Currently it is however
+not possible to obtain the address of an lvalue.</p>
+<p>An example is shown below:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">numba</span>
+<span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">numba.tests.test_support</span> <span class="kn">import</span> <span class="n">autojit_py3doc</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+<span class="n">int32p</span> <span class="o">=</span> <span class="n">int32</span><span class="o">.</span><span class="n">pointer</span><span class="p">()</span>
+<span class="n">voidp</span> <span class="o">=</span> <span class="n">void</span><span class="o">.</span><span class="n">pointer</span><span class="p">()</span>
+
+<span class="nd">@autojit_py3doc</span>
+<span class="k">def</span> <span class="nf">test_pointer_arithmetic</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    &gt;&gt;&gt; test_pointer_arithmetic()</span>
+<span class="sd">    48L</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">int32p</span><span class="p">(</span><span class="n">Py_uintptr_t</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">p</span> <span class="o">+</span> <span class="mi">10</span>
+    <span class="n">p</span> <span class="o">+=</span> <span class="mi">2</span>
+    <span class="k">return</span> <span class="n">Py_uintptr_t</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="c"># 0 + 4 * 12</span>
+
+<span class="nd">@autojit_py3doc</span><span class="p">(</span><span class="nb">locals</span><span class="o">=</span><span class="p">{</span><span class="s">&quot;pointer_value&quot;</span><span class="p">:</span> <span class="n">Py_uintptr_t</span><span class="p">})</span>
+<span class="k">def</span> <span class="nf">test_pointer_indexing</span><span class="p">(</span><span class="n">pointer_value</span><span class="p">,</span> <span class="n">type_p</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    &gt;&gt;&gt; a = np.array([1, 2, 3, 4], dtype=np.float32)</span>
+<span class="sd">    &gt;&gt;&gt; test_pointer_indexing(a.ctypes.data, float32.pointer())</span>
+<span class="sd">    (1.0, 2.0, 3.0, 4.0)</span>
+
+<span class="sd">    &gt;&gt;&gt; a = np.array([1, 2, 3, 4], dtype=np.int64)</span>
+<span class="sd">    &gt;&gt;&gt; test_pointer_indexing(a.ctypes.data, int64.pointer())</span>
+<span class="sd">    (1L, 2L, 3L, 4L)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">type_p</span><span class="p">(</span><span class="n">pointer_value</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">p</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">p</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">p</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+
+<span class="nd">@autojit</span>
+<span class="k">def</span> <span class="nf">test_compare_null</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    &gt;&gt;&gt; test_compare_null()</span>
+<span class="sd">    True</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">voidp</span><span class="p">(</span><span class="n">Py_uintptr_t</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span> <span class="o">==</span> <span class="n">numba</span><span class="o">.</span><span class="n">NULL</span>
+
+<span class="n">numba</span><span class="o">.</span><span class="n">testmod</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Interfacing with C</a><ul>
+<li><a class="reference internal" href="#ctypes-and-cffi">Ctypes and CFFI</a></li>
+<li><a class="reference internal" href="#writing-low-level-code">Writing Low-level Code</a><ul>
+<li><a class="reference internal" href="#structs">Structs</a></li>
+<li><a class="reference internal" href="#pointers">Pointers</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="arrays.html"
+                        title="previous chapter">Arrays</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="pycc.html"
+                        title="next chapter">Static Compilation (pycc)</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/doc/interface_c.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="pycc.html" title="Static Compilation (pycc)"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="arrays.html" title="Arrays"
+             >previous</a> |</li>
+        <li><a href="../index.html">numba 0.7.0-2-g2474b9c documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012-2013, Continuum Analytics.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>
