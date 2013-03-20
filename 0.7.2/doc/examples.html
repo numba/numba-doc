@@ -1,0 +1,467 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Examples &mdash; numba 0.7.1-69-gd9c4219 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.7.1-69-gd9c4219',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="numba 0.7.1-69-gd9c4219 documentation" href="../index.html" />
+    <link rel="next" title="Release Notes" href="releases.html" />
+    <link rel="prev" title="Using doctest with Numba" href="doctest.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="releases.html" title="Release Notes"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="doctest.html" title="Using doctest with Numba"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">numba 0.7.1-69-gd9c4219 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="examples">
+<h1>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="a-simple-function">
+<span id="id1"></span><h2>A Simple Function<a class="headerlink" href="#a-simple-function" title="Permalink to this headline">¶</a></h2>
+<p>Suppose we want to write an image-processing function in Python.  Here&#8217;s how it might look.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">numpy</span>
+
+<span class="k">def</span> <span class="nf">filter2d</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">filt</span><span class="p">):</span>
+    <span class="n">M</span><span class="p">,</span> <span class="n">N</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">Mf</span><span class="p">,</span> <span class="n">Nf</span> <span class="o">=</span> <span class="n">filt</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">Mf2</span> <span class="o">=</span> <span class="n">Mf</span> <span class="o">//</span> <span class="mi">2</span>
+    <span class="n">Nf2</span> <span class="o">=</span> <span class="n">Nf</span> <span class="o">//</span> <span class="mi">2</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Mf2</span><span class="p">,</span> <span class="n">M</span> <span class="o">-</span> <span class="n">Mf2</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Nf2</span><span class="p">,</span> <span class="n">N</span> <span class="o">-</span> <span class="n">Nf2</span><span class="p">):</span>
+            <span class="n">num</span> <span class="o">=</span> <span class="mf">0.0</span>
+            <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Mf</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">jj</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Nf</span><span class="p">):</span>
+                    <span class="n">num</span> <span class="o">+=</span> <span class="p">(</span><span class="n">filt</span><span class="p">[</span><span class="n">Mf</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">ii</span><span class="p">,</span> <span class="n">Nf</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">jj</span><span class="p">]</span> <span class="o">*</span> <span class="n">image</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="n">Mf2</span><span class="o">+</span><span class="n">ii</span><span class="p">,</span> <span class="n">j</span><span class="o">-</span><span class="n">Nf2</span><span class="o">+</span><span class="n">jj</span><span class="p">])</span>
+            <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">num</span>
+    <span class="k">return</span> <span class="n">result</span>
+
+<span class="c"># This kind of quadruply-nested for-loop is going to be quite slow.</span>
+<span class="c"># Using Numba we can compile this code to LLVM which then gets</span>
+<span class="c"># compiled to machine code:</span>
+
+<span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">double</span><span class="p">,</span> <span class="n">jit</span>
+
+<span class="n">fastfilter_2d</span> <span class="o">=</span> <span class="n">jit</span><span class="p">(</span><span class="n">double</span><span class="p">[:,:](</span><span class="n">double</span><span class="p">[:,:],</span> <span class="n">double</span><span class="p">[:,:]))(</span><span class="n">filter2d</span><span class="p">)</span>
+
+<span class="c"># Now fastfilter_2d runs at speeds as if you had first translated</span>
+<span class="c"># it to C, compiled the code and wrapped it with Python</span>
+<span class="n">image</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">((</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">))</span>
+<span class="n">filt</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">((</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">fastfilter_2d</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">filt</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Numba actually produces two functions.   The first function is the
+low-level compiled version of filter2d.  The second function is the
+Python wrapper to that low-level function so that the function can be
+called from Python.   The first function can be called from other
+numba functions to eliminate all python overhead in function calling.</p>
+</div>
+<div class="section" id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># -*- coding: utf-8 -*-</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Example for extension classes.</span>
+
+<span class="sd">Things that work:</span>
+
+<span class="sd">    - overriding Numba methods in Numba (all methods are virtual)</span>
+<span class="sd">    - inheritance</span>
+<span class="sd">    - instance attributes</span>
+<span class="sd">    - subclassing in python and calling overridden methods in Python</span>
+<span class="sd">    - arbitrary new attributes on extension classes and objects</span>
+<span class="sd">    - weakrefs to extension objects</span>
+
+<span class="sd">Things that do NOT (yet) work:</span>
+
+<span class="sd">    - overriding methods in Python and calling the method from Numba</span>
+<span class="sd">    - multiple inheritance of Numba classes</span>
+<span class="sd">        (multiple inheritance with Python classes should work)</span>
+<span class="sd">    - subclassing variable sized objects like &#39;str&#39; or &#39;tuple&#39;</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">absolute_import</span>
+
+<span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">jit</span><span class="p">,</span> <span class="n">void</span><span class="p">,</span> <span class="n">int_</span><span class="p">,</span> <span class="n">double</span>
+
+<span class="c"># All methods must be given signatures</span>
+
+<span class="nd">@jit</span>
+<span class="k">class</span> <span class="nc">Shrubbery</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="nd">@void</span><span class="p">(</span><span class="n">int_</span><span class="p">,</span> <span class="n">int_</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">):</span>
+        <span class="c"># All instance attributes must be defined in the initializer</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">w</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="n">h</span>
+
+        <span class="c"># Types can be explicitly specified through casts</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">some_attr</span> <span class="o">=</span> <span class="n">double</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span>
+
+    <span class="nd">@int_</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">area</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span>
+
+    <span class="nd">@void</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">describe</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&quot;This shrubbery is &quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">,</span>
+              <span class="s">&quot;by&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">,</span> <span class="s">&quot;cubits.&quot;</span><span class="p">)</span>
+ 
+<span class="n">shrub</span> <span class="o">=</span> <span class="n">Shrubbery</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">shrub</span><span class="o">.</span><span class="n">area</span><span class="p">())</span>
+<span class="n">shrub</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
+<span class="k">print</span><span class="p">(</span><span class="n">shrub</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="n">shrub</span><span class="o">.</span><span class="n">height</span><span class="p">)</span>
+<span class="n">shrub</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="mi">30</span>
+<span class="k">print</span><span class="p">(</span><span class="n">shrub</span><span class="o">.</span><span class="n">area</span><span class="p">())</span>
+<span class="k">print</span><span class="p">(</span><span class="n">shrub</span><span class="o">.</span><span class="n">_numba_attrs</span><span class="o">.</span><span class="n">_fields_</span><span class="p">)</span> <span class="c"># This is an internal attribute subject to change!</span>
+
+<span class="k">class</span> <span class="nc">MyClass</span><span class="p">(</span><span class="n">Shrubbery</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">newmethod</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&quot;This is a new method.&quot;</span><span class="p">)</span>
+
+<span class="n">shrub2</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span><span class="mi">40</span><span class="p">)</span>
+<span class="n">shrub2</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
+<span class="n">shrub2</span><span class="o">.</span><span class="n">newmethod</span><span class="p">()</span>
+<span class="k">print</span><span class="p">(</span><span class="n">shrub</span><span class="o">.</span><span class="n">_numba_attrs</span><span class="o">.</span><span class="n">_fields_</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="closures">
+<h2>Closures<a class="headerlink" href="#closures" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><pre># -*- coding: utf-8 -*-
+"""
+Example for closures. Closures may be of arbitrary dept, and they keep
+the scope alive as long as the closure is alive. Only variables that are
+closed over (cell variables in the defining function, free variables in the
+closure), are kept alive. See also numba/tests/closures/test_closure.py
+"""
+from __future__ import print_function, division, absolute_import
+
+from numba import autojit, jit, float_
+from numpy import linspace
+
+@autojit
+def generate_power_func(n):
+    @jit(float_(float_))
+    def nth_power(x):
+        return x ** n
+
+    # This is a native call
+    print nth_power(10)
+
+    # Return closure and keep all cell variables alive
+    return nth_power
+
+for n in range(2, 5):
+    func = generate_power_func(n)
+    print [func(x) for x in linspace(1.,2.,10.)]
+</pre>
+</div>
+</div>
+<div class="section" id="structs">
+<span id="structexample"></span><h2>Structs<a class="headerlink" href="#structs" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><pre># -*- coding: utf-8 -*-
+from __future__ import print_function, division, absolute_import
+from numba import struct, jit, double
+import numpy as np
+
+record_type = struct([('x', double), ('y', double)])
+record_dtype = record_type.get_dtype()
+a = np.array([(1.0, 2.0), (3.0, 4.0)], dtype=record_dtype)
+
+@jit(argtypes=[record_type[:]])
+def hypot(data):
+    # return types of numpy functions are inferred
+    result = np.empty_like(data, dtype=np.float64) 
+    # notice access to structure elements 'x' and 'y' via attribute access
+    # You can also index by field name or field index:
+    #       data[i].x == data[i]['x'] == data[i][0]
+    for i in range(data.shape[0]):
+        result[i] = np.sqrt(data[i].x * data[i].x + data[i].y * data[i].y)
+
+    return result
+
+print hypot(a)
+
+# Notice inferred return type
+print hypot.signature
+# Notice native sqrt calls and for.body direct access to memory...
+#print hypot.lfunc
+</pre>
+</div>
+</div>
+<div class="section" id="pointers">
+<span id="pointerexample"></span><h2>Pointers<a class="headerlink" href="#pointers" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># -*- coding: utf-8 -*-</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">absolute_import</span>
+<span class="kn">import</span> <span class="nn">numba</span>
+<span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">numba.tests.test_support</span> <span class="kn">import</span> <span class="n">autojit_py3doc</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+<span class="n">int32p</span> <span class="o">=</span> <span class="n">int32</span><span class="o">.</span><span class="n">pointer</span><span class="p">()</span>
+<span class="n">voidp</span> <span class="o">=</span> <span class="n">void</span><span class="o">.</span><span class="n">pointer</span><span class="p">()</span>
+
+<span class="nd">@autojit_py3doc</span>
+<span class="k">def</span> <span class="nf">test_pointer_arithmetic</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    &gt;&gt;&gt; test_pointer_arithmetic()</span>
+<span class="sd">    48L</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">int32p</span><span class="p">(</span><span class="n">Py_uintptr_t</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">p</span> <span class="o">+</span> <span class="mi">10</span>
+    <span class="n">p</span> <span class="o">+=</span> <span class="mi">2</span>
+    <span class="k">return</span> <span class="n">Py_uintptr_t</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="c"># 0 + 4 * 12</span>
+
+<span class="nd">@autojit_py3doc</span><span class="p">(</span><span class="nb">locals</span><span class="o">=</span><span class="p">{</span><span class="s">&quot;pointer_value&quot;</span><span class="p">:</span> <span class="n">Py_uintptr_t</span><span class="p">})</span>
+<span class="k">def</span> <span class="nf">test_pointer_indexing</span><span class="p">(</span><span class="n">pointer_value</span><span class="p">,</span> <span class="n">type_p</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    &gt;&gt;&gt; a = np.array([1, 2, 3, 4], dtype=np.float32)</span>
+<span class="sd">    &gt;&gt;&gt; test_pointer_indexing(a.ctypes.data, float32.pointer())</span>
+<span class="sd">    (1.0, 2.0, 3.0, 4.0)</span>
+
+<span class="sd">    &gt;&gt;&gt; a = np.array([1, 2, 3, 4], dtype=np.int64)</span>
+<span class="sd">    &gt;&gt;&gt; test_pointer_indexing(a.ctypes.data, int64.pointer())</span>
+<span class="sd">    (1L, 2L, 3L, 4L)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">type_p</span><span class="p">(</span><span class="n">pointer_value</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">p</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">p</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">p</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+
+<span class="nd">@autojit</span>
+<span class="k">def</span> <span class="nf">test_compare_null</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    &gt;&gt;&gt; test_compare_null()</span>
+<span class="sd">    True</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">voidp</span><span class="p">(</span><span class="n">Py_uintptr_t</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span> <span class="o">==</span> <span class="n">numba</span><span class="o">.</span><span class="n">NULL</span>
+
+<span class="n">numba</span><span class="o">.</span><span class="n">testmod</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="objects">
+<h2>Objects<a class="headerlink" href="#objects" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><pre># -*- coding: utf-8 -*-
+from __future__ import print_function, division, absolute_import
+from numba import double, autojit
+
+class MyClass(object):
+    def mymethod(self, arg):
+        return arg * 2
+    
+@autojit(locals=dict(mydouble=double)) # specify types for local variables
+def call_method(obj):
+    print obj.mymethod("hello")   # object result
+    mydouble = obj.mymethod(10.2) # native double
+    print mydouble * 2            # native multiplication
+    
+call_method(MyClass())
+</pre>
+</div>
+</div>
+<div class="section" id="mandelbrot">
+<h2>Mandelbrot<a class="headerlink" href="#mandelbrot" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># -*- coding: utf-8 -*-</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">absolute_import</span>
+<span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">autojit</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">pylab</span> <span class="kn">import</span> <span class="n">imshow</span><span class="p">,</span> <span class="n">jet</span><span class="p">,</span> <span class="n">show</span><span class="p">,</span> <span class="n">ion</span>
+
+<span class="nd">@autojit</span>
+<span class="k">def</span> <span class="nf">mandel</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">max_iters</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Given the real and imaginary parts of a complex number,</span>
+<span class="sd">    determine if it is a candidate for membership in the Mandelbrot</span>
+<span class="sd">    set given a fixed number of iterations.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="nb">complex</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="mf">0.0j</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_iters</span><span class="p">):</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="n">z</span><span class="o">*</span><span class="n">z</span> <span class="o">+</span> <span class="n">c</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">z</span><span class="o">.</span><span class="n">real</span><span class="o">*</span><span class="n">z</span><span class="o">.</span><span class="n">real</span> <span class="o">+</span> <span class="n">z</span><span class="o">.</span><span class="n">imag</span><span class="o">*</span><span class="n">z</span><span class="o">.</span><span class="n">imag</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">4</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">i</span>
+
+    <span class="k">return</span> <span class="mi">255</span>
+
+<span class="nd">@autojit</span>
+<span class="k">def</span> <span class="nf">create_fractal</span><span class="p">(</span><span class="n">min_x</span><span class="p">,</span> <span class="n">max_x</span><span class="p">,</span> <span class="n">min_y</span><span class="p">,</span> <span class="n">max_y</span><span class="p">,</span> <span class="n">image</span><span class="p">,</span> <span class="n">iters</span><span class="p">):</span>
+    <span class="n">height</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">width</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="n">pixel_size_x</span> <span class="o">=</span> <span class="p">(</span><span class="n">max_x</span> <span class="o">-</span> <span class="n">min_x</span><span class="p">)</span> <span class="o">/</span> <span class="n">width</span>
+    <span class="n">pixel_size_y</span> <span class="o">=</span> <span class="p">(</span><span class="n">max_y</span> <span class="o">-</span> <span class="n">min_y</span><span class="p">)</span> <span class="o">/</span> <span class="n">height</span>
+    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">width</span><span class="p">):</span>
+        <span class="n">real</span> <span class="o">=</span> <span class="n">min_x</span> <span class="o">+</span> <span class="n">x</span> <span class="o">*</span> <span class="n">pixel_size_x</span>
+        <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">height</span><span class="p">):</span>
+            <span class="n">imag</span> <span class="o">=</span> <span class="n">min_y</span> <span class="o">+</span> <span class="n">y</span> <span class="o">*</span> <span class="n">pixel_size_y</span>
+            <span class="n">color</span> <span class="o">=</span> <span class="n">mandel</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">iters</span><span class="p">)</span>
+            <span class="n">image</span><span class="p">[</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">]</span> <span class="o">=</span> <span class="n">color</span>
+
+    <span class="k">return</span> <span class="n">image</span>
+
+<span class="n">image</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">500</span><span class="p">,</span> <span class="mi">750</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
+<span class="n">imshow</span><span class="p">(</span><span class="n">create_fractal</span><span class="p">(</span><span class="o">-</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">image</span><span class="p">,</span> <span class="mi">20</span><span class="p">))</span>
+<span class="n">jet</span><span class="p">()</span>
+<span class="n">ion</span><span class="p">()</span>
+<span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="filterbank-correlation">
+<h2>Filterbank Correlation<a class="headerlink" href="#filterbank-correlation" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><pre># -*- coding: utf-8 -*-
+"""
+This file demonstrates a filterbank correlation loop.
+"""
+from __future__ import print_function, division, absolute_import
+import numpy as np
+import numba
+from numba.decorators import jit
+nd4type = numba.double[:,:,:,:]
+
+@jit(argtypes=(nd4type, nd4type, nd4type))
+def fbcorr(imgs, filters, output):
+    n_imgs, n_rows, n_cols, n_channels = imgs.shape
+    n_filters, height, width, n_ch2 = filters.shape
+
+    for ii in range(n_imgs):
+        for rr in range(n_rows - height + 1):
+            for cc in range(n_cols - width + 1):
+                for hh in xrange(height):
+                    for ww in xrange(width):
+                        for jj in range(n_channels):
+                            for ff in range(n_filters):
+                                imgval = imgs[ii, rr + hh, cc + ww, jj]
+                                filterval = filters[ff, hh, ww, jj]
+                                output[ii, ff, rr, cc] += imgval * filterval
+
+def main ():
+    imgs = np.random.randn(10, 64, 64, 3)
+    filt = np.random.randn(6, 5, 5, 3)
+    output = np.zeros((10, 60, 60, 6))
+
+    import time
+    t0 = time.time()
+    fbcorr(imgs, filt, output)
+    print time.time() - t0
+
+if __name__ == "__main__":
+    main()
+</pre>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Examples</a><ul>
+<li><a class="reference internal" href="#a-simple-function">A Simple Function</a></li>
+<li><a class="reference internal" href="#classes">Classes</a></li>
+<li><a class="reference internal" href="#closures">Closures</a></li>
+<li><a class="reference internal" href="#structs">Structs</a></li>
+<li><a class="reference internal" href="#pointers">Pointers</a></li>
+<li><a class="reference internal" href="#objects">Objects</a></li>
+<li><a class="reference internal" href="#mandelbrot">Mandelbrot</a></li>
+<li><a class="reference internal" href="#filterbank-correlation">Filterbank Correlation</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="doctest.html"
+                        title="previous chapter">Using doctest with Numba</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="releases.html"
+                        title="next chapter">Release Notes</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/doc/examples.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="releases.html" title="Release Notes"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="doctest.html" title="Using doctest with Numba"
+             >previous</a> |</li>
+        <li><a href="../index.html">numba 0.7.1-69-gd9c4219 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012-2013, Continuum Analytics.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

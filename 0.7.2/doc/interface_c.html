@@ -1,0 +1,370 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Interfacing with C &mdash; numba 0.7.1-69-gd9c4219 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.7.1-69-gd9c4219',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="numba 0.7.1-69-gd9c4219 documentation" href="../index.html" />
+    <link rel="next" title="Static Compilation (pycc)" href="pycc.html" />
+    <link rel="prev" title="Arrays" href="arrays.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="pycc.html" title="Static Compilation (pycc)"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="arrays.html" title="Arrays"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">numba 0.7.1-69-gd9c4219 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="interfacing-with-c">
+<span id="c"></span><h1>Interfacing with C<a class="headerlink" href="#interfacing-with-c" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="ctypes-and-cffi">
+<h2>Ctypes and CFFI<a class="headerlink" href="#ctypes-and-cffi" title="Permalink to this headline">¶</a></h2>
+<p>Numba supports jitting ctypes and CFFI function calls. Numba will automatically
+figure out the signatures of the functions and data. Below is a gibbs sampling
+code that accesses ctypes (or CFFI) functions defined in another module (
+<tt class="docutils literal"><span class="pre">rk_seed</span></tt>,  <tt class="docutils literal"><span class="pre">rk_gamma</span></tt> and <tt class="docutils literal"><span class="pre">rk_normal</span></tt>), and that passes in a pointer to a struct
+also allocated with ctypes (<tt class="docutils literal"><span class="pre">state_p</span></tt>):</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">gibbs</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">thin</span><span class="p">):</span>
+    <span class="n">rng</span><span class="o">.</span><span class="n">rk_seed</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">rng</span><span class="o">.</span><span class="n">state_p</span><span class="p">)</span>
+
+    <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">samples</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">N</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">thin</span><span class="p">):</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">rk_gamma</span><span class="p">(</span><span class="n">rng</span><span class="o">.</span><span class="n">state_p</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="o">/</span><span class="p">(</span><span class="n">y</span><span class="o">**</span><span class="mi">2</span><span class="o">+</span><span class="mi">4</span><span class="p">))</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">rk_normal</span><span class="p">(</span><span class="n">rng</span><span class="o">.</span><span class="n">state_p</span><span class="p">,</span> <span class="mf">1.0</span><span class="o">/</span><span class="p">(</span><span class="n">x</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span> <span class="mf">1.0</span><span class="o">/</span><span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="o">+</span><span class="mi">2</span><span class="o">*</span><span class="n">x</span><span class="p">))</span>
+
+        <span class="n">samples</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span>
+        <span class="n">samples</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">y</span>
+
+    <span class="k">return</span> <span class="n">samples</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Passing in ctypes or CFFI libraries to autojit functions does not yet work.
+However, passing in individual functions does.</p>
+</div>
+</div>
+<div class="section" id="writing-low-level-code">
+<h2>Writing Low-level Code<a class="headerlink" href="#writing-low-level-code" title="Permalink to this headline">¶</a></h2>
+<p>Numba allows users to deal with high-level as well as low-level C-like code.
+Users can access and define new or external stucts, deal with pointers, and
+call C functions natively.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Type declarations are covered in in <a class="reference internal" href="types.html#types"><em>Types and Variables</em></a>.</p>
+</div>
+<div class="section" id="structs">
+<h3>Structs<a class="headerlink" href="#structs" title="Permalink to this headline">¶</a></h3>
+<p>Structs can be declared on the stack, passed in as arguments,
+returned from external or Numba
+functions, or originate from record arrays. Structs currently have
+copy-by-value semantics, but this is likely to change.</p>
+<p>Struct fields can accessed as follows:</p>
+<blockquote>
+<div><ul class="simple">
+<li><tt class="docutils literal"><span class="pre">struct.attr</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">struct['attr']</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">struct[field_index]</span></tt></li>
+</ul>
+</div></blockquote>
+<p>An example is shown below:</p>
+<div class="highlight-python"><pre># -*- coding: utf-8 -*-
+from __future__ import print_function, division, absolute_import
+from numba import struct, jit, double
+import numpy as np
+
+record_type = struct([('x', double), ('y', double)])
+record_dtype = record_type.get_dtype()
+a = np.array([(1.0, 2.0), (3.0, 4.0)], dtype=record_dtype)
+
+@jit(argtypes=[record_type[:]])
+def hypot(data):
+    # return types of numpy functions are inferred
+    result = np.empty_like(data, dtype=np.float64) 
+    # notice access to structure elements 'x' and 'y' via attribute access
+    # You can also index by field name or field index:
+    #       data[i].x == data[i]['x'] == data[i][0]
+    for i in range(data.shape[0]):
+        result[i] = np.sqrt(data[i].x * data[i].x + data[i].y * data[i].y)
+
+    return result
+
+print hypot(a)
+
+# Notice inferred return type
+print hypot.signature
+# Notice native sqrt calls and for.body direct access to memory...
+#print hypot.lfunc
+</pre>
+</div>
+</div>
+<div class="section" id="pointers">
+<h3>Pointers<a class="headerlink" href="#pointers" title="Permalink to this headline">¶</a></h3>
+<p>Pointers in Numba can be used in a similar way to C. They can be cast,
+indexed and operated on with pointer arithmetic. Currently it is however
+not possible to obtain the address of an lvalue.</p>
+<p>An example is shown below:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># -*- coding: utf-8 -*-</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">absolute_import</span>
+<span class="kn">import</span> <span class="nn">numba</span>
+<span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">numba.tests.test_support</span> <span class="kn">import</span> <span class="n">autojit_py3doc</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+<span class="n">int32p</span> <span class="o">=</span> <span class="n">int32</span><span class="o">.</span><span class="n">pointer</span><span class="p">()</span>
+<span class="n">voidp</span> <span class="o">=</span> <span class="n">void</span><span class="o">.</span><span class="n">pointer</span><span class="p">()</span>
+
+<span class="nd">@autojit_py3doc</span>
+<span class="k">def</span> <span class="nf">test_pointer_arithmetic</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    &gt;&gt;&gt; test_pointer_arithmetic()</span>
+<span class="sd">    48L</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">int32p</span><span class="p">(</span><span class="n">Py_uintptr_t</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">p</span> <span class="o">+</span> <span class="mi">10</span>
+    <span class="n">p</span> <span class="o">+=</span> <span class="mi">2</span>
+    <span class="k">return</span> <span class="n">Py_uintptr_t</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="c"># 0 + 4 * 12</span>
+
+<span class="nd">@autojit_py3doc</span><span class="p">(</span><span class="nb">locals</span><span class="o">=</span><span class="p">{</span><span class="s">&quot;pointer_value&quot;</span><span class="p">:</span> <span class="n">Py_uintptr_t</span><span class="p">})</span>
+<span class="k">def</span> <span class="nf">test_pointer_indexing</span><span class="p">(</span><span class="n">pointer_value</span><span class="p">,</span> <span class="n">type_p</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    &gt;&gt;&gt; a = np.array([1, 2, 3, 4], dtype=np.float32)</span>
+<span class="sd">    &gt;&gt;&gt; test_pointer_indexing(a.ctypes.data, float32.pointer())</span>
+<span class="sd">    (1.0, 2.0, 3.0, 4.0)</span>
+
+<span class="sd">    &gt;&gt;&gt; a = np.array([1, 2, 3, 4], dtype=np.int64)</span>
+<span class="sd">    &gt;&gt;&gt; test_pointer_indexing(a.ctypes.data, int64.pointer())</span>
+<span class="sd">    (1L, 2L, 3L, 4L)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">type_p</span><span class="p">(</span><span class="n">pointer_value</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">p</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">p</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">p</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+
+<span class="nd">@autojit</span>
+<span class="k">def</span> <span class="nf">test_compare_null</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    &gt;&gt;&gt; test_compare_null()</span>
+<span class="sd">    True</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">voidp</span><span class="p">(</span><span class="n">Py_uintptr_t</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span> <span class="o">==</span> <span class="n">numba</span><span class="o">.</span><span class="n">NULL</span>
+
+<span class="n">numba</span><span class="o">.</span><span class="n">testmod</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="using-intrinsics">
+<h2>Using Intrinsics<a class="headerlink" href="#using-intrinsics" title="Permalink to this headline">¶</a></h2>
+<p>Numba allows users to declare and use LLVM intrinsics and instructions directly.
+This allows one to implement very low-level features directly in Python, while
+maintaining compatibility with Python code not compiled with numba itself.</p>
+<dl class="function">
+<dt id="declare_intrinsic">
+<tt class="descname">declare_intrinsic</tt><big>(</big><em>func_signature</em>, <em>intrinsic_name</em><big>)</big><a class="headerlink" href="#declare_intrinsic" title="Permalink to this definition">¶</a></dt>
+<dd><p>This declares an LLVM intrinsic function with the given name.
+E.g.</p>
+</dd></dl>
+
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># declare i64 @llvm.readcyclecounter()</span>
+<span class="n">intrin</span> <span class="o">=</span> <span class="n">numba</span><span class="o">.</span><span class="n">declare_intrinsic</span><span class="p">(</span><span class="n">int64</span><span class="p">(),</span> <span class="s">&quot;llvm.readcyclecounter&quot;</span><span class="p">)</span>
+<span class="k">print</span> <span class="n">intrin</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Intrinsics are not yet implemented. Only the instructions below are.</p>
+</div>
+<dl class="function">
+<dt id="declare_instruction">
+<tt class="descname">declare_instruction</tt><big>(</big><em>func_signature</em>, <em>intrinsic_name</em><big>)</big><a class="headerlink" href="#declare_instruction" title="Permalink to this definition">¶</a></dt>
+<dd><p>This declares an LLVM instruction named <tt class="docutils literal"><span class="pre">name</span></tt> as a function.
+E.g. we can use the <tt class="docutils literal"><span class="pre">srem</span></tt> instruction <a class="footnote-reference" href="#id4" id="id1">[1]</a> to calculate the remainder
+of a signed integer, in an equivalent manner to how modulo works
+in C (see <a class="footnote-reference" href="#id5" id="id2">[2]</a> and <a class="footnote-reference" href="#id6" id="id3">[3]</a> for how this differs from Python).</p>
+</dd></dl>
+
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">rem</span> <span class="o">=</span> <span class="n">nb</span><span class="o">.</span><span class="n">declare_instruction</span><span class="p">(</span><span class="n">int32</span><span class="p">(</span><span class="n">int32</span><span class="p">,</span> <span class="n">int32</span><span class="p">),</span> <span class="s">&#39;srem&#39;</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nd">@jit</span><span class="p">(</span><span class="n">int32</span><span class="p">(</span><span class="n">int32</span><span class="p">,</span> <span class="n">int32</span><span class="p">))</span>
+<span class="gp">... </span><span class="k">def</span> <span class="nf">py_modulo</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">r</span> <span class="o">=</span> <span class="n">rem</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="k">if</span> <span class="n">r</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="p">(</span><span class="n">r</span> <span class="o">^</span> <span class="n">n</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+<span class="gp">... </span>        <span class="n">r</span> <span class="o">+=</span> <span class="n">n</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">r</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="c"># Instructions and intrinsics works directly in Python</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">rem</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">rem</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">),</span> <span class="n">rem</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">rem</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">)</span>
+<span class="go">1 1 -1 -1</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="c"># ... and are jitted in Numba functions</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">py_modulo</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">py_modulo</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">),</span> <span class="n">py_modulo</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">py_modulo</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">)</span>
+<span class="go">1 -1 1 -1</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">py_modulo</span><span class="o">.</span><span class="n">lfunc</span>
+<span class="go">define i32 @__numba_specialized_6___main___2E_py_modulo(i32 %a, i32 %n) nounwind readnone {</span>
+<span class="go">entry:</span>
+<span class="go">  %0 = srem i32 %a, %n</span>
+<span class="go">  %1 = icmp ne i32 %0, 0</span>
+<span class="go">  %2 = xor i32 %0, %n</span>
+<span class="go">  %3 = icmp slt i32 %2, 0</span>
+<span class="go">  %or.cond = and i1 %1, %3</span>
+<span class="go">  %4 = select i1 %or.cond, i32 %n, i32 0</span>
+<span class="go">  %. = add i32 %4, %0</span>
+<span class="go">  ret i32 %.</span>
+<span class="go">}</span>
+</pre></div>
+</div>
+<p>As you can see the instructions can be used in Numba, where the instruction
+is inserted directly in the instruction stream, or pure-Python, where arguments
+are converted to native values, the operation executed, and the result returned
+as a Python object. We can verify that our modulo function works in pure Python:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">py_modulo</span><span class="o">.</span><span class="n">py_func</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span>  <span class="mi">2</span><span class="p">),</span> <span class="n">py_modulo</span><span class="o">.</span><span class="n">py_func</span><span class="p">(</span> <span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">),</span> \
+<span class="gp">... </span>      <span class="n">py_modulo</span><span class="o">.</span><span class="n">py_func</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">py_modulo</span><span class="o">.</span><span class="n">py_func</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">)</span>
+<span class="go">1 -1 1 -1</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Numba does not validate the signatures or validity of instructions
+and intrinsics. This is the responsibility of the user. Fortunately,
+the validity can be quickly verified :)</p>
+</div>
+</div>
+<div class="section" id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
+<table class="docutils footnote" frame="void" id="id4" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td><a class="reference external" href="http://llvm.org/docs/LangRef.html#srem-instruction">http://llvm.org/docs/LangRef.html#srem-instruction</a></td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id5" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id2">[2]</a></td><td><a class="reference external" href="http://en.wikipedia.org/wiki/Modulo_operation">http://en.wikipedia.org/wiki/Modulo_operation</a></td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id6" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id3">[3]</a></td><td><a class="reference external" href="http://wiki.cython.org/enhancements/division">http://wiki.cython.org/enhancements/division</a></td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Interfacing with C</a><ul>
+<li><a class="reference internal" href="#ctypes-and-cffi">Ctypes and CFFI</a></li>
+<li><a class="reference internal" href="#writing-low-level-code">Writing Low-level Code</a><ul>
+<li><a class="reference internal" href="#structs">Structs</a></li>
+<li><a class="reference internal" href="#pointers">Pointers</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#using-intrinsics">Using Intrinsics</a></li>
+<li><a class="reference internal" href="#references">References</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="arrays.html"
+                        title="previous chapter">Arrays</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="pycc.html"
+                        title="next chapter">Static Compilation (pycc)</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/doc/interface_c.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="pycc.html" title="Static Compilation (pycc)"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="arrays.html" title="Arrays"
+             >previous</a> |</li>
+        <li><a href="../index.html">numba 0.7.1-69-gd9c4219 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012-2013, Continuum Analytics.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

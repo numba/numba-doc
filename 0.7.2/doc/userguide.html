@@ -1,0 +1,247 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>User Guide &mdash; numba 0.7.1-69-gd9c4219 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.7.1-69-gd9c4219',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="numba 0.7.1-69-gd9c4219 documentation" href="../index.html" />
+    <link rel="next" title="Examples" href="examples.html" />
+    <link rel="prev" title="Numba" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="examples.html" title="Examples"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../index.html" title="Numba"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">numba 0.7.1-69-gd9c4219 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="user-guide">
+<h1>User Guide<a class="headerlink" href="#user-guide" title="Permalink to this headline">¶</a></h1>
+<p>Numba compiles Python code with LLVM to code which can be natively executed
+at runtime. This happens by decorating Python functions, which allows users
+to create native functions for different input types, or to create them
+on the fly:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@jit</span><span class="p">(</span><span class="s">&#39;f8(f8[:])&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">sum1d</span><span class="p">(</span><span class="n">my_double_array</span><span class="p">):</span>
+    <span class="nb">sum</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">my_double_array</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+        <span class="nb">sum</span> <span class="o">+=</span> <span class="n">my_double_array</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="k">return</span> <span class="nb">sum</span>
+</pre></div>
+</div>
+<p>To make the above example work for any compatible input types automatically,
+we can create a function that specializes automatically:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@autojit</span>
+<span class="k">def</span> <span class="nf">sum1d</span><span class="p">(</span><span class="n">my_array</span><span class="p">):</span>
+    <span class="o">...</span>
+</pre></div>
+</div>
+<div class="section" id="specifying-types">
+<h2>Specifying Types<a class="headerlink" href="#specifying-types" title="Permalink to this headline">¶</a></h2>
+<p>User elementary types are summarized in the table below and can be found
+in the <tt class="docutils literal"><span class="pre">numba</span></tt> namespace. These types
+can be further used to specify arrays in a similar manner to Cython&#8217;s
+memoryviews.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="34%" />
+<col width="66%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Type Name</th>
+<th class="head">Result Type</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>float_</td>
+<td>float32</td>
+</tr>
+<tr class="row-odd"><td>double</td>
+<td>float64</td>
+</tr>
+<tr class="row-even"><td>longdouble</td>
+<td>float128</td>
+</tr>
+<tr class="row-odd"><td>char</td>
+<td>signed char</td>
+</tr>
+<tr class="row-even"><td>int8</td>
+<td>int8 (char)</td>
+</tr>
+<tr class="row-odd"><td>int16</td>
+<td>int16</td>
+</tr>
+<tr class="row-even"><td>int32</td>
+<td>int32</td>
+</tr>
+<tr class="row-odd"><td>int64</td>
+<td>int64</td>
+</tr>
+<tr class="row-even"><td>complex64</td>
+<td>float complex</td>
+</tr>
+<tr class="row-odd"><td>complex128</td>
+<td>double complex</td>
+</tr>
+<tr class="row-even"><td>complex256</td>
+<td>long double complex</td>
+</tr>
+</tbody>
+</table>
+<p>Unsigned integer counterparts are available under the name <tt class="docutils literal"><span class="pre">uint8</span></tt>
+etc.   Also, short-names are available with the style &#8216;&lt;char&gt;N&#8217; where
+char is &#8216;b&#8217;, &#8216;i&#8217;, &#8216;u&#8217;, &#8216;f&#8217;, and &#8216;c&#8217; for boolean, integer, unsigned,
+float and complex types respectively with &#8216;N&#8217; indicating the number of
+bytes in the type.    Thus, f8 is equivalent to float64, and c16 is
+equivalent to double complex.</p>
+<p>Native platform-dependent types are also available under names such as
+<tt class="docutils literal"><span class="pre">int_</span></tt>, <tt class="docutils literal"><span class="pre">short</span></tt>, <tt class="docutils literal"><span class="pre">ulonglong</span></tt>, etc.</p>
+<p>Types are names that can be imported from the numba namespace.
+Alternatively, they can be specified in strings in the jit decorator.</p>
+<p>The jit decorator can take keyword arguments: restype, and argtypes to
+specify the function signature.  Alternatively, the signature can be
+expressed by passing a single argument to jit either as a string as
+shown above or directly (assuming the type names have been imported
+from the numba module):</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">f8</span><span class="p">,</span> <span class="n">jit</span>
+
+<span class="nd">@jit</span><span class="p">(</span><span class="n">f8</span><span class="p">(</span><span class="n">f8</span><span class="p">[:]))</span>
+<span class="k">def</span> <span class="nf">sum</span><span class="p">(</span><span class="n">arr</span><span class="p">):</span>
+    <span class="o">...</span>
+</pre></div>
+</div>
+<p>Notice how the argument types are passed in as arguments to the return
+type treated as a python function.    Previously, this same syntax was
+used but embedded in a string which avoids having to import f8 from
+numba directly.</p>
+<div class="section" id="specifying-arrays">
+<h3>Specifying Arrays<a class="headerlink" href="#specifying-arrays" title="Permalink to this headline">¶</a></h3>
+<p>Arrays may be specified strided or C or Fortran contiguous. For instance,
+<tt class="docutils literal"><span class="pre">float[:,</span> <span class="pre">:]</span></tt> specifies a strided 2D array of floats. <tt class="docutils literal"><span class="pre">float[:,</span> <span class="pre">::1]</span></tt>
+specifies that the array is C contiguous (row-major), and <tt class="docutils literal"><span class="pre">float[::1,</span> <span class="pre">:]</span></tt>
+specifies that the array is Fortran contiguous (column-major).</p>
+</div>
+</div>
+<div class="section" id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<p>For get a better feel of what numba can do, see <a class="reference internal" href="examples.html#id1"><em>Examples</em></a>.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+</ul>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">User Guide</a><ul>
+<li><a class="reference internal" href="#specifying-types">Specifying Types</a><ul>
+<li><a class="reference internal" href="#specifying-arrays">Specifying Arrays</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#examples">Examples</a><ul>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../index.html"
+                        title="previous chapter">Numba</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="examples.html"
+                        title="next chapter">Examples</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/doc/userguide.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="examples.html" title="Examples"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../index.html" title="Numba"
+             >previous</a> |</li>
+        <li><a href="../index.html">numba 0.7.1-69-gd9c4219 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012-2013, Continuum Analytics.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>
