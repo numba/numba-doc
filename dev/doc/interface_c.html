@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Interfacing with C &mdash; numba 0.7.0-2-g2474b9c documentation</title>
+    <title>Interfacing with C &mdash; numba 0.7.1-44-g53a9263-dirty documentation</title>
     
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.7.0-2-g2474b9c',
+        VERSION:     '0.7.1-44-g53a9263-dirty',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,7 +26,7 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <link rel="top" title="numba 0.7.0-2-g2474b9c documentation" href="../index.html" />
+    <link rel="top" title="numba 0.7.1-44-g53a9263-dirty documentation" href="../index.html" />
     <link rel="next" title="Static Compilation (pycc)" href="pycc.html" />
     <link rel="prev" title="Arrays" href="arrays.html" /> 
   </head>
@@ -46,7 +46,7 @@
         <li class="right" >
           <a href="arrays.html" title="Arrays"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">numba 0.7.0-2-g2474b9c documentation</a> &raquo;</li> 
+        <li><a href="../index.html">numba 0.7.1-44-g53a9263-dirty documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -111,32 +111,34 @@ copy-by-value semantics, but this is likely to change.</p>
 </ul>
 </div></blockquote>
 <p>An example is shown below:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">struct</span><span class="p">,</span> <span class="n">jit</span><span class="p">,</span> <span class="n">double</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<div class="highlight-python"><pre># -*- coding: utf-8 -*-
+from __future__ import print_function, division, absolute_import
+from numba import struct, jit, double
+import numpy as np
 
-<span class="n">record_type</span> <span class="o">=</span> <span class="n">struct</span><span class="p">([(</span><span class="s">&#39;x&#39;</span><span class="p">,</span> <span class="n">double</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;y&#39;</span><span class="p">,</span> <span class="n">double</span><span class="p">)])</span>
-<span class="n">record_dtype</span> <span class="o">=</span> <span class="n">record_type</span><span class="o">.</span><span class="n">get_dtype</span><span class="p">()</span>
-<span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">),</span> <span class="p">(</span><span class="mf">3.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">)],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">record_dtype</span><span class="p">)</span>
+record_type = struct([('x', double), ('y', double)])
+record_dtype = record_type.get_dtype()
+a = np.array([(1.0, 2.0), (3.0, 4.0)], dtype=record_dtype)
 
-<span class="nd">@jit</span><span class="p">(</span><span class="n">argtypes</span><span class="o">=</span><span class="p">[</span><span class="n">record_type</span><span class="p">[:]])</span>
-<span class="k">def</span> <span class="nf">hypot</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
-    <span class="c"># return types of numpy functions are inferred</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty_like</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span> 
-    <span class="c"># notice access to structure elements &#39;x&#39; and &#39;y&#39; via attribute access</span>
-    <span class="c"># You can also index by field name or field index:</span>
-    <span class="c">#       data[i].x == data[i][&#39;x&#39;] == data[i][0]</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
-        <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">y</span> <span class="o">*</span> <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+@jit(argtypes=[record_type[:]])
+def hypot(data):
+    # return types of numpy functions are inferred
+    result = np.empty_like(data, dtype=np.float64) 
+    # notice access to structure elements 'x' and 'y' via attribute access
+    # You can also index by field name or field index:
+    #       data[i].x == data[i]['x'] == data[i][0]
+    for i in range(data.shape[0]):
+        result[i] = np.sqrt(data[i].x * data[i].x + data[i].y * data[i].y)
 
-    <span class="k">return</span> <span class="n">result</span>
+    return result
 
-<span class="k">print</span> <span class="n">hypot</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+print hypot(a)
 
-<span class="c"># Notice inferred return type</span>
-<span class="k">print</span> <span class="n">hypot</span><span class="o">.</span><span class="n">signature</span>
-<span class="c"># Notice native sqrt calls and for.body direct access to memory...</span>
-<span class="c">#print hypot.lfunc</span>
-</pre></div>
+# Notice inferred return type
+print hypot.signature
+# Notice native sqrt calls and for.body direct access to memory...
+#print hypot.lfunc
+</pre>
 </div>
 </div>
 <div class="section" id="pointers">
@@ -145,7 +147,9 @@ copy-by-value semantics, but this is likely to change.</p>
 indexed and operated on with pointer arithmetic. Currently it is however
 not possible to obtain the address of an lvalue.</p>
 <p>An example is shown below:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">numba</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># -*- coding: utf-8 -*-</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">absolute_import</span>
+<span class="kn">import</span> <span class="nn">numba</span>
 <span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">numba.tests.test_support</span> <span class="kn">import</span> <span class="n">autojit_py3doc</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
@@ -191,6 +195,100 @@ not possible to obtain the address of an lvalue.</p>
 </div>
 </div>
 </div>
+<div class="section" id="using-intrinsics">
+<h2>Using Intrinsics<a class="headerlink" href="#using-intrinsics" title="Permalink to this headline">¶</a></h2>
+<p>Numba allows users to declare and use LLVM intrinsics and instructions directly.
+This allows one to implement very low-level features directly in Python, while
+maintaining compatibility with Python code not compiled with numba itself.</p>
+<dl class="function">
+<dt id="declare_intrinsic">
+<tt class="descname">declare_intrinsic</tt><big>(</big><em>func_signature</em>, <em>intrinsic_name</em><big>)</big><a class="headerlink" href="#declare_intrinsic" title="Permalink to this definition">¶</a></dt>
+<dd><p>This declares an LLVM intrinsic function with the given name.
+E.g.</p>
+</dd></dl>
+
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># declare i64 @llvm.readcyclecounter()</span>
+<span class="n">intrin</span> <span class="o">=</span> <span class="n">numba</span><span class="o">.</span><span class="n">declare_intrinsic</span><span class="p">(</span><span class="n">int64</span><span class="p">(),</span> <span class="s">&quot;llvm.readcyclecounter&quot;</span><span class="p">)</span>
+<span class="k">print</span> <span class="n">intrin</span><span class="p">()</span>
+</pre></div>
+</div>
+<dl class="function">
+<dt id="declare_instruction">
+<tt class="descname">declare_instruction</tt><big>(</big><em>func_signature</em>, <em>intrinsic_name</em><big>)</big><a class="headerlink" href="#declare_instruction" title="Permalink to this definition">¶</a></dt>
+<dd><p>This declares an LLVM instruction named <tt class="docutils literal"><span class="pre">name</span></tt> as a function.
+E.g. we can use the <tt class="docutils literal"><span class="pre">srem</span></tt> instruction <a class="footnote-reference" href="#id4" id="id1">[1]</a> to calculate the remainder
+of a signed integer, in an equivalent manner to how modulo works
+in C (see <a class="footnote-reference" href="#id5" id="id2">[2]</a> and <a class="footnote-reference" href="#id6" id="id3">[3]</a> for how this differs from Python).</p>
+</dd></dl>
+
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">rem</span> <span class="o">=</span> <span class="n">nb</span><span class="o">.</span><span class="n">declare_instruction</span><span class="p">(</span><span class="n">int32</span><span class="p">(</span><span class="n">int32</span><span class="p">,</span> <span class="n">int32</span><span class="p">),</span> <span class="s">&#39;srem&#39;</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nd">@jit</span><span class="p">(</span><span class="n">int32</span><span class="p">(</span><span class="n">int32</span><span class="p">,</span> <span class="n">int32</span><span class="p">))</span>
+<span class="gp">... </span><span class="k">def</span> <span class="nf">py_modulo</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">r</span> <span class="o">=</span> <span class="n">rem</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="k">if</span> <span class="n">r</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="p">(</span><span class="n">r</span> <span class="o">^</span> <span class="n">n</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+<span class="gp">... </span>        <span class="n">r</span> <span class="o">+=</span> <span class="n">n</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">r</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="c"># Instructions and intrinsics works directly in Python</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">rem</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">rem</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">),</span> <span class="n">rem</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">rem</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">)</span>
+<span class="go">1 1 -1 -1</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="c"># ... and are jitted in Numba functions</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">py_modulo</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">py_modulo</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">),</span> <span class="n">py_modulo</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">py_modulo</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">)</span>
+<span class="go">1 -1 1 -1</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">py_modulo</span><span class="o">.</span><span class="n">lfunc</span>
+<span class="go">define i32 @__numba_specialized_6___main___2E_py_modulo(i32 %a, i32 %n) nounwind readnone {</span>
+<span class="go">entry:</span>
+<span class="go">  %0 = srem i32 %a, %n</span>
+<span class="go">  %1 = icmp ne i32 %0, 0</span>
+<span class="go">  %2 = xor i32 %0, %n</span>
+<span class="go">  %3 = icmp slt i32 %2, 0</span>
+<span class="go">  %or.cond = and i1 %1, %3</span>
+<span class="go">  %4 = select i1 %or.cond, i32 %n, i32 0</span>
+<span class="go">  %. = add i32 %4, %0</span>
+<span class="go">  ret i32 %.</span>
+<span class="go">}</span>
+</pre></div>
+</div>
+<p>As you can see the instructions can be used in Numba, where the instruction
+is inserted directly in the instruction stream, or pure-Python, where arguments
+are converted to native values, the operation executed, and the result returned
+as a Python object. We can verify that our modulo function works in pure Python:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">py_modulo</span><span class="o">.</span><span class="n">py_func</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span>  <span class="mi">2</span><span class="p">),</span> <span class="n">py_modulo</span><span class="o">.</span><span class="n">py_func</span><span class="p">(</span> <span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">),</span> \
+<span class="gp">... </span>      <span class="n">py_modulo</span><span class="o">.</span><span class="n">py_func</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">py_modulo</span><span class="o">.</span><span class="n">py_func</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">)</span>
+<span class="go">1 -1 1 -1</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Numba does not validate the signatures or validity of instructions
+and intrinsics. This is the responsibility of the user. Fortunately,
+the validity can be quickly verified :)</p>
+</div>
+</div>
+<div class="section" id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
+<table class="docutils footnote" frame="void" id="id4" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td><a class="reference external" href="http://llvm.org/docs/LangRef.html#srem-instruction">http://llvm.org/docs/LangRef.html#srem-instruction</a></td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id5" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id2">[2]</a></td><td><a class="reference external" href="http://en.wikipedia.org/wiki/Modulo_operation">http://en.wikipedia.org/wiki/Modulo_operation</a></td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id6" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id3">[3]</a></td><td><a class="reference external" href="http://wiki.cython.org/enhancements/division">http://wiki.cython.org/enhancements/division</a></td></tr>
+</tbody>
+</table>
+</div>
 </div>
 
 
@@ -208,6 +306,8 @@ not possible to obtain the address of an lvalue.</p>
 <li><a class="reference internal" href="#pointers">Pointers</a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#using-intrinsics">Using Intrinsics</a></li>
+<li><a class="reference internal" href="#references">References</a></li>
 </ul>
 </li>
 </ul>
@@ -255,7 +355,7 @@ not possible to obtain the address of an lvalue.</p>
         <li class="right" >
           <a href="arrays.html" title="Arrays"
              >previous</a> |</li>
-        <li><a href="../index.html">numba 0.7.0-2-g2474b9c documentation</a> &raquo;</li> 
+        <li><a href="../index.html">numba 0.7.1-44-g53a9263-dirty documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

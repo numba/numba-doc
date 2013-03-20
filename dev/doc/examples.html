@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Examples &mdash; numba 0.7.0-2-g2474b9c documentation</title>
+    <title>Examples &mdash; numba 0.7.1-44-g53a9263-dirty documentation</title>
     
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.7.0-2-g2474b9c',
+        VERSION:     '0.7.1-44-g53a9263-dirty',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,7 +26,7 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <link rel="top" title="numba 0.7.0-2-g2474b9c documentation" href="../index.html" />
+    <link rel="top" title="numba 0.7.1-44-g53a9263-dirty documentation" href="../index.html" />
     <link rel="next" title="Release Notes" href="releases.html" />
     <link rel="prev" title="Using doctest with Numba" href="doctest.html" /> 
   </head>
@@ -46,7 +46,7 @@
         <li class="right" >
           <a href="doctest.html" title="Using doctest with Numba"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">numba 0.7.0-2-g2474b9c documentation</a> &raquo;</li> 
+        <li><a href="../index.html">numba 0.7.1-44-g53a9263-dirty documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -100,7 +100,8 @@ numba functions to eliminate all python overhead in function calling.</p>
 </div>
 <div class="section" id="classes">
 <h2>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-python"><div class="highlight"><pre><span class="sd">&quot;&quot;&quot;</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># -*- coding: utf-8 -*-</span>
+<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Example for extension classes.</span>
 
 <span class="sd">Things that work:</span>
@@ -119,6 +120,7 @@ numba functions to eliminate all python overhead in function calling.</p>
 <span class="sd">        (multiple inheritance with Python classes should work)</span>
 <span class="sd">    - subclassing variable sized objects like &#39;str&#39; or &#39;tuple&#39;</span>
 <span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">absolute_import</span>
 
 <span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">jit</span><span class="p">,</span> <span class="n">void</span><span class="p">,</span> <span class="n">int_</span><span class="p">,</span> <span class="n">double</span>
 
@@ -165,67 +167,73 @@ numba functions to eliminate all python overhead in function calling.</p>
 </div>
 <div class="section" id="closures">
 <h2>Closures<a class="headerlink" href="#closures" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-python"><div class="highlight"><pre><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Example for closures. Closures may be of arbitrary dept, and they keep</span>
-<span class="sd">the scope alive as long as the closure is alive. Only variables that are</span>
-<span class="sd">closed over (cell variables in the defining function, free variables in the</span>
-<span class="sd">closure), are kept alive. See also numba/tests/closures/test_closure.py</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<div class="highlight-python"><pre># -*- coding: utf-8 -*-
+"""
+Example for closures. Closures may be of arbitrary dept, and they keep
+the scope alive as long as the closure is alive. Only variables that are
+closed over (cell variables in the defining function, free variables in the
+closure), are kept alive. See also numba/tests/closures/test_closure.py
+"""
+from __future__ import print_function, division, absolute_import
 
-<span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">autojit</span><span class="p">,</span> <span class="n">jit</span><span class="p">,</span> <span class="n">float_</span>
-<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">linspace</span>
+from numba import autojit, jit, float_
+from numpy import linspace
 
-<span class="nd">@autojit</span>
-<span class="k">def</span> <span class="nf">generate_power_func</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
-    <span class="nd">@jit</span><span class="p">(</span><span class="n">float_</span><span class="p">(</span><span class="n">float_</span><span class="p">))</span>
-    <span class="k">def</span> <span class="nf">nth_power</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">x</span> <span class="o">**</span> <span class="n">n</span>
+@autojit
+def generate_power_func(n):
+    @jit(float_(float_))
+    def nth_power(x):
+        return x ** n
 
-    <span class="c"># This is a native call</span>
-    <span class="k">print</span> <span class="n">nth_power</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+    # This is a native call
+    print nth_power(10)
 
-    <span class="c"># Return closure and keep all cell variables alive</span>
-    <span class="k">return</span> <span class="n">nth_power</span>
+    # Return closure and keep all cell variables alive
+    return nth_power
 
-<span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">):</span>
-    <span class="n">func</span> <span class="o">=</span> <span class="n">generate_power_func</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
-    <span class="k">print</span> <span class="p">[</span><span class="n">func</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">linspace</span><span class="p">(</span><span class="mf">1.</span><span class="p">,</span><span class="mf">2.</span><span class="p">,</span><span class="mf">10.</span><span class="p">)]</span>
-</pre></div>
+for n in range(2, 5):
+    func = generate_power_func(n)
+    print [func(x) for x in linspace(1.,2.,10.)]
+</pre>
 </div>
 </div>
 <div class="section" id="structs">
 <span id="structexample"></span><h2>Structs<a class="headerlink" href="#structs" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">struct</span><span class="p">,</span> <span class="n">jit</span><span class="p">,</span> <span class="n">double</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<div class="highlight-python"><pre># -*- coding: utf-8 -*-
+from __future__ import print_function, division, absolute_import
+from numba import struct, jit, double
+import numpy as np
 
-<span class="n">record_type</span> <span class="o">=</span> <span class="n">struct</span><span class="p">([(</span><span class="s">&#39;x&#39;</span><span class="p">,</span> <span class="n">double</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;y&#39;</span><span class="p">,</span> <span class="n">double</span><span class="p">)])</span>
-<span class="n">record_dtype</span> <span class="o">=</span> <span class="n">record_type</span><span class="o">.</span><span class="n">get_dtype</span><span class="p">()</span>
-<span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">),</span> <span class="p">(</span><span class="mf">3.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">)],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">record_dtype</span><span class="p">)</span>
+record_type = struct([('x', double), ('y', double)])
+record_dtype = record_type.get_dtype()
+a = np.array([(1.0, 2.0), (3.0, 4.0)], dtype=record_dtype)
 
-<span class="nd">@jit</span><span class="p">(</span><span class="n">argtypes</span><span class="o">=</span><span class="p">[</span><span class="n">record_type</span><span class="p">[:]])</span>
-<span class="k">def</span> <span class="nf">hypot</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
-    <span class="c"># return types of numpy functions are inferred</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty_like</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span> 
-    <span class="c"># notice access to structure elements &#39;x&#39; and &#39;y&#39; via attribute access</span>
-    <span class="c"># You can also index by field name or field index:</span>
-    <span class="c">#       data[i].x == data[i][&#39;x&#39;] == data[i][0]</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
-        <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">y</span> <span class="o">*</span> <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+@jit(argtypes=[record_type[:]])
+def hypot(data):
+    # return types of numpy functions are inferred
+    result = np.empty_like(data, dtype=np.float64) 
+    # notice access to structure elements 'x' and 'y' via attribute access
+    # You can also index by field name or field index:
+    #       data[i].x == data[i]['x'] == data[i][0]
+    for i in range(data.shape[0]):
+        result[i] = np.sqrt(data[i].x * data[i].x + data[i].y * data[i].y)
 
-    <span class="k">return</span> <span class="n">result</span>
+    return result
 
-<span class="k">print</span> <span class="n">hypot</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+print hypot(a)
 
-<span class="c"># Notice inferred return type</span>
-<span class="k">print</span> <span class="n">hypot</span><span class="o">.</span><span class="n">signature</span>
-<span class="c"># Notice native sqrt calls and for.body direct access to memory...</span>
-<span class="c">#print hypot.lfunc</span>
-</pre></div>
+# Notice inferred return type
+print hypot.signature
+# Notice native sqrt calls and for.body direct access to memory...
+#print hypot.lfunc
+</pre>
 </div>
 </div>
 <div class="section" id="pointers">
 <span id="pointerexample"></span><h2>Pointers<a class="headerlink" href="#pointers" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">numba</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># -*- coding: utf-8 -*-</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">absolute_import</span>
+<span class="kn">import</span> <span class="nn">numba</span>
 <span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">numba.tests.test_support</span> <span class="kn">import</span> <span class="n">autojit_py3doc</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
@@ -272,25 +280,29 @@ numba functions to eliminate all python overhead in function calling.</p>
 </div>
 <div class="section" id="objects">
 <h2>Objects<a class="headerlink" href="#objects" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">double</span><span class="p">,</span> <span class="n">autojit</span>
+<div class="highlight-python"><pre># -*- coding: utf-8 -*-
+from __future__ import print_function, division, absolute_import
+from numba import double, autojit
 
-<span class="k">class</span> <span class="nc">MyClass</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">mymethod</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">arg</span> <span class="o">*</span> <span class="mi">2</span>
+class MyClass(object):
+    def mymethod(self, arg):
+        return arg * 2
     
-<span class="nd">@autojit</span><span class="p">(</span><span class="nb">locals</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">mydouble</span><span class="o">=</span><span class="n">double</span><span class="p">))</span> <span class="c"># specify types for local variables</span>
-<span class="k">def</span> <span class="nf">call_method</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
-    <span class="k">print</span> <span class="n">obj</span><span class="o">.</span><span class="n">mymethod</span><span class="p">(</span><span class="s">&quot;hello&quot;</span><span class="p">)</span>   <span class="c"># object result</span>
-    <span class="n">mydouble</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">mymethod</span><span class="p">(</span><span class="mf">10.2</span><span class="p">)</span> <span class="c"># native double</span>
-    <span class="k">print</span> <span class="n">mydouble</span> <span class="o">*</span> <span class="mi">2</span>            <span class="c"># native multiplication</span>
+@autojit(locals=dict(mydouble=double)) # specify types for local variables
+def call_method(obj):
+    print obj.mymethod("hello")   # object result
+    mydouble = obj.mymethod(10.2) # native double
+    print mydouble * 2            # native multiplication
     
-<span class="n">call_method</span><span class="p">(</span><span class="n">MyClass</span><span class="p">())</span>
-</pre></div>
+call_method(MyClass())
+</pre>
 </div>
 </div>
 <div class="section" id="mandelbrot">
 <h2>Mandelbrot<a class="headerlink" href="#mandelbrot" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">autojit</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># -*- coding: utf-8 -*-</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">absolute_import</span>
+<span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">autojit</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">pylab</span> <span class="kn">import</span> <span class="n">imshow</span><span class="p">,</span> <span class="n">jet</span><span class="p">,</span> <span class="n">show</span><span class="p">,</span> <span class="n">ion</span>
 
@@ -337,43 +349,45 @@ numba functions to eliminate all python overhead in function calling.</p>
 </div>
 <div class="section" id="filterbank-correlation">
 <h2>Filterbank Correlation<a class="headerlink" href="#filterbank-correlation" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-python"><div class="highlight"><pre><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">This file demonstrates a filterbank correlation loop.</span>
-<span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">numba</span>
-<span class="kn">from</span> <span class="nn">numba.decorators</span> <span class="kn">import</span> <span class="n">jit</span>
-<span class="n">nd4type</span> <span class="o">=</span> <span class="n">numba</span><span class="o">.</span><span class="n">double</span><span class="p">[:,:,:,:]</span>
+<div class="highlight-python"><pre># -*- coding: utf-8 -*-
+"""
+This file demonstrates a filterbank correlation loop.
+"""
+from __future__ import print_function, division, absolute_import
+import numpy as np
+import numba
+from numba.decorators import jit
+nd4type = numba.double[:,:,:,:]
 
-<span class="nd">@jit</span><span class="p">(</span><span class="n">argtypes</span><span class="o">=</span><span class="p">(</span><span class="n">nd4type</span><span class="p">,</span> <span class="n">nd4type</span><span class="p">,</span> <span class="n">nd4type</span><span class="p">))</span>
-<span class="k">def</span> <span class="nf">fbcorr</span><span class="p">(</span><span class="n">imgs</span><span class="p">,</span> <span class="n">filters</span><span class="p">,</span> <span class="n">output</span><span class="p">):</span>
-    <span class="n">n_imgs</span><span class="p">,</span> <span class="n">n_rows</span><span class="p">,</span> <span class="n">n_cols</span><span class="p">,</span> <span class="n">n_channels</span> <span class="o">=</span> <span class="n">imgs</span><span class="o">.</span><span class="n">shape</span>
-    <span class="n">n_filters</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">n_ch2</span> <span class="o">=</span> <span class="n">filters</span><span class="o">.</span><span class="n">shape</span>
+@jit(argtypes=(nd4type, nd4type, nd4type))
+def fbcorr(imgs, filters, output):
+    n_imgs, n_rows, n_cols, n_channels = imgs.shape
+    n_filters, height, width, n_ch2 = filters.shape
 
-    <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_imgs</span><span class="p">):</span>
-        <span class="k">for</span> <span class="n">rr</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_rows</span> <span class="o">-</span> <span class="n">height</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
-            <span class="k">for</span> <span class="n">cc</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_cols</span> <span class="o">-</span> <span class="n">width</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
-                <span class="k">for</span> <span class="n">hh</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="n">height</span><span class="p">):</span>
-                    <span class="k">for</span> <span class="n">ww</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="n">width</span><span class="p">):</span>
-                        <span class="k">for</span> <span class="n">jj</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_channels</span><span class="p">):</span>
-                            <span class="k">for</span> <span class="n">ff</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_filters</span><span class="p">):</span>
-                                <span class="n">imgval</span> <span class="o">=</span> <span class="n">imgs</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span> <span class="n">rr</span> <span class="o">+</span> <span class="n">hh</span><span class="p">,</span> <span class="n">cc</span> <span class="o">+</span> <span class="n">ww</span><span class="p">,</span> <span class="n">jj</span><span class="p">]</span>
-                                <span class="n">filterval</span> <span class="o">=</span> <span class="n">filters</span><span class="p">[</span><span class="n">ff</span><span class="p">,</span> <span class="n">hh</span><span class="p">,</span> <span class="n">ww</span><span class="p">,</span> <span class="n">jj</span><span class="p">]</span>
-                                <span class="n">output</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span> <span class="n">ff</span><span class="p">,</span> <span class="n">rr</span><span class="p">,</span> <span class="n">cc</span><span class="p">]</span> <span class="o">+=</span> <span class="n">imgval</span> <span class="o">*</span> <span class="n">filterval</span>
+    for ii in range(n_imgs):
+        for rr in range(n_rows - height + 1):
+            for cc in range(n_cols - width + 1):
+                for hh in xrange(height):
+                    for ww in xrange(width):
+                        for jj in range(n_channels):
+                            for ff in range(n_filters):
+                                imgval = imgs[ii, rr + hh, cc + ww, jj]
+                                filterval = filters[ff, hh, ww, jj]
+                                output[ii, ff, rr, cc] += imgval * filterval
 
-<span class="k">def</span> <span class="nf">main</span> <span class="p">():</span>
-    <span class="n">imgs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
-    <span class="n">filt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
-    <span class="n">output</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">10</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+def main ():
+    imgs = np.random.randn(10, 64, 64, 3)
+    filt = np.random.randn(6, 5, 5, 3)
+    output = np.zeros((10, 60, 60, 6))
 
-    <span class="kn">import</span> <span class="nn">time</span>
-    <span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-    <span class="n">fbcorr</span><span class="p">(</span><span class="n">imgs</span><span class="p">,</span> <span class="n">filt</span><span class="p">,</span> <span class="n">output</span><span class="p">)</span>
-    <span class="k">print</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t0</span>
+    import time
+    t0 = time.time()
+    fbcorr(imgs, filt, output)
+    print time.time() - t0
 
-<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&quot;__main__&quot;</span><span class="p">:</span>
-    <span class="n">main</span><span class="p">()</span>
-</pre></div>
+if __name__ == "__main__":
+    main()
+</pre>
 </div>
 </div>
 </div>
@@ -442,7 +456,7 @@ numba functions to eliminate all python overhead in function calling.</p>
         <li class="right" >
           <a href="doctest.html" title="Using doctest with Numba"
              >previous</a> |</li>
-        <li><a href="../index.html">numba 0.7.0-2-g2474b9c documentation</a> &raquo;</li> 
+        <li><a href="../index.html">numba 0.7.1-44-g53a9263-dirty documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
