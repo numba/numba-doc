@@ -1,60 +1,211 @@
 
-
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+
+
+<html lang="en">
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
     
     <title>Numba IR Stages &mdash; numba 0.7.1-265-gf9fdf42-dirty documentation</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
     
-    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+<link rel="stylesheet" href="../_static/css/basicstrap-base.css" type="text/css" />
+<link rel="stylesheet" href="../_static/css/bootstrap.min.css" type="text/css" />
+<link rel="stylesheet" href="../_static/css/font-awesome.min.css">
+<!--[if IE 7]>
+<link rel="stylesheet" href="../_static/css/font-awesome-ie7.min.css">
+<![endif]-->
+<style type="text/css">
+  body {
+    padding-top: 60px;
+    padding-bottom: 40px;
+  }
+}
+</style>
+<link rel="stylesheet" href="../_static/basicstrap.css" type="text/css" />
+<link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+<link rel="stylesheet" href="../_static/css/bootstrap-responsive.min.css" type="text/css" />
     
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../',
-        VERSION:     '0.7.1-265-gf9fdf42-dirty',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
-      };
-    </script>
-    <script type="text/javascript" src="../_static/jquery.js"></script>
-    <script type="text/javascript" src="../_static/underscore.js"></script>
-    <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/javascript">
+  var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:    '../',
+            VERSION:     '0.7.1-265-gf9fdf42-dirty',
+            COLLAPSE_INDEX: false,
+            FILE_SUFFIX: '.html',
+            HAS_SOURCE:  true
+  };
+</script>
+<script type="text/javascript" src="../_static/js/jquery.min.js"></script>
+<script type="text/javascript" src="../_static/underscore.js"></script>
+<script type="text/javascript" src="../_static/doctools.js"></script>
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/javascript" src="../_static/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+  $(document).ready(function(){
+    $('.show-sidebar').click(function(e) {
+       e.preventDefault();
+       if ($(".show-sidebar").html() == "Open Table Of Contents") {
+          $('.for-mobile').removeClass('hidden-phone');
+          $(".show-sidebar").html("Close Table Of Contents");
+       } else {
+          $(".show-sidebar").html("Open Table Of Contents");
+       }
+    });
+  });
+</script>
     <link rel="top" title="numba 0.7.1-265-gf9fdf42-dirty documentation" href="../index.html" />
     <link rel="next" title="Numba Module Reference" href="reference.html" />
     <link rel="prev" title="Numba Architecture" href="architecture.html" /> 
   </head>
   <body>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="reference.html" title="Numba Module Reference"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="architecture.html" title="Numba Architecture"
-             accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">numba 0.7.1-265-gf9fdf42-dirty documentation</a> &raquo;</li> 
-      </ul>
-    </div>  
+    <div class="navbar navbar-fixed-top ">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="../index.html">numba 0.7.1-265-gf9fdf42-dirty documentation</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav pull-right">
+              
+                <li>
+                <a href="../genindex.html" title="General Index" accesskey="I">index</a>
+                </li>
+                <li>
+                <a href="../py-modindex.html" title="Python Module Index" >modules</a>
+                </li>
+                <li>
+                <a href="reference.html" title="Numba Module Reference" accesskey="N">next</a>
+                </li>
+                <li>
+                <a href="architecture.html" title="Numba Architecture" accesskey="P">previous</a>
+                </li>
+              
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    
 
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          <div class="body">
-            
+    <!-- container -->
+    <div class="container-fluid">
+
+
+      
+      <div class="row-fluid hidden-desktop hidden-tablet">
+      
+<div class="span3 ">
+  <a class="visible-phone btn btn-small show-sidebar" data-toggle="collapse" data-target=".for-mobile">Open Table Of Contents</a>
+  <div class="for-mobile sidebar hidden-phone">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Numba IR Stages</a><ul>
+<li><a class="reference internal" href="#intermediate-representations">Intermediate Representations</a><ul>
+<li><a class="reference internal" href="#use-of-schemas">Use of Schemas</a></li>
+<li><a class="reference internal" href="#initial-python-like-ir">Initial Python-like IR</a></li>
+<li><a class="reference internal" href="#untyped-ir-in-ssa-form">Untyped IR in SSA form</a></li>
+<li><a class="reference internal" href="#typed-ir-in-ssa-form">Typed IR in SSA form</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#low-level-portable-ir">Low-level Portable IR</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="architecture.html"
+                        title="previous chapter">Numba Architecture</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="reference.html"
+                        title="next chapter">Numba Module Reference</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/doc/ir.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox">
+  <h3>Quick search</h3>
+  <form class="search form-search" action="../search.html" method="get">
+      <div class="input-append">
+        <input type="text" class="search-query" name="q">
+        <input type="submit" class="btn" value="Go" />
+      </div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+  </div>
+</div>
+      </div>
+      
+
+      <!-- row -->
+      <div class="row-fluid">
+         
+<div class="span3 visible-desktop visible-tablet">
+  <div class=" sidebar hidden-phone">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Numba IR Stages</a><ul>
+<li><a class="reference internal" href="#intermediate-representations">Intermediate Representations</a><ul>
+<li><a class="reference internal" href="#use-of-schemas">Use of Schemas</a></li>
+<li><a class="reference internal" href="#initial-python-like-ir">Initial Python-like IR</a></li>
+<li><a class="reference internal" href="#untyped-ir-in-ssa-form">Untyped IR in SSA form</a></li>
+<li><a class="reference internal" href="#typed-ir-in-ssa-form">Typed IR in SSA form</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#low-level-portable-ir">Low-level Portable IR</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="architecture.html"
+                        title="previous chapter">Numba Architecture</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="reference.html"
+                        title="next chapter">Numba Module Reference</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/doc/ir.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox">
+  <h3>Quick search</h3>
+  <form class="search form-search" action="../search.html" method="get">
+      <div class="input-append">
+        <input type="text" class="search-query" name="q">
+        <input type="submit" class="btn" value="Go" />
+      </div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+  </div>
+</div> 
+        
+
+        <div class="span9">
+          <div class="document">
+            <div class="documentwrapper">
+              <div class="bodywrapper">
+                <div class="body">
+                  
   <div class="section" id="numba-ir-stages">
 <h1>Numba IR Stages<a class="headerlink" href="#numba-ir-stages" title="Permalink to this headline">¶</a></h1>
 <p>To allow Numba as a general purpose compiler, we provide different entry
@@ -83,8 +234,8 @@ as opposed to structural equality. These objects each carry a unique id
 and are serialized in a table (and they may participate in circular
 references, i.e. in a graph):</p>
 <p>Serialization to LLVM IR (or a direct textual serialization) will
-consist of something like a generated table, e.g.:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">mod</span> <span class="o">=</span> <span class="n">schema</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s">&quot;foo = @Foo(str name, foo attr)&quot;</span><span class="p">)</span>
+consist of something like a generated table, e.g.</p>
+<div class="highlight-pycon"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">mod</span> <span class="o">=</span> <span class="n">schema</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s">&quot;foo = @Foo(str name, foo attr)&quot;</span><span class="p">)</span>
 
 <span class="gp">&gt;&gt;&gt; </span><span class="n">foo1</span> <span class="o">=</span> <span class="n">mod</span><span class="o">.</span><span class="n">Foo</span><span class="p">(</span><span class="s">&quot;foo1&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">foo2</span> <span class="o">=</span> <span class="n">mod</span><span class="o">.</span><span class="n">Foo</span><span class="p">(</span><span class="s">&quot;foo2&quot;</span><span class="p">,</span> <span class="n">foo1</span><span class="p">)</span>
@@ -112,7 +263,7 @@ visitor dispatch (compile with Cython or pre-compile with Numba).</p>
 <p>We can generate automatic mapping code to map schema instances to
 opaguely typed LLVM IR automatically, which is the abstract syntax
 generated post-order. E.g. <tt class="docutils literal"><span class="pre">a</span> <span class="pre">+</span> <span class="pre">b</span> <span class="pre">*</span> <span class="pre">c</span></tt> becomes:</p>
-<div class="highlight-python"><pre>!0 = metadata !{ metadata !"operator", i8* "Mul" }
+<div class="highlight-llvm"><pre>!0 = metadata !{ metadata !"operator", i8* "Mul" }
 !1 = metadata !{ metadata !"operator", i8* "Add" }
 
 define i8* some_func(i8* %a, i8* %b, i8* %c) {
@@ -124,7 +275,7 @@ entry:
 </div>
 <p>The LLVM IR contains the high-level block structure, i.e. an <tt class="docutils literal"><span class="pre">if</span></tt> statement
 will generate IR along the following lines:</p>
-<div class="highlight-python"><pre>define i8* @func() {
+<div class="highlight-llvm"><pre>define i8* @func() {
     %0 = blockaddress(@func, %bb_true)
     %1 = blockaddress(@func, %bb_false)
     %2 = i8*  @If(i8* %0, i8* %1)
@@ -182,56 +333,57 @@ normalized to <tt class="docutils literal"><span class="pre">For(...)</span></tt
 </div></blockquote>
 <p>The initial IR is what numba decorators produce given a pure
 Python AST, function or class as input.</p>
-<p>Sample schema:</p>
-<div class="highlight-python"><pre>module initial {
+<p>Sample schema</p>
+<div class="highlight-ocaml"><div class="highlight"><pre><span class="k">module</span> <span class="n">initial</span> <span class="o">{</span>
 
-    mod = NumbaModule(unit* stats)
+    <span class="ow">mod</span> <span class="o">=</span> <span class="nc">NumbaModule</span><span class="o">(</span><span class="kt">unit</span><span class="o">*</span> <span class="n">stats</span><span class="o">)</span>
 
-    unit =
-      = lambda
-      | class
+    <span class="kt">unit</span>
+      <span class="o">=</span> <span class="n">lambda</span>
+      <span class="o">|</span> <span class="k">class</span>
 
-    -- functions --
-    lambda
-      = Lambda(posinfo pos, funcmeta meta, str name, arguments args,
-               expr body)
+    <span class="o">--</span> <span class="n">functions</span> <span class="o">--</span>
+    <span class="n">lambda</span>
+      <span class="o">=</span> <span class="nc">Lambda</span><span class="o">(</span><span class="n">posinfo</span> <span class="n">pos</span><span class="o">,</span> <span class="n">funcmeta</span> <span class="n">meta</span><span class="o">,</span> <span class="n">str</span> <span class="n">name</span><span class="o">,</span> <span class="n">arguments</span> <span class="n">args</span><span class="o">,</span>
+               <span class="n">expr</span> <span class="n">body</span><span class="o">)</span>
 
-    funcmeta
-      = FunctionMetaData(
-            -- locals={'foo': double}
-            str* names,     -- 'foo'
-            nbtype* types,  -- double
-            bool nopython,
-        )
+    <span class="n">funcmeta</span>
+      <span class="o">=</span> <span class="nc">FunctionMetaData</span><span class="o">(</span>
+            <span class="o">--</span> <span class="n">locals</span><span class="o">={</span><span class="k">&#39;</span><span class="n">foo&#39;</span><span class="o">:</span> <span class="n">double</span><span class="o">}</span>
+            <span class="n">str</span><span class="o">*</span> <span class="n">names</span><span class="o">,</span>     <span class="o">--</span> <span class="k">&#39;</span><span class="n">foo&#39;</span>
+            <span class="n">nbtype</span><span class="o">*</span> <span class="n">types</span><span class="o">,</span>  <span class="o">--</span> <span class="n">double</span>
+            <span class="kt">bool</span> <span class="n">nopython</span><span class="o">,</span>
+        <span class="o">)</span>
 
-    -- classes --
-    class
-      = ClassExpr(posinfo pos, bool is_jit, attrtable table, method* methods)
+    <span class="o">--</span> <span class="n">classes</span> <span class="o">--</span>
+    <span class="k">class</span>
+      <span class="o">=</span> <span class="nc">ClassExpr</span><span class="o">(</span><span class="n">posinfo</span> <span class="n">pos</span><span class="o">,</span> <span class="kt">bool</span> <span class="n">is_jit</span><span class="o">,</span> <span class="n">attrtable</span> <span class="n">table</span><span class="o">,</span> <span class="k">method</span><span class="o">*</span> <span class="n">methods</span><span class="o">)</span>
 
-    attrtable
-      = AttributeTable(str* attrnames, nbtype* attrtypes)
+    <span class="n">attrtable</span>
+      <span class="o">=</span> <span class="nc">AttributeTable</span><span class="o">(</span><span class="n">str</span><span class="o">*</span> <span class="n">attrnames</span><span class="o">,</span> <span class="n">nbtype</span><span class="o">*</span> <span class="n">attrtypes</span><span class="o">)</span>
 
-    method
-      = Method(posinfo pos, methodsignature signature, stat* body)
+    <span class="k">method</span>
+      <span class="o">=</span> <span class="nc">Method</span><span class="o">(</span><span class="n">posinfo</span> <span class="n">pos</span><span class="o">,</span> <span class="n">methodsignature</span> <span class="n">signature</span><span class="o">,</span> <span class="n">stat</span><span class="o">*</span> <span class="n">body</span><span class="o">)</span>
 
-    -- Types --
+    <span class="o">--</span> <span class="nc">Types</span> <span class="o">--</span>
 
-    type = nbtype
-    nbtype
-      = char | short | int_ | long_ | longlong
-      | uchar | ushort | uint | ulong | ulonglong
-      | ...
-      | functype
-      | methodtype
+    <span class="k">type</span> <span class="o">=</span> <span class="n">nbtype</span>
+    <span class="n">nbtype</span>
+      <span class="o">=</span> <span class="kt">char</span> <span class="o">|</span> <span class="n">short</span> <span class="o">|</span> <span class="n">int_</span> <span class="o">|</span> <span class="n">long_</span> <span class="o">|</span> <span class="n">longlong</span>
+      <span class="o">|</span> <span class="n">uchar</span> <span class="o">|</span> <span class="n">ushort</span> <span class="o">|</span> <span class="n">uint</span> <span class="o">|</span> <span class="n">ulong</span> <span class="o">|</span> <span class="n">ulonglong</span>
+      <span class="o">|</span> <span class="o">...</span>
+      <span class="o">|</span> <span class="n">functype</span>
+      <span class="o">|</span> <span class="n">methodtype</span>
 
-    methodtype
-      = MethodSignature(functype signature,
-                        bool is_staticmethod,
-                        bool is_classmethod,
-                        bool is_jit, -- whether this is a jit or
-                                     -- autojit method
-                       )
-}</pre>
+    <span class="n">methodtype</span>
+      <span class="o">=</span> <span class="nc">MethodSignature</span><span class="o">(</span><span class="n">functype</span> <span class="n">signature</span><span class="o">,</span>
+                        <span class="kt">bool</span> <span class="n">is_staticmethod</span><span class="o">,</span>
+                        <span class="kt">bool</span> <span class="n">is_classmethod</span><span class="o">,</span>
+                        <span class="kt">bool</span> <span class="n">is_jit</span><span class="o">,</span> <span class="o">--</span> <span class="n">whether</span> <span class="n">this</span> <span class="n">is</span> <span class="n">a</span> <span class="n">jit</span> <span class="ow">or</span>
+                                     <span class="o">--</span> <span class="n">autojit</span> <span class="k">method</span>
+                       <span class="o">)</span>
+<span class="o">}</span>
+</pre></div>
 </div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
@@ -336,75 +488,41 @@ concepts such as arrays or objects is gone.</li>
 </div>
 
 
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="sphinxsidebar">
-        <div class="sphinxsidebarwrapper">
-  <h3><a href="../index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">Numba IR Stages</a><ul>
-<li><a class="reference internal" href="#intermediate-representations">Intermediate Representations</a><ul>
-<li><a class="reference internal" href="#use-of-schemas">Use of Schemas</a></li>
-<li><a class="reference internal" href="#initial-python-like-ir">Initial Python-like IR</a></li>
-<li><a class="reference internal" href="#untyped-ir-in-ssa-form">Untyped IR in SSA form</a></li>
-<li><a class="reference internal" href="#typed-ir-in-ssa-form">Typed IR in SSA form</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#low-level-portable-ir">Low-level Portable IR</a></li>
-</ul>
-</li>
-</ul>
+        
+        
+      </div><!-- /row -->
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="architecture.html"
-                        title="previous chapter">Numba Architecture</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="reference.html"
-                        title="next chapter">Numba Module Reference</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="../_sources/doc/ir.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
-  <h3>Quick search</h3>
-    <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
+      <!-- row -->
+      <div class="row-fluid">
+<div class="related navbar ">
+  <div class="navbar-inner">
+    <ul class="nav pull-right">
+      
+        <li><a href="../genindex.html" title="General Index" >index</a></li>
+        <li><a href="../py-modindex.html" title="Python Module Index" >modules</a></li>
+        <li><a href="reference.html" title="Numba Module Reference" >next</a></li>
+        <li><a href="architecture.html" title="Numba Architecture" >previous</a></li>
+        <li><a href="../index.html">numba 0.7.1-265-gf9fdf42-dirty documentation</a></li> 
+      
+    </ul>
+  </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
-        </div>
-      </div>
-      <div class="clearer"></div>
+      </div><!-- /row -->
+
+      <!-- footer -->
+      <footer>
+          &copy; Copyright 2012-2013, Continuum Analytics.
+        Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+      </footer>
+      <!-- /footer -->
+
     </div>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="reference.html" title="Numba Module Reference"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="architecture.html" title="Numba Architecture"
-             >previous</a> |</li>
-        <li><a href="../index.html">numba 0.7.1-265-gf9fdf42-dirty documentation</a> &raquo;</li> 
-      </ul>
-    </div>
-    <div class="footer">
-        &copy; Copyright 2012-2013, Continuum Analytics.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
-    </div>
+    <!-- /container -->
+
   </body>
 </html>

@@ -1,60 +1,235 @@
 
-
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+
+
+<html lang="en">
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
     
     <title>Numba Architecture &mdash; numba 0.7.1-265-gf9fdf42-dirty documentation</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
     
-    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+<link rel="stylesheet" href="../_static/css/basicstrap-base.css" type="text/css" />
+<link rel="stylesheet" href="../_static/css/bootstrap.min.css" type="text/css" />
+<link rel="stylesheet" href="../_static/css/font-awesome.min.css">
+<!--[if IE 7]>
+<link rel="stylesheet" href="../_static/css/font-awesome-ie7.min.css">
+<![endif]-->
+<style type="text/css">
+  body {
+    padding-top: 60px;
+    padding-bottom: 40px;
+  }
+}
+</style>
+<link rel="stylesheet" href="../_static/basicstrap.css" type="text/css" />
+<link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+<link rel="stylesheet" href="../_static/css/bootstrap-responsive.min.css" type="text/css" />
     
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../',
-        VERSION:     '0.7.1-265-gf9fdf42-dirty',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
-      };
-    </script>
-    <script type="text/javascript" src="../_static/jquery.js"></script>
-    <script type="text/javascript" src="../_static/underscore.js"></script>
-    <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/javascript">
+  var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:    '../',
+            VERSION:     '0.7.1-265-gf9fdf42-dirty',
+            COLLAPSE_INDEX: false,
+            FILE_SUFFIX: '.html',
+            HAS_SOURCE:  true
+  };
+</script>
+<script type="text/javascript" src="../_static/js/jquery.min.js"></script>
+<script type="text/javascript" src="../_static/underscore.js"></script>
+<script type="text/javascript" src="../_static/doctools.js"></script>
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/javascript" src="../_static/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+  $(document).ready(function(){
+    $('.show-sidebar').click(function(e) {
+       e.preventDefault();
+       if ($(".show-sidebar").html() == "Open Table Of Contents") {
+          $('.for-mobile').removeClass('hidden-phone');
+          $(".show-sidebar").html("Close Table Of Contents");
+       } else {
+          $(".show-sidebar").html("Open Table Of Contents");
+       }
+    });
+  });
+</script>
     <link rel="top" title="numba 0.7.1-265-gf9fdf42-dirty documentation" href="../index.html" />
     <link rel="next" title="Numba IR Stages" href="ir.html" />
     <link rel="prev" title="Release Notes" href="releases.html" /> 
   </head>
   <body>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="ir.html" title="Numba IR Stages"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="releases.html" title="Release Notes"
-             accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">numba 0.7.1-265-gf9fdf42-dirty documentation</a> &raquo;</li> 
-      </ul>
-    </div>  
+    <div class="navbar navbar-fixed-top ">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="../index.html">numba 0.7.1-265-gf9fdf42-dirty documentation</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav pull-right">
+              
+                <li>
+                <a href="../genindex.html" title="General Index" accesskey="I">index</a>
+                </li>
+                <li>
+                <a href="../py-modindex.html" title="Python Module Index" >modules</a>
+                </li>
+                <li>
+                <a href="ir.html" title="Numba IR Stages" accesskey="N">next</a>
+                </li>
+                <li>
+                <a href="releases.html" title="Release Notes" accesskey="P">previous</a>
+                </li>
+              
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    
 
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          <div class="body">
-            
+    <!-- container -->
+    <div class="container-fluid">
+
+
+      
+      <div class="row-fluid hidden-desktop hidden-tablet">
+      
+<div class="span3 ">
+  <a class="visible-phone btn btn-small show-sidebar" data-toggle="collapse" data-target=".for-mobile">Open Table Of Contents</a>
+  <div class="for-mobile sidebar hidden-phone">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Numba Architecture</a><ul>
+<li><a class="reference internal" href="#introduction">Introduction</a></li>
+<li><a class="reference internal" href="#core-entry-points">Core Entry Points</a><ul>
+<li><a class="reference internal" href="#run-time-translation">Run-time Translation</a></li>
+<li><a class="reference internal" href="#call-time-specialization">Call-time Specialization</a></li>
+<li><a class="reference internal" href="#extension-types">Extension Types</a></li>
+<li><a class="reference internal" href="#compile-time-translation">Compile-time Translation</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#translation-internals">Translation Internals</a><ul>
+<li><a class="reference internal" href="#towards-more-modular-pipelines">Towards More Modular Pipelines</a><ul>
+<li><a class="reference internal" href="#modularity">Modularity</a></li>
+<li><a class="reference internal" href="#diagram">Diagram</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#discussion-pipeline-composition"><em>Discussion: Pipeline Composition</em></a></li>
+<li><a class="reference internal" href="#discussion-pipeline-environments"><em>Discussion: Pipeline Environments</em></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#terms-and-definitions">Terms and Definitions</a></li>
+<li><a class="reference internal" href="#appendix">Appendix</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="releases.html"
+                        title="previous chapter">Release Notes</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="ir.html"
+                        title="next chapter">Numba IR Stages</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/doc/architecture.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox">
+  <h3>Quick search</h3>
+  <form class="search form-search" action="../search.html" method="get">
+      <div class="input-append">
+        <input type="text" class="search-query" name="q">
+        <input type="submit" class="btn" value="Go" />
+      </div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+  </div>
+</div>
+      </div>
+      
+
+      <!-- row -->
+      <div class="row-fluid">
+         
+<div class="span3 visible-desktop visible-tablet">
+  <div class=" sidebar hidden-phone">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Numba Architecture</a><ul>
+<li><a class="reference internal" href="#introduction">Introduction</a></li>
+<li><a class="reference internal" href="#core-entry-points">Core Entry Points</a><ul>
+<li><a class="reference internal" href="#run-time-translation">Run-time Translation</a></li>
+<li><a class="reference internal" href="#call-time-specialization">Call-time Specialization</a></li>
+<li><a class="reference internal" href="#extension-types">Extension Types</a></li>
+<li><a class="reference internal" href="#compile-time-translation">Compile-time Translation</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#translation-internals">Translation Internals</a><ul>
+<li><a class="reference internal" href="#towards-more-modular-pipelines">Towards More Modular Pipelines</a><ul>
+<li><a class="reference internal" href="#modularity">Modularity</a></li>
+<li><a class="reference internal" href="#diagram">Diagram</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#discussion-pipeline-composition"><em>Discussion: Pipeline Composition</em></a></li>
+<li><a class="reference internal" href="#discussion-pipeline-environments"><em>Discussion: Pipeline Environments</em></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#terms-and-definitions">Terms and Definitions</a></li>
+<li><a class="reference internal" href="#appendix">Appendix</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="releases.html"
+                        title="previous chapter">Release Notes</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="ir.html"
+                        title="next chapter">Numba IR Stages</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/doc/architecture.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox">
+  <h3>Quick search</h3>
+  <form class="search form-search" action="../search.html" method="get">
+      <div class="input-append">
+        <input type="text" class="search-query" name="q">
+        <input type="submit" class="btn" value="Go" />
+      </div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+  </div>
+</div> 
+        
+
+        <div class="span9">
+          <div class="document">
+            <div class="documentwrapper">
+              <div class="bodywrapper">
+                <div class="body">
+                  
   <div class="section" id="numba-architecture">
 <h1><a class="toc-backref" href="#id1">Numba Architecture</a><a class="headerlink" href="#numba-architecture" title="Permalink to this headline">¶</a></h1>
 <div class="contents topic" id="contents">
@@ -248,87 +423,41 @@ when the internal stage checking flag is set.</p>
 </div>
 
 
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="sphinxsidebar">
-        <div class="sphinxsidebarwrapper">
-  <h3><a href="../index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">Numba Architecture</a><ul>
-<li><a class="reference internal" href="#introduction">Introduction</a></li>
-<li><a class="reference internal" href="#core-entry-points">Core Entry Points</a><ul>
-<li><a class="reference internal" href="#run-time-translation">Run-time Translation</a></li>
-<li><a class="reference internal" href="#call-time-specialization">Call-time Specialization</a></li>
-<li><a class="reference internal" href="#extension-types">Extension Types</a></li>
-<li><a class="reference internal" href="#compile-time-translation">Compile-time Translation</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#translation-internals">Translation Internals</a><ul>
-<li><a class="reference internal" href="#towards-more-modular-pipelines">Towards More Modular Pipelines</a><ul>
-<li><a class="reference internal" href="#modularity">Modularity</a></li>
-<li><a class="reference internal" href="#diagram">Diagram</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#discussion-pipeline-composition"><em>Discussion: Pipeline Composition</em></a></li>
-<li><a class="reference internal" href="#discussion-pipeline-environments"><em>Discussion: Pipeline Environments</em></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#terms-and-definitions">Terms and Definitions</a></li>
-<li><a class="reference internal" href="#appendix">Appendix</a></li>
-</ul>
-</li>
-</ul>
+        
+        
+      </div><!-- /row -->
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="releases.html"
-                        title="previous chapter">Release Notes</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="ir.html"
-                        title="next chapter">Numba IR Stages</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="../_sources/doc/architecture.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
-  <h3>Quick search</h3>
-    <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
+      <!-- row -->
+      <div class="row-fluid">
+<div class="related navbar ">
+  <div class="navbar-inner">
+    <ul class="nav pull-right">
+      
+        <li><a href="../genindex.html" title="General Index" >index</a></li>
+        <li><a href="../py-modindex.html" title="Python Module Index" >modules</a></li>
+        <li><a href="ir.html" title="Numba IR Stages" >next</a></li>
+        <li><a href="releases.html" title="Release Notes" >previous</a></li>
+        <li><a href="../index.html">numba 0.7.1-265-gf9fdf42-dirty documentation</a></li> 
+      
+    </ul>
+  </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
-        </div>
-      </div>
-      <div class="clearer"></div>
+      </div><!-- /row -->
+
+      <!-- footer -->
+      <footer>
+          &copy; Copyright 2012-2013, Continuum Analytics.
+        Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+      </footer>
+      <!-- /footer -->
+
     </div>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="ir.html" title="Numba IR Stages"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="releases.html" title="Release Notes"
-             >previous</a> |</li>
-        <li><a href="../index.html">numba 0.7.1-265-gf9fdf42-dirty documentation</a> &raquo;</li> 
-      </ul>
-    </div>
-    <div class="footer">
-        &copy; Copyright 2012-2013, Continuum Analytics.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
-    </div>
+    <!-- /container -->
+
   </body>
 </html>
