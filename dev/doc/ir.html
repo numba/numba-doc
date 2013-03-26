@@ -8,7 +8,7 @@
   <head>
     <meta charset="utf-8" />
     
-    <title>Numba IR Stages &mdash; numba 0.7.1-267-g28324e0-dirty documentation</title>
+    <title>Numba IR Stages &mdash; numba 0.7.1-268-gda224f6-dirty documentation</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
@@ -35,7 +35,7 @@
 <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
             URL_ROOT:    '../',
-            VERSION:     '0.7.1-267-g28324e0-dirty',
+            VERSION:     '0.7.1-268-gda224f6-dirty',
             COLLAPSE_INDEX: false,
             FILE_SUFFIX: '.html',
             HAS_SOURCE:  true
@@ -59,7 +59,7 @@
     });
   });
 </script>
-    <link rel="top" title="numba 0.7.1-267-g28324e0-dirty documentation" href="../index.html" />
+    <link rel="top" title="numba 0.7.1-268-gda224f6-dirty documentation" href="../index.html" />
     <link rel="next" title="Numba Module Reference" href="reference.html" />
     <link rel="prev" title="Numba Architecture" href="architecture.html" /> 
   </head>
@@ -72,7 +72,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="../index.html">numba 0.7.1-267-g28324e0-dirty documentation</a>
+          <a class="brand" href="../index.html">numba 0.7.1-268-gda224f6-dirty documentation</a>
           <div class="nav-collapse collapse">
             <ul class="nav pull-right">
               
@@ -125,6 +125,11 @@
 <li><a class="reference internal" href="#ir-suitability">IR Suitability</a><ul>
 <li><a class="reference internal" href="#structure">Structure</a></li>
 <li><a class="reference internal" href="#expressiveness">Expressiveness</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#resuing-llvm-passes">Resuing LLVM Passes</a><ul>
+<li><a class="reference internal" href="#ssa">SSA</a></li>
+<li><a class="reference internal" href="#type-dependence-graph-construction">Type Dependence Graph Construction</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#references">References</a></li>
@@ -186,6 +191,11 @@
 <li><a class="reference internal" href="#ir-suitability">IR Suitability</a><ul>
 <li><a class="reference internal" href="#structure">Structure</a></li>
 <li><a class="reference internal" href="#expressiveness">Expressiveness</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#resuing-llvm-passes">Resuing LLVM Passes</a><ul>
+<li><a class="reference internal" href="#ssa">SSA</a></li>
+<li><a class="reference internal" href="#type-dependence-graph-construction">Type Dependence Graph Construction</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#references">References</a></li>
@@ -780,6 +790,137 @@ of a function pointer and an object pointer).</li>
 the first. Yet what we want is the former, for the sake of expressiveness.</p>
 </div>
 </div>
+<div class="section" id="resuing-llvm-passes">
+<h2>Resuing LLVM Passes<a class="headerlink" href="#resuing-llvm-passes" title="Permalink to this headline">¶</a></h2>
+<p>Although LLVM IR does not cater well to some of the high-level
+transformations we want to make, it provides a useful infrastructure to
+do certain things. This includes:</p>
+<blockquote>
+<div><ul class="simple">
+<li>SSA Graph Computation (as well as reaching definitions, etc)</li>
+<li>CFG simplification</li>
+<li>Finding SCCs in various graphs (CFG, SSA, call graph, etc)</li>
+<li>Build a call graph</li>
+<li>Aiding lower-level and TAC transformations</li>
+</ul>
+</div></blockquote>
+<p>Below we will discuss a plan for resuability.</p>
+<div class="section" id="ssa">
+<h3>SSA<a class="headerlink" href="#ssa" title="Permalink to this headline">¶</a></h3>
+<p>We currently construct our own CFG and compute the SSA graph from the
+CFG containing abstract statements that represent definitions and uses
+(loads and stores).</p>
+<p>As mentioned, the advantage of having our own CFG construction includes:</p>
+<blockquote>
+<div><ul class="simple">
+<li>Expressiveness of high-level operations</li>
+<li>Automatic code generation and translation into IRs with expanded
+control flow</li>
+</ul>
+</div></blockquote>
+<p>The advantage of having our own reaching definitions (reused from Cython&#8217;s
+control flow, <tt class="docutils literal"><span class="pre">Cython/Compiler/FlowControl</span></tt>) is the great support for
+errors and warnings for:</p>
+<blockquote>
+<div><ul class="simple">
+<li>Definitely unbound variables (error)</li>
+<li>Potentionally unbound variables (warning)</li>
+<li>Unused variables (warning)</li>
+</ul>
+</div></blockquote>
+<p>as well as other categories. LLVM on the other hand classifies reads
+from uninitialized variables as undefined behaviour.</p>
+<p>Numba initializes potentially unbound variables to a &#8220;bad&#8221; value (<tt class="docutils literal"><span class="pre">nan</span></tt>,
+<tt class="docutils literal"><span class="pre">0xdeadbeef</span></tt>, etc). We can use the same mechanism to construct valid
+LLVM IR, and compute the SSA graph from our subset program, consisting only
+of:</p>
+<blockquote>
+<div><ul class="simple">
+<li>expanded control flow</li>
+<li>variable stores</li>
+<li>variable loads</li>
+</ul>
+</div></blockquote>
+<p>This LLVM-constructed SSA graph can be mapped back to our high-lever IR
+with relative ease if we simply remembered which LLVM basic block associates
+with which basic block in our IR.</p>
+<p>Expected save: 220 SLOC (<a class="reference external" href="https://github.com/markflorisson88/numba/blob/phimerge/numba/control_flow/ssa.py#L20">https://github.com/markflorisson88/numba/blob/phimerge/numba/control_flow/ssa.py#L20</a>).</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This operates under the assumption that we have a general
+framework that can map LLVM transformations back to our IR
+representation automatically.</p>
+</div>
+</div>
+<div class="section" id="type-dependence-graph-construction">
+<h3>Type Dependence Graph Construction<a class="headerlink" href="#type-dependence-graph-construction" title="Permalink to this headline">¶</a></h3>
+<p>From the SSA graph we compute a type graph by inferring all variable
+assignments. This graph often has cycles, due to the back-edge in
+the CFG for loops. For instance we may have the following code:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">x</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+<span class="n">y</span> <span class="o">=</span> <span class="n">x</span>
+</pre></div>
+</div>
+<p>Where <tt class="docutils literal"><span class="pre">f</span></tt> is an external autojit function (i.e., it&#8217;s output type depends
+on it&#8217;s dynamic input type).</p>
+<p>We get the following type graph:</p>
+<p class="graphviz">
+<img src="../_images/graphviz-77d6c117622c4c26de16e722d9c3eb98f0252859.png" alt="digraph typegraph {
+x_0 -&gt; int
+x_0 -&gt; x_1
+x_2 -&gt; x_1
+x_2 -&gt; f
+f -&gt; x_1
+x_1 -&gt; y_0
+
+i_0 -&gt; range
+range -&gt; int
+}" />
+</p>
+<p>Below we show the correspondence of the SSA variable definitions to their
+basic blocks:</p>
+<p class="graphviz">
+<img src="../_images/graphviz-0d9527069f69872cfb4e428da17e5519bb5c0423.png" alt="digraph cfg {
+&quot;entry: [ x_0, i_0 ]&quot; -&gt; &quot;condition: [ x_1 ]&quot; -&gt; &quot;body: [ x_2 ]&quot;
+&quot;body: [ x_2 ]&quot; -&gt; &quot;condition: [ x_1 ]&quot;
+&quot;condition: [ x_1 ]&quot; -&gt; &quot;exit: [ y_2 ]&quot;
+}" />
+</p>
+<p>Our goal is to resolve this type graph in topological order, such that
+we know the type for each variable definition (<tt class="docutils literal"><span class="pre">x_0</span></tt>, <tt class="docutils literal"><span class="pre">x_1</span></tt>, etc).</p>
+<p>In order to do a topological sort, we compute the condensation graph
+by finding the strongly connected components. The resulting graph
+looks like this:</p>
+<p class="graphviz">
+<img src="../_images/graphviz-2c7782b0649eec9d8762cbc7d2b6b9af212a2049.png" alt="digraph typegraph {
+x_0 -&gt; int
+x_0 -&gt; SCC0
+SCC0 -&gt; y_0
+i_0 -&gt; range
+range -&gt; int
+}" />
+</p>
+<p>And <tt class="docutils literal"><span class="pre">SCC0</span></tt> contains the cycle in the type graph. We now have a
+well-defined preorder for which we can process each node in topological
+order on the transpose graph, doing the following:</p>
+<blockquote>
+<div><ul class="simple">
+<li>If the node represents a concrete type, propagate result along edge</li>
+<li>If the node represents a function over an argument of the given input types,
+infer the result type of this function</li>
+<li>For each SCC, process all internal nodes using fixpoint iteration
+given all input types to the SCC. Update internal nodes with their result
+types.</li>
+</ul>
+</div></blockquote>
+<p>We can compute strongly connected components using many libraries (including
+LLVM or networkx). Currently we have our own, which we can replace.
+Expected save: 21 SLOC (<a class="reference external" href="https://github.com/markflorisson88/numba/blob/phimerge/numba/typesystem/ssatypes.py#L677">https://github.com/markflorisson88/numba/blob/phimerge/numba/typesystem/ssatypes.py#L677</a>)</p>
+</div>
+</div>
 <div class="section" id="references">
 <h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
 <table class="docutils footnote" frame="void" id="id4" rules="none">
@@ -817,7 +958,7 @@ the first. Yet what we want is the former, for the sake of expressiveness.</p>
         <li><a href="../py-modindex.html" title="Python Module Index" >modules</a></li>
         <li><a href="reference.html" title="Numba Module Reference" >next</a></li>
         <li><a href="architecture.html" title="Numba Architecture" >previous</a></li>
-        <li><a href="../index.html">numba 0.7.1-267-g28324e0-dirty documentation</a></li> 
+        <li><a href="../index.html">numba 0.7.1-268-gda224f6-dirty documentation</a></li> 
       
     </ul>
   </div>
