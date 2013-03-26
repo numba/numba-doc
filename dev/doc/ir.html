@@ -8,7 +8,7 @@
   <head>
     <meta charset="utf-8" />
     
-    <title>Numba IR Stages &mdash; numba 0.7.1-265-gf9fdf42-dirty documentation</title>
+    <title>Numba IR Stages &mdash; numba 0.7.1-267-g28324e0-dirty documentation</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
@@ -35,7 +35,7 @@
 <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
             URL_ROOT:    '../',
-            VERSION:     '0.7.1-265-gf9fdf42-dirty',
+            VERSION:     '0.7.1-267-g28324e0-dirty',
             COLLAPSE_INDEX: false,
             FILE_SUFFIX: '.html',
             HAS_SOURCE:  true
@@ -59,7 +59,7 @@
     });
   });
 </script>
-    <link rel="top" title="numba 0.7.1-265-gf9fdf42-dirty documentation" href="../index.html" />
+    <link rel="top" title="numba 0.7.1-267-g28324e0-dirty documentation" href="../index.html" />
     <link rel="next" title="Numba Module Reference" href="reference.html" />
     <link rel="prev" title="Numba Architecture" href="architecture.html" /> 
   </head>
@@ -72,7 +72,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="../index.html">numba 0.7.1-265-gf9fdf42-dirty documentation</a>
+          <a class="brand" href="../index.html">numba 0.7.1-267-g28324e0-dirty documentation</a>
           <div class="nav-collapse collapse">
             <ul class="nav pull-right">
               
@@ -110,13 +110,24 @@
   <ul>
 <li><a class="reference internal" href="#">Numba IR Stages</a><ul>
 <li><a class="reference internal" href="#intermediate-representations">Intermediate Representations</a><ul>
-<li><a class="reference internal" href="#use-of-schemas">Use of Schemas</a></li>
+<li><a class="reference internal" href="#use-of-schemas">Use of Schemas</a><ul>
+<li><a class="reference internal" href="#llvm-ir">LLVM IR</a></li>
+<li><a class="reference internal" href="#executable-ir">Executable IR</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#initial-python-like-ir">Initial Python-like IR</a></li>
 <li><a class="reference internal" href="#untyped-ir-in-ssa-form">Untyped IR in SSA form</a></li>
 <li><a class="reference internal" href="#typed-ir-in-ssa-form">Typed IR in SSA form</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#low-level-portable-ir">Low-level Portable IR</a></li>
+<li><a class="reference internal" href="#control-flow">Control Flow</a></li>
+<li><a class="reference internal" href="#ir-suitability">IR Suitability</a><ul>
+<li><a class="reference internal" href="#structure">Structure</a></li>
+<li><a class="reference internal" href="#expressiveness">Expressiveness</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#references">References</a></li>
 </ul>
 </li>
 </ul>
@@ -160,13 +171,24 @@
   <ul>
 <li><a class="reference internal" href="#">Numba IR Stages</a><ul>
 <li><a class="reference internal" href="#intermediate-representations">Intermediate Representations</a><ul>
-<li><a class="reference internal" href="#use-of-schemas">Use of Schemas</a></li>
+<li><a class="reference internal" href="#use-of-schemas">Use of Schemas</a><ul>
+<li><a class="reference internal" href="#llvm-ir">LLVM IR</a></li>
+<li><a class="reference internal" href="#executable-ir">Executable IR</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#initial-python-like-ir">Initial Python-like IR</a></li>
 <li><a class="reference internal" href="#untyped-ir-in-ssa-form">Untyped IR in SSA form</a></li>
 <li><a class="reference internal" href="#typed-ir-in-ssa-form">Typed IR in SSA form</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#low-level-portable-ir">Low-level Portable IR</a></li>
+<li><a class="reference internal" href="#control-flow">Control Flow</a></li>
+<li><a class="reference internal" href="#ir-suitability">IR Suitability</a><ul>
+<li><a class="reference internal" href="#structure">Structure</a></li>
+<li><a class="reference internal" href="#expressiveness">Expressiveness</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#references">References</a></li>
 </ul>
 </li>
 </ul>
@@ -210,7 +232,7 @@
 <h1>Numba IR Stages<a class="headerlink" href="#numba-ir-stages" title="Permalink to this headline">¶</a></h1>
 <p>To allow Numba as a general purpose compiler, we provide different entry
 points. These entry points also allow for further decoupling of the Numba
-architecture. We propose three new Intermediate Representations (IRs),
+architecture. We propose several new Intermediate Representations (IRs),
 from high-level to low-level:</p>
 <blockquote>
 <div><ul class="simple">
@@ -256,10 +278,43 @@ rewrites:</p>
 </div>
 <div class="section" id="use-of-schemas">
 <h3>Use of Schemas<a class="headerlink" href="#use-of-schemas" title="Permalink to this headline">¶</a></h3>
-<p>We can use our schemas to generate Python AST classes, which can
-also verify the typing (using <tt class="docutils literal"><span class="pre">TypedProperty</span></tt>). Each node can
-furthermore implement its own <tt class="docutils literal"><span class="pre">visit</span></tt> method, allowing for quick
-visitor dispatch (compile with Cython or pre-compile with Numba).</p>
+<p>We can use our schemas to:</p>
+<blockquote>
+<div><ul>
+<li><p class="first">Validate IR instances</p>
+</li>
+<li><p class="first">Generate Python AST classes with typed properties and fast
+visitor dispatching</p>
+</li>
+<li><p class="first">Generate Higher- or Lower-level LLVM IR</p>
+</li>
+<li><p class="first">Generate conversion code to and from an ATerm representation</p>
+</li>
+<li><p class="first">Generate a flat representation. E.g. a form of Three Address Code</p>
+</li>
+<li><p class="first">Generate an implementation in other languages that can load a
+serialized representation and construct an AST in that langauge</p>
+</li>
+<li><p class="first">Generate type definitions and serialization routines in
+other languages.</p>
+<blockquote>
+<div><div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This can help other languages target Numba as
+a backend compiler more easily, since they can
+build up the IR using in-memory data structures for
+the IR most suitable to their needs.</p>
+</div>
+</div></blockquote>
+</li>
+<li><p class="first">Generate definitions for use in Attribute Grammars (<a class="footnote-reference" href="#id4" id="id1">[1]</a>)</p>
+</li>
+<li><p class="first">Executable IR (<a class="reference internal" href="#executable"><em>Executable IR</em></a>)</p>
+</li>
+</ul>
+</div></blockquote>
+<div class="section" id="llvm-ir">
+<span id="id2"></span><h4>LLVM IR<a class="headerlink" href="#llvm-ir" title="Permalink to this headline">¶</a></h4>
 <p>We can generate automatic mapping code to map schema instances to
 opaguely typed LLVM IR automatically, which is the abstract syntax
 generated post-order. E.g. <tt class="docutils literal"><span class="pre">a</span> <span class="pre">+</span> <span class="pre">b</span> <span class="pre">*</span> <span class="pre">c</span></tt> becomes:</p>
@@ -276,47 +331,89 @@ entry:
 <p>The LLVM IR contains the high-level block structure, i.e. an <tt class="docutils literal"><span class="pre">if</span></tt> statement
 will generate IR along the following lines:</p>
 <div class="highlight-llvm"><pre>define i8* @func() {
-    %0 = blockaddress(@func, %bb_true)
-    %1 = blockaddress(@func, %bb_false)
-    %2 = i8*  @If(i8* %0, i8* %1)
+entry:
+    %0 = blockaddress(@func, %bb_test)
+    %1 = blockaddress(@func, %bb_true)
+    %2 = blockaddress(@func, %bb_false)
+    %3 = i8*  @If(i8* %0, i8* %1, i8* %2)
 
-  "bb_true":
+  bb_test:
     ...
 
-  "bb_false":
+  bb_true:
+    ...
+
+  bb_false:
     ...
 }</pre>
 </div>
-<p>Other things we can do from our schema:</p>
+<p>An LLVM IR instance can be mapped back losslessly to an IR instance of a
+different representation (e.g. a DAG).</p>
+<p>We can use a well-defined abstraction that can map these higher-level
+constructs to the lower-level equilvent. This can be used
+simultenously by:</p>
+<blockquote>
+<div><ul class="simple">
+<li>The control flow graph builder</li>
+<li>Any IR that wants control flow expanded</li>
+<li>The code generator</li>
+</ul>
+</div></blockquote>
+<p>We can use this
+construct to expand our IR to IR that corresponds more closely to
+the final IR we would generate, where all control flow is expanded
+to branches:</p>
+<div class="highlight-python"><pre>define i8* @func() {
+entry:
+    br label %bb_test
+
+  bb_test:
+    %test = ...
+    br i1 %test, label %bb_true, label %bb_false
+
+  bb_true:
+    ...
+    br label %bb_false
+
+  bb_false:
+    ...
+    br label %bb_exit
+
+  bb_exit:
+    ...
+
+}</pre>
+</div>
+<p>Passes can do not care about special control structures can then execute
+on this IR.</p>
+</div>
+<div class="section" id="executable-ir">
+<span id="executable"></span><h4>Executable IR<a class="headerlink" href="#executable-ir" title="Permalink to this headline">¶</a></h4>
+<p>There are two ideas:</p>
+<blockquote>
+<div><ul class="simple">
+<li>Implement a library to which the generated abstract
+LLVM IR can link. E.g. implement functions such as
+<tt class="docutils literal"><span class="pre">&#64;BinOp(%add,</span> <span class="pre">%lhs,</span> <span class="pre">%rhs)</span></tt> (we can call this function
+<tt class="docutils literal"><span class="pre">PyNumber_Add</span></tt>).</li>
+</ul>
+</div></blockquote>
+<p>If we define new lowered IRs are a specialized subset of higher-level
+IRs, we get execution for free:</p>
 <blockquote>
 <div><ul>
-<li><p class="first">Generate conversion code to and from JSON or XML</p>
-</li>
-<li><p class="first">Generate conversion code to and from an ATerm representation</p>
-</li>
-<li><p class="first">Generate an implementation in other languages that can load a
-serialized representation and construct an AST in that langauge</p>
-</li>
-<li><p class="first">Travis&#8217; idea, make the IR executable.</p>
-<blockquote>
-<div><ul>
-<li><p class="first">Implement a library to which the generated abstract
-LLVM IR can link.
-E.g. implement functions such as <tt class="docutils literal"><span class="pre">&#64;BinOp(%lhs,</span> <span class="pre">%rhs)</span></tt>.</p>
-</li>
 <li><p class="first">Generate conversion code to and from a high-level Python AST
 or source code.</p>
 <p>For instance, <tt class="docutils literal"><span class="pre">PointerIndex(base_type,</span> <span class="pre">node,</span> <span class="pre">index)</span></tt> becomes
 <tt class="docutils literal"><span class="pre">Call(func=Name('base_type'),</span> <span class="pre">args=[Subscript(subnode,</span> <span class="pre">index)])</span></tt>.
 This function can then be compiled and interpreted with Python,
-using abstract argument inputs (or maybe we can write a
-simple AST evaluator).</p>
+using abstract argument inputs.</p>
 </li>
 </ul>
 </div></blockquote>
-</li>
-</ul>
-</div></blockquote>
+<p>Alternatively, if we already know which operations our data corresponds
+to, we can generate a simple AST or bytecode evaluator.</p>
+</div>
 </div>
 <div class="section" id="initial-python-like-ir">
 <h3>Initial Python-like IR<a class="headerlink" href="#initial-python-like-ir" title="Permalink to this headline">¶</a></h3>
@@ -328,7 +425,9 @@ syntax exludes:</p>
 to <tt class="docutils literal"><span class="pre">Assign</span></tt> of the function and subsequent
 decorator applications and assignments</li>
 <li>No list, dict, set or generators comprehensions, which are
-normalized to <tt class="docutils literal"><span class="pre">For(...)</span></tt> etc + method calls</li>
+normalized to <tt class="docutils literal"><span class="pre">For(...)</span></tt> etc + method calls to <tt class="docutils literal"><span class="pre">list.append</span></tt>,
+etc.</li>
+<li>Normalized comparisons</li>
 </ul>
 </div></blockquote>
 <p>The initial IR is what numba decorators produce given a pure
@@ -485,6 +584,217 @@ concepts such as arrays or objects is gone.</li>
 </ul>
 </div></blockquote>
 </div>
+<div class="section" id="control-flow">
+<span id="cfg"></span><h2>Control Flow<a class="headerlink" href="#control-flow" title="Permalink to this headline">¶</a></h2>
+<p>We can have a single abstraction that can create basic blocks and
+link blocks together. For instance we for the following structure:</p>
+<div class="highlight-python"><pre>For(expr target, expr iter, stmt* body, stmt* orelse)</pre>
+</div>
+<p>We have the following CFG:</p>
+<p class="graphviz">
+<img src="../_images/graphviz-9219a618ca1740acea3d0913845604a94ec9a3ec.png" alt="digraph cfg {
+entry -&gt; condition -&gt; body -&gt; condition -&gt; orelse -&gt; exit
+}" />
+</p>
+<p>In this CFG, <tt class="docutils literal"><span class="pre">break</span></tt> and <tt class="docutils literal"><span class="pre">continue</span></tt> correspond to the following edges:</p>
+<p class="graphviz">
+<img src="../_images/graphviz-8f97f90d08a9bf13664e900749f430afb1a51a8e.png" alt="digraph break {
+break -&gt; exit
+continue -&gt; condition
+}" />
+</p>
+<p>We can use this single abstraction to:</p>
+<blockquote>
+<div><ul>
+<li><p class="first">Create a CFG at any time in any IR stage. For instance we can
+generate LLVM IR automatically with expanded control flow.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This also includes the code generator, which doesn&#8217;t
+have to handle any block structures.</p>
+</div>
+</li>
+<li><p class="first">Retain high-level information that allows for simple
+classification and accurate error reporting.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This is important to allow us to easily rewrite entire
+control flow structures, such as outlining of the prange
+construct.</p>
+</div>
+</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="ir-suitability">
+<h2>IR Suitability<a class="headerlink" href="#ir-suitability" title="Permalink to this headline">¶</a></h2>
+<p>An important consideration for an IR is how well transformations are
+defined over it, and how efficient those transformations are. For instance,
+a pass that combines instructions works far better on a simple three-address
+representation than an AST. Design considerations (<a class="footnote-reference" href="#id5" id="id3">[2]</a>):</p>
+<blockquote>
+<div><ul class="simple">
+<li>Level and machine independence</li>
+<li>Structure</li>
+<li>Expressiveness</li>
+<li>Appropriateness for transformation and code generation</li>
+</ul>
+</div></blockquote>
+<p>To evaluate some of these metrics we will look at some concretizations.</p>
+<div class="section" id="structure">
+<h3>Structure<a class="headerlink" href="#structure" title="Permalink to this headline">¶</a></h3>
+<p>We can consider expanded or abstract control flow:</p>
+<blockquote>
+<div><ul class="simple">
+<li>We want to compute an SSA graph. Clearly we need a control flow
+graph in order to perform this computation.</li>
+<li>We want to <em>outline</em> a prange construct. Consider what this looks
+like using unexpanded and expanded control flow.</li>
+</ul>
+<p>Unexpanded:</p>
+<div class="highlight-python"><pre>For(iter=prange(...)) -&gt;
+    [ MakeClosure(For(iter=prange(adjust_bounds(...))) ; InvokeThreadPool ]</pre>
+</div>
+<p>Expanded:</p>
+<blockquote>
+<div><ul class="simple">
+<li>Match a loop</li>
+<li>Scan preceding statements for <tt class="docutils literal"><span class="pre">t</span> <span class="pre">=</span> <span class="pre">iter(prange(...))</span></tt></li>
+<li>Outline <tt class="docutils literal"><span class="pre">[</span> <span class="pre">t</span> <span class="pre">;</span> <span class="pre">loop</span> <span class="pre">]</span></tt></li>
+<li>Apply <tt class="docutils literal"><span class="pre">adjust_bounds</span></tt> to <tt class="docutils literal"><span class="pre">iter(prange(...))</span></tt></li>
+<li>Perform range transformation to rewrite using counters</li>
+</ul>
+</div></blockquote>
+</div></blockquote>
+<p>Consider also error reporting facilities. For instance, let&#8217;s assume
+we want to disallow break from parallel loops.</p>
+<blockquote>
+<div><p>Unexanded:</p>
+<blockquote>
+<div><tt class="docutils literal"><span class="pre">Break</span> <span class="pre">-&gt;</span> <span class="pre">error</span></tt></div></blockquote>
+<p>Expanded:</p>
+<blockquote>
+<div><ul class="simple">
+<li>Scan for <tt class="docutils literal"><span class="pre">prange</span></tt> (similar to above, namely match a loop,
+scan preceding statement for <tt class="docutils literal"><span class="pre">iter()</span></tt>)</li>
+<li>Find a CFG edge that points outside the loop body region
+(e.g. the exit block of the loop, or a block further outside
+the region)</li>
+</ul>
+</div></blockquote>
+</div></blockquote>
+<p>Clearly, some transformations are easier to perform using expanded control flow, e.g.:</p>
+<blockquote>
+<div><ul class="simple">
+<li>Computing SSA</li>
+<li>Dead-code elimination</li>
+<li>Control flow simplification</li>
+<li>Transformations to structured control flow</li>
+<li>and so forth</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="expressiveness">
+<h3>Expressiveness<a class="headerlink" href="#expressiveness" title="Permalink to this headline">¶</a></h3>
+<p>Consider a high-level type system, that has:</p>
+<blockquote>
+<div><ul>
+<li><p class="first">Full or partial functions as first-class values</p>
+<blockquote>
+<div><ul class="simple">
+<li>This subsumes closurs and all methods (bound, unbound, class, static)</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first">Types as first-class values</p>
+</li>
+<li><p class="first">(Extension) Classes as first-class values</p>
+</li>
+<li><p class="first">Containers such as</p>
+<blockquote>
+<div><ul class="simple">
+<li>Arrays</li>
+<li>Typed lists, sets, dicts, channels, and so forth</li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</div></blockquote>
+<p>Program instances using these constructs must be quickly identifyable to aid
+easy tranformation. For instance, <tt class="docutils literal"><span class="pre">obj.method(10)</span></tt> should be quickly transformable
+using rules along the following lines:</p>
+<div class="highlight-ocaml"><div class="highlight"><pre><span class="nc">Attribute</span><span class="o">(</span><span class="k">value</span><span class="o">.</span><span class="k">type</span><span class="o">=</span><span class="k">object</span><span class="o">,</span> <span class="n">attr</span><span class="o">)</span>
+    <span class="o">-&gt;</span> <span class="nc">PyObject_GetAttrString</span><span class="o">(</span><span class="k">value</span><span class="o">,</span> <span class="n">attr</span><span class="o">)</span>
+
+<span class="nc">Attribute</span><span class="o">(</span><span class="k">value</span><span class="o">,</span> <span class="n">attr</span><span class="o">).</span><span class="k">type</span><span class="o">=</span><span class="nc">ExtensionMethod</span><span class="o">(...,</span> <span class="n">is_jit</span><span class="o">=</span><span class="nc">True</span><span class="o">)</span>
+    <span class="o">-&gt;</span> <span class="nc">ExtensionMethodStruct</span><span class="o">(</span><span class="k">value</span><span class="o">,</span> <span class="k">method</span><span class="o">)</span>
+</pre></div>
+</div>
+<p>with:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="p">[</span>
+    <span class="k">typedef</span> <span class="p">{</span>
+        <span class="kt">double</span> <span class="p">(</span><span class="o">*</span><span class="n">method1</span><span class="p">)(</span><span class="kt">double</span><span class="p">);</span>
+        <span class="p">...</span>
+    <span class="p">}</span> <span class="n">vtab_struct</span><span class="p">;</span>
+
+    <span class="n">vtab_struct</span> <span class="o">*</span><span class="n">vtab</span> <span class="o">=</span> <span class="o">*</span><span class="p">(</span><span class="n">vtab_struct</span> <span class="o">**</span><span class="p">)</span> <span class="p">(((</span><span class="kt">char</span> <span class="o">*</span><span class="p">)</span> <span class="n">obj</span><span class="p">)</span> <span class="o">+</span> <span class="n">vtab_offset</span><span class="p">)</span>
+    <span class="kt">void</span> <span class="o">*</span><span class="n">method</span> <span class="o">=</span> <span class="n">vtab</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+<p>A call for object then exands to <tt class="docutils literal"><span class="pre">PyObject_Call</span></tt>, and a method call to a
+<tt class="docutils literal"><span class="pre">NativeCall</span></tt> of <tt class="docutils literal"><span class="pre">ExtensionMethodStruct.method</span></tt> with first argument
+<tt class="docutils literal"><span class="pre">ExtensionMethodStruct.value</span></tt> (&#8216;self&#8217;).</p>
+<p>A later pass can then combine consecutive instructions and optimize them, i.e.</p>
+<div class="highlight-ocaml"><div class="highlight"><pre><span class="o">[</span>
+    <span class="k">method</span> <span class="o">=</span> <span class="nc">PyObject_GetAttrString</span><span class="o">(</span><span class="n">obj</span><span class="o">,</span> <span class="n">attr</span><span class="o">);</span>
+    <span class="nc">PyObject_Call</span><span class="o">(</span><span class="k">method</span><span class="o">,</span> <span class="k">value</span><span class="o">,</span> <span class="n">args</span><span class="o">)</span>
+<span class="o">]</span>
+    <span class="o">-&gt;</span> <span class="nc">PyObject_CallMethod</span><span class="o">(</span><span class="n">obj</span><span class="o">,</span> <span class="n">attr</span><span class="o">,</span> <span class="n">args</span><span class="o">)</span>
+</pre></div>
+</div>
+<p>A similar pass for extension methods would then avoid building the
+intermediate struct.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Note how we could combine the first and second passes to detect method
+calls. Such a rule would be well-expressed on a tree or graph structure.
+The first rule as specified would work well on both a tree or three-address
+code. The latter is specified best on TAC.</p>
+</div>
+<p>The point we&#8217;re trying to make is that we need to encode many different kinds
+of first-class values, which have high-level types. These constucts must be
+quickly identifyable and transformable using a high-level type system that
+can support constructs of the high-level language.</p>
+<p>Using a low-level type system such as LLVM&#8217;s or C&#8217;s means high-level types
+need low-level equivalents, which means one of two things:</p>
+<blockquote>
+<div><ul class="simple">
+<li>You use an abstract type classifier, which needs to be composable</li>
+<li>You use a lower-level representation which more closely resembles
+the type of the value in its lowered representation (e.g. a struct
+of a function pointer and an object pointer).</li>
+</ul>
+</div></blockquote>
+<p>LLVM facilitates the latter point, but is in no way caters to
+the first. Yet what we want is the former, for the sake of expressiveness.</p>
+</div>
+</div>
+<div class="section" id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
+<table class="docutils footnote" frame="void" id="id4" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td>Attribute Grammars in Haskell with UUAG, A. Loh, <a class="reference external" href="http://www.andres-loeh.de/AGee.pdf">http://www.andres-loeh.de/AGee.pdf</a></td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id5" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id3">[2]</a></td><td>Advanced Compiler Design and Implementation, Steven S. Muchnick</td></tr>
+</tbody>
+</table>
+</div>
 </div>
 
 
@@ -507,7 +817,7 @@ concepts such as arrays or objects is gone.</li>
         <li><a href="../py-modindex.html" title="Python Module Index" >modules</a></li>
         <li><a href="reference.html" title="Numba Module Reference" >next</a></li>
         <li><a href="architecture.html" title="Numba Architecture" >previous</a></li>
-        <li><a href="../index.html">numba 0.7.1-265-gf9fdf42-dirty documentation</a></li> 
+        <li><a href="../index.html">numba 0.7.1-267-g28324e0-dirty documentation</a></li> 
       
     </ul>
   </div>
