@@ -8,7 +8,7 @@
   <head>
     <meta charset="utf-8" />
     
-    <title>Numba IR Stages &mdash; numba 0.7.1-268-gda224f6-dirty documentation</title>
+    <title>Numba IR Stages &mdash; numba 0.7.1-270-g860f878 documentation</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
@@ -35,7 +35,7 @@
 <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
             URL_ROOT:    '../',
-            VERSION:     '0.7.1-268-gda224f6-dirty',
+            VERSION:     '0.7.1-270-g860f878',
             COLLAPSE_INDEX: false,
             FILE_SUFFIX: '.html',
             HAS_SOURCE:  true
@@ -59,7 +59,7 @@
     });
   });
 </script>
-    <link rel="top" title="numba 0.7.1-268-gda224f6-dirty documentation" href="../index.html" />
+    <link rel="top" title="numba 0.7.1-270-g860f878 documentation" href="../index.html" />
     <link rel="next" title="Numba Module Reference" href="reference.html" />
     <link rel="prev" title="Numba Architecture" href="architecture.html" /> 
   </head>
@@ -72,7 +72,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="../index.html">numba 0.7.1-268-gda224f6-dirty documentation</a>
+          <a class="brand" href="../index.html">numba 0.7.1-270-g860f878 documentation</a>
           <div class="nav-collapse collapse">
             <ul class="nav pull-right">
               
@@ -130,6 +130,8 @@
 <li><a class="reference internal" href="#resuing-llvm-passes">Resuing LLVM Passes</a><ul>
 <li><a class="reference internal" href="#ssa">SSA</a></li>
 <li><a class="reference internal" href="#type-dependence-graph-construction">Type Dependence Graph Construction</a></li>
+<li><a class="reference internal" href="#building-a-call-graph">Building a Call Graph</a></li>
+<li><a class="reference internal" href="#writing-llvm-passes">Writing LLVM Passes</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#references">References</a></li>
@@ -196,6 +198,8 @@
 <li><a class="reference internal" href="#resuing-llvm-passes">Resuing LLVM Passes</a><ul>
 <li><a class="reference internal" href="#ssa">SSA</a></li>
 <li><a class="reference internal" href="#type-dependence-graph-construction">Type Dependence Graph Construction</a></li>
+<li><a class="reference internal" href="#building-a-call-graph">Building a Call Graph</a></li>
+<li><a class="reference internal" href="#writing-llvm-passes">Writing LLVM Passes</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#references">References</a></li>
@@ -920,6 +924,29 @@ types.</li>
 LLVM or networkx). Currently we have our own, which we can replace.
 Expected save: 21 SLOC (<a class="reference external" href="https://github.com/markflorisson88/numba/blob/phimerge/numba/typesystem/ssatypes.py#L677">https://github.com/markflorisson88/numba/blob/phimerge/numba/typesystem/ssatypes.py#L677</a>)</p>
 </div>
+<div class="section" id="building-a-call-graph">
+<h3>Building a Call Graph<a class="headerlink" href="#building-a-call-graph" title="Permalink to this headline">¶</a></h3>
+<p>This will be useful to use LLVM for in order to:</p>
+<blockquote>
+<div><ul class="simple">
+<li>Efficiently infer types of direct or indirect uses of recursion for autojit
+functions or methods</li>
+<li>Detect such recusion by letting LLVM find the SCCs in the call graph, and
+resolving in an analogous and cooperative manner to how we resolve the type graph</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="writing-llvm-passes">
+<h3>Writing LLVM Passes<a class="headerlink" href="#writing-llvm-passes" title="Permalink to this headline">¶</a></h3>
+<p>We have a few constructs that may be better written as LLVM passes over simpler
+(lower-level) constructs (with exapnded control flow, three-address code arithmetic
+instructions, etc). We showed one such example already, but one can think
+of many others.</p>
+<p>We can define the penultimate IR in LLVM, such that any passes before code generator
+and after lowering of high-level constructions an be performed on this IR. This allows
+us to use the full power of LLVM where it is most adequate. Furthermore, we can likely
+do away with (most of) our code generator if we define our IR stages well.</p>
+</div>
 </div>
 <div class="section" id="references">
 <h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
@@ -958,7 +985,7 @@ Expected save: 21 SLOC (<a class="reference external" href="https://github.com/m
         <li><a href="../py-modindex.html" title="Python Module Index" >modules</a></li>
         <li><a href="reference.html" title="Numba Module Reference" >next</a></li>
         <li><a href="architecture.html" title="Numba Architecture" >previous</a></li>
-        <li><a href="../index.html">numba 0.7.1-268-gda224f6-dirty documentation</a></li> 
+        <li><a href="../index.html">numba 0.7.1-270-g860f878 documentation</a></li> 
       
     </ul>
   </div>
