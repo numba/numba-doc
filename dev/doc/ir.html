@@ -8,7 +8,7 @@
   <head>
     <meta charset="utf-8" />
     
-    <title>Numba IR Stages &mdash; numba 0.7.1-272-g61a583c documentation</title>
+    <title>Numba IR Stages &mdash; numba 0.7.2-226-g392482e-dirty documentation</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
@@ -35,7 +35,7 @@
 <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
             URL_ROOT:    '../',
-            VERSION:     '0.7.1-272-g61a583c',
+            VERSION:     '0.7.2-226-g392482e-dirty',
             COLLAPSE_INDEX: false,
             FILE_SUFFIX: '.html',
             HAS_SOURCE:  true
@@ -59,7 +59,7 @@
     });
   });
 </script>
-    <link rel="top" title="numba 0.7.1-272-g61a583c documentation" href="../index.html" />
+    <link rel="top" title="numba 0.7.2-226-g392482e-dirty documentation" href="../index.html" />
     <link rel="next" title="Numba Module Reference" href="reference.html" />
     <link rel="prev" title="Numba Architecture" href="architecture.html" /> 
   </head>
@@ -72,7 +72,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="../index.html">numba 0.7.1-272-g61a583c documentation</a>
+          <a class="brand" href="../index.html">numba 0.7.2-226-g392482e-dirty documentation</a>
           <div class="nav-collapse collapse">
             <ul class="nav pull-right">
               
@@ -249,17 +249,109 @@ points. These entry points also allow for further decoupling of the Numba
 architecture. We propose several new Intermediate Representations (IRs),
 from high-level to low-level:</p>
 <blockquote>
+<div><ul>
+<li><p class="first">The Python AST IR (input to a numba frontend)</p>
+</li>
+<li><p class="first">Normalized IR</p>
+<blockquote>
 <div><ul class="simple">
-<li>The Python AST IR (input to a numba frontend)</li>
-<li>Initial Python-like IR</li>
-<li>Untyped IR in SSA form</li>
-<li>Typed IR in SSA form</li>
-<li>Low-level IR in SSA form</li>
-<li>Final LLVM IR, the final input for LLVM. This IR is unportable
-since the sizes of types are fixed.</li>
+<li>Like a Python AST, but contains normalized structures
+(assignments, comparisons, list comprehensions, etc)</li>
 </ul>
 </div></blockquote>
-<p>All IRs except the last are portable across machine architectures.</p>
+</li>
+<li><p class="first">Untyped IR in SSA form</p>
+<blockquote>
+<div><ul class="simple">
+<li>Expanded control flow (with annotations)</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first">Typed IR in SSA form</p>
+</li>
+<li><p class="first">Low-level IR in SSA form</p>
+</li>
+<li><p class="first">Final LLVM IR, the final input for LLVM. This IR is unportable
+since the sizes of types are fixed.</p>
+</li>
+</ul>
+</div></blockquote>
+<p>All IRs except the last are portable across machine architectures.
+We get the following options for rewrites:</p>
+<p class="graphviz">
+<img src="../_images/graphviz-6cd24634c65c4099c20a116b1cbc0ff053f71958.png" alt="digraph stages {
+&quot;Python AST&quot; -&gt; Normalized
+Normalized -&gt; &quot;Stage 1&quot;
+&quot;Stage 1&quot; -&gt; &quot;Untyped SSA&quot;
+&quot;Untyped SSA&quot; -&gt; &quot;Stage 2&quot;
+&quot;Stage 2&quot; -&gt; &quot;Typed SSA IR&quot;
+&quot;Typed SSA IR&quot; -&gt; &quot;Stage 3&quot;
+&quot;Stage 3&quot; -&gt; &quot;Low-level IR&quot;
+&quot;Low-level IR&quot; -&gt; &quot;Stage 4&quot;
+&quot;Stage 4&quot; -&gt; &quot;Final LLVM&quot;
+}" />
+</p>
+<p>Each stage specifies a point for a series of IR transformations that together
+define the input for the next stage. Each rewrite may target a different IR stage:</p>
+<blockquote>
+<div><ul>
+<li><p class="first">The input to <cite>Stage 1</cite> is an AST with all high-level syntactic constructs
+left intact. This allows high-level transformations that operate or
+expand most suitable at an abstract syntax level.</p>
+</li>
+<li><p class="first">The input to <cite>Stage 2</cite> is a Function with a sequence of basic blocks
+(expanded control flow), such that all control flow can be handled
+uniformly (and there may still be high-level annotations that signify
+where loops are (so that we don&#8217;t have to find them again from the
+dominator tree and CFG), where exceptions are raised and caught, etc).
+Def/use and variable merges are explicit.</p>
+<p>Expressions and statements are encoded in sequences of AST expression trees.
+Expressions result in implicit Values which can be referred to in subsequent
+expression trees without re-evaluation (we can replace the
+CloneNode/CloneableNode mechanisms that currently allow subtree sharing).</p>
+</li>
+<li><p class="first">The input to <cite>Stage 3</cite> is the same as to <cite>Stage 2</cite>, except that
+it additionally contains type information (and type promotions).</p>
+</li>
+<li><p class="first"><cite>Stage 4</cite> is a low-level three-address code representation that
+still has polymorphic operations, such as <tt class="docutils literal"><span class="pre">c</span> <span class="pre">=</span> <span class="pre">add(a,</span> <span class="pre">b)</span></tt>,
+where <tt class="docutils literal"><span class="pre">a</span></tt> and <tt class="docutils literal"><span class="pre">b</span></tt> can be operands of any scalar type. A final
+pass then lowers these constructs to specialized LLVM instructions.</p>
+</li>
+</ul>
+</div></blockquote>
+<p>IRs up to the low-level IR (input to <cite>Stage 4</cite>) should still contain explicit
+variable stores, so that passes can rewrite variable assignments to for instance
+assignments to struct or extension type instance members. Keeping stores and loads
+to and from these variables in the original order is important in the context
+of closures (or any function call which can modify a stack variable through a pointer).</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Maybe we should only do this for cell- and free variables, and fix
+closures before CFA?</p>
+</div>
+<p>We must make sure to support preloads for variable definitions across basic
+blocks, e.g.:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">if</span> <span class="o">...</span><span class="p">:</span>
+    <span class="n">A</span> <span class="o">=</span> <span class="o">...</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">A</span> <span class="o">=</span> <span class="o">...</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="o">...</span><span class="p">):</span>
+    <span class="n">use</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>In this example we want to preload <tt class="docutils literal"><span class="pre">A.data</span></tt> (and <tt class="docutils literal"><span class="pre">a.strides[0]</span></tt>). This can
+probably work equally well if each expression value is an implicit definition
+and we have a way to find Values given a Phi. We then get:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">ValueC</span> <span class="o">=</span> <span class="n">BinOp</span><span class="p">(</span><span class="n">ValueA</span><span class="p">,</span> <span class="n">Add</span><span class="p">,</span> <span class="n">ValueB</span><span class="p">)</span>
+<span class="n">Store</span><span class="p">(</span><span class="n">Name</span><span class="p">(</span><span class="s">&#39;c&#39;</span><span class="p">),</span> <span class="n">ValueC</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Instead of:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">Assign</span><span class="p">(</span><span class="n">Name</span><span class="p">(</span><span class="s">&#39;c&#39;</span><span class="p">),</span> <span class="n">BinOp</span><span class="p">(</span><span class="n">Name</span><span class="p">(</span><span class="s">&#39;a&#39;</span><span class="p">),</span> <span class="n">Add</span><span class="p">,</span> <span class="n">Name</span><span class="p">(</span><span class="s">&#39;b&#39;</span><span class="p">)))</span>
+</pre></div>
+</div>
 <div class="section" id="intermediate-representations">
 <h2>Intermediate Representations<a class="headerlink" href="#intermediate-representations" title="Permalink to this headline">¶</a></h2>
 <p>Each IR consists of two layers, namely a higher-level Abstract Syntax Tree
@@ -330,7 +422,7 @@ the IR most suitable to their needs.</p>
 <div class="section" id="llvm-ir">
 <span id="id2"></span><h4>LLVM IR<a class="headerlink" href="#llvm-ir" title="Permalink to this headline">¶</a></h4>
 <p>We can generate automatic mapping code to map schema instances to
-opaguely typed LLVM IR automatically, which is the abstract syntax
+opaquely typed LLVM IR automatically, which is the abstract syntax
 generated post-order. E.g. <tt class="docutils literal"><span class="pre">a</span> <span class="pre">+</span> <span class="pre">b</span> <span class="pre">*</span> <span class="pre">c</span></tt> becomes:</p>
 <div class="highlight-llvm"><pre>!0 = metadata !{ metadata !"operator", i8* "Mul" }
 !1 = metadata !{ metadata !"operator", i8* "Add" }
@@ -654,7 +746,7 @@ representation than an AST. Design considerations (<a class="footnote-reference"
 <li>Appropriateness for transformation and code generation</li>
 </ul>
 </div></blockquote>
-<p>To evaluate some of these metrics we will look at some concretizations.</p>
+<p>To evaluate some of these metrics we will look at some concretions.</p>
 <div class="section" id="structure">
 <h3>Structure<a class="headerlink" href="#structure" title="Permalink to this headline">¶</a></h3>
 <p>We can consider expanded or abstract control flow:</p>
@@ -737,10 +829,10 @@ the region)</li>
 <p>Program instances using these constructs must be quickly identifyable to aid
 easy tranformation. For instance, <tt class="docutils literal"><span class="pre">obj.method(10)</span></tt> should be quickly transformable
 using rules along the following lines:</p>
-<div class="highlight-ocaml"><div class="highlight"><pre><span class="nc">Attribute</span><span class="o">(</span><span class="k">value</span><span class="o">.</span><span class="k">type</span><span class="o">=</span><span class="k">object</span><span class="o">,</span> <span class="n">attr</span><span class="o">)</span>
+<div class="highlight-ocaml"><div class="highlight"><pre><span class="nc">Attribute</span><span class="o">(</span><span class="nc">Value</span><span class="o">(</span><span class="k">type</span><span class="o">=</span><span class="n">object_</span><span class="o">),</span> <span class="n">attr</span><span class="o">)</span>
     <span class="o">-&gt;</span> <span class="nc">PyObject_GetAttrString</span><span class="o">(</span><span class="k">value</span><span class="o">,</span> <span class="n">attr</span><span class="o">)</span>
 
-<span class="nc">Attribute</span><span class="o">(</span><span class="k">value</span><span class="o">,</span> <span class="n">attr</span><span class="o">).</span><span class="k">type</span><span class="o">=</span><span class="nc">ExtensionMethod</span><span class="o">(...,</span> <span class="n">is_jit</span><span class="o">=</span><span class="nc">True</span><span class="o">)</span>
+<span class="nc">Attribute</span><span class="o">(</span><span class="nc">ExtensionMethod</span><span class="o">(...,</span> <span class="n">is_jit</span><span class="o">=</span><span class="nc">True</span><span class="o">),</span> <span class="k">value</span><span class="o">,</span> <span class="n">attr</span><span class="o">)</span>
     <span class="o">-&gt;</span> <span class="nc">ExtensionMethodStruct</span><span class="o">(</span><span class="k">value</span><span class="o">,</span> <span class="k">method</span><span class="o">)</span>
 </pre></div>
 </div>
@@ -848,7 +940,6 @@ of:</p>
 <p>This LLVM-constructed SSA graph can be mapped back to our high-lever IR
 with relative ease if we simply remembered which LLVM basic block associates
 with which basic block in our IR.</p>
-<p>Expected save: 220 SLOC (<a class="reference external" href="https://github.com/markflorisson88/numba/blob/phimerge/numba/control_flow/ssa.py#L20">https://github.com/markflorisson88/numba/blob/phimerge/numba/control_flow/ssa.py#L20</a>).</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">This operates under the assumption that we have a general
@@ -923,9 +1014,6 @@ given all input types to the SCC. Update internal nodes with their result
 types.</li>
 </ul>
 </div></blockquote>
-<p>We can compute strongly connected components using many libraries (including
-LLVM or networkx). Currently we have our own, which we can replace.
-Expected save: 21 SLOC (<a class="reference external" href="https://github.com/markflorisson88/numba/blob/phimerge/numba/typesystem/ssatypes.py#L677">https://github.com/markflorisson88/numba/blob/phimerge/numba/typesystem/ssatypes.py#L677</a>)</p>
 </div>
 <div class="section" id="building-a-call-graph">
 <h3>Building a Call Graph<a class="headerlink" href="#building-a-call-graph" title="Permalink to this headline">¶</a></h3>
@@ -988,7 +1076,7 @@ do away with (most of) our code generator if we define our IR stages well.</p>
         <li><a href="../py-modindex.html" title="Python Module Index" >modules</a></li>
         <li><a href="reference.html" title="Numba Module Reference" >next</a></li>
         <li><a href="architecture.html" title="Numba Architecture" >previous</a></li>
-        <li><a href="../index.html">numba 0.7.1-272-g61a583c documentation</a></li> 
+        <li><a href="../index.html">numba 0.7.2-226-g392482e-dirty documentation</a></li> 
       
     </ul>
   </div>

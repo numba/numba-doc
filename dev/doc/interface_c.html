@@ -8,7 +8,7 @@
   <head>
     <meta charset="utf-8" />
     
-    <title>Interfacing with C &mdash; numba 0.7.1-272-g61a583c documentation</title>
+    <title>Interfacing with C &mdash; numba 0.7.2-226-g392482e-dirty documentation</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
@@ -35,7 +35,7 @@
 <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
             URL_ROOT:    '../',
-            VERSION:     '0.7.1-272-g61a583c',
+            VERSION:     '0.7.2-226-g392482e-dirty',
             COLLAPSE_INDEX: false,
             FILE_SUFFIX: '.html',
             HAS_SOURCE:  true
@@ -59,7 +59,7 @@
     });
   });
 </script>
-    <link rel="top" title="numba 0.7.1-272-g61a583c documentation" href="../index.html" />
+    <link rel="top" title="numba 0.7.2-226-g392482e-dirty documentation" href="../index.html" />
     <link rel="next" title="Static Compilation (pycc)" href="pycc.html" />
     <link rel="prev" title="Arrays" href="arrays.html" /> 
   </head>
@@ -72,7 +72,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="../index.html">numba 0.7.1-272-g61a583c documentation</a>
+          <a class="brand" href="../index.html">numba 0.7.2-226-g392482e-dirty documentation</a>
           <div class="nav-collapse collapse">
             <ul class="nav pull-right">
               
@@ -211,8 +211,9 @@
 <div class="section" id="ctypes-and-cffi">
 <h2>Ctypes and CFFI<a class="headerlink" href="#ctypes-and-cffi" title="Permalink to this headline">¶</a></h2>
 <p>Numba supports jitting ctypes and CFFI function calls. Numba will automatically
-figure out the signatures of the functions and data. Below is a gibbs sampling
-code that accesses ctypes (or CFFI) functions defined in another module (
+figure out the signatures of the functions and data. Below is a Gibbs sampling
+implementation that accesses ctypes (or CFFI) functions defined in another
+module (
 <tt class="docutils literal"><span class="pre">rk_seed</span></tt>,  <tt class="docutils literal"><span class="pre">rk_gamma</span></tt> and <tt class="docutils literal"><span class="pre">rk_normal</span></tt>), and that passes in a pointer to a struct
 also allocated with ctypes (<tt class="docutils literal"><span class="pre">state_p</span></tt>):</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">gibbs</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">thin</span><span class="p">):</span>
@@ -241,7 +242,7 @@ However, passing in individual functions does.</p>
 <div class="section" id="writing-low-level-code">
 <h2>Writing Low-level Code<a class="headerlink" href="#writing-low-level-code" title="Permalink to this headline">¶</a></h2>
 <p>Numba allows users to deal with high-level as well as low-level C-like code.
-Users can access and define new or external stucts, deal with pointers, and
+Users can access and define new or external structs, deal with pointers, and
 call C functions natively.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
@@ -262,34 +263,34 @@ copy-by-value semantics, but this is likely to change.</p>
 </ul>
 </div></blockquote>
 <p>An example is shown below:</p>
-<div class="highlight-python"><pre># -*- coding: utf-8 -*-
-from __future__ import print_function, division, absolute_import
-from numba import struct, jit, double
-import numpy as np
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># -*- coding: utf-8 -*-</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">absolute_import</span>
+<span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">struct</span><span class="p">,</span> <span class="n">jit</span><span class="p">,</span> <span class="n">double</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 
-record_type = struct([('x', double), ('y', double)])
-record_dtype = record_type.get_dtype()
-a = np.array([(1.0, 2.0), (3.0, 4.0)], dtype=record_dtype)
+<span class="n">record_type</span> <span class="o">=</span> <span class="n">struct</span><span class="p">([(</span><span class="s">&#39;x&#39;</span><span class="p">,</span> <span class="n">double</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;y&#39;</span><span class="p">,</span> <span class="n">double</span><span class="p">)])</span>
+<span class="n">record_dtype</span> <span class="o">=</span> <span class="n">record_type</span><span class="o">.</span><span class="n">get_dtype</span><span class="p">()</span>
+<span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">),</span> <span class="p">(</span><span class="mf">3.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">)],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">record_dtype</span><span class="p">)</span>
 
-@jit(argtypes=[record_type[:]])
-def hypot(data):
-    # return types of numpy functions are inferred
-    result = np.empty_like(data, dtype=np.float64) 
-    # notice access to structure elements 'x' and 'y' via attribute access
-    # You can also index by field name or field index:
-    #       data[i].x == data[i]['x'] == data[i][0]
-    for i in range(data.shape[0]):
-        result[i] = np.sqrt(data[i].x * data[i].x + data[i].y * data[i].y)
+<span class="nd">@jit</span><span class="p">(</span><span class="n">argtypes</span><span class="o">=</span><span class="p">[</span><span class="n">record_type</span><span class="p">[:]])</span>
+<span class="k">def</span> <span class="nf">hypot</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="c"># return types of numpy functions are inferred</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty_like</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span> 
+    <span class="c"># notice access to structure elements &#39;x&#39; and &#39;y&#39; via attribute access</span>
+    <span class="c"># You can also index by field name or field index:</span>
+    <span class="c">#       data[i].x == data[i][&#39;x&#39;] == data[i][0]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+        <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">y</span> <span class="o">*</span> <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
 
-    return result
+    <span class="k">return</span> <span class="n">result</span>
 
-print hypot(a)
+<span class="k">print</span><span class="p">(</span><span class="n">hypot</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
 
-# Notice inferred return type
-print hypot.signature
-# Notice native sqrt calls and for.body direct access to memory...
-#print hypot.lfunc
-</pre>
+<span class="c"># Notice inferred return type</span>
+<span class="k">print</span><span class="p">(</span><span class="n">hypot</span><span class="o">.</span><span class="n">signature</span><span class="p">)</span>
+<span class="c"># Notice native sqrt calls and for.body direct access to memory...</span>
+<span class="c">#print(hypot.lfunc)</span>
+</pre></div>
 </div>
 </div>
 <div class="section" id="pointers">
@@ -466,7 +467,7 @@ the validity can be quickly verified :)</p>
         <li><a href="../py-modindex.html" title="Python Module Index" >modules</a></li>
         <li><a href="pycc.html" title="Static Compilation (pycc)" >next</a></li>
         <li><a href="arrays.html" title="Arrays" >previous</a></li>
-        <li><a href="../index.html">numba 0.7.1-272-g61a583c documentation</a></li> 
+        <li><a href="../index.html">numba 0.7.2-226-g392482e-dirty documentation</a></li> 
       
     </ul>
   </div>
