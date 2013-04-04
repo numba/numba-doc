@@ -8,7 +8,7 @@
   <head>
     <meta charset="utf-8" />
     
-    <title>Interfacing with C &mdash; numba 0.7.2-278-ga8a2104-dirty documentation</title>
+    <title>Interfacing with C &mdash; numba 0.7.2-283-gc4ecc2c-dirty documentation</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
@@ -35,7 +35,7 @@
 <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
             URL_ROOT:    '../',
-            VERSION:     '0.7.2-278-ga8a2104-dirty',
+            VERSION:     '0.7.2-283-gc4ecc2c-dirty',
             COLLAPSE_INDEX: false,
             FILE_SUFFIX: '.html',
             HAS_SOURCE:  true
@@ -59,7 +59,7 @@
     });
   });
 </script>
-    <link rel="top" title="numba 0.7.2-278-ga8a2104-dirty documentation" href="../index.html" />
+    <link rel="top" title="numba 0.7.2-283-gc4ecc2c-dirty documentation" href="../index.html" />
     <link rel="next" title="Static Compilation (pycc)" href="pycc.html" />
     <link rel="prev" title="Arrays" href="arrays.html" /> 
   </head>
@@ -72,7 +72,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="../index.html">numba 0.7.2-278-ga8a2104-dirty documentation</a>
+          <a class="brand" href="../index.html">numba 0.7.2-283-gc4ecc2c-dirty documentation</a>
           <div class="nav-collapse collapse">
             <ul class="nav pull-right">
               
@@ -116,6 +116,7 @@
 </ul>
 </li>
 <li><a class="reference internal" href="#using-intrinsics">Using Intrinsics</a></li>
+<li><a class="reference internal" href="#using-numba-functions-in-external-code">Using Numba Functions in External Code</a></li>
 <li><a class="reference internal" href="#references">References</a></li>
 </ul>
 </li>
@@ -166,6 +167,7 @@
 </ul>
 </li>
 <li><a class="reference internal" href="#using-intrinsics">Using Intrinsics</a></li>
+<li><a class="reference internal" href="#using-numba-functions-in-external-code">Using Numba Functions in External Code</a></li>
 <li><a class="reference internal" href="#references">References</a></li>
 </ul>
 </li>
@@ -424,6 +426,65 @@ and intrinsics. This is the responsibility of the user. Fortunately,
 the validity can be quickly verified :)</p>
 </div>
 </div>
+<div class="section" id="using-numba-functions-in-external-code">
+<h2>Using Numba Functions in External Code<a class="headerlink" href="#using-numba-functions-in-external-code" title="Permalink to this headline">¶</a></h2>
+<p>Users can take the address of a numba compiled function using <tt class="docutils literal"><span class="pre">numba.addressof</span></tt>:</p>
+<dl class="function">
+<dt id="addressof">
+<tt class="descname">addressof</tt><big>(</big><em>jit_func</em>, <em>propagate=True</em><big>)</big><a class="headerlink" href="#addressof" title="Permalink to this definition">¶</a></dt>
+<dd><p>Take the address of <tt class="docutils literal"><span class="pre">jit_func</span></tt> as a ctypes function. <tt class="docutils literal"><span class="pre">propagate</span></tt> indicates
+whether uncaught exceptions propogate or are written to stderr.</p>
+</dd></dl>
+
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@jit</span><span class="p">(</span><span class="n">int32</span><span class="p">(</span><span class="n">int32</span><span class="p">,</span> <span class="n">int32</span><span class="p">))</span>
+<span class="k">def</span> <span class="nf">mul</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">a</span> <span class="o">*</span> <span class="n">b</span>
+
+<span class="n">cmul</span> <span class="o">=</span> <span class="n">numba</span><span class="o">.</span><span class="n">addressof</span><span class="p">(</span><span class="n">mul</span><span class="p">)</span>
+<span class="k">print</span> <span class="n">cmul</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+
+<span class="c"># Get the address as an Python int</span>
+<span class="n">addr_int</span> <span class="o">=</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">cmul</span><span class="p">,</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">c_void_p</span><span class="p">)</span><span class="o">.</span><span class="n">value</span>
+<span class="k">print</span> <span class="nb">hex</span><span class="p">(</span><span class="n">addr_int</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Callers can currently check for exceptions (where appropriate) using
+<tt class="docutils literal"><span class="pre">PyErr_Occurred()</span></tt> (which requires the GIL).</p>
+<p><tt class="docutils literal"><span class="pre">nopython</span></tt> functions
+which do not directly or indirectly call functions requiring the GIL or
+use the <tt class="docutils literal"><span class="pre">with</span> <span class="pre">python</span></tt> construct can be called without the GIL. Numba
+does not check whether this is valid, nor does it currently acquire the GIL.</p>
+<p>Currently supported bad values for return types:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="57%" />
+<col width="43%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Return Type</th>
+<th class="head">Bad Value</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">object_</span></tt></td>
+<td><tt class="docutils literal"><span class="pre">NULL</span></tt></td>
+</tr>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">floating</span></tt></td>
+<td><tt class="docutils literal"><span class="pre">NaN</span></tt></td>
+</tr>
+</tbody>
+</table>
+<p>These can be checked as follows:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="kt">float</span> <span class="n">ret</span> <span class="o">=</span> <span class="n">my_numba_func</span><span class="p">(...);</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">ret</span> <span class="o">!=</span> <span class="n">ret</span> <span class="o">&amp;&amp;</span> <span class="n">PyErr_Occurred</span><span class="p">())</span> <span class="p">{</span>
+    <span class="c1">// Handle error</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The error indicator for integer values is currently undecided, since
+constants in LLVM bitcode are printed in decimal form, but hex codes
+can be a better choice for other scenarios.</p>
+</div>
 <div class="section" id="references">
 <h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
 <table class="docutils footnote" frame="void" id="id4" rules="none">
@@ -467,7 +528,7 @@ the validity can be quickly verified :)</p>
         <li><a href="../py-modindex.html" title="Python Module Index" >modules</a></li>
         <li><a href="pycc.html" title="Static Compilation (pycc)" >next</a></li>
         <li><a href="arrays.html" title="Arrays" >previous</a></li>
-        <li><a href="../index.html">numba 0.7.2-278-ga8a2104-dirty documentation</a></li> 
+        <li><a href="../index.html">numba 0.7.2-283-gc4ecc2c-dirty documentation</a></li> 
       
     </ul>
   </div>
