@@ -8,7 +8,7 @@
   <head>
     <meta charset="utf-8" />
     
-    <title>Numba Roadmap &mdash; numba 0.7.2-323-g2e28dee-dirty documentation</title>
+    <title>Numba Roadmap &mdash; numba 0.8.0-dirty documentation</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
@@ -35,7 +35,7 @@
 <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
             URL_ROOT:    '',
-            VERSION:     '0.7.2-323-g2e28dee-dirty',
+            VERSION:     '0.8.0-dirty',
             COLLAPSE_INDEX: false,
             FILE_SUFFIX: '.html',
             HAS_SOURCE:  true
@@ -59,7 +59,7 @@
     });
   });
 </script>
-    <link rel="top" title="numba 0.7.2-323-g2e28dee-dirty documentation" href="index.html" />
+    <link rel="top" title="numba 0.8.0-dirty documentation" href="index.html" />
     <link rel="next" title="Numba Module Reference" href="reference.html" />
     <link rel="prev" title="Numba IR Stages" href="ir.html" /> 
   </head>
@@ -72,7 +72,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="index.html">numba 0.7.2-323-g2e28dee-dirty documentation</a>
+          <a class="brand" href="index.html">numba 0.8.0-dirty documentation</a>
           <div class="nav-collapse collapse">
             <ul class="nav pull-right">
               
@@ -283,6 +283,30 @@ is interested in implementing them.</p>
 </li>
 </ul>
 </div></blockquote>
+<p>We also like some minimal Cython support, in addition to the longer
+term goals of SEP 200. One idea from Zaur Shibzukhov is to provide
+support for Cython pxd overlays:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># foo.py</span>
+
+<span class="k">def</span> <span class="nf">my_function</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="k">return</span> <span class="n">a</span> <span class="o">**</span> <span class="n">b</span>
+</pre></div>
+</div>
+<p>Such a module can be overlain with a Cython pxd file, e.g.</p>
+<div class="highlight-cython"><div class="highlight"><pre><span class="c"># foo.pxd</span>
+
+<span class="k">cimport</span> <span class="nn">cython</span>
+
+<span class="nd">@cython</span><span class="o">.</span><span class="n">locals</span><span class="p">(</span><span class="n">b</span><span class="o">=</span><span class="n">double</span><span class="p">)</span>
+<span class="k">cpdef</span> <span class="nf">my_function</span><span class="p">(</span><span class="n">double</span> <span class="n">a</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>For some inspiration of what we can do with pxd overlays, see also:
+<a class="reference external" href="https://github.com/cython/cython/blob/master/Cython/Compiler/FlowControl.pxd">https://github.com/cython/cython/blob/master/Cython/Compiler/FlowControl.pxd</a></p>
+<p>We can now compile <tt class="docutils literal"><span class="pre">foo.py</span></tt> with Cython. We should be able to similarly
+compile <tt class="docutils literal"><span class="pre">foo.py</span></tt> with numba, using <tt class="docutils literal"><span class="pre">pycc</span></tt> as well as at runtime to produce
+a new module with annotated functions compiled in the right order.</p>
 </div>
 </div>
 <div class="section" id="thing-we-want">
@@ -656,7 +680,7 @@ jit and autojit methods.</p>
         <li><a href="py-modindex.html" title="Python Module Index" >modules</a></li>
         <li><a href="reference.html" title="Numba Module Reference" >next</a></li>
         <li><a href="ir.html" title="Numba IR Stages" >previous</a></li>
-        <li><a href="index.html">numba 0.7.2-323-g2e28dee-dirty documentation</a></li> 
+        <li><a href="index.html">numba 0.8.0-dirty documentation</a></li> 
       
     </ul>
   </div>
