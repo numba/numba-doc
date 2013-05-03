@@ -8,7 +8,7 @@
   <head>
     <meta charset="utf-8" />
     
-    <title>Arrays &mdash; numba 0.8.0-dirty documentation</title>
+    <title>Arrays &mdash; numba 0.8.1-69-g60d01b8 documentation</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
@@ -35,7 +35,7 @@
 <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
             URL_ROOT:    '',
-            VERSION:     '0.8.0-dirty',
+            VERSION:     '0.8.1-69-g60d01b8',
             COLLAPSE_INDEX: false,
             FILE_SUFFIX: '.html',
             HAS_SOURCE:  true
@@ -59,7 +59,7 @@
     });
   });
 </script>
-    <link rel="top" title="numba 0.8.0-dirty documentation" href="index.html" />
+    <link rel="top" title="numba 0.8.1-69-g60d01b8 documentation" href="index.html" />
     <link rel="next" title="Interfacing with C" href="interface_c.html" />
     <link rel="prev" title="Python Functionality" href="pythonstuff.html" /> 
   </head>
@@ -72,7 +72,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="index.html">numba 0.8.0-dirty documentation</a>
+          <a class="brand" href="index.html">numba 0.8.1-69-g60d01b8 documentation</a>
           <div class="nav-collapse collapse">
             <ul class="nav pull-right">
               
@@ -118,6 +118,11 @@
 <li><a class="reference internal" href="#universal-functions-ufuncs">Universal Functions (ufuncs)</a><ul>
 <li><a class="reference internal" href="#ufunc-definition">ufunc Definition</a></li>
 <li><a class="reference internal" href="#building-ufuncs-using-vectorize">Building ufuncs using &#64;vectorize</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#generalized-ufuncs">Generalized Ufuncs</a><ul>
+<li><a class="reference internal" href="#imports">Imports</a></li>
+<li><a class="reference internal" href="#generalized-ufunc-definition">Generalized ufunc Definition</a></li>
 </ul>
 </li>
 </ul>
@@ -171,6 +176,11 @@
 <li><a class="reference internal" href="#universal-functions-ufuncs">Universal Functions (ufuncs)</a><ul>
 <li><a class="reference internal" href="#ufunc-definition">ufunc Definition</a></li>
 <li><a class="reference internal" href="#building-ufuncs-using-vectorize">Building ufuncs using &#64;vectorize</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#generalized-ufuncs">Generalized Ufuncs</a><ul>
+<li><a class="reference internal" href="#imports">Imports</a></li>
+<li><a class="reference internal" href="#generalized-ufunc-definition">Generalized ufunc Definition</a></li>
 </ul>
 </li>
 </ul>
@@ -424,6 +434,66 @@ etc:</p>
 <p>The <cite>vectorize</cite> decorator takes a list of function signature and an optional <cite>target</cite> keyword argument (default to &#8216;cpu&#8217;).  The example above generate a <cite>sinc</cite> ufunc that is overloaded to accept float and double.  This syntax replaces calls to <cite>Vectorize.add</cite> and <cite>Vectorize.build_ufunc</cite>.</p>
 </div>
 </div>
+<div class="section" id="generalized-ufuncs">
+<h2>Generalized Ufuncs<a class="headerlink" href="#generalized-ufuncs" title="Permalink to this headline">¶</a></h2>
+<p>The <tt class="docutils literal"><span class="pre">numba.vectorize</span></tt> module also provides support for generalized ufuncs.
+Traditional ufuncs perfom element-wise operations, whereas generalized ufuncs operate on entire
+sub-arrays. Unlike other Numba Vectorize classes, the GUVectorize constructor takes
+an additional signature which specifies the shapes of the inner arrays we want to operate on.</p>
+<div class="section" id="imports">
+<h3>Imports<a class="headerlink" href="#imports" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">float32</span><span class="p">,</span> <span class="n">float64</span><span class="p">,</span> <span class="n">int32</span>
+<span class="kn">from</span> <span class="nn">numba.vectorize</span> <span class="kn">import</span> <span class="n">GUVectorize</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="generalized-ufunc-definition">
+<h3>Generalized ufunc Definition<a class="headerlink" href="#generalized-ufunc-definition" title="Permalink to this headline">¶</a></h3>
+<p>GUVectorize ufunc arguments are vectors of a NumPy array.  Function definitions can be arbitrary
+expressions.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">matmulcore</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">C</span><span class="p">):</span>
+    <span class="n">m</span><span class="p">,</span> <span class="n">n</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">n</span><span class="p">,</span> <span class="n">p</span> <span class="o">=</span> <span class="n">B</span><span class="o">.</span><span class="n">shape</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">m</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
+            <span class="n">C</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+                <span class="n">C</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">+=</span> <span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span> <span class="o">*</span> <span class="n">B</span><span class="p">[</span><span class="n">k</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Compilation requires type information. Numba assumes no knowledge of type when building native
+ufuncs. We must therefore define argument and return dtypes for the defined ufunc. We can add
+as many dtypes as we need, which do not need to be uniform, i.e. we can specify a gufunc
+taking an array of ints and an array of doubles while producing an array of complex numbers.
+The <tt class="docutils literal"><span class="pre">gufunc</span></tt> will dispatch to the right implementation depending on the argument types.</p>
+<p>We can define our gufunc as follows:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">gufunc</span> <span class="o">=</span> <span class="n">GUVectorize</span><span class="p">(</span><span class="n">matmulcore</span><span class="p">,</span> <span class="s">&#39;(m,n),(n,p)-&gt;(m,p)&#39;</span><span class="p">)</span>
+<span class="n">gufunc</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">argtypes</span><span class="o">=</span><span class="p">[</span><span class="n">float32</span><span class="p">[:,:],</span> <span class="n">float32</span><span class="p">[:,:],</span> <span class="n">float32</span><span class="p">[:,:]])</span>
+<span class="n">gufunc</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">argtypes</span><span class="o">=</span><span class="p">[</span><span class="n">float64</span><span class="p">[:,:],</span> <span class="n">float64</span><span class="p">[:,:],</span> <span class="n">float64</span><span class="p">[:,:]])</span>
+<span class="n">gufunc</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">argtypes</span><span class="o">=</span><span class="p">[</span><span class="n">int32</span><span class="p">[:,:],</span> <span class="n">int32</span><span class="p">[:,:],</span> <span class="n">int32</span><span class="p">[:,:]])</span>
+</pre></div>
+</div>
+<p>Above we are using a float <strong>float32</strong>, a double <strong>float64</strong>, and a signed <strong>32-bit int</strong>.  The
+GUVectorize calls <a class="reference external" href="http://scipy-lectures.github.com/advanced/advanced_numpy/index.html#generalized-ufuncs">PyDynUFunc_FromFuncAndDataAndSignature</a> which
+requires a the signature: <em>(m,n),(n,p)-&gt;(m,p)</em> in the constructor.  This signature defines the <em>&#8220;core
+dimensions&#8221;</em> of the generalized ufunc.</p>
+<p>We can compile the ufunc as follows:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">gufunc</span> <span class="o">=</span> <span class="n">gufunc</span><span class="o">.</span><span class="n">build_ufunc</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>We can now use the gufunc with two NumPy matrices:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">matrix_ct</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">matrix_ct</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="mi">4</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">matrix_ct</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="n">B</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">matrix_ct</span> <span class="o">*</span> <span class="mi">4</span> <span class="o">*</span> <span class="mi">5</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">matrix_ct</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="n">C</span> <span class="o">=</span> <span class="n">gufunc</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Notice that we don&#8217;t have a third argument in the gufunc call but the generalized ufunc definition
+above has three arguments. The last argument of the generalized ufunc is the output, which is
+automatically allocated with the shape specified in the signature.</p>
+</div>
+</div>
 </div>
 
 
@@ -446,7 +516,7 @@ etc:</p>
         <li><a href="py-modindex.html" title="Python Module Index" >modules</a></li>
         <li><a href="interface_c.html" title="Interfacing with C" >next</a></li>
         <li><a href="pythonstuff.html" title="Python Functionality" >previous</a></li>
-        <li><a href="index.html">numba 0.8.0-dirty documentation</a></li> 
+        <li><a href="index.html">numba 0.8.1-69-g60d01b8 documentation</a></li> 
       
     </ul>
   </div>
