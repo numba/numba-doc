@@ -1,0 +1,537 @@
+
+<!DOCTYPE html>
+
+
+
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+    <title>Arrays &mdash; numba 0.9.0 documentation</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    
+<link rel="stylesheet" href="_static/css/basicstrap-base.css" type="text/css" />
+<link rel="stylesheet" href="_static/css/bootstrap.min.css" type="text/css" />
+<link rel="stylesheet" href="_static/css/font-awesome.min.css">
+<!--[if IE 7]>
+<link rel="stylesheet" href="_static/css/font-awesome-ie7.min.css">
+<![endif]-->
+<style type="text/css">
+  body {
+    padding-top: 60px;
+    padding-bottom: 40px;
+  }
+}
+</style>
+<link rel="stylesheet" href="_static/basicstrap.css" type="text/css" />
+<link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+<link rel="stylesheet" href="_static/css/bootstrap-responsive.min.css" type="text/css" />
+    
+<script type="text/javascript">
+  var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:    '',
+            VERSION:     '0.9.0',
+            COLLAPSE_INDEX: false,
+            FILE_SUFFIX: '.html',
+            HAS_SOURCE:  true
+  };
+</script>
+<script type="text/javascript" src="_static/js/jquery.min.js"></script>
+<script type="text/javascript" src="_static/underscore.js"></script>
+<script type="text/javascript" src="_static/doctools.js"></script>
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/javascript" src="_static/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+  $(document).ready(function(){
+    $('.show-sidebar').click(function(e) {
+       e.preventDefault();
+       if ($(".show-sidebar").html() == "Open Table Of Contents") {
+          $('.for-mobile').removeClass('hidden-phone');
+          $(".show-sidebar").html("Close Table Of Contents");
+       } else {
+          $(".show-sidebar").html("Open Table Of Contents");
+       }
+    });
+  });
+</script>
+    <link rel="top" title="numba 0.9.0 documentation" href="index.html" />
+    <link rel="next" title="Interfacing with C" href="interface_c.html" />
+    <link rel="prev" title="Python Functionality" href="pythonstuff.html" /> 
+  </head>
+  <body>
+    <div class="navbar navbar-fixed-top ">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="index.html">numba 0.9.0 documentation</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav pull-right">
+              
+                <li>
+                <a href="genindex.html" title="General Index" accesskey="I">index</a>
+                </li>
+                <li>
+                <a href="py-modindex.html" title="Python Module Index" >modules</a>
+                </li>
+                <li>
+                <a href="interface_c.html" title="Interfacing with C" accesskey="N">next</a>
+                </li>
+                <li>
+                <a href="pythonstuff.html" title="Python Functionality" accesskey="P">previous</a>
+                </li>
+              
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <!-- container -->
+    <div class="container-fluid">
+
+
+      
+      <div class="row-fluid hidden-desktop hidden-tablet">
+      
+<div class="span3 ">
+  <a class="visible-phone btn btn-small show-sidebar" data-toggle="collapse" data-target=".for-mobile">Open Table Of Contents</a>
+  <div class="for-mobile sidebar hidden-phone">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Arrays</a><ul>
+<li><a class="reference internal" href="#array-expressions">Array Expressions</a><ul>
+<li><a class="reference internal" href="#broadcasting">Broadcasting</a></li>
+<li><a class="reference internal" href="#new-arrays">New Arrays</a></li>
+<li><a class="reference internal" href="#math">Math</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#universal-functions-ufuncs">Universal Functions (ufuncs)</a><ul>
+<li><a class="reference internal" href="#ufunc-definition">ufunc Definition</a></li>
+<li><a class="reference internal" href="#building-ufuncs-using-vectorize">Building ufuncs using &#64;vectorize</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#generalized-ufuncs">Generalized Ufuncs</a><ul>
+<li><a class="reference internal" href="#imports">Imports</a></li>
+<li><a class="reference internal" href="#generalized-ufunc-definition">Generalized ufunc Definition</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="pythonstuff.html"
+                        title="previous chapter">Python Functionality</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="interface_c.html"
+                        title="next chapter">Interfacing with C</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/arrays.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox">
+  <h3>Quick search</h3>
+  <form class="search form-search" action="search.html" method="get">
+      <div class="input-append">
+        <input type="text" class="search-query" name="q">
+        <input type="submit" class="btn" value="Go" />
+      </div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+  </div>
+</div>
+      </div>
+      
+
+      <!-- row -->
+      <div class="row-fluid">
+         
+<div class="span3 visible-desktop visible-tablet">
+  <div class=" sidebar hidden-phone">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Arrays</a><ul>
+<li><a class="reference internal" href="#array-expressions">Array Expressions</a><ul>
+<li><a class="reference internal" href="#broadcasting">Broadcasting</a></li>
+<li><a class="reference internal" href="#new-arrays">New Arrays</a></li>
+<li><a class="reference internal" href="#math">Math</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#universal-functions-ufuncs">Universal Functions (ufuncs)</a><ul>
+<li><a class="reference internal" href="#ufunc-definition">ufunc Definition</a></li>
+<li><a class="reference internal" href="#building-ufuncs-using-vectorize">Building ufuncs using &#64;vectorize</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#generalized-ufuncs">Generalized Ufuncs</a><ul>
+<li><a class="reference internal" href="#imports">Imports</a></li>
+<li><a class="reference internal" href="#generalized-ufunc-definition">Generalized ufunc Definition</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="pythonstuff.html"
+                        title="previous chapter">Python Functionality</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="interface_c.html"
+                        title="next chapter">Interfacing with C</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/arrays.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox">
+  <h3>Quick search</h3>
+  <form class="search form-search" action="search.html" method="get">
+      <div class="input-append">
+        <input type="text" class="search-query" name="q">
+        <input type="submit" class="btn" value="Go" />
+      </div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+  </div>
+</div> 
+        
+
+        <div class="span9">
+          <div class="document">
+            <div class="documentwrapper">
+              <div class="bodywrapper">
+                <div class="body">
+                  
+  <div class="section" id="arrays">
+<span id="id1"></span><h1>Arrays<a class="headerlink" href="#arrays" title="Permalink to this headline">¶</a></h1>
+<p>Numba has support for fast indexing and understands NumPy arrays and infers
+types for various calls of the NumPy API.</p>
+<p><strong>Limitations</strong>:</p>
+<p>Unfortunately, there are a few pitfalls. We hope to resolve these in the
+future, and to document them in the meantime:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="39%" />
+<col width="61%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Operation</th>
+<th class="head">Example</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>Boundschecking</td>
+<td><tt class="docutils literal"><span class="pre">array[N]</span></tt>, with N &lt; 0 or N &gt; array.shape[0]</td>
+</tr>
+<tr class="row-odd"><td>Wraparound</td>
+<td><tt class="docutils literal"><span class="pre">array[-1]</span></tt></td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="array-expressions">
+<h2>Array Expressions<a class="headerlink" href="#array-expressions" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul class="simple">
+</ul>
+</div>
+<p>Numba implements array expressions which provide a single pass
+over the data with a fused expression. It also implements native slicing
+and stack-allocated NumPy array views, which means slicing is very fast compared
+to slicing in Python. It also means one can now slice an array in
+a <tt class="docutils literal"><span class="pre">nopython</span></tt> context. Lets try a diffusion in numba with loops and with
+array expressions:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+<span class="n">mu</span> <span class="o">=</span> <span class="mf">0.1</span>
+<span class="n">Lx</span><span class="p">,</span> <span class="n">Ly</span> <span class="o">=</span> <span class="mi">101</span><span class="p">,</span> <span class="mi">101</span>
+<span class="n">N</span> <span class="o">=</span> <span class="mi">1000</span>
+
+<span class="nd">@autojit</span>
+<span class="k">def</span> <span class="nf">diffuse_loops</span><span class="p">(</span><span class="n">iter_num</span><span class="p">):</span>
+    <span class="n">u</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">Lx</span><span class="p">,</span> <span class="n">Ly</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+    <span class="n">temp_u</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
+    <span class="n">temp_u</span><span class="p">[</span><span class="n">Lx</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">Ly</span> <span class="o">/</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1000.0</span>
+
+    <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">iter_num</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">Lx</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">Ly</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="n">u</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">mu</span> <span class="o">*</span> <span class="p">(</span><span class="n">temp_u</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">+</span> <span class="n">temp_u</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">+</span>
+                                <span class="n">temp_u</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">temp_u</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span>
+                                <span class="mi">4</span> <span class="o">*</span> <span class="n">temp_u</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">])</span>
+
+        <span class="n">temp</span> <span class="o">=</span> <span class="n">u</span>
+        <span class="n">u</span> <span class="o">=</span> <span class="n">temp_u</span>
+        <span class="n">temp_u</span> <span class="o">=</span> <span class="n">temp</span>
+
+    <span class="k">return</span> <span class="n">u</span>
+
+<span class="nd">@autojit</span>
+<span class="k">def</span> <span class="nf">diffuse_array_expressions</span><span class="p">(</span><span class="n">iter_num</span><span class="p">):</span>
+    <span class="n">u</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">Lx</span><span class="p">,</span> <span class="n">Ly</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+    <span class="n">temp_u</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
+    <span class="n">temp_u</span><span class="p">[</span><span class="n">Lx</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">Ly</span> <span class="o">/</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1000.0</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">iter_num</span><span class="p">):</span>
+        <span class="n">u</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">mu</span> <span class="o">*</span> <span class="p">(</span><span class="n">temp_u</span><span class="p">[</span><span class="mi">2</span><span class="p">:,</span> <span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">temp_u</span><span class="p">[:</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span>
+                              <span class="n">temp_u</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">:]</span> <span class="o">+</span> <span class="n">temp_u</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span>
+                              <span class="mi">4</span> <span class="o">*</span> <span class="n">temp_u</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+
+        <span class="n">temp</span> <span class="o">=</span> <span class="n">u</span>
+        <span class="n">u</span> <span class="o">=</span> <span class="n">temp_u</span>
+        <span class="n">temp_u</span> <span class="o">=</span> <span class="n">temp</span>
+
+    <span class="k">return</span> <span class="n">u</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Correct handling of overlapping memory between the left-hand and
+right-hand side of expressions is not supported yet.</p>
+</div>
+<div class="section" id="broadcasting">
+<h3>Broadcasting<a class="headerlink" href="#broadcasting" title="Permalink to this headline">¶</a></h3>
+<p>Array expressions also support broadcasting, raising an error if shapes do not match:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@autojit</span>
+<span class="k">def</span> <span class="nf">matrix_vector</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">M</span> <span class="o">*</span> <span class="n">v</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">M</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">90</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="n">v</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="k">print</span> <span class="n">matrix_vector</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+<span class="k">print</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Prints:</p>
+<div class="highlight-python"><pre>[ 285  735 1185 1635 2085 2535 2985 3435 3885]
+[ 285  735 1185 1635 2085 2535 2985 3435 3885]</pre>
+</div>
+<p>Calling the function with incompatible shapes gives the following:</p>
+<div class="highlight-python"><pre>In [0]: matrix_vector(M, np.arange(8))
+---------------------------------------------------------------------------
+ValueError                                Traceback (most recent call last)
+    ...
+ValueError: Shape mismatch while broadcasting</pre>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Errors raised in a nopython context print an error message and abort the
+program.</p>
+</div>
+</div>
+<div class="section" id="new-arrays">
+<h3>New Arrays<a class="headerlink" href="#new-arrays" title="Permalink to this headline">¶</a></h3>
+<p>Expressions not containing a left-hand side automatically create a new array:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@autojit</span>
+<span class="k">def</span> <span class="nf">square</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">a</span> <span class="o">*</span> <span class="n">a</span>
+
+<span class="k">print</span> <span class="n">square</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span> <span class="c"># array([ 0,  1,  4,  9, 16, 25, 36, 49, 64, 81])</span>
+</pre></div>
+</div>
+<p>Allocating new arrays is however not support yet in nopython mode:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@autojit</span><span class="p">(</span><span class="n">nopython</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">square</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">a</span> <span class="o">*</span> <span class="n">a</span>
+
+<span class="k">print</span> <span class="n">square</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span> <span class="c"># NumbaError: 1:0: Cannot allocate new memory in nopython context</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="math">
+<h3>Math<a class="headerlink" href="#math" title="Permalink to this headline">¶</a></h3>
+<p>All NumPy math functions supported on scalars is also supported for
+arrays. This includes most unary ufuncs:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@autojit</span>
+<span class="k">def</span> <span class="nf">tan</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="universal-functions-ufuncs">
+<h2>Universal Functions (ufuncs)<a class="headerlink" href="#universal-functions-ufuncs" title="Permalink to this headline">¶</a></h2>
+<p>Numba&#8217;s vectorize allows Numba functions taking scalar input arguments to be used as
+NumPy ufuncs (see <a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/ufuncs.html">http://docs.scipy.org/doc/numpy/reference/ufuncs.html</a>).</p>
+<p>For the example codes we will assume the user has run the following import:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">numba.vectorize</span> <span class="kn">import</span> <span class="n">Vectorize</span><span class="p">,</span> <span class="n">vectorize</span>
+</pre></div>
+</div>
+<div class="section" id="ufunc-definition">
+<h3>ufunc Definition<a class="headerlink" href="#ufunc-definition" title="Permalink to this headline">¶</a></h3>
+<p>Ufunc arguments are scalars of a NumPy array. Function definitions can be arbitrary
+mathematical expressions.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">my_ufunc</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">a</span><span class="o">+</span><span class="n">b</span><span class="o">+</span><span class="n">sqrt</span><span class="p">(</span><span class="n">a</span><span class="o">*</span><span class="n">cos</span><span class="p">(</span><span class="n">b</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Compilation requires type information.  Numba assumes no knowledge of type when building native
+ufuncs.  We must therefore define argument and return dtypes for the defined ufunc.  We can add
+many and various dtypes for a given BasicVectorize ufuncs, using Numba types, to create different
+versions of the code depending on the inputs.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">v</span> <span class="o">=</span> <span class="n">Vectorize</span><span class="p">(</span><span class="n">my_ufunc</span><span class="p">)</span>
+<span class="n">v</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">restype</span><span class="o">=</span><span class="n">int32</span><span class="p">,</span> <span class="n">argtypes</span><span class="o">=</span><span class="p">[</span><span class="n">int32</span><span class="p">,</span> <span class="n">int32</span><span class="p">])</span>
+<span class="n">v</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">restype</span><span class="o">=</span><span class="n">uint32</span><span class="p">,</span> <span class="n">argtypes</span><span class="o">=</span><span class="p">[</span><span class="n">uint32</span><span class="p">,</span> <span class="n">uint32</span><span class="p">])</span>
+<span class="n">v</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">restype</span><span class="o">=</span><span class="n">f4</span><span class="p">,</span> <span class="n">argtypes</span><span class="o">=</span><span class="p">[</span><span class="n">f4</span><span class="p">,</span> <span class="n">f4</span><span class="p">])</span>
+<span class="n">v</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">restype</span><span class="o">=</span><span class="n">f8</span><span class="p">,</span> <span class="n">argtypes</span><span class="o">=</span><span class="p">[</span><span class="n">f8</span><span class="p">,</span> <span class="n">f8</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>Above we are using signed and unsigned 32-bit ints, a float <strong>f4</strong>, and a double <strong>f8</strong>.</p>
+<p>To compile our ufunc we issue the following command</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">basic_ufunc</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">build_ufunc</span><span class="p">()</span>
+</pre></div>
+</div>
+<p><em>bv.build_ufunc()</em> returns a python callable list of functions which are compiled by Numba.  <em>This work is normally accomplished by</em> <a class="reference external" href="http://docs.scipy.org/doc/numpy/user/c-info.ufunc-tutorial.html">PyUFunc_FromFuncAndData</a> and Numba takes care of it.* We&#8217;ve now registered a set of overload functions ready be used as NumPy ufuncs.</p>
+<p>Lastly, we call basic_ufunc with two NumPy array as arguments</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="mi">100</span><span class="p">))</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">basic_ufunc</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Since we defined a binary ufunc, we can use the various ufunc methods such as <tt class="docutils literal"><span class="pre">reduce</span></tt>, <tt class="docutils literal"><span class="pre">accumulate</span></tt>,
+etc:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+<span class="k">print</span> <span class="n">basic_ufunc</span><span class="o">.</span><span class="n">reduce</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="k">print</span> <span class="n">basic_ufunc</span><span class="o">.</span><span class="n">accumulate</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="building-ufuncs-using-vectorize">
+<h3>Building ufuncs using &#64;vectorize<a class="headerlink" href="#building-ufuncs-using-vectorize" title="Permalink to this headline">¶</a></h3>
+<p>An alternative syntax is available through the use of the <cite>vectorize</cite> decorator:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">math</span>
+
+<span class="n">pi</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span>
+
+<span class="nd">@vectorize</span><span class="p">([</span><span class="n">f4</span><span class="p">(</span><span class="n">f4</span><span class="p">),</span> <span class="n">f8</span><span class="p">(</span><span class="n">f8</span><span class="p">)],</span> <span class="n">target</span><span class="o">=</span><span class="s">&#39;cpu&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">sinc</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">x</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mf">1.0</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="o">*</span><span class="n">pi</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">pi</span><span class="o">*</span><span class="n">x</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The <cite>vectorize</cite> decorator takes a list of function signature and an optional <cite>target</cite> keyword argument (default to &#8216;cpu&#8217;).  The example above generate a <cite>sinc</cite> ufunc that is overloaded to accept float and double.  This syntax replaces calls to <cite>Vectorize.add</cite> and <cite>Vectorize.build_ufunc</cite>.</p>
+</div>
+</div>
+<div class="section" id="generalized-ufuncs">
+<h2>Generalized Ufuncs<a class="headerlink" href="#generalized-ufuncs" title="Permalink to this headline">¶</a></h2>
+<p>The <tt class="docutils literal"><span class="pre">numba.vectorize</span></tt> module also provides support for generalized ufuncs.
+Traditional ufuncs perfom element-wise operations, whereas generalized ufuncs operate on entire
+sub-arrays. Unlike other Numba Vectorize classes, the GUVectorize constructor takes
+an additional signature which specifies the shapes of the inner arrays we want to operate on.</p>
+<div class="section" id="imports">
+<h3>Imports<a class="headerlink" href="#imports" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">float32</span><span class="p">,</span> <span class="n">float64</span><span class="p">,</span> <span class="n">int32</span>
+<span class="kn">from</span> <span class="nn">numba.vectorize</span> <span class="kn">import</span> <span class="n">GUVectorize</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="generalized-ufunc-definition">
+<h3>Generalized ufunc Definition<a class="headerlink" href="#generalized-ufunc-definition" title="Permalink to this headline">¶</a></h3>
+<p>GUVectorize ufunc arguments are vectors of a NumPy array.  Function definitions can be arbitrary
+expressions.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">matmulcore</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">C</span><span class="p">):</span>
+    <span class="n">m</span><span class="p">,</span> <span class="n">n</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">n</span><span class="p">,</span> <span class="n">p</span> <span class="o">=</span> <span class="n">B</span><span class="o">.</span><span class="n">shape</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">m</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
+            <span class="n">C</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+                <span class="n">C</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">+=</span> <span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span> <span class="o">*</span> <span class="n">B</span><span class="p">[</span><span class="n">k</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Compilation requires type information. Numba assumes no knowledge of type when building native
+ufuncs. We must therefore define argument and return dtypes for the defined ufunc. We can add
+as many dtypes as we need, which do not need to be uniform, i.e. we can specify a gufunc
+taking an array of ints and an array of doubles while producing an array of complex numbers.
+The <tt class="docutils literal"><span class="pre">gufunc</span></tt> will dispatch to the right implementation depending on the argument types.</p>
+<p>We can define our gufunc as follows:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">gufunc</span> <span class="o">=</span> <span class="n">GUVectorize</span><span class="p">(</span><span class="n">matmulcore</span><span class="p">,</span> <span class="s">&#39;(m,n),(n,p)-&gt;(m,p)&#39;</span><span class="p">)</span>
+<span class="n">gufunc</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">argtypes</span><span class="o">=</span><span class="p">[</span><span class="n">float32</span><span class="p">[:,:],</span> <span class="n">float32</span><span class="p">[:,:],</span> <span class="n">float32</span><span class="p">[:,:]])</span>
+<span class="n">gufunc</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">argtypes</span><span class="o">=</span><span class="p">[</span><span class="n">float64</span><span class="p">[:,:],</span> <span class="n">float64</span><span class="p">[:,:],</span> <span class="n">float64</span><span class="p">[:,:]])</span>
+<span class="n">gufunc</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">argtypes</span><span class="o">=</span><span class="p">[</span><span class="n">int32</span><span class="p">[:,:],</span> <span class="n">int32</span><span class="p">[:,:],</span> <span class="n">int32</span><span class="p">[:,:]])</span>
+</pre></div>
+</div>
+<p>Above we are using a float <strong>float32</strong>, a double <strong>float64</strong>, and a signed <strong>32-bit int</strong>.  The
+GUVectorize calls <a class="reference external" href="http://scipy-lectures.github.com/advanced/advanced_numpy/index.html#generalized-ufuncs">PyDynUFunc_FromFuncAndDataAndSignature</a> which
+requires a the signature: <em>(m,n),(n,p)-&gt;(m,p)</em> in the constructor.  This signature defines the <em>&#8220;core
+dimensions&#8221;</em> of the generalized ufunc.</p>
+<p>We can compile the ufunc as follows:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">gufunc</span> <span class="o">=</span> <span class="n">gufunc</span><span class="o">.</span><span class="n">build_ufunc</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>We can now use the gufunc with two NumPy matrices:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">matrix_ct</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">matrix_ct</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="mi">4</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">matrix_ct</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="n">B</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">matrix_ct</span> <span class="o">*</span> <span class="mi">4</span> <span class="o">*</span> <span class="mi">5</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">matrix_ct</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="n">C</span> <span class="o">=</span> <span class="n">gufunc</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Notice that we don&#8217;t have a third argument in the gufunc call but the generalized ufunc definition
+above has three arguments. The last argument of the generalized ufunc is the output, which is
+automatically allocated with the shape specified in the signature.</p>
+</div>
+</div>
+</div>
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        
+      </div><!-- /row -->
+
+      <!-- row -->
+      <div class="row-fluid">
+<div class="related navbar ">
+  <div class="navbar-inner">
+    <ul class="nav pull-right">
+      
+        <li><a href="genindex.html" title="General Index" >index</a></li>
+        <li><a href="py-modindex.html" title="Python Module Index" >modules</a></li>
+        <li><a href="interface_c.html" title="Interfacing with C" >next</a></li>
+        <li><a href="pythonstuff.html" title="Python Functionality" >previous</a></li>
+        <li><a href="index.html">numba 0.9.0 documentation</a></li> 
+      
+    </ul>
+  </div>
+</div>
+      </div><!-- /row -->
+
+      <!-- footer -->
+      <footer>
+          &copy; Copyright 2012-2013, Continuum Analytics.
+        Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+      </footer>
+      <!-- /footer -->
+
+    </div>
+    <!-- /container -->
+
+  </body>
+</html>
