@@ -1,0 +1,1171 @@
+
+<!DOCTYPE html>
+
+
+
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+    <title>codegen Package &mdash; numba 0.9.0 documentation</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    
+<link rel="stylesheet" href="../_static/css/basicstrap-base.css" type="text/css" />
+<link rel="stylesheet" href="../_static/css/bootstrap.min.css" type="text/css" />
+<link rel="stylesheet" href="../_static/css/font-awesome.min.css">
+<!--[if IE 7]>
+<link rel="stylesheet" href="../_static/css/font-awesome-ie7.min.css">
+<![endif]-->
+<style type="text/css">
+  body {
+    padding-top: 60px;
+    padding-bottom: 40px;
+  }
+}
+</style>
+<link rel="stylesheet" href="../_static/basicstrap.css" type="text/css" />
+<link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+<link rel="stylesheet" href="../_static/css/bootstrap-responsive.min.css" type="text/css" />
+    
+<script type="text/javascript">
+  var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:    '../',
+            VERSION:     '0.9.0',
+            COLLAPSE_INDEX: false,
+            FILE_SUFFIX: '.html',
+            HAS_SOURCE:  true
+  };
+</script>
+<script type="text/javascript" src="../_static/js/jquery.min.js"></script>
+<script type="text/javascript" src="../_static/underscore.js"></script>
+<script type="text/javascript" src="../_static/doctools.js"></script>
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/javascript" src="../_static/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+  $(document).ready(function(){
+    $('.show-sidebar').click(function(e) {
+       e.preventDefault();
+       if ($(".show-sidebar").html() == "Open Table Of Contents") {
+          $('.for-mobile').removeClass('hidden-phone');
+          $(".show-sidebar").html("Close Table Of Contents");
+       } else {
+          $(".show-sidebar").html("Open Table Of Contents");
+       }
+    });
+  });
+</script>
+    <link rel="top" title="numba 0.9.0 documentation" href="../index.html" />
+    <link rel="up" title="numba Package" href="numba.html" />
+    <link rel="next" title="containers Package" href="numba.containers.html" />
+    <link rel="prev" title="numba Package" href="numba.html" /> 
+  </head>
+  <body>
+    <div class="navbar navbar-fixed-top ">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="../index.html">numba 0.9.0 documentation</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav pull-right">
+              
+                <li>
+                <a href="../genindex.html" title="General Index" accesskey="I">index</a>
+                </li>
+                <li>
+                <a href="../py-modindex.html" title="Python Module Index" >modules</a>
+                </li>
+                <li>
+                <a href="numba.containers.html" title="containers Package" accesskey="N">next</a>
+                </li>
+                <li>
+                <a href="numba.html" title="numba Package" accesskey="P">previous</a>
+                </li>
+                <li>
+                <a href="modules.html" >Numba Module Reference</a>
+                </li>
+                <li>
+                <a href="numba.html" accesskey="U">numba Package</a>
+                </li>
+              
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <!-- container -->
+    <div class="container-fluid">
+
+
+      
+      <div class="row-fluid hidden-desktop hidden-tablet">
+      
+<div class="span3 ">
+  <a class="visible-phone btn btn-small show-sidebar" data-toggle="collapse" data-target=".for-mobile">Open Table Of Contents</a>
+  <div class="for-mobile sidebar hidden-phone">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">codegen Package</a><ul>
+<li><a class="reference internal" href="#id1"><tt class="docutils literal"><span class="pre">codegen</span></tt> Package</a></li>
+<li><a class="reference internal" href="#module-numba.codegen.codeutils"><tt class="docutils literal"><span class="pre">codeutils</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-numba.codegen.coerce"><tt class="docutils literal"><span class="pre">coerce</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-numba.codegen.complexsupport"><tt class="docutils literal"><span class="pre">complexsupport</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-numba.codegen.debug"><tt class="docutils literal"><span class="pre">debug</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-numba.codegen.globalconstants"><tt class="docutils literal"><span class="pre">globalconstants</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-numba.codegen.llvmcontext"><tt class="docutils literal"><span class="pre">llvmcontext</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-numba.codegen.llvmwrapper"><tt class="docutils literal"><span class="pre">llvmwrapper</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-numba.codegen.refcounting"><tt class="docutils literal"><span class="pre">refcounting</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-numba.codegen.translate"><tt class="docutils literal"><span class="pre">translate</span></tt> Module</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="numba.html"
+                        title="previous chapter">numba Package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="numba.containers.html"
+                        title="next chapter">containers Package</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/modules/numba.codegen.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox">
+  <h3>Quick search</h3>
+  <form class="search form-search" action="../search.html" method="get">
+      <div class="input-append">
+        <input type="text" class="search-query" name="q">
+        <input type="submit" class="btn" value="Go" />
+      </div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+  </div>
+</div>
+      </div>
+      
+
+      <!-- row -->
+      <div class="row-fluid">
+         
+<div class="span3 visible-desktop visible-tablet">
+  <div class=" sidebar hidden-phone">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">codegen Package</a><ul>
+<li><a class="reference internal" href="#id1"><tt class="docutils literal"><span class="pre">codegen</span></tt> Package</a></li>
+<li><a class="reference internal" href="#module-numba.codegen.codeutils"><tt class="docutils literal"><span class="pre">codeutils</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-numba.codegen.coerce"><tt class="docutils literal"><span class="pre">coerce</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-numba.codegen.complexsupport"><tt class="docutils literal"><span class="pre">complexsupport</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-numba.codegen.debug"><tt class="docutils literal"><span class="pre">debug</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-numba.codegen.globalconstants"><tt class="docutils literal"><span class="pre">globalconstants</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-numba.codegen.llvmcontext"><tt class="docutils literal"><span class="pre">llvmcontext</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-numba.codegen.llvmwrapper"><tt class="docutils literal"><span class="pre">llvmwrapper</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-numba.codegen.refcounting"><tt class="docutils literal"><span class="pre">refcounting</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-numba.codegen.translate"><tt class="docutils literal"><span class="pre">translate</span></tt> Module</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="numba.html"
+                        title="previous chapter">numba Package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="numba.containers.html"
+                        title="next chapter">containers Package</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/modules/numba.codegen.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox">
+  <h3>Quick search</h3>
+  <form class="search form-search" action="../search.html" method="get">
+      <div class="input-append">
+        <input type="text" class="search-query" name="q">
+        <input type="submit" class="btn" value="Go" />
+      </div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+  </div>
+</div> 
+        
+
+        <div class="span9">
+          <div class="document">
+            <div class="documentwrapper">
+              <div class="bodywrapper">
+                <div class="body">
+                  
+  <div class="section" id="codegen-package">
+<h1>codegen Package<a class="headerlink" href="#codegen-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id1">
+<h2><tt class="xref py py-mod docutils literal"><span class="pre">codegen</span></tt> Package<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-numba.codegen"></span></div>
+<div class="section" id="module-numba.codegen.codeutils">
+<span id="codeutils-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">codeutils</span></tt> Module<a class="headerlink" href="#module-numba.codegen.codeutils" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="numba.codegen.codeutils.if_badval">
+<tt class="descclassname">numba.codegen.codeutils.</tt><tt class="descname">if_badval</tt><big>(</big><em>translator</em>, <em>llvm_result</em>, <em>badval</em>, <em>callback</em>, <em>cmp=32</em>, <em>name='cleanup'</em><big>)</big><a class="headerlink" href="#numba.codegen.codeutils.if_badval" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.codegen.codeutils.llvm_alloca">
+<tt class="descclassname">numba.codegen.codeutils.</tt><tt class="descname">llvm_alloca</tt><big>(</big><em>lfunc</em>, <em>builder</em>, <em>ltype</em>, <em>name=''</em>, <em>change_bb=True</em><big>)</big><a class="headerlink" href="#numba.codegen.codeutils.llvm_alloca" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use alloca only at the entry bock of the function</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-numba.codegen.coerce">
+<span id="coerce-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">coerce</span></tt> Module<a class="headerlink" href="#module-numba.codegen.coerce" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="numba.codegen.coerce.ObjectCoercer">
+<em class="property">class </em><tt class="descclassname">numba.codegen.coerce.</tt><tt class="descname">ObjectCoercer</tt><big>(</big><em>translator</em><big>)</big><a class="headerlink" href="#numba.codegen.coerce.ObjectCoercer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Object that knows how to convert to/from objects using Py_BuildValue
+and PyArg_ParseTuple.</p>
+<dl class="method">
+<dt id="numba.codegen.coerce.ObjectCoercer.build_dict">
+<tt class="descname">build_dict</tt><big>(</big><em>key_types</em>, <em>value_types</em>, <em>llvm_keys</em>, <em>llvm_values</em><big>)</big><a class="headerlink" href="#numba.codegen.coerce.ObjectCoercer.build_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Build a dict from a bunch of LLVM values</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.coerce.ObjectCoercer.build_list">
+<tt class="descname">build_list</tt><big>(</big><em>types</em>, <em>llvm_values</em><big>)</big><a class="headerlink" href="#numba.codegen.coerce.ObjectCoercer.build_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Build a tuple from a bunch of LLVM values</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.coerce.ObjectCoercer.build_tuple">
+<tt class="descname">build_tuple</tt><big>(</big><em>types</em>, <em>llvm_values</em><big>)</big><a class="headerlink" href="#numba.codegen.coerce.ObjectCoercer.build_tuple" title="Permalink to this definition">¶</a></dt>
+<dd><p>Build a tuple from a bunch of LLVM values</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.coerce.ObjectCoercer.buildvalue">
+<tt class="descname">buildvalue</tt><big>(</big><em>types</em>, <em>*largs</em>, <em>**kwds</em><big>)</big><a class="headerlink" href="#numba.codegen.coerce.ObjectCoercer.buildvalue" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.coerce.ObjectCoercer.check_err">
+<tt class="descname">check_err</tt><big>(</big><em>llvm_result</em>, <em>callback=None</em>, <em>cmp=32</em>, <em>pos_node=None</em><big>)</big><a class="headerlink" href="#numba.codegen.coerce.ObjectCoercer.check_err" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check for errors. If the result is NULL, and error should have been set
+Jumps to translator.error_label if an exception occurred.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.coerce.ObjectCoercer.check_err_int">
+<tt class="descname">check_err_int</tt><big>(</big><em>llvm_result</em>, <em>badval</em><big>)</big><a class="headerlink" href="#numba.codegen.coerce.ObjectCoercer.check_err_int" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.coerce.ObjectCoercer.convert_single">
+<tt class="descname">convert_single</tt><big>(</big><em>type</em>, <em>llvm_result</em>, <em>name=''</em><big>)</big><a class="headerlink" href="#numba.codegen.coerce.ObjectCoercer.convert_single" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate code to convert an LLVM value to a Python object</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.coerce.ObjectCoercer.convert_single_struct">
+<tt class="descname">convert_single_struct</tt><big>(</big><em>llvm_result</em>, <em>type</em><big>)</big><a class="headerlink" href="#numba.codegen.coerce.ObjectCoercer.convert_single_struct" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.coerce.ObjectCoercer.lstr">
+<tt class="descname">lstr</tt><big>(</big><em>types</em>, <em>fmt=None</em><big>)</big><a class="headerlink" href="#numba.codegen.coerce.ObjectCoercer.lstr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get an llvm format string for the given types</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.coerce.ObjectCoercer.npy_intp_to_py_ssize_t">
+<tt class="descname">npy_intp_to_py_ssize_t</tt><big>(</big><em>llvm_result</em>, <em>type</em><big>)</big><a class="headerlink" href="#numba.codegen.coerce.ObjectCoercer.npy_intp_to_py_ssize_t" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.coerce.ObjectCoercer.parse_tuple">
+<tt class="descname">parse_tuple</tt><big>(</big><em>lstr</em>, <em>llvm_tuple</em>, <em>types</em>, <em>name=''</em><big>)</big><a class="headerlink" href="#numba.codegen.coerce.ObjectCoercer.parse_tuple" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unpack a Python tuple into typed llvm variables</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.coerce.ObjectCoercer.py_ssize_t_to_npy_intp">
+<tt class="descname">py_ssize_t_to_npy_intp</tt><big>(</big><em>llvm_result</em>, <em>type</em><big>)</big><a class="headerlink" href="#numba.codegen.coerce.ObjectCoercer.py_ssize_t_to_npy_intp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.coerce.ObjectCoercer.to_native">
+<tt class="descname">to_native</tt><big>(</big><em>type</em>, <em>llvm_tuple</em>, <em>name=''</em><big>)</big><a class="headerlink" href="#numba.codegen.coerce.ObjectCoercer.to_native" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate code to convert a Python object to an LLVM value</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="numba.codegen.coerce.ObjectCoercer.type_to_buildvalue_str">
+<tt class="descname">type_to_buildvalue_str</tt><em class="property"> = {string: 's', char: 'b', float32: 'f', complex128: 'D', long: 'l', char *: 's', uint: 'I', ulong: 'k', longlong: 'L', ulonglong: 'K', Py_ssize_t: 'n', uchar: 'B', object: 'O', short: 'h', ushort: 'H', npy_intp: 'n', float64: 'd', bool: 'b', int: 'i', size_t: 'n'}</em><a class="headerlink" href="#numba.codegen.coerce.ObjectCoercer.type_to_buildvalue_str" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-numba.codegen.complexsupport">
+<span id="complexsupport-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">complexsupport</span></tt> Module<a class="headerlink" href="#module-numba.codegen.complexsupport" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="numba.codegen.complexsupport.ComplexSupportMixin">
+<em class="property">class </em><tt class="descclassname">numba.codegen.complexsupport.</tt><tt class="descname">ComplexSupportMixin</tt><a class="headerlink" href="#numba.codegen.complexsupport.ComplexSupportMixin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Support for complex numbers</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-numba.codegen.debug">
+<span id="debug-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">debug</span></tt> Module<a class="headerlink" href="#module-numba.codegen.debug" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-numba.codegen.globalconstants">
+<span id="globalconstants-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">globalconstants</span></tt> Module<a class="headerlink" href="#module-numba.codegen.globalconstants" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="numba.codegen.globalconstants.LLVMConstantsManager">
+<em class="property">class </em><tt class="descclassname">numba.codegen.globalconstants.</tt><tt class="descname">LLVMConstantsManager</tt><a class="headerlink" href="#numba.codegen.globalconstants.LLVMConstantsManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Manage global constants. The result should be linked into the consumer
+LLVM module.</p>
+<dl class="method">
+<dt id="numba.codegen.globalconstants.LLVMConstantsManager.get_string_constant">
+<tt class="descname">get_string_constant</tt><big>(</big><em>const_str</em><big>)</big><a class="headerlink" href="#numba.codegen.globalconstants.LLVMConstantsManager.get_string_constant" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.globalconstants.LLVMConstantsManager.link">
+<tt class="descname">link</tt><big>(</big><em>dst_module</em><big>)</big><a class="headerlink" href="#numba.codegen.globalconstants.LLVMConstantsManager.link" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-numba.codegen.llvmcontext">
+<span id="llvmcontext-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">llvmcontext</span></tt> Module<a class="headerlink" href="#module-numba.codegen.llvmcontext" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="numba.codegen.llvmcontext.LLVMContextManager">
+<em class="property">class </em><tt class="descclassname">numba.codegen.llvmcontext.</tt><tt class="descname">LLVMContextManager</tt><a class="headerlink" href="#numba.codegen.llvmcontext.LLVMContextManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>TODO: Make this class not a singleton.
+A possible design is to let each Numba Context owns a
+LLVMContextManager.</p>
+<dl class="attribute">
+<dt id="numba.codegen.llvmcontext.LLVMContextManager.execution_engine">
+<tt class="descname">execution_engine</tt><a class="headerlink" href="#numba.codegen.llvmcontext.LLVMContextManager.execution_engine" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.llvmcontext.LLVMContextManager.get_pointer_to_function">
+<tt class="descname">get_pointer_to_function</tt><big>(</big><em>lfunc</em><big>)</big><a class="headerlink" href="#numba.codegen.llvmcontext.LLVMContextManager.get_pointer_to_function" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.llvmcontext.LLVMContextManager.link">
+<tt class="descname">link</tt><big>(</big><em>lfunc</em><big>)</big><a class="headerlink" href="#numba.codegen.llvmcontext.LLVMContextManager.link" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="numba.codegen.llvmcontext.LLVMContextManager.module">
+<tt class="descname">module</tt><a class="headerlink" href="#numba.codegen.llvmcontext.LLVMContextManager.module" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="numba.codegen.llvmcontext.LLVMContextManager.pass_manager">
+<tt class="descname">pass_manager</tt><a class="headerlink" href="#numba.codegen.llvmcontext.LLVMContextManager.pass_manager" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="numba.codegen.llvmcontext.LLVMContextManager.target_machine">
+<tt class="descname">target_machine</tt><a class="headerlink" href="#numba.codegen.llvmcontext.LLVMContextManager.target_machine" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.llvmcontext.LLVMContextManager.verify">
+<tt class="descname">verify</tt><big>(</big><em>lfunc</em><big>)</big><a class="headerlink" href="#numba.codegen.llvmcontext.LLVMContextManager.verify" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.codegen.llvmcontext.handle">
+<tt class="descclassname">numba.codegen.llvmcontext.</tt><tt class="descname">handle</tt><big>(</big><em>llvm_value</em><big>)</big><a class="headerlink" href="#numba.codegen.llvmcontext.handle" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.codegen.llvmcontext.link_module">
+<tt class="descclassname">numba.codegen.llvmcontext.</tt><tt class="descname">link_module</tt><big>(</big><em>engine</em>, <em>src_module</em>, <em>dst_module</em>, <em>preserve=False</em><big>)</big><a class="headerlink" href="#numba.codegen.llvmcontext.link_module" title="Permalink to this definition">¶</a></dt>
+<dd><p>Link a source module into a destination module while preserving the
+execution engine&#8217;s global mapping of pointers.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-numba.codegen.llvmwrapper">
+<span id="llvmwrapper-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">llvmwrapper</span></tt> Module<a class="headerlink" href="#module-numba.codegen.llvmwrapper" title="Permalink to this headline">¶</a></h2>
+<p>Module that creates wrapper around llvm functions. The wrapper is callable
+from Python.</p>
+<dl class="function">
+<dt id="numba.codegen.llvmwrapper.build_wrapper_function">
+<tt class="descclassname">numba.codegen.llvmwrapper.</tt><tt class="descname">build_wrapper_function</tt><big>(</big><em>env</em><big>)</big><a class="headerlink" href="#numba.codegen.llvmwrapper.build_wrapper_function" title="Permalink to this definition">¶</a></dt>
+<dd><p>Build a wrapper function for the currently translated function.</p>
+<p>Return the interpreter-level wrapper function, the LLVM wrapper function,
+and the method definition record.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.codegen.llvmwrapper.build_wrapper_function_ast">
+<tt class="descclassname">numba.codegen.llvmwrapper.</tt><tt class="descname">build_wrapper_function_ast</tt><big>(</big><em>env</em>, <em>wrapper_lfunc</em>, <em>llvm_module</em><big>)</big><a class="headerlink" href="#numba.codegen.llvmwrapper.build_wrapper_function_ast" title="Permalink to this definition">¶</a></dt>
+<dd><p>Build AST for LLVM function wrapper.</p>
+<blockquote>
+<div>lfunc: LLVM function to wrap
+llvm_module: module the wrapper is being defined in</div></blockquote>
+<p>The resulting AST has a NativeCallNode to the wrapped function. The
+arguments are  LLVMValueRefNode nodes which still need their llvm_value
+set to the object from the tuple. This happens in visit_FunctionWrapperNode
+during codegen.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.codegen.llvmwrapper.build_wrapper_module">
+<tt class="descclassname">numba.codegen.llvmwrapper.</tt><tt class="descname">build_wrapper_module</tt><big>(</big><em>env</em><big>)</big><a class="headerlink" href="#numba.codegen.llvmwrapper.build_wrapper_module" title="Permalink to this definition">¶</a></dt>
+<dd><p>Build a wrapper function for the currently translated
+function, and return a tuple containing the separate LLVM
+module, and the LLVM wrapper function.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.codegen.llvmwrapper.build_wrapper_translation">
+<tt class="descclassname">numba.codegen.llvmwrapper.</tt><tt class="descname">build_wrapper_translation</tt><big>(</big><em>env</em>, <em>llvm_module=None</em><big>)</big><a class="headerlink" href="#numba.codegen.llvmwrapper.build_wrapper_translation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate a wrapper function in the given llvm module.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.codegen.llvmwrapper.fake_pyfunc">
+<tt class="descclassname">numba.codegen.llvmwrapper.</tt><tt class="descname">fake_pyfunc</tt><big>(</big><em>self</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.codegen.llvmwrapper.fake_pyfunc" title="Permalink to this definition">¶</a></dt>
+<dd><p>PyObject <em>(</em>)(PyObject <a href="#id2"><span class="problematic" id="id3">*</span></a>self, PyObject <a href="#id4"><span class="problematic" id="id5">*</span></a>args)</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.codegen.llvmwrapper.get_closure_scope">
+<tt class="descclassname">numba.codegen.llvmwrapper.</tt><tt class="descname">get_closure_scope</tt><big>(</big><em>func_signature</em>, <em>func_obj</em><big>)</big><a class="headerlink" href="#numba.codegen.llvmwrapper.get_closure_scope" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve the closure from the NumbaFunction from the func_closure
+attribute.</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>func_signature:</dt>
+<dd>signature of closure function</dd>
+<dt>func_obj:</dt>
+<dd>LLVM Value referencing the closure function as a Python object</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.codegen.llvmwrapper.get_ctypes_func">
+<tt class="descclassname">numba.codegen.llvmwrapper.</tt><tt class="descname">get_ctypes_func</tt><big>(</big><em>self</em>, <em>llvm=True</em><big>)</big><a class="headerlink" href="#numba.codegen.llvmwrapper.get_ctypes_func" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.codegen.llvmwrapper.numbafunction_new">
+<tt class="descclassname">numba.codegen.llvmwrapper.</tt><tt class="descname">numbafunction_new</tt><big>(</big><em>py_func</em>, <em>func_name</em>, <em>func_doc</em>, <em>module_name</em>, <em>func_pointer</em>, <em>wrapped_lfunc_pointer</em>, <em>wrapped_signature</em><big>)</big><a class="headerlink" href="#numba.codegen.llvmwrapper.numbafunction_new" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a NumbaFunction (numbafunction.c)</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-numba.codegen.refcounting">
+<span id="refcounting-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">refcounting</span></tt> Module<a class="headerlink" href="#module-numba.codegen.refcounting" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="numba.codegen.refcounting.RefcountingMixin">
+<em class="property">class </em><tt class="descclassname">numba.codegen.refcounting.</tt><tt class="descname">RefcountingMixin</tt><a class="headerlink" href="#numba.codegen.refcounting.RefcountingMixin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<dl class="method">
+<dt id="numba.codegen.refcounting.RefcountingMixin.decref">
+<tt class="descname">decref</tt><big>(</big><em>value</em><big>)</big><a class="headerlink" href="#numba.codegen.refcounting.RefcountingMixin.decref" title="Permalink to this definition">¶</a></dt>
+<dd><p>Py_DECREF a value</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.refcounting.RefcountingMixin.incref">
+<tt class="descname">incref</tt><big>(</big><em>value</em><big>)</big><a class="headerlink" href="#numba.codegen.refcounting.RefcountingMixin.incref" title="Permalink to this definition">¶</a></dt>
+<dd><p>Py_INCREF a value</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.refcounting.RefcountingMixin.refcount">
+<tt class="descname">refcount</tt><big>(</big><em>func</em>, <em>value</em><big>)</big><a class="headerlink" href="#numba.codegen.refcounting.RefcountingMixin.refcount" title="Permalink to this definition">¶</a></dt>
+<dd><p>Refcount a value with a refcounting function</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.refcounting.RefcountingMixin.xdecref">
+<tt class="descname">xdecref</tt><big>(</big><em>value</em><big>)</big><a class="headerlink" href="#numba.codegen.refcounting.RefcountingMixin.xdecref" title="Permalink to this definition">¶</a></dt>
+<dd><p>Py_XDECREF a value</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.refcounting.RefcountingMixin.xdecref_temp">
+<tt class="descname">xdecref_temp</tt><big>(</big><em>temp</em><big>)</big><a class="headerlink" href="#numba.codegen.refcounting.RefcountingMixin.xdecref_temp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Py_XDECREF a temporary</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.refcounting.RefcountingMixin.xdecref_temp_cleanup">
+<tt class="descname">xdecref_temp_cleanup</tt><big>(</big><em>temp</em><big>)</big><a class="headerlink" href="#numba.codegen.refcounting.RefcountingMixin.xdecref_temp_cleanup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cleanup a temp at the end of the function:</p>
+<ul class="simple">
+<li>Save current basic block</li>
+<li>Generate code at cleanup path</li>
+<li>Restore basic block</li>
+</ul>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.refcounting.RefcountingMixin.xincref">
+<tt class="descname">xincref</tt><big>(</big><em>value</em><big>)</big><a class="headerlink" href="#numba.codegen.refcounting.RefcountingMixin.xincref" title="Permalink to this definition">¶</a></dt>
+<dd><p>Py_XINCREF a value</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.refcounting.RefcountingMixin.xincref_temp">
+<tt class="descname">xincref_temp</tt><big>(</big><em>temp</em><big>)</big><a class="headerlink" href="#numba.codegen.refcounting.RefcountingMixin.xincref_temp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Py_XINCREF a temporary</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-numba.codegen.translate">
+<span id="translate-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">translate</span></tt> Module<a class="headerlink" href="#module-numba.codegen.translate" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="numba.codegen.translate.LLVMCodeGenerator">
+<em class="property">class </em><tt class="descclassname">numba.codegen.translate.</tt><tt class="descname">LLVMCodeGenerator</tt><big>(</big><em>context</em>, <em>func</em>, <em>ast</em>, <em>func_signature</em>, <em>symtab</em>, <em>optimize=True</em>, <em>nopython=False</em>, <em>llvm_module=None</em>, <em>**kwds</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="numba.html#numba.visitors.NumbaVisitor" title="numba.visitors.NumbaVisitor"><tt class="xref py py-class docutils literal"><span class="pre">numba.visitors.NumbaVisitor</span></tt></a>, <a class="reference internal" href="#numba.codegen.complexsupport.ComplexSupportMixin" title="numba.codegen.complexsupport.ComplexSupportMixin"><tt class="xref py py-class docutils literal"><span class="pre">numba.codegen.complexsupport.ComplexSupportMixin</span></tt></a>, <a class="reference internal" href="#numba.codegen.refcounting.RefcountingMixin" title="numba.codegen.refcounting.RefcountingMixin"><tt class="xref py py-class docutils literal"><span class="pre">numba.codegen.refcounting.RefcountingMixin</span></tt></a>, <a class="reference internal" href="numba.html#numba.visitors.NoPythonContextMixin" title="numba.visitors.NoPythonContextMixin"><tt class="xref py py-class docutils literal"><span class="pre">numba.visitors.NoPythonContextMixin</span></tt></a></p>
+<p>Translate a Python AST to LLVM. Each visit_* method should directly
+return an LLVM value.</p>
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.alloca">
+<tt class="descname">alloca</tt><big>(</big><em>type</em>, <em>name=''</em>, <em>change_bb=True</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.alloca" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.append_basic_block">
+<tt class="descname">append_basic_block</tt><big>(</big><em>name='unamed'</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.append_basic_block" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.bool_ltype">
+<tt class="descname">bool_ltype</tt><em class="property"> = &lt;llvm.core.IntegerType object at 0x3775c90&gt;</em><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.bool_ltype" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.c_array_to_pointer">
+<tt class="descname">c_array_to_pointer</tt><big>(</big><em>name</em>, <em>stackspace</em>, <em>var</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.c_array_to_pointer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decay a C array to a pointer to allow pointer access</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.check_unbound_local">
+<tt class="descname">check_unbound_local</tt><big>(</big><em>node</em>, <em>var</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.check_unbound_local" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.cur_bb">
+<tt class="descname">cur_bb</tt><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.cur_bb" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.current_node">
+<tt class="descname">current_node</tt><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.current_node" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.declare">
+<tt class="descname">declare</tt><big>(</big><em>cbuilder_func</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.declare" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.generate_assign_stack">
+<tt class="descname">generate_assign_stack</tt><big>(</big><em>lvalue</em>, <em>ltarget</em>, <em>tbaa_node=None</em>, <em>tbaa_type=None</em>, <em>decref=False</em>, <em>incref=False</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.generate_assign_stack" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate assignment operation and automatically cast value to
+match the target type.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.generate_constant_int">
+<tt class="descname">generate_constant_int</tt><big>(</big><em>val</em>, <em>ty=int</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.generate_constant_int" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.handle_phis">
+<tt class="descname">handle_phis</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.handle_phis" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update all our phi nodes after translation is done and all Variables
+have their llvm values set.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.incref_arg">
+<tt class="descname">incref_arg</tt><big>(</big><em>argname</em>, <em>argtype</em>, <em>larg</em>, <em>variable</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.incref_arg" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.is_block_terminated">
+<tt class="descname">is_block_terminated</tt><big>(</big><em>basic_block=None</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.is_block_terminated" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if the current basicblock is properly terminated.
+That means the basicblock is ended with a branch or return</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.lfunc_pointer">
+<tt class="descname">lfunc_pointer</tt><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.lfunc_pointer" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.llvm_alloca">
+<tt class="descname">llvm_alloca</tt><big>(</big><em>ltype</em>, <em>name=''</em>, <em>change_bb=True</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.llvm_alloca" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.load_tbaa">
+<tt class="descname">load_tbaa</tt><big>(</big><em>ptr</em>, <em>tbaa_type</em>, <em>name=''</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.load_tbaa" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load a pointer and annotate with Type Based Alias Analysis
+metadata.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.multiarray_api">
+<tt class="descname">multiarray_api</tt><em class="property"> = &lt;numba.multiarray_api.MultiarrayAPI object at 0x391b150&gt;</em><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.multiarray_api" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.opname">
+<tt class="descname">opname</tt><big>(</big><em>op</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.opname" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.preload_attributes">
+<tt class="descname">preload_attributes</tt><big>(</big><em>var</em>, <em>value</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.preload_attributes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pre-load ndarray attributes data/shape/strides.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.puts">
+<tt class="descname">puts</tt><big>(</big><em>msg</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.puts" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.puts_llvm">
+<tt class="descname">puts_llvm</tt><big>(</big><em>llvm_string</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.puts_llvm" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.pyarray_accessor">
+<tt class="descname">pyarray_accessor</tt><big>(</big><em>llvm_array_ptr</em>, <em>dtype</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.pyarray_accessor" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.renameable">
+<tt class="descname">renameable</tt><big>(</big><em>variable</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.renameable" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.setblock">
+<tt class="descname">setblock</tt><big>(</big><em>cfg_basic_block</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.setblock" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.setup_func">
+<tt class="descname">setup_func</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.setup_func" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.setup_loop">
+<tt class="descname">setup_loop</tt><big>(</big><em>continue_block</em>, <em>bb_cond</em>, <em>bb_exit</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.setup_loop" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.setup_return">
+<tt class="descname">setup_return</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.setup_return" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.store_tbaa">
+<tt class="descname">store_tbaa</tt><big>(</big><em>value</em>, <em>ptr</em>, <em>tbaa_type</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.store_tbaa" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load a pointer and annotate with Type Based Alias Analysis
+metadata.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.struct_field">
+<tt class="descname">struct_field</tt><big>(</big><em>node</em>, <em>value</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.struct_field" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.teardown_loop">
+<tt class="descname">teardown_loop</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.teardown_loop" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.term_block">
+<tt class="descname">term_block</tt><big>(</big><em>end_block</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.term_block" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.terminate_block">
+<tt class="descname">terminate_block</tt><big>(</big><em>block</em>, <em>end_block</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.terminate_block" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.terminate_cleanup_blocks">
+<tt class="descname">terminate_cleanup_blocks</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.terminate_cleanup_blocks" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.to_llvm">
+<tt class="descname">to_llvm</tt><big>(</big><em>type</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.to_llvm" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.translate">
+<tt class="descname">translate</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.translate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.visit">
+<tt class="descname">visit</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.visit" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.visit_ArrayAttributeNode">
+<tt class="descname">visit_ArrayAttributeNode</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.visit_ArrayAttributeNode" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.visit_Assign">
+<tt class="descname">visit_Assign</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.visit_Assign" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.visit_Attribute">
+<tt class="descname">visit_Attribute</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.visit_Attribute" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.visit_BadValue">
+<tt class="descname">visit_BadValue</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.visit_BadValue" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.visit_BinOp">
+<tt class="descname">visit_BinOp</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.visit_BinOp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.visit_BoolOp">
+<tt class="descname">visit_BoolOp</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.visit_BoolOp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.visit_Break">
+<tt class="descname">visit_Break</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.visit_Break" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.visit_BroadcastNode">
+<tt class="descname">visit_BroadcastNode</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.visit_BroadcastNode" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.visit_Call">
+<tt class="descname">visit_Call</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.visit_Call" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.visit_CloneNode">
+<tt class="descname">visit_CloneNode</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.visit_CloneNode" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.visit_CloneableNode">
+<tt class="descname">visit_CloneableNode</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.visit_CloneableNode" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.visit_ClosureCallNode">
+<tt class="descname">visit_ClosureCallNode</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.visit_ClosureCallNode" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.visit_CoerceToNative">
+<tt class="descname">visit_CoerceToNative</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.visit_CoerceToNative" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.visit_CoerceToObject">
+<tt class="descname">visit_CoerceToObject</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.visit_CoerceToObject" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.visit_CoercionNode">
+<tt class="descname">visit_CoercionNode</tt><big>(</big><em>node</em>, <em>val=None</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.visit_CoercionNode" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.visit_Compare">
+<tt class="descname">visit_Compare</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.visit_Compare" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.visit_ComplexAttributeNode">
+<tt class="descname">visit_ComplexAttributeNode</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.visit_ComplexAttributeNode" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.visit_ComplexConjugateNode">
+<tt class="descname">visit_ComplexConjugateNode</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.visit_ComplexConjugateNode" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.visit_ComplexNode">
+<tt class="descname">visit_ComplexNode</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.visit_ComplexNode" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.visit_ConstNode">
+<tt class="descname">visit_ConstNode</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.visit_ConstNode" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.visit_Continue">
+<tt class="descname">visit_Continue</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.visit_Continue" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.visit_ControlBlock">
+<tt class="descname">visit_ControlBlock</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.visit_ControlBlock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a new basic block and handle phis and promotions. Promotions
+are needed at merge (phi) points to have a consistent type.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.visit_DataPointerNode">
+<tt class="descname">visit_DataPointerNode</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.visit_DataPointerNode" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.visit_DecrefNode">
+<tt class="descname">visit_DecrefNode</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.visit_DecrefNode" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.visit_DereferenceNode">
+<tt class="descname">visit_DereferenceNode</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.visit_DereferenceNode" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.visit_Dict">
+<tt class="descname">visit_Dict</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.visit_Dict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.visit_Expr">
+<tt class="descname">visit_Expr</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.visit_Expr" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.visit_ExpressionNode">
+<tt class="descname">visit_ExpressionNode</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.visit_ExpressionNode" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.visit_ExtSlice">
+<tt class="descname">visit_ExtSlice</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.visit_ExtSlice" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.visit_For">
+<tt class="descname">visit_For</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.visit_For" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.visit_FunctionWrapperNode">
+<tt class="descname">visit_FunctionWrapperNode</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.visit_FunctionWrapperNode" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.visit_If">
+<tt class="descname">visit_If</tt><big>(</big><em>node</em>, <em>is_while=False</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.visit_If" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.visit_IfExp">
+<tt class="descname">visit_IfExp</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.visit_IfExp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.visit_IncrefNode">
+<tt class="descname">visit_IncrefNode</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.visit_IncrefNode" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.visit_IntrinsicNode">
+<tt class="descname">visit_IntrinsicNode</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.visit_IntrinsicNode" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.visit_LLMacroNode">
+<tt class="descname">visit_LLMacroNode</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.visit_LLMacroNode" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.visit_LLVMExternalFunctionNode">
+<tt class="descname">visit_LLVMExternalFunctionNode</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.visit_LLVMExternalFunctionNode" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.visit_LLVMIntrinsicNode">
+<tt class="descname">visit_LLVMIntrinsicNode</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.visit_LLVMIntrinsicNode" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.visit_LLVMValueRefNode">
+<tt class="descname">visit_LLVMValueRefNode</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.visit_LLVMValueRefNode" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.visit_List">
+<tt class="descname">visit_List</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.visit_List" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.visit_LowLevelBasicBlockNode">
+<tt class="descname">visit_LowLevelBasicBlockNode</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.visit_LowLevelBasicBlockNode" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.visit_MathCallNode">
+<tt class="descname">visit_MathCallNode</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.visit_MathCallNode" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.visit_MultiArrayAPINode">
+<tt class="descname">visit_MultiArrayAPINode</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.visit_MultiArrayAPINode" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.visit_Name">
+<tt class="descname">visit_Name</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.visit_Name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.visit_NativeCallNode">
+<tt class="descname">visit_NativeCallNode</tt><big>(</big><em>node</em>, <em>largs=None</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.visit_NativeCallNode" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.visit_NativeFunctionCallNode">
+<tt class="descname">visit_NativeFunctionCallNode</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.visit_NativeFunctionCallNode" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.visit_NativeSliceNode">
+<tt class="descname">visit_NativeSliceNode</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.visit_NativeSliceNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Slice an array. Allocate fake PyArray and allocate shape/strides</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.visit_NoneNode">
+<tt class="descname">visit_NoneNode</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.visit_NoneNode" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.visit_ObjectCallNode">
+<tt class="descname">visit_ObjectCallNode</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.visit_ObjectCallNode" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.visit_ObjectInjectNode">
+<tt class="descname">visit_ObjectInjectNode</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.visit_ObjectInjectNode" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.visit_ObjectTempNode">
+<tt class="descname">visit_ObjectTempNode</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.visit_ObjectTempNode" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.visit_ObjectTempRefNode">
+<tt class="descname">visit_ObjectTempRefNode</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.visit_ObjectTempRefNode" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.visit_Pass">
+<tt class="descname">visit_Pass</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.visit_Pass" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.visit_PointerCallNode">
+<tt class="descname">visit_PointerCallNode</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.visit_PointerCallNode" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.visit_PointerFromObject">
+<tt class="descname">visit_PointerFromObject</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.visit_PointerFromObject" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.visit_PromotionNode">
+<tt class="descname">visit_PromotionNode</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.visit_PromotionNode" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.visit_PropagateNode">
+<tt class="descname">visit_PropagateNode</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.visit_PropagateNode" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.visit_Return">
+<tt class="descname">visit_Return</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.visit_Return" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.visit_ShapeAttributeNode">
+<tt class="descname">visit_ShapeAttributeNode</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.visit_ShapeAttributeNode" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.visit_SliceDimNode">
+<tt class="descname">visit_SliceDimNode</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.visit_SliceDimNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle indexing and newaxes in a slice operation</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.visit_SliceSliceNode">
+<tt class="descname">visit_SliceSliceNode</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.visit_SliceSliceNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle slicing</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.visit_StructAttribute">
+<tt class="descname">visit_StructAttribute</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.visit_StructAttribute" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.visit_StructVariable">
+<tt class="descname">visit_StructVariable</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.visit_StructVariable" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.visit_Subscript">
+<tt class="descname">visit_Subscript</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.visit_Subscript" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.visit_Suite">
+<tt class="descname">visit_Suite</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.visit_Suite" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.visit_TempLoadNode">
+<tt class="descname">visit_TempLoadNode</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.visit_TempLoadNode" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.visit_TempNode">
+<tt class="descname">visit_TempNode</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.visit_TempNode" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.visit_TempStoreNode">
+<tt class="descname">visit_TempStoreNode</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.visit_TempStoreNode" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.visit_Tuple">
+<tt class="descname">visit_Tuple</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.visit_Tuple" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.visit_UnaryOp">
+<tt class="descname">visit_UnaryOp</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.visit_UnaryOp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.visit_UserNode">
+<tt class="descname">visit_UserNode</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.visit_UserNode" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.codegen.translate.LLVMCodeGenerator.visit_While">
+<tt class="descname">visit_While</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.LLVMCodeGenerator.visit_While" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.codegen.translate.add_cast_flag_unsigned">
+<tt class="descclassname">numba.codegen.translate.</tt><tt class="descname">add_cast_flag_unsigned</tt><big>(</big><em>flags</em>, <em>lty</em>, <em>rty</em><big>)</big><a class="headerlink" href="#numba.codegen.translate.add_cast_flag_unsigned" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+</div>
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        
+      </div><!-- /row -->
+
+      <!-- row -->
+      <div class="row-fluid">
+<div class="related navbar ">
+  <div class="navbar-inner">
+    <ul class="nav pull-right">
+      
+        <li><a href="../genindex.html" title="General Index" >index</a></li>
+        <li><a href="../py-modindex.html" title="Python Module Index" >modules</a></li>
+        <li><a href="numba.containers.html" title="containers Package" >next</a></li>
+        <li><a href="numba.html" title="numba Package" >previous</a></li>
+        <li><a href="../index.html">numba 0.9.0 documentation</a></li>
+        <li><a href="modules.html" >Numba Module Reference</a></li>
+        <li><a href="numba.html" >numba Package</a></li> 
+      
+    </ul>
+  </div>
+</div>
+      </div><!-- /row -->
+
+      <!-- footer -->
+      <footer>
+          &copy; Copyright 2012-2013, Continuum Analytics.
+        Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+      </footer>
+      <!-- /footer -->
+
+    </div>
+    <!-- /container -->
+
+  </body>
+</html>
