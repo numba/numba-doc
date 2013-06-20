@@ -8,7 +8,7 @@
   <head>
     <meta charset="utf-8" />
     
-    <title>Development crash course &mdash; numba 0.9.0-41-g16b309a documentation</title>
+    <title>Development crash course &mdash; numba 0.9.0-43-gd074b30 documentation</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
@@ -35,7 +35,7 @@
 <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
             URL_ROOT:    '',
-            VERSION:     '0.9.0-41-g16b309a',
+            VERSION:     '0.9.0-43-gd074b30',
             COLLAPSE_INDEX: false,
             FILE_SUFFIX: '.html',
             HAS_SOURCE:  true
@@ -59,7 +59,7 @@
     });
   });
 </script>
-    <link rel="top" title="numba 0.9.0-41-g16b309a documentation" href="index.html" />
+    <link rel="top" title="numba 0.9.0-43-gd074b30 documentation" href="index.html" />
     <link rel="next" title="Numba Module Reference" href="modules/modules.html" />
     <link rel="prev" title="Numba Roadmap" href="roadmap.html" /> 
   </head>
@@ -72,7 +72,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="index.html">numba 0.9.0-41-g16b309a documentation</a>
+          <a class="brand" href="index.html">numba 0.9.0-43-gd074b30 documentation</a>
           <div class="nav-collapse collapse">
             <ul class="nav pull-right">
               
@@ -111,8 +111,8 @@
 <li><a class="reference internal" href="#">Development crash course</a><ul>
 <li><a class="reference internal" href="#overview">Overview</a><ul>
 <li><a class="reference internal" href="#stages">Stages</a><ul>
-<li><a class="reference internal" href="#type-dependence-graph-construction">Type Dependence Graph Construction</a></li>
 <li><a class="reference internal" href="#package-structure">Package Structure</a></li>
+<li><a class="reference internal" href="#type-dependence-graph-construction">Type Dependence Graph Construction</a></li>
 <li><a class="reference internal" href="#closures">Closures</a></li>
 <li><a class="reference internal" href="#extension-classes">Extension Classes</a></li>
 </ul>
@@ -174,8 +174,8 @@
 <li><a class="reference internal" href="#">Development crash course</a><ul>
 <li><a class="reference internal" href="#overview">Overview</a><ul>
 <li><a class="reference internal" href="#stages">Stages</a><ul>
-<li><a class="reference internal" href="#type-dependence-graph-construction">Type Dependence Graph Construction</a></li>
 <li><a class="reference internal" href="#package-structure">Package Structure</a></li>
+<li><a class="reference internal" href="#type-dependence-graph-construction">Type Dependence Graph Construction</a></li>
 <li><a class="reference internal" href="#closures">Closures</a></li>
 <li><a class="reference internal" href="#extension-classes">Extension Classes</a></li>
 </ul>
@@ -297,6 +297,9 @@ loop-carried dependency for a variable:</p>
     <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">i</span> <span class="c"># loop-carried dependency</span>
 </pre></div>
 </div>
+<p>The phi nodes are themselves variable definitions, and they define
+the points where variables merge and need a unifyable type (e.g.
+(int, int), or (int, float), as opposed to (int, string)).</p>
 </div></blockquote>
 </li>
 <li><p class="first">Type inference: <tt class="docutils literal"><span class="pre">numba.type_inference</span></tt></p>
@@ -305,7 +308,7 @@ loop-carried dependency for a variable:</p>
 variables. This operates in two stages:</p>
 <blockquote>
 <div><ul>
-<li><p class="first">Infer types for all local variable definitions</p>
+<li><p class="first">Infer types for all local variable definitions (including phis)</p>
 <blockquote>
 <div><p>For an overview of this see <a class="reference internal" href="#dependence"><em>Type Dependence Graph Construction</em></a> below.</p>
 </div></blockquote>
@@ -319,7 +322,7 @@ type information up the tree</p>
 <div class="line-block">
 <div class="line">When the type inferencer cannot determine a type, such as when it</div>
 <div class="line">calls a Python function or method that is not a Numba function, it</div>
-<div class="line">assumes type object. Object variables may be coerced to and from</div>
+<div class="line">assumes type <tt class="docutils literal"><span class="pre">object</span></tt>. Object variables may be coerced to and from</div>
 <div class="line">most native types.</div>
 </div>
 <div class="line-block">
@@ -344,9 +347,13 @@ type information up the tree</p>
 <blockquote>
 <div><p><a class="reference external" href="https://github.com/numba/numba/tree/devel/numba/type_inference/modules">https://github.com/numba/numba/tree/devel/numba/type_inference/modules</a></p>
 </div></blockquote>
+<div class="line-block">
+<div class="line">This above sub-package is an important part of numba that</div>
+<div class="line">infers (and sometimes grossly rewrites) calls to known functions.</div>
+</div>
 </div></blockquote>
 </li>
-<li><p class="first">Specialization/Lowering</p>
+<li><p class="first">Specialization/Lowering: numba/specialize and numba/transforms.py</p>
 <blockquote>
 <div><p>What follows over the typed code are a series of transformations to
 lower the level of the code into something low-level - something
@@ -367,7 +374,7 @@ calls such as <tt class="docutils literal"><span class="pre">PyFloat_FromDouble<
 <li><p class="first">Lower exception code into calls into the C-API and insert
 NULL pointer checks in places</p>
 </li>
-<li><p class="first">Normalize comparisons</p>
+<li><p class="first">Normalize comparisons (e.g. <tt class="docutils literal"><span class="pre">a</span> <span class="pre">&lt;</span> <span class="pre">b</span> <span class="pre">&lt;</span> <span class="pre">c</span></tt> =&gt; <tt class="docutils literal"><span class="pre">a</span> <span class="pre">&lt;</span> <span class="pre">b</span> <span class="pre">and</span> <span class="pre">b</span> <span class="pre">&lt;</span> <span class="pre">c</span></tt>)</p>
 </li>
 <li><p class="first">Keep track of refcounts. This is mostly done with
 ObjectTempNode, which hold a temporary for an object (a new
@@ -401,85 +408,20 @@ return_block:                       ; clean up objects
 </div></blockquote>
 </div></blockquote>
 </li>
-<li><p class="first">Code generation</p>
+<li><p class="first">Code generation: numba/codegen</p>
 <blockquote>
 <div><p>Generate LLVM code from the transformed AST. This is relatively
 straightforward at this point. One tricky problem is that the basic
 blocks from the LLVM code no longer correspond to the basic blocks
 of the CFG, since error checks have been inserted. This makes
 tracking phis harder than it should be.</p>
+<p>The code generator uses utility functions from numba/utility and
+numba/external to do things like refcounting (<tt class="docutils literal"><span class="pre">Py_INCREF</span></tt>, etc)
+and uses helpers to slice and broadcast arrays.</p>
 </div></blockquote>
 </li>
 </ul>
 </div></blockquote>
-<div class="section" id="type-dependence-graph-construction">
-<span id="dependence"></span><h4>Type Dependence Graph Construction<a class="headerlink" href="#type-dependence-graph-construction" title="Permalink to this headline">¶</a></h4>
-<p>From the SSA graph we compute a type graph by inferring all variable
-assignments. This graph often has cycles, due to the back-edge in
-the CFG for loops. For instance we may have the following code:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">x</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
-    <span class="n">x</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-
-<span class="n">y</span> <span class="o">=</span> <span class="n">x</span>
-</pre></div>
-</div>
-<p>Where <tt class="docutils literal"><span class="pre">f</span></tt> is an external autojit function (i.e., it&#8217;s output type depends
-on it&#8217;s dynamic input type).</p>
-<p>We get the following type graph:</p>
-<p class="graphviz">
-<img src="_images/graphviz-d31f43050eeba7b8b1310d8bb012551d8e8f94d3.png" alt="digraph typegraph {
-x_0 -&gt; int
-
-x_1 -&gt; x_0
-x_1 -&gt; x_2
-x_2 -&gt; f
-f -&gt; x_1
-
-y_0 -&gt; x_1
-
-i_0 -&gt; range
-range -&gt; int
-}" />
-</p>
-<p>Below we show the correspondence of the SSA variable definitions to their
-basic blocks:</p>
-<p class="graphviz">
-<img src="_images/graphviz-0d9527069f69872cfb4e428da17e5519bb5c0423.png" alt="digraph cfg {
-&quot;entry: [ x_0, i_0 ]&quot; -&gt; &quot;condition: [ x_1 ]&quot; -&gt; &quot;body: [ x_2 ]&quot;
-&quot;body: [ x_2 ]&quot; -&gt; &quot;condition: [ x_1 ]&quot;
-&quot;condition: [ x_1 ]&quot; -&gt; &quot;exit: [ y_2 ]&quot;
-}" />
-</p>
-<p>Our goal is to resolve this type graph in topological order, such that
-we know the type for each variable definition (<tt class="docutils literal"><span class="pre">x_0</span></tt>, <tt class="docutils literal"><span class="pre">x_1</span></tt>, etc).</p>
-<p>In order to do a topological sort, we compute the condensation graph
-by finding the strongly connected components and condensing them
-into single graph nodes. The resulting graph looks like this:</p>
-<p class="graphviz">
-<img src="_images/graphviz-bcba21ba0c2ac0644d3f762c6e4f4e385e768337.png" alt="digraph typegraph {
-x_0 -&gt; int
-SCC0 -&gt; x_0
-y_0 -&gt; SCC0
-
-i_0 -&gt; range
-range -&gt; int
-}" />
-</p>
-<p>And <tt class="docutils literal"><span class="pre">SCC0</span></tt> contains the cycle in the type graph. We now have a
-well-defined preorder for which we can process each node in topological
-order on the transpose graph, doing the following:</p>
-<blockquote>
-<div><ul class="simple">
-<li>If the node represents a concrete type, propagate result along edge</li>
-<li>If the node represents a function over an argument of the given input types,
-infer the result type of this function</li>
-<li>For each SCC, process all internal nodes using fixpoint iteration
-given all input types to the SCC. Update internal nodes with their result
-types.</li>
-</ul>
-</div></blockquote>
-</div>
 <div class="section" id="package-structure">
 <span id="structure"></span><h4>Package Structure<a class="headerlink" href="#package-structure" title="Permalink to this headline">¶</a></h4>
 <ul>
@@ -596,9 +538,77 @@ from ASDL. This should be factored out into asdlpy or somesuch.</p>
 </li>
 </ul>
 </div>
+<div class="section" id="type-dependence-graph-construction">
+<span id="dependence"></span><h4>Type Dependence Graph Construction<a class="headerlink" href="#type-dependence-graph-construction" title="Permalink to this headline">¶</a></h4>
+<p>From the SSA graph we compute a type graph by inferring all variable
+assignments. This graph often has cycles, due to the back-edge in
+the CFG for loops. For instance we may have the following code:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">x</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+<span class="n">y</span> <span class="o">=</span> <span class="n">x</span>
+</pre></div>
+</div>
+<p>Where <tt class="docutils literal"><span class="pre">f</span></tt> is an external autojit function (i.e., it&#8217;s output type depends
+on it&#8217;s dynamic input type).</p>
+<p>We get the following type graph:</p>
+<p class="graphviz">
+<img src="_images/graphviz-d31f43050eeba7b8b1310d8bb012551d8e8f94d3.png" alt="digraph typegraph {
+x_0 -&gt; int
+
+x_1 -&gt; x_0
+x_1 -&gt; x_2
+x_2 -&gt; f
+f -&gt; x_1
+
+y_0 -&gt; x_1
+
+i_0 -&gt; range
+range -&gt; int
+}" />
+</p>
+<p>Below we show the correspondence of the SSA variable definitions to their
+basic blocks:</p>
+<p class="graphviz">
+<img src="_images/graphviz-0d9527069f69872cfb4e428da17e5519bb5c0423.png" alt="digraph cfg {
+&quot;entry: [ x_0, i_0 ]&quot; -&gt; &quot;condition: [ x_1 ]&quot; -&gt; &quot;body: [ x_2 ]&quot;
+&quot;body: [ x_2 ]&quot; -&gt; &quot;condition: [ x_1 ]&quot;
+&quot;condition: [ x_1 ]&quot; -&gt; &quot;exit: [ y_2 ]&quot;
+}" />
+</p>
+<p>Our goal is to resolve this type graph in topological order, such that
+we know the type for each variable definition (<tt class="docutils literal"><span class="pre">x_0</span></tt>, <tt class="docutils literal"><span class="pre">x_1</span></tt>, etc).</p>
+<p>In order to do a topological sort, we compute the condensation graph
+by finding the strongly connected components and condensing them
+into single graph nodes. The resulting graph looks like this:</p>
+<p class="graphviz">
+<img src="_images/graphviz-bcba21ba0c2ac0644d3f762c6e4f4e385e768337.png" alt="digraph typegraph {
+x_0 -&gt; int
+SCC0 -&gt; x_0
+y_0 -&gt; SCC0
+
+i_0 -&gt; range
+range -&gt; int
+}" />
+</p>
+<p>And <tt class="docutils literal"><span class="pre">SCC0</span></tt> contains the cycle in the type graph. We now have a
+well-defined preorder for which we can process each node in topological
+order on the transpose graph, doing the following:</p>
+<blockquote>
+<div><ul class="simple">
+<li>If the node represents a concrete type, propagate result along edge</li>
+<li>If the node represents a function over an argument of the given input types,
+infer the result type of this function</li>
+<li>For each SCC, process all internal nodes using fixpoint iteration
+given all input types to the SCC. Update internal nodes with their result
+types.</li>
+</ul>
+</div></blockquote>
+</div>
 <div class="section" id="closures">
 <span id="id3"></span><h4>Closures<a class="headerlink" href="#closures" title="Permalink to this headline">¶</a></h4>
-<p>This module provides support for closures and inner functions:</p>
+<p><tt class="docutils literal"><span class="pre">numba/closures.py</span></tt> provides support for closures and inner functions:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="nd">@autojit</span>
 <span class="k">def</span> <span class="nf">outer</span><span class="p">():</span>
     <span class="n">a</span> <span class="o">=</span> <span class="mi">10</span> <span class="c"># this is a cellvar</span>
@@ -641,10 +651,11 @@ to share a single outer scope. E.g.:</p>
 But it does contain a freevar from scope_outer and scope_inner, so it gets
 scope_inner passed as first argument. scope_inner has a reference to scope
 outer, so all variables can be resolved.</p>
-<p>These scopes are instances of a numba extension class.</p>
+<p>These scopes are instances of dynamic numba extension classes.</p>
 </div>
 <div class="section" id="extension-classes">
 <span id="extcls"></span><h4>Extension Classes<a class="headerlink" href="#extension-classes" title="Permalink to this headline">¶</a></h4>
+<p>Extension classes live in numba/exttypes.</p>
 </div>
 </div>
 <div class="section" id="jit">
@@ -652,7 +663,7 @@ outer, so all variables can be resolved.</p>
 <p>Compiling &#64;jit extension classes works as follows:</p>
 <blockquote>
 <div><ul>
-<li><p class="first">Create an extension Numba type holding a symtab</p>
+<li><p class="first">Create an extension Numba type holding a symbol table</p>
 </li>
 <li><p class="first">Capture attribute types in the symtab ...</p>
 <blockquote>
@@ -798,6 +809,12 @@ Hash Functions (1999) by Rasmus Pagn:</p>
 generic scheme, e.g. where a caller is dealing with an unknown
 object, and we quickly want to see whether it support such a
 perfect-hashing virtual method table:</p>
+<dl class="docutils">
+<dt>NOTE: What we want is to actually use a separate attribute table</dt>
+<dd><p class="first last">in addition to the virtual method table, giving all extension
+objects a compatible layout.</p>
+</dd>
+</dl>
 <div class="highlight-c"><div class="highlight"><pre><span class="k">if</span> <span class="p">(</span><span class="n">o</span><span class="o">-&gt;</span><span class="n">ob_type</span><span class="o">-&gt;</span><span class="n">tp_flags</span> <span class="o">&amp;</span> <span class="n">NATIVELY_CALLABLE_TABLE</span><span class="p">)</span> <span class="p">{</span>
     <span class="n">PyCustomSlots_Table</span> <span class="o">***</span><span class="n">slot_p</span> <span class="o">=</span> <span class="p">((</span><span class="kt">char</span> <span class="o">*</span><span class="p">)</span> <span class="n">o</span><span class="p">)</span> <span class="o">-</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">PyGC_HEAD</span><span class="p">)</span>
     <span class="n">PyCustomSlots_Table</span> <span class="o">*</span><span class="n">vtab</span> <span class="o">=</span> <span class="o">**</span><span class="n">slot_p</span>
@@ -834,10 +851,11 @@ numba.typesystem.tests.test_conversion                                 SUCCESS
 <p>To isolate problems it&#8217;s best to create an isolated test-case that is as
 small as possible yet still exhibits the problem, often using just a simple
 test script.</p>
-<p>Debugging compiler tracebacks are often simpler when using post-mortem
-debugging, which can help understand what&#8217;s going wrong without modifying
-any code (and later tracking down print statements that you accidentally
-committed):</p>
+<p>Debugging compiler tracebacks can be handled through prints, but if the
+problem is less obvious (or the codebase unfamiliar) it is often simpler
+to use post-mortem debugging, which can help understand what&#8217;s going wrong
+without modifying any code (and later tracking down print statements that
+you accidentally committed):</p>
 <div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>python -m pdb test.py
 </pre></div>
 </div>
@@ -954,7 +972,7 @@ runtime environment or library (CPython, NumPy).</p>
         <li><a href="py-modindex.html" title="Python Module Index" >modules</a></li>
         <li><a href="modules/modules.html" title="Numba Module Reference" >next</a></li>
         <li><a href="roadmap.html" title="Numba Roadmap" >previous</a></li>
-        <li><a href="index.html">numba 0.9.0-41-g16b309a documentation</a></li> 
+        <li><a href="index.html">numba 0.9.0-43-gd074b30 documentation</a></li> 
       
     </ul>
   </div>
