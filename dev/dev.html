@@ -8,7 +8,7 @@
   <head>
     <meta charset="utf-8" />
     
-    <title>Development crash course &mdash; numba 0.9.0-43-gd074b30 documentation</title>
+    <title>Development crash course &mdash; numba 0.9.0-54-gb113a6a documentation</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
@@ -35,7 +35,7 @@
 <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
             URL_ROOT:    '',
-            VERSION:     '0.9.0-43-gd074b30',
+            VERSION:     '0.9.0-54-gb113a6a',
             COLLAPSE_INDEX: false,
             FILE_SUFFIX: '.html',
             HAS_SOURCE:  true
@@ -59,8 +59,7 @@
     });
   });
 </script>
-    <link rel="top" title="numba 0.9.0-43-gd074b30 documentation" href="index.html" />
-    <link rel="next" title="Numba Module Reference" href="modules/modules.html" />
+    <link rel="top" title="numba 0.9.0-54-gb113a6a documentation" href="index.html" />
     <link rel="prev" title="Numba Roadmap" href="roadmap.html" /> 
   </head>
   <body>
@@ -72,18 +71,12 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="index.html">numba 0.9.0-43-gd074b30 documentation</a>
+          <a class="brand" href="index.html">numba 0.9.0-54-gb113a6a documentation</a>
           <div class="nav-collapse collapse">
             <ul class="nav pull-right">
               
                 <li>
                 <a href="genindex.html" title="General Index" accesskey="I">index</a>
-                </li>
-                <li>
-                <a href="py-modindex.html" title="Python Module Index" >modules</a>
-                </li>
-                <li>
-                <a href="modules/modules.html" title="Numba Module Reference" accesskey="N">next</a>
                 </li>
                 <li>
                 <a href="roadmap.html" title="Numba Roadmap" accesskey="P">previous</a>
@@ -119,12 +112,19 @@
 </li>
 <li><a class="reference internal" href="#jit">&#64;jit</a></li>
 <li><a class="reference internal" href="#autojit">&#64;autojit</a><ul>
+<li><a class="reference internal" href="#wrappers">Wrappers</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id6">&#64;jit</a></li>
+<li><a class="reference internal" href="#id7">&#64;autojit</a></li>
+<li><a class="reference internal" href="#classes">classes</a><ul>
 <li><a class="reference internal" href="#testing">Testing</a></li>
 <li><a class="reference internal" href="#debugging">Debugging</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#debugging-asts">Debugging ASTs</a></li>
-<li><a class="reference internal" href="#debugging-types">Debugging Types</a><ul>
+<li><a class="reference internal" href="#debugging-types">Debugging Types</a></li>
+<li><a class="reference internal" href="#debugging-the-translator">Debugging the Translator</a><ul>
 <li><a class="reference internal" href="#problems">Problems</a></li>
 </ul>
 </li>
@@ -137,9 +137,6 @@
   <h4>Previous topic</h4>
   <p class="topless"><a href="roadmap.html"
                         title="previous chapter">Numba Roadmap</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="modules/modules.html"
-                        title="next chapter">Numba Module Reference</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/dev.txt"
@@ -182,12 +179,19 @@
 </li>
 <li><a class="reference internal" href="#jit">&#64;jit</a></li>
 <li><a class="reference internal" href="#autojit">&#64;autojit</a><ul>
+<li><a class="reference internal" href="#wrappers">Wrappers</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id6">&#64;jit</a></li>
+<li><a class="reference internal" href="#id7">&#64;autojit</a></li>
+<li><a class="reference internal" href="#classes">classes</a><ul>
 <li><a class="reference internal" href="#testing">Testing</a></li>
 <li><a class="reference internal" href="#debugging">Debugging</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#debugging-asts">Debugging ASTs</a></li>
-<li><a class="reference internal" href="#debugging-types">Debugging Types</a><ul>
+<li><a class="reference internal" href="#debugging-types">Debugging Types</a></li>
+<li><a class="reference internal" href="#debugging-the-translator">Debugging the Translator</a><ul>
 <li><a class="reference internal" href="#problems">Problems</a></li>
 </ul>
 </li>
@@ -200,9 +204,6 @@
   <h4>Previous topic</h4>
   <p class="topless"><a href="roadmap.html"
                         title="previous chapter">Numba Roadmap</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="modules/modules.html"
-                        title="next chapter">Numba Module Reference</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/dev.txt"
@@ -832,6 +833,110 @@ an autojit method).</p>
 </li>
 </ul>
 </div></blockquote>
+<div class="section" id="wrappers">
+<h4>Wrappers<a class="headerlink" href="#wrappers" title="Permalink to this headline">¶</a></h4>
+<p>There are several wrappers in numba that wrap functions, classes and methods.
+The key implementations are in:</p>
+<blockquote>
+<div><ul class="simple">
+<li>numba/numbawrapper.pyx</li>
+<li>numba/numbafunction.c</li>
+<li>numba/codegen/llvmwrapper.py</li>
+</ul>
+</div></blockquote>
+<p>What numba does is it creates a function like this (in C pseudo-code):</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="kt">double</span> <span class="nf">square</span><span class="p">(</span><span class="kt">double</span> <span class="n">arg</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">arg</span> <span class="o">*</span> <span class="n">arg</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>and it wraps it as follows:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">PyObject</span> <span class="o">*</span><span class="nf">square_wrapper</span><span class="p">(</span><span class="n">PyObject</span> <span class="o">*</span><span class="n">self</span><span class="p">,</span> <span class="n">PyObject</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">double</span> <span class="n">arg</span><span class="p">;</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">PyArg_ParseTuple</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="s">&quot;d&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">arg</span><span class="p">))</span>
+        <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+
+    <span class="k">return</span> <span class="n">PyFloat_FromDouble</span><span class="p">(</span><span class="n">square</span><span class="p">(</span><span class="n">arg</span><span class="p">));</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The wrapper is a CPython compatible function the likes of which you often
+see in extension modules. It is created by llvmwrapper.py.
+This wrapper is turned into an <tt class="docutils literal"><span class="pre">PyCFunctionObject</span></tt>,
+defined in <tt class="docutils literal"><span class="pre">Include/methodobject.h</span></tt> in CPython&#8217;s source tree:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="k">typedef</span> <span class="k">struct</span> <span class="p">{</span>
+    <span class="n">PyObject_HEAD</span>
+    <span class="n">PyMethodDef</span> <span class="o">*</span><span class="n">m_ml</span><span class="p">;</span> <span class="cm">/* Description of the C function to call */</span>
+    <span class="n">PyObject</span>    <span class="o">*</span><span class="n">m_self</span><span class="p">;</span> <span class="cm">/* Passed as &#39;self&#39; arg to the C func, can be NULL */</span>
+    <span class="n">PyObject</span>    <span class="o">*</span><span class="n">m_module</span><span class="p">;</span> <span class="cm">/* The __module__ attribute, can be anything */</span>
+<span class="p">}</span> <span class="n">PyCFunctionObject</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Numba uses a wrapper (a subclass) of <tt class="docutils literal"><span class="pre">PyCFunctionObject</span></tt>, called
+<tt class="docutils literal"><span class="pre">numbafunction</span></tt>, which has some extra fields and gives the function a
+more pythonic interface, such as a dict, a way to override <tt class="docutils literal"><span class="pre">__doc__</span></tt>, etc.
+It also has a field to hold a closure frame (see <a class="reference internal" href="pythonstuff.html#closures"><em>Closures</em></a>).</p>
+<p>This function object is created after compilation of the function and its
+wrapper (<tt class="docutils literal"><span class="pre">square_wrapper</span></tt>). It is instantiated in
+<tt class="docutils literal"><span class="pre">llvmwrapper.py:numbafunction_new</span></tt>, calling <tt class="docutils literal"><span class="pre">NumbaFunction_NewEx</span></tt>.</p>
+</div>
+</div>
+<div class="section" id="id6">
+<h3>&#64;jit<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<p>Jit functions are wrapped typically by the <tt class="docutils literal"><span class="pre">NumbaFunction</span></tt> in
+<tt class="docutils literal"><span class="pre">numbafunction.c</span></tt>. The <tt class="docutils literal"><span class="pre">NumbaCompiledWrapper</span></tt> is only a temporary wrapper
+used in case of a recursive function that is still being compiled, and for
+which we have no pointer.</p>
+</div>
+<div class="section" id="id7">
+<h3>&#64;autojit<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<p>Autojit functions are handled by <tt class="docutils literal"><span class="pre">NumbaSpecializingWrapper</span></tt>, which wraps
+a Python function and when called does a lookup in a cache to see if a
+previously compiled version is available. This code in in <tt class="docutils literal"><span class="pre">numbawrapper.pyx</span></tt>.</p>
+<p><tt class="docutils literal"><span class="pre">NumbaSpecializingWrapper</span></tt> holds an <tt class="docutils literal"><span class="pre">AutojitCache</span></tt> which tries to find
+a match very quickly. However, it may not always find a compiled version
+even though it&#8217;s in the cache, for instance because there are values of
+different Python types which are represented using the same numba type.</p>
+<p>This is then corrected by a slower path which tries to compile the function,
+and creates a type for each argument. It uses these types to do a lookup
+in <tt class="docutils literal"><span class="pre">numba.functions.FunctionCache</span></tt>.</p>
+</div>
+<div class="section" id="classes">
+<h3>classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h3>
+<p>The story for classes is slightly different. <tt class="docutils literal"><span class="pre">&#64;jit</span></tt> classes are simply
+turned into a compiled extension type, with compiled methods set as class
+attributes. The <tt class="docutils literal"><span class="pre">NumbaFunction</span></tt> handles binding to bound or unbound methods.</p>
+<p><tt class="docutils literal"><span class="pre">&#64;autojit</span></tt> classes are wrapped in the same way as autojit functions, but
+with a different compiler entry point that triggers when the wrapper is
+called. The entry point compiles a special version of the extension class,
+and any methods that are not specialized (e.g. because they take further
+arguments than <tt class="docutils literal"><span class="pre">self</span></tt>), are wrapped by wrappers (again
+<tt class="docutils literal"><span class="pre">NumbaSpecializingWrapper</span></tt>) that compile a method on call and update the
+method table (the table supporting fast call from numba space).</p>
+<p>The only special case are unbound methods, consider the code below:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="nd">@autojit</span>
+<span class="k">class</span> <span class="nc">A</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">arg</span> <span class="o">=</span> <span class="n">arg</span>
+
+    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">arg</span> <span class="o">*</span> <span class="n">other</span>
+
+<span class="k">print</span> <span class="n">A</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">exttype</span>     <span class="c"># &lt;AutojitExtension A({&#39;arg&#39;: int})&gt;</span>
+<span class="k">print</span> <span class="n">A</span><span class="p">(</span><span class="mf">10.0</span><span class="p">)</span><span class="o">.</span><span class="n">exttype</span>   <span class="c"># &lt;AutojitExtension A({&#39;arg&#39;: float64})&gt;</span>
+</pre></div>
+</div>
+<p>We have two versions of our extension type, one with <tt class="docutils literal"><span class="pre">arg</span> <span class="pre">=</span> <span class="pre">int</span></tt> and one
+with <tt class="docutils literal"><span class="pre">arg</span> <span class="pre">=</span> <span class="pre">float64</span></tt>. Now consider calling <tt class="docutils literal"><span class="pre">add</span></tt> as an unbound method:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">print</span> <span class="n">A</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">A</span><span class="p">(</span><span class="mf">10.0</span><span class="p">),</span> <span class="mf">5.0</span><span class="p">)</span>   <span class="c"># 50.0</span>
+</pre></div>
+</div>
+<p>To dispatch from unbound method <tt class="docutils literal"><span class="pre">A.add</span></tt> of unspecialized class <tt class="docutils literal"><span class="pre">A</span></tt> to
+specialized method <tt class="docutils literal"><span class="pre">A[{'arg':int_}].add</span></tt>, numba creates a
+<tt class="docutils literal"><span class="pre">UnboundDelegatingMethod</span></tt> defined in <tt class="docutils literal"><span class="pre">numba.exttypes.autojitclass</span></tt>.</p>
 <div class="section" id="testing">
 <h4>Testing<a class="headerlink" href="#testing" title="Permalink to this headline">¶</a></h4>
 <p>Whenever you make changes to the code, you should see what impact this has
@@ -856,9 +961,21 @@ problem is less obvious (or the codebase unfamiliar) it is often simpler
 to use post-mortem debugging, which can help understand what&#8217;s going wrong
 without modifying any code (and later tracking down print statements that
 you accidentally committed):</p>
-<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>python -m pdb test.py
+<div class="highlight-bash" id="post-mortem"><div class="highlight"><pre><span class="nv">$ </span>python -m pdb test.py
 </pre></div>
 </div>
+<p>When using post-mortem debugging it&#8217;s useful to enable the post-mortem
+option in numba.environment.FunctionErrorEnvironment:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">enable_post_mortem</span> <span class="o">=</span> <span class="n">TypedProperty</span><span class="p">(</span>
+    <span class="nb">bool</span><span class="p">,</span>
+    <span class="s">&quot;Enable post-mortem debugging for the Numba compiler&quot;</span><span class="p">,</span>
+    <span class="bp">False</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Set the default value to <tt class="docutils literal"><span class="pre">True</span></tt> there. This way exceptions are not
+swallowed and accumulated (and hence raised from the error reporter,
+instead of the failing place in the compiler).</p>
 </div>
 <div class="section" id="debugging">
 <h4>Debugging<a class="headerlink" href="#debugging" title="Permalink to this headline">¶</a></h4>
@@ -921,6 +1038,14 @@ is <tt class="docutils literal"><span class="pre">numba.typeof</span></tt>:</p>
     <span class="k">print</span><span class="p">(</span><span class="n">double</span><span class="p">(</span><span class="n">y</span><span class="p">))</span>           <span class="c"># cast</span>
 </pre></div>
 </div>
+</div>
+<div class="section" id="debugging-the-translator">
+<h3>Debugging the Translator<a class="headerlink" href="#debugging-the-translator" title="Permalink to this headline">¶</a></h3>
+<p>To debug the translator, one can again stick with prints or post-mortem
+debugging. If the latter option is desirable, make absolutely sure that
+you enable the post-mortem debug option (see <em class="xref std std-ref">post-mortem</em>). This
+makes sure numba does not delete the LLVM function, which means the LLVM
+values referenced in the translator will still be in a consistent state.</p>
 <div class="section" id="problems">
 <h4>Problems<a class="headerlink" href="#problems" title="Permalink to this headline">¶</a></h4>
 <p>There are several problems with the codebase, stemming from our IR.
@@ -969,10 +1094,8 @@ runtime environment or library (CPython, NumPy).</p>
     <ul class="nav pull-right">
       
         <li><a href="genindex.html" title="General Index" >index</a></li>
-        <li><a href="py-modindex.html" title="Python Module Index" >modules</a></li>
-        <li><a href="modules/modules.html" title="Numba Module Reference" >next</a></li>
         <li><a href="roadmap.html" title="Numba Roadmap" >previous</a></li>
-        <li><a href="index.html">numba 0.9.0-43-gd074b30 documentation</a></li> 
+        <li><a href="index.html">numba 0.9.0-54-gb113a6a documentation</a></li> 
       
     </ul>
   </div>

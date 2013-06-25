@@ -8,7 +8,7 @@
   <head>
     <meta charset="utf-8" />
     
-    <title>Examples &mdash; numba 0.9.0-43-gd074b30 documentation</title>
+    <title>Examples &mdash; numba 0.9.0-54-gb113a6a documentation</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
@@ -35,7 +35,7 @@
 <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
             URL_ROOT:    '',
-            VERSION:     '0.9.0-43-gd074b30',
+            VERSION:     '0.9.0-54-gb113a6a',
             COLLAPSE_INDEX: false,
             FILE_SUFFIX: '.html',
             HAS_SOURCE:  true
@@ -59,7 +59,7 @@
     });
   });
 </script>
-    <link rel="top" title="numba 0.9.0-43-gd074b30 documentation" href="index.html" />
+    <link rel="top" title="numba 0.9.0-54-gb113a6a documentation" href="index.html" />
     <link rel="next" title="Release Notes" href="releases.html" />
     <link rel="prev" title="Using doctest with Numba" href="doctest.html" /> 
   </head>
@@ -72,15 +72,12 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="index.html">numba 0.9.0-43-gd074b30 documentation</a>
+          <a class="brand" href="index.html">numba 0.9.0-54-gb113a6a documentation</a>
           <div class="nav-collapse collapse">
             <ul class="nav pull-right">
               
                 <li>
                 <a href="genindex.html" title="General Index" accesskey="I">index</a>
-                </li>
-                <li>
-                <a href="py-modindex.html" title="Python Module Index" >modules</a>
                 </li>
                 <li>
                 <a href="releases.html" title="Release Notes" accesskey="N">next</a>
@@ -118,6 +115,7 @@
 <li><a class="reference internal" href="#mandelbrot">Mandelbrot</a></li>
 <li><a class="reference internal" href="#filterbank-correlation">Filterbank Correlation</a></li>
 <li><a class="reference internal" href="#multi-threading">Multi threading</a></li>
+<li><a class="reference internal" href="#strings-and-libc">Strings and libc</a></li>
 </ul>
 </li>
 </ul>
@@ -169,6 +167,7 @@
 <li><a class="reference internal" href="#mandelbrot">Mandelbrot</a></li>
 <li><a class="reference internal" href="#filterbank-correlation">Filterbank Correlation</a></li>
 <li><a class="reference internal" href="#multi-threading">Multi threading</a></li>
+<li><a class="reference internal" href="#strings-and-libc">Strings and libc</a></li>
 </ul>
 </li>
 </ul>
@@ -637,6 +636,80 @@ numba functions to eliminate all python overhead in function calling.</p>
 </pre></div>
 </div>
 </div>
+<div class="section" id="strings-and-libc">
+<h2>Strings and libc<a class="headerlink" href="#strings-and-libc" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># -*- coding: utf-8 -*-</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Example of using strings with numba using libc and some basic string</span>
+<span class="sd">functionality.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span><span class="p">,</span> <span class="n">absolute_import</span>
+<span class="kn">import</span> <span class="nn">struct</span>
+<span class="kn">import</span> <span class="nn">socket</span>
+
+<span class="kn">import</span> <span class="nn">numba</span> <span class="kn">as</span> <span class="nn">nb</span>
+<span class="kn">import</span> <span class="nn">cffi</span>
+
+<span class="n">ffi</span> <span class="o">=</span> <span class="n">cffi</span><span class="o">.</span><span class="n">FFI</span><span class="p">()</span>
+<span class="n">ffi</span><span class="o">.</span><span class="n">cdef</span><span class="p">(</span><span class="s">&quot;&quot;&quot;</span>
+<span class="s">void abort(void);</span>
+<span class="s">char *strstr(const char *s1, const char *s2);</span>
+<span class="s">int atoi(const char *str);</span>
+<span class="s">char *strtok(char *restrict str, const char *restrict sep);</span>
+<span class="s">&quot;&quot;&quot;</span><span class="p">)</span>
+
+<span class="n">lib</span> <span class="o">=</span> <span class="n">ffi</span><span class="o">.</span><span class="n">dlopen</span><span class="p">(</span><span class="bp">None</span><span class="p">)</span>
+
+<span class="c"># For now, we need to make these globals so numba will recognize them</span>
+<span class="n">abort</span><span class="p">,</span> <span class="n">strstr</span><span class="p">,</span> <span class="n">atoi</span><span class="p">,</span> <span class="n">strtok</span> <span class="o">=</span> <span class="n">lib</span><span class="o">.</span><span class="n">abort</span><span class="p">,</span> <span class="n">lib</span><span class="o">.</span><span class="n">strstr</span><span class="p">,</span> <span class="n">lib</span><span class="o">.</span><span class="n">atoi</span><span class="p">,</span> <span class="n">lib</span><span class="o">.</span><span class="n">strtok</span>
+
+<span class="n">int8_p</span> <span class="o">=</span> <span class="n">nb</span><span class="o">.</span><span class="n">int8</span><span class="o">.</span><span class="n">pointer</span><span class="p">()</span>
+<span class="n">int_p</span>  <span class="o">=</span> <span class="n">nb</span><span class="o">.</span><span class="n">int_</span><span class="o">.</span><span class="n">pointer</span><span class="p">()</span>
+
+<span class="nd">@nb.autojit</span><span class="p">(</span><span class="n">nopython</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">parse_int_strtok</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convert an IP address given as a string to an int, similar to</span>
+<span class="sd">    socket.inet_aton(). Performs no error checking!</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">nb</span><span class="o">.</span><span class="n">uint32</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">current</span> <span class="o">=</span> <span class="n">strtok</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s">&quot;.&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
+        <span class="n">byte</span> <span class="o">=</span> <span class="n">atoi</span><span class="p">(</span><span class="n">current</span><span class="p">)</span>
+        <span class="n">shift</span> <span class="o">=</span> <span class="p">(</span><span class="mi">3</span> <span class="o">-</span> <span class="n">i</span><span class="p">)</span> <span class="o">*</span> <span class="mi">8</span>
+        <span class="n">result</span> <span class="o">|=</span> <span class="n">byte</span> <span class="o">&lt;&lt;</span> <span class="n">shift</span>
+        <span class="n">current</span> <span class="o">=</span> <span class="n">strtok</span><span class="p">(</span><span class="n">int_p</span><span class="p">(</span><span class="n">nb</span><span class="o">.</span><span class="n">NULL</span><span class="p">),</span> <span class="s">&quot;.&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">result</span>
+
+<span class="nd">@nb.autojit</span><span class="p">(</span><span class="n">nopython</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">parse_int_manual</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convert an IP address given as a string to an int, similar to</span>
+<span class="sd">    socket.inet_aton(). Performs no error checking!</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">nb</span><span class="o">.</span><span class="n">uint32</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">end</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+    <span class="n">start</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">shift</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">end</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;.&#39;</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">or</span> <span class="n">i</span> <span class="o">==</span> <span class="n">end</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">byte</span> <span class="o">=</span> <span class="n">atoi</span><span class="p">(</span><span class="n">int8_p</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="o">+</span> <span class="n">start</span><span class="p">)</span>
+            <span class="n">result</span> <span class="o">|=</span> <span class="n">byte</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">shift</span> <span class="o">*</span> <span class="mi">8</span><span class="p">)</span>
+            <span class="n">shift</span> <span class="o">-=</span> <span class="mi">1</span>
+            <span class="n">start</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+
+    <span class="k">return</span> <span class="n">result</span>
+
+<span class="n">result1</span> <span class="o">=</span> <span class="n">parse_int_strtok</span><span class="p">(</span><span class="s">&#39;192.168.1.2&#39;</span><span class="p">)</span>
+<span class="n">result2</span> <span class="o">=</span> <span class="n">parse_int_manual</span><span class="p">(</span><span class="s">&#39;1.2.3.4&#39;</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">socket</span><span class="o">.</span><span class="n">inet_ntoa</span><span class="p">(</span><span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s">&#39;&gt;I&#39;</span><span class="p">,</span> <span class="n">result1</span><span class="p">)))</span>
+<span class="k">print</span><span class="p">(</span><span class="n">socket</span><span class="o">.</span><span class="n">inet_ntoa</span><span class="p">(</span><span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s">&#39;&gt;I&#39;</span><span class="p">,</span> <span class="n">result2</span><span class="p">)))</span>
+</pre></div>
+</div>
+</div>
 </div>
 
 
@@ -656,10 +729,9 @@ numba functions to eliminate all python overhead in function calling.</p>
     <ul class="nav pull-right">
       
         <li><a href="genindex.html" title="General Index" >index</a></li>
-        <li><a href="py-modindex.html" title="Python Module Index" >modules</a></li>
         <li><a href="releases.html" title="Release Notes" >next</a></li>
         <li><a href="doctest.html" title="Using doctest with Numba" >previous</a></li>
-        <li><a href="index.html">numba 0.9.0-43-gd074b30 documentation</a></li> 
+        <li><a href="index.html">numba 0.9.0-54-gb113a6a documentation</a></li> 
       
     </ul>
   </div>
