@@ -1,55 +1,57 @@
 Numba Language Specification
-----------------------------
+============================
 
-This document tries to describe which constructs are supported, and which
-things go through the object layer.
+This document attempts to specify the Python subset supported by the numba
+compiler, and attempts to clarify which constructs are supported natively
+without help of the object layer.
 
-Python Types
+Native Types
 ------------
 
+- bool
+- char
 - int
 - float
-- bool
-- string
-- unicode
 - complex
+- string [2]
+- arrays [1], [2] and array expressions
+- extension types [1]
+- numba functions
+- Ctypes/CFFI functions
+- pointers
+- structs
+
+.. NOTE:: [1] with reference counting
+.. NOTE:: [2] indexing, slicing and len()
+
+Boxed Types
+-----------
+
+The following types are currently boxed in PyObjects:
+
+- unicode
 - list
 - tuple
-- NoneType
-- FunctionType
-
-Unsupported Types:
-
-- object
-- dict
 - set
-- long
+- dict
+- object
 - frozenset
 - buffer
 - bytearray
 - bytes
-- basestring
 - memoryview
+
+All operations on these types go through the object layer.
 
 Values
 ------
 
-Tuple unpacking is not supported.
+Tuple unpacking is supported for:
 
-Assignment to tuples is syntactic sugar for multiple assignment
-only when r-values are literals.
+    - arrays of known size, e.g. ``m, n = array.shape``
+    - syntactic assignment, e.g. ``x, y = a, b``
 
-Supported:
-
-```
-a, b = 1, True
-```
-
-Not Supported:
-
-```
-a, b = f()
-```
+Anything else goes through the object layer.
 
 Control Flow
 ------------
@@ -63,44 +65,26 @@ Supported:
 - For/Else
 - While
 - While/Else
+- Return
+- Raise
 
 Not Supported:
 
 - Generators
-- Raise
 - Try
 - Try/Finally
 - Try/Except
 - Try/Except/Finally
 
-Data Model
-----------
-
-- Lists are stricly homogeneus containers of data. The
-  storage is compiler specific.
-- Tuples are heteroegneous immutable types. The storage is
-  compiler specific.
-- Strings are variable immutable arrays of ascii characters. The
-  storage is compiler specific.
-- Unicode strings are immutable arrays of UTF-8 characters. The
-  storage is compiler specific.
-
-The ``list`` constructor polymorphically lifts elements into
-singleton containers.
-
-```
-list :: a -> [a]
-```
-
 Introspection
 -------------
 
 Runtime introspection with ``type``, ``isinstance``,
-``issubclass``, ``id``, ``globals``, ``locals``, ``dir``,
-``callable``, ``getattr``, ``hash``, ``hasattr``, ``super``,
-``vars`` is not supported.
+``issubclass``, ``id``, ``dir``,
+``callable``, ``getattr``, ``hash``, ``hasattr``, ``super`` and
+``vars`` are supported only through the object layer.
 
-The ``intern`` function is not supported.
+``globals``, ``locals`` are not supported.
 
 Length
 ------
@@ -108,9 +92,9 @@ Length
 The implementation of the ``len`` function is polymorphic and
 container specific.
 
-```python
-len :: [a] -> int
-```
+::
+
+    len :: [a] -> int
 
 Destruction
 -----------
@@ -127,49 +111,45 @@ Metaprogramming
 Pass
 ----
 
-Pass is a syntactic construct that translates into a compiler
-specific noop.
+Pass is ignored.
 
 System IO
 ---------
 
 ``file``, ``open`` and ``quit``, ``raw_input``, ``reload``,
-``help`` and ``input`` are not supported.
+``help`` and ``input`` are are supported only through the object layer.
 
-``print`` is optionally supported. The implementation is specific
-to the compiler. For compilers that do not choose to implement
-print it should translate to noop.
-
-The ``repr`` function is not supported.
+``print`` is supported through the object layer (default) or through
+``printf`` (nopython mode).
 
 Formatting
 ----------
 
-Printf style formatting is not supported. The ``Mod`` operator
-exclusively maps to numeric modulus.
+String formatting is supported through the object layer.
 
 Iterators
 ---------
 
-Generators are not supported.
+Generator definitions are not supported. Generator and iterator
+iteration is supported through the object layer.
 
 Range iterators are syntactic sugar for looping constructs. Custom
 iterators are not supported. The ``iter`` and ``next`` functions
-are not supported.
+are are supported only through the object layer.
 
-```
-for i in xrange(start, stop, step)
-    foo()
-```
+::
+
+    for i in xrange(start, stop, step):
+        foo()
 
 Is lowered into some equivalent low-level looping construct that
 roughly corresponds to the following C code:
 
-```
-for (i = start; i < stop; i += step) {
-    foo();
-}
-```
+.. code-block:: c
+
+    for (i = start; i < stop; i += step) {
+        foo();
+    }
 
 The value of ``i`` after the loop block follows the Python
 semantics and is set to the last value in the iterator instead of
@@ -177,250 +157,123 @@ the C semantics.
 
 ``xrange`` and `range`` are lowered into the same constructs.
 
-``enumerate`` is not supported
+``enumerate`` is supported through the object layer.
 
 Comprehensions
 --------------
 
-TODO
+List comprehensions are rewritten into equivalent loops with list appending.
+Generator comprehensions are not supported.
 
 Builtins
 --------
 
-* abs            -  Supported 
-* all            -  Supported 
-* any            -  Supported 
-* apply          -  Not Supported   
-* basestring     -  Not Supported        
-* bin            -  Not Supported 
-* bool           -  Supported  
-* buffer         -  Not Supported    
-* bytearray      -  Not Supported       
-* bytes          -  Not Supported   
-* callable       -  Not Supported      
-* chr            -  Not Supported 
-* classmethod    -  Not Supported         
-* cmp            -  Supported 
-* coerce         -  Not Supported    
-* compile        -  Not Supported     
-* complex        -  Supported     
-* copyright      -  Not Supported       
-* credits        -  Not Supported     
-* delattr        -  Not Supported     
-* dict           -  Not Supported  
-* dir            -  Not Supported 
-* divmod         -  Supported    
-* enumerate      -  Not Supported       
-* eval           -  Not Supported  
-* execfile       -  Not Supported      
-* exit           -  Not Supported  
-* file           -  Not Supported  
-* filter         -  Supported    
-* float          -  Supported   
-* format         -  Not Supported    
-* frozenset      -  Not Supported       
-* getattr        -  Not Supported     
-* globals        -  Not Supported     
-* hasattr        -  Not Supported     
-* hash           -  Not Supported  
-* help           -  Not Supported  
-* hex            -  Not Supported 
-* id             -  Not Supported
-* input          -  Not Supported   
-* int            -  Supported 
-* intern         -  Not Supported    
-* isinstance     -  Not Supported        
-* issubclass     -  Not Supported        
-* iter           -  Not Supported  
-* len            -  Supported 
-* license        -  Not Supported     
-* list           -  Supported  
-* locals         -  Not Supported    
-* long           -  Not Supported  
-* map            -  Supported 
-* max            -  Supported 
-* memoryview     -  Not Supported        
-* min            -  Supported 
-* next           -  Not Supported  
-* object         -  Not Supported    
-* oct            -  Not Supported 
-* open           -  Not Supported  
-* ord            -  Not Supported 
-* pow            -  Supported 
-* print          -  Not Supported   
-* property       -  Not Supported      
-* quit           -  Not Supported  
-* range          -  Supported   
-* raw_input      -  Not Supported       
-* reduce         -  Supported    
-* reload         -  Not Supported    
-* repr           -  Not Supported  
-* reversed       -  Not Supported      
-* round          -  Supported   
-* set            -  Not Supported 
-* setattr        -  Not Supported     
-* slice          -  Not Supported   
-* sorted         -  Supported    
-* staticmethod   -  Not Supported          
-* str            -  Supported 
-* sum            -  Supported 
-* super          -  Not Supported   
-* tuple          -  Not Supported   
-* type           -  Not Supported  
-* unichr         -  Not Supported    
-* unicode        -  Supported     
-* vars           -  Not Supported  
-* xrange         -  Supported    
-* zip            -  Supported 
-
-
-Filter
-------
-
-```python
-filter :: (a -> bool) -> [a] -> [a]
-def filter(p, xs):
-    return [x for x in xs if p(x)]
-```
-
-All
----
-
-
-```python
-all :: (a -> bool) -> [a] -> bool
-def all(p, xs):
-    for i in xs:
-        if not p(i):
-            return False
-    return True
-```
-
-Any
----
-
-```python
-any :: (a -> bool) -> [a] -> bool
-def any(p, xs):
-    for i in xs:
-        if not p(i):
-            return True
-    return False
-```
-
-Map
----
-
-```python
-map :: (a -> b) -> [a] -> [b]
-def map(f, xs):
-    return [f(x) for x in xs]
-```
-
-Reduce
-------
-
-```python
-reduce :: (a -> b -> a) -> a -> [b] -> a
-def reduce(p, xs, x0):
-    acc = x0
-    for x in xs:
-        acc = f(acc)
-    return acc
-```
-
-Max
----
-
-```python
-
-max :: [a] -> a
-def max(xs):
-    assert len(xs) > 0
-    x0 = xs[0]
-    for x in xs:
-        if x > x0:
-            x0 = x
-    return x0
-```
-
-Min
----
-
-```python
-
-min :: [a] -> a
-def min(xs):
-    assert len(xs) > 0
-    x0 = xs[0]
-    for x in xs:
-        if x < x0:
-            x0 = x
-    return x0
-```
-
-Zip
----
-
-```python
-min :: [a] -> [b] -> [(a, b)] 
-def min(xs, ys):
-    out = []
-    for i in min(len(xs), len(ys)):
-        out.append((xs[i], ys[i]))
-    return out
-```
-
-Reverse
--------
-
-```
-reverse :: [a] -> [a]
-def reverse(xs):
-    out = []
-    for i in len(xs):
-        out.append(xs[len(xs)-i])
-    return out
-```
-
-Sorted
-------
-
-Sorted sorts the underlying list data structure. The
-implementation is compiler specific.
-
-```python
-sorted :: [a] -> [a]
-```
+* abs            -  Supported
+* all            -  object layer
+* any            -  object layer
+* apply          -  object layer
+* basestring     -  object layer
+* bin            -  object layer
+* bool           -  Supported
+* buffer         -  object layer
+* bytearray      -  object layer
+* bytes          -  object layer
+* callable       -  object layer
+* chr            -  object layer
+* classmethod    -  object layer
+* cmp            -  object layer
+* coerce         -  object layer
+* compile        -  object layer
+* complex        -  Supported
+* delattr        -  object layer
+* dict           -  object layer
+* dir            -  object layer
+* divmod         -  object layer
+* enumerate      -  object layer
+* eval           -  object layer
+* execfile       -  object layer
+* exit           -  object layer
+* file           -  object layer
+* filter         -  Supported
+* float          -  Supported
+* format         -  object layer
+* frozenset      -  object layer
+* getattr        -  object layer
+* globals        -  object layer
+* hasattr        -  object layer
+* hash           -  object layer
+* help           -  object layer
+* hex            -  object layer
+* id             -  object layer
+* input          -  object layer
+* int            -  Supported
+* intern         -  object layer
+* isinstance     -  object layer
+* issubclass     -  object layer
+* iter           -  object layer
+* len            -  Supported
+* list           -  object layer
+* locals         -  object layer
+* long           -  Supported
+* map            -  object layer
+* max            -  object layer
+* memoryview     -  object layer
+* min            -  Supported
+* next           -  object layer
+* object         -  object layer
+* oct            -  object layer
+* open           -  object layer
+* ord            -  object layer
+* pow            -  Supported
+* print          -  Supported
+* property       -  object layer
+* quit           -  object layer
+* range          -  Supported
+* raw_input      -  object layer
+* reduce         -  object layer
+* reload         -  object layer
+* repr           -  object layer
+* reversed       -  object layer
+* round          -  Supported
+* set            -  object layer
+* setattr        -  object layer
+* slice          -  object layer
+* sorted         -  object layer
+* staticmethod   -  object layer
+* str            -  Supported
+* sum            -  object layer
+* super          -  object layer
+* tuple          -  object layer
+* type           -  object layer
+* unichr         -  object layer
+* unicode        -  object layer
+* vars           -  object layer
+* xrange         -  Supported
+* zip            -  object layer
 
 Slice
 -----
 
-Named slicing is not supported. Slice types are not supported.
-Slicing as an indexing operation is supported.
+Named slicing is not supported. Slice types are supported only through the
+object layer. Slicing as an indexing operation is supported.
 
-```
-a = slice(0, 1, 2)
-```
+::
+
+    a = slice(0, 1, 2)
 
 Classes
 -------
 
-Classes are not supported. The corresponding descriptor methods
-are not implemented.
-
-- property
-- classmethod
-- staticmethod
+Classes are supported through extension types.
 
 Casts
 -----
 
-```
-int :: a -> int
-bool :: a -> bool
-complex :: a -> bool
-```
+::
+
+    int :: a -> int
+    bool :: a -> bool
+    complex :: a -> bool
 
 The coerce function is not supported.
 
@@ -429,18 +282,23 @@ The ``str``, ``list`` and ``tuple`` casts are not supported.
 Characters
 ----------
 
-The ``chr``, ``ord`` and ``unichr``, ``hex``, ``bin``, ``oct``
-functions are not supported.
+The ``chr``, ``ord`` are supported for the integer and character types.
+``unichr``, ``hex``, ``bin``, ``oct`` functions are supported through the
+object layer.
 
 Closures
 --------
 
-Nested functions and closures are not supported.
+Nested functions and closures are supported. Construction goes through
+the object layer. Calling from numba does not.
+
+The ``nonlocal`` keyword is not supported.
 
 Globals
 -------
 
-Global variables are not supported.
+Global variables are not supported and resolved as constants. The ``global``
+keyword is not supported.
 
 Arguments
 ---------
@@ -452,123 +310,44 @@ Assertions
 
 Assertions are not supported.
 
-Syntax
-------
-
-Language Features
-
-```
-
-module SmallPython
-{
-	mod = Module(stmt* body)
-	    | Expression(expr body)
-
-	stmt = FunctionDef(identifier name, arguments args, 
-                           stmt* body, expr? returns)
-	      | Return(expr? value)
-
-	      | Assign(expr* targets, expr value)
-	      | AugAssign(expr target, operator op, expr value)
-
-	      | For(expr target, expr iter, stmt* body, stmt* orelse)
-	      | While(expr test, stmt* body, stmt* orelse)
-	      | If(expr test, stmt* body, stmt* orelse)
-
-	      | Expr(expr value)
-	      | Pass | Break | Continue
-
-	      attributes (int lineno, int col_offset)
-
-	expr = BoolOp(boolop op, expr* values)
-	     | BinOp(expr left, operator op, expr right)
-	     | UnaryOp(unaryop op, expr operand)
-	     | IfExp(expr test, expr body, expr orelse)
-	     | ListComp(expr elt, comprehension* generators)
-	     | Compare(expr left, cmpop* ops, expr* comparators)
-	     | Call(expr func, expr* args, keyword* keywords,
-			 expr? starargs, expr? kwargs)
-	     | Num(object n) -- a number as a PyObject.
-	     | Str(string s) -- need to specify raw, unicode, etc?
-	     | Bytes(string s)
-
-	     | Attribute(expr value, identifier attr, expr_context ctx)
-	     | Subscript(expr value, slice slice, expr_context ctx)
-	     | Name(identifier id, expr_context ctx)
-	     | List(expr* elts, expr_context ctx) 
-	     | Tuple(expr* elts, expr_context ctx)
-
-	      attributes (int lineno, int col_offset)
-
-	expr_context = Load | Store | AugLoad | AugStore | Param
-
-	slice = Slice(expr? lower, expr? upper, expr? step) 
-	      | ExtSlice(slice* dims) 
-	      | Index(expr value) 
-
-	boolop = And | Or 
-
-	operator = Add | Sub | Mult | Div | Mod | Pow | LShift 
-                 | RShift | BitOr | BitXor | BitAnd | FloorDiv
-
-	unaryop = Invert | Not | UAdd | USub
-
-	cmpop = Eq | NotEq | Lt | LtE | Gt | GtE
-
-	comprehension = (expr target, expr iter, expr* ifs)
-
-	arguments = (arg* args, identifier? vararg, expr? varargannotation,
-                     arg* kwonlyargs, identifier? kwarg,
-                     expr? kwargannotation, expr* defaults,
-                     expr* kw_defaults)
-	arg = (identifier arg, expr? annotation)
-
-        keyword = (identifier arg, expr value)
-        alias = (identifier name, identifier? asname)
-}
-
-```
-
 Operators
 ---------
 
-- And      
-- Or       
-- Add      
-- Sub      
-- Mult     
-- Div      
-- Mod      
-- Pow      
-- LShift   
-- RShift   
-- BitOr    
-- BitXor   
-- BitAnd   
-- FloorDiv 
-- Invert   
-- Not      
-- UAdd     
-- USub     
-- Eq       
-- NotEq    
-- Lt       
-- LtE      
-- Gt       
-- GtE      
+- And
+- Or
+- Add
+- Sub
+- Mult
+- Div
+- Mod
+- Pow
+- LShift
+- RShift
+- BitOr
+- BitXor
+- BitAnd
+- FloorDiv
+- Invert
+- Not
+- UAdd
+- USub
+- Eq
+- NotEq
+- Lt
+- LtE
+- Gt
+- GtE
 
 Comparison operator chaining is supported and is desugared into
-boolean conjunctions of the comparison operators.
+boolean conjunctions of the comparison operators::
 
-```
-(x > y > z)
-```
+    (x > y > z)
 
-```
-(x > y) and (y > z)
-```
+::
 
-Smallpy explictly does not support the following operators.
+    (x > y) and (y > z)
+
+Not supported:
 
 - Is
 - IsNot
@@ -586,83 +365,69 @@ Math Functions
 --------------
 
 - abs
-- cmp
-- divmod
 - pow
 - round
-
-sorted
 
 Floating Point Math
 -------------------
 
-```
-acos
-acosh
-asin
-asinh
-atan
-atan2
-atanh
-ceil
-copysign
-cos
-cosh
-degrees
-e
-erf
-erfc
-exp
-expm1
-fabs
-factorial
-floor
-fmod
-frexp
-fsum
-gamma
-hypot
-isinf
-isnan
-ldexp
-lgamma
-log
-log10
-log1p
-modf
-pi
-pow
-radians
-sin
-sinh
-sqrt
-tan
-tanh
-trunc
-```
+* acos
+* acosh
+* asin
+* asinh
+* atan
+* atan2
+* atanh
+* ceil
+* cos
+* cosh
+* degrees
+* erf
+* erfc
+* exp
+* expm1
+* exp2
+* fabs
+* floor
+* fmod
+* hypot
+* log
+* logaddexp
+* logaddexp2
+* log10
+* log1p
+* modf
+* pow
+* rint
+* sin
+* sinh
+* sqrt
+* tan
+* tanh
+* trunc
+
+Constants such as ``math.e`` and ``math.pi`` are resolved as constants.
 
 Complex Math
+-------------------
 
-```
-acos
-acosh
-asin
-asinh
-atan
-atanh
-cos
-cosh
-exp
-isinf
-isnan
-log
-log10
-phase
-polar
-rect
-sin
-sinh
-sqrt
-tan
-tanh
-```
+* abs
+* acos
+* acosh
+* asin
+* asinh
+* atan
+* atanh
+* cos
+* cosh
+* exp
+* expm1
+* exp2
+* log
+* log10
+* log1p
+* sin
+* sinh
+* sqrt
+* tan
+* tanh

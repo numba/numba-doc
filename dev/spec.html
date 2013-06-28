@@ -8,7 +8,7 @@
   <head>
     <meta charset="utf-8" />
     
-    <title>Numba Language Specification &mdash; numba 0.9.0-133-g449e4d1 documentation</title>
+    <title>Numba Language Specification &mdash; numba 0.9.0-141-gb718785 documentation</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
@@ -35,7 +35,7 @@
 <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
             URL_ROOT:    '',
-            VERSION:     '0.9.0-133-g449e4d1',
+            VERSION:     '0.9.0-141-gb718785',
             COLLAPSE_INDEX: false,
             FILE_SUFFIX: '.html',
             HAS_SOURCE:  true
@@ -59,7 +59,9 @@
     });
   });
 </script>
-    <link rel="top" title="numba 0.9.0-133-g449e4d1 documentation" href="index.html" /> 
+    <link rel="top" title="numba 0.9.0-141-gb718785 documentation" href="index.html" />
+    <link rel="next" title="Static Compilation (pycc)" href="pycc.html" />
+    <link rel="prev" title="Interfacing with C" href="interface_c.html" /> 
   </head>
   <body>
     <div class="navbar navbar-fixed-top ">
@@ -70,12 +72,18 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="index.html">numba 0.9.0-133-g449e4d1 documentation</a>
+          <a class="brand" href="index.html">numba 0.9.0-141-gb718785 documentation</a>
           <div class="nav-collapse collapse">
             <ul class="nav pull-right">
               
                 <li>
                 <a href="genindex.html" title="General Index" accesskey="I">index</a>
+                </li>
+                <li>
+                <a href="pycc.html" title="Static Compilation (pycc)" accesskey="N">next</a>
+                </li>
+                <li>
+                <a href="interface_c.html" title="Interfacing with C" accesskey="P">previous</a>
                 </li>
               
             </ul>
@@ -97,11 +105,11 @@
   <div class="for-mobile sidebar hidden-phone">
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">Numba Language Specification</a></li>
-<li><a class="reference internal" href="#python-types">Python Types</a></li>
+<li><a class="reference internal" href="#">Numba Language Specification</a><ul>
+<li><a class="reference internal" href="#native-types">Native Types</a></li>
+<li><a class="reference internal" href="#boxed-types">Boxed Types</a></li>
 <li><a class="reference internal" href="#values">Values</a></li>
 <li><a class="reference internal" href="#control-flow">Control Flow</a></li>
-<li><a class="reference internal" href="#data-model">Data Model</a></li>
 <li><a class="reference internal" href="#introspection">Introspection</a></li>
 <li><a class="reference internal" href="#length">Length</a></li>
 <li><a class="reference internal" href="#destruction">Destruction</a></li>
@@ -109,22 +117,9 @@
 <li><a class="reference internal" href="#pass">Pass</a></li>
 <li><a class="reference internal" href="#system-io">System IO</a></li>
 <li><a class="reference internal" href="#formatting">Formatting</a></li>
-<li><a class="reference internal" href="#iterators">Iterators</a><ul>
-<li><a class="reference internal" href="#id11">}</a></li>
-</ul>
-</li>
+<li><a class="reference internal" href="#iterators">Iterators</a></li>
 <li><a class="reference internal" href="#comprehensions">Comprehensions</a></li>
 <li><a class="reference internal" href="#builtins">Builtins</a></li>
-<li><a class="reference internal" href="#filter">Filter</a></li>
-<li><a class="reference internal" href="#all">All</a></li>
-<li><a class="reference internal" href="#any">Any</a></li>
-<li><a class="reference internal" href="#map">Map</a></li>
-<li><a class="reference internal" href="#reduce">Reduce</a></li>
-<li><a class="reference internal" href="#max">Max</a></li>
-<li><a class="reference internal" href="#min">Min</a></li>
-<li><a class="reference internal" href="#zip">Zip</a></li>
-<li><a class="reference internal" href="#reverse">Reverse</a></li>
-<li><a class="reference internal" href="#sorted">Sorted</a></li>
 <li><a class="reference internal" href="#slice">Slice</a></li>
 <li><a class="reference internal" href="#classes">Classes</a></li>
 <li><a class="reference internal" href="#casts">Casts</a></li>
@@ -133,13 +128,21 @@
 <li><a class="reference internal" href="#globals">Globals</a></li>
 <li><a class="reference internal" href="#arguments">Arguments</a></li>
 <li><a class="reference internal" href="#assertions">Assertions</a></li>
-<li><a class="reference internal" href="#syntax">Syntax</a></li>
 <li><a class="reference internal" href="#operators">Operators</a></li>
 <li><a class="reference internal" href="#division">Division</a></li>
 <li><a class="reference internal" href="#math-functions">Math Functions</a></li>
 <li><a class="reference internal" href="#floating-point-math">Floating Point Math</a></li>
+<li><a class="reference internal" href="#complex-math">Complex Math</a></li>
+</ul>
+</li>
 </ul>
 
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="interface_c.html"
+                        title="previous chapter">Interfacing with C</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="pycc.html"
+                        title="next chapter">Static Compilation (pycc)</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/spec.txt"
@@ -171,11 +174,11 @@
   <div class=" sidebar hidden-phone">
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">Numba Language Specification</a></li>
-<li><a class="reference internal" href="#python-types">Python Types</a></li>
+<li><a class="reference internal" href="#">Numba Language Specification</a><ul>
+<li><a class="reference internal" href="#native-types">Native Types</a></li>
+<li><a class="reference internal" href="#boxed-types">Boxed Types</a></li>
 <li><a class="reference internal" href="#values">Values</a></li>
 <li><a class="reference internal" href="#control-flow">Control Flow</a></li>
-<li><a class="reference internal" href="#data-model">Data Model</a></li>
 <li><a class="reference internal" href="#introspection">Introspection</a></li>
 <li><a class="reference internal" href="#length">Length</a></li>
 <li><a class="reference internal" href="#destruction">Destruction</a></li>
@@ -183,22 +186,9 @@
 <li><a class="reference internal" href="#pass">Pass</a></li>
 <li><a class="reference internal" href="#system-io">System IO</a></li>
 <li><a class="reference internal" href="#formatting">Formatting</a></li>
-<li><a class="reference internal" href="#iterators">Iterators</a><ul>
-<li><a class="reference internal" href="#id11">}</a></li>
-</ul>
-</li>
+<li><a class="reference internal" href="#iterators">Iterators</a></li>
 <li><a class="reference internal" href="#comprehensions">Comprehensions</a></li>
 <li><a class="reference internal" href="#builtins">Builtins</a></li>
-<li><a class="reference internal" href="#filter">Filter</a></li>
-<li><a class="reference internal" href="#all">All</a></li>
-<li><a class="reference internal" href="#any">Any</a></li>
-<li><a class="reference internal" href="#map">Map</a></li>
-<li><a class="reference internal" href="#reduce">Reduce</a></li>
-<li><a class="reference internal" href="#max">Max</a></li>
-<li><a class="reference internal" href="#min">Min</a></li>
-<li><a class="reference internal" href="#zip">Zip</a></li>
-<li><a class="reference internal" href="#reverse">Reverse</a></li>
-<li><a class="reference internal" href="#sorted">Sorted</a></li>
 <li><a class="reference internal" href="#slice">Slice</a></li>
 <li><a class="reference internal" href="#classes">Classes</a></li>
 <li><a class="reference internal" href="#casts">Casts</a></li>
@@ -207,13 +197,21 @@
 <li><a class="reference internal" href="#globals">Globals</a></li>
 <li><a class="reference internal" href="#arguments">Arguments</a></li>
 <li><a class="reference internal" href="#assertions">Assertions</a></li>
-<li><a class="reference internal" href="#syntax">Syntax</a></li>
 <li><a class="reference internal" href="#operators">Operators</a></li>
 <li><a class="reference internal" href="#division">Division</a></li>
 <li><a class="reference internal" href="#math-functions">Math Functions</a></li>
 <li><a class="reference internal" href="#floating-point-math">Floating Point Math</a></li>
+<li><a class="reference internal" href="#complex-math">Complex Math</a></li>
+</ul>
+</li>
 </ul>
 
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="interface_c.html"
+                        title="previous chapter">Interfacing with C</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="pycc.html"
+                        title="next chapter">Static Compilation (pycc)</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/spec.txt"
@@ -245,53 +243,65 @@
                   
   <div class="section" id="numba-language-specification">
 <h1>Numba Language Specification<a class="headerlink" href="#numba-language-specification" title="Permalink to this headline">¶</a></h1>
-<p>This document tries to describe which constructs are supported, and which
-things go through the object layer.</p>
-</div>
-<div class="section" id="python-types">
-<h1>Python Types<a class="headerlink" href="#python-types" title="Permalink to this headline">¶</a></h1>
+<p>This document attempts to specify the Python subset supported by the numba
+compiler, and attempts to clarify which constructs are supported natively
+without help of the object layer.</p>
+<div class="section" id="native-types">
+<h2>Native Types<a class="headerlink" href="#native-types" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
+<li>bool</li>
+<li>char</li>
 <li>int</li>
 <li>float</li>
-<li>bool</li>
-<li>string</li>
-<li>unicode</li>
 <li>complex</li>
+<li>string [2]</li>
+<li>arrays [1], [2] and array expressions</li>
+<li>extension types [1]</li>
+<li>numba functions</li>
+<li>Ctypes/CFFI functions</li>
+<li>pointers</li>
+<li>structs</li>
+</ul>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">[1] with reference counting</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">[2] indexing, slicing and len()</p>
+</div>
+</div>
+<div class="section" id="boxed-types">
+<h2>Boxed Types<a class="headerlink" href="#boxed-types" title="Permalink to this headline">¶</a></h2>
+<p>The following types are currently boxed in PyObjects:</p>
+<ul class="simple">
+<li>unicode</li>
 <li>list</li>
 <li>tuple</li>
-<li>NoneType</li>
-<li>FunctionType</li>
-</ul>
-<p>Unsupported Types:</p>
-<ul class="simple">
-<li>object</li>
-<li>dict</li>
 <li>set</li>
-<li>long</li>
+<li>dict</li>
+<li>object</li>
 <li>frozenset</li>
 <li>buffer</li>
 <li>bytearray</li>
 <li>bytes</li>
-<li>basestring</li>
 <li>memoryview</li>
 </ul>
+<p>All operations on these types go through the object layer.</p>
 </div>
 <div class="section" id="values">
-<h1>Values<a class="headerlink" href="#values" title="Permalink to this headline">¶</a></h1>
-<p>Tuple unpacking is not supported.</p>
-<p>Assignment to tuples is syntactic sugar for multiple assignment
-only when r-values are literals.</p>
-<p>Supported:</p>
-<p><tt class="docutils literal"><span class="pre">`</span>
-<span class="pre">a,</span> <span class="pre">b</span> <span class="pre">=</span> <span class="pre">1,</span> <span class="pre">True</span>
-<span class="pre">`</span></tt></p>
-<p>Not Supported:</p>
-<p><tt class="docutils literal"><span class="pre">`</span>
-<span class="pre">a,</span> <span class="pre">b</span> <span class="pre">=</span> <span class="pre">f()</span>
-<span class="pre">`</span></tt></p>
+<h2>Values<a class="headerlink" href="#values" title="Permalink to this headline">¶</a></h2>
+<p>Tuple unpacking is supported for:</p>
+<blockquote>
+<div><ul class="simple">
+<li>arrays of known size, e.g. <tt class="docutils literal"><span class="pre">m,</span> <span class="pre">n</span> <span class="pre">=</span> <span class="pre">array.shape</span></tt></li>
+<li>syntactic assignment, e.g. <tt class="docutils literal"><span class="pre">x,</span> <span class="pre">y</span> <span class="pre">=</span> <span class="pre">a,</span> <span class="pre">b</span></tt></li>
+</ul>
+</div></blockquote>
+<p>Anything else goes through the object layer.</p>
 </div>
 <div class="section" id="control-flow">
-<h1>Control Flow<a class="headerlink" href="#control-flow" title="Permalink to this headline">¶</a></h1>
+<h2>Control Flow<a class="headerlink" href="#control-flow" title="Permalink to this headline">¶</a></h2>
 <p>Supported:</p>
 <ul class="simple">
 <li>If</li>
@@ -301,484 +311,222 @@ only when r-values are literals.</p>
 <li>For/Else</li>
 <li>While</li>
 <li>While/Else</li>
+<li>Return</li>
+<li>Raise</li>
 </ul>
 <p>Not Supported:</p>
 <ul class="simple">
 <li>Generators</li>
-<li>Raise</li>
 <li>Try</li>
 <li>Try/Finally</li>
 <li>Try/Except</li>
 <li>Try/Except/Finally</li>
 </ul>
 </div>
-<div class="section" id="data-model">
-<h1>Data Model<a class="headerlink" href="#data-model" title="Permalink to this headline">¶</a></h1>
-<ul class="simple">
-<li>Lists are stricly homogeneus containers of data. The
-storage is compiler specific.</li>
-<li>Tuples are heteroegneous immutable types. The storage is
-compiler specific.</li>
-<li>Strings are variable immutable arrays of ascii characters. The
-storage is compiler specific.</li>
-<li>Unicode strings are immutable arrays of UTF-8 characters. The
-storage is compiler specific.</li>
-</ul>
-<p>The <tt class="docutils literal"><span class="pre">list</span></tt> constructor polymorphically lifts elements into
-singleton containers.</p>
-<p><tt class="docutils literal"><span class="pre">`</span>
-<span class="pre">list</span> <span class="pre">::</span> <span class="pre">a</span> <span class="pre">-&gt;</span> <span class="pre">[a]</span>
-<span class="pre">`</span></tt></p>
-</div>
 <div class="section" id="introspection">
-<h1>Introspection<a class="headerlink" href="#introspection" title="Permalink to this headline">¶</a></h1>
+<h2>Introspection<a class="headerlink" href="#introspection" title="Permalink to this headline">¶</a></h2>
 <p>Runtime introspection with <tt class="docutils literal"><span class="pre">type</span></tt>, <tt class="docutils literal"><span class="pre">isinstance</span></tt>,
-<tt class="docutils literal"><span class="pre">issubclass</span></tt>, <tt class="docutils literal"><span class="pre">id</span></tt>, <tt class="docutils literal"><span class="pre">globals</span></tt>, <tt class="docutils literal"><span class="pre">locals</span></tt>, <tt class="docutils literal"><span class="pre">dir</span></tt>,
-<tt class="docutils literal"><span class="pre">callable</span></tt>, <tt class="docutils literal"><span class="pre">getattr</span></tt>, <tt class="docutils literal"><span class="pre">hash</span></tt>, <tt class="docutils literal"><span class="pre">hasattr</span></tt>, <tt class="docutils literal"><span class="pre">super</span></tt>,
-<tt class="docutils literal"><span class="pre">vars</span></tt> is not supported.</p>
-<p>The <tt class="docutils literal"><span class="pre">intern</span></tt> function is not supported.</p>
+<tt class="docutils literal"><span class="pre">issubclass</span></tt>, <tt class="docutils literal"><span class="pre">id</span></tt>, <tt class="docutils literal"><span class="pre">dir</span></tt>,
+<tt class="docutils literal"><span class="pre">callable</span></tt>, <tt class="docutils literal"><span class="pre">getattr</span></tt>, <tt class="docutils literal"><span class="pre">hash</span></tt>, <tt class="docutils literal"><span class="pre">hasattr</span></tt>, <tt class="docutils literal"><span class="pre">super</span></tt> and
+<tt class="docutils literal"><span class="pre">vars</span></tt> are supported only through the object layer.</p>
+<p><tt class="docutils literal"><span class="pre">globals</span></tt>, <tt class="docutils literal"><span class="pre">locals</span></tt> are not supported.</p>
 </div>
 <div class="section" id="length">
-<h1>Length<a class="headerlink" href="#length" title="Permalink to this headline">¶</a></h1>
+<h2>Length<a class="headerlink" href="#length" title="Permalink to this headline">¶</a></h2>
 <p>The implementation of the <tt class="docutils literal"><span class="pre">len</span></tt> function is polymorphic and
 container specific.</p>
-<p><tt class="docutils literal"><span class="pre">`python</span>
-<span class="pre">len</span> <span class="pre">::</span> <span class="pre">[a]</span> <span class="pre">-&gt;</span> <span class="pre">int</span>
-<span class="pre">`</span></tt></p>
+<div class="highlight-python"><pre>len :: [a] -&gt; int</pre>
+</div>
 </div>
 <div class="section" id="destruction">
-<h1>Destruction<a class="headerlink" href="#destruction" title="Permalink to this headline">¶</a></h1>
+<h2>Destruction<a class="headerlink" href="#destruction" title="Permalink to this headline">¶</a></h2>
 <p>Variable and element destruction is not supported. The <tt class="docutils literal"><span class="pre">del</span></tt>
 operator is not part of the syntax and <a href="#id1"><span class="problematic" id="id2">``</span></a>delattr` is not
 supported.</p>
 </div>
 <div class="section" id="metaprogramming">
-<h1>Metaprogramming<a class="headerlink" href="#metaprogramming" title="Permalink to this headline">¶</a></h1>
+<h2>Metaprogramming<a class="headerlink" href="#metaprogramming" title="Permalink to this headline">¶</a></h2>
 <p><tt class="docutils literal"><span class="pre">compile</span></tt>, <tt class="docutils literal"><span class="pre">eval</span></tt> and <tt class="docutils literal"><span class="pre">exec</span></tt>, <tt class="docutils literal"><span class="pre">execfile</span></tt> are not supported</p>
 </div>
 <div class="section" id="pass">
-<h1>Pass<a class="headerlink" href="#pass" title="Permalink to this headline">¶</a></h1>
-<p>Pass is a syntactic construct that translates into a compiler
-specific noop.</p>
+<h2>Pass<a class="headerlink" href="#pass" title="Permalink to this headline">¶</a></h2>
+<p>Pass is ignored.</p>
 </div>
 <div class="section" id="system-io">
-<h1>System IO<a class="headerlink" href="#system-io" title="Permalink to this headline">¶</a></h1>
+<h2>System IO<a class="headerlink" href="#system-io" title="Permalink to this headline">¶</a></h2>
 <p><tt class="docutils literal"><span class="pre">file</span></tt>, <tt class="docutils literal"><span class="pre">open</span></tt> and <tt class="docutils literal"><span class="pre">quit</span></tt>, <tt class="docutils literal"><span class="pre">raw_input</span></tt>, <tt class="docutils literal"><span class="pre">reload</span></tt>,
-<tt class="docutils literal"><span class="pre">help</span></tt> and <tt class="docutils literal"><span class="pre">input</span></tt> are not supported.</p>
-<p><tt class="docutils literal"><span class="pre">print</span></tt> is optionally supported. The implementation is specific
-to the compiler. For compilers that do not choose to implement
-print it should translate to noop.</p>
-<p>The <tt class="docutils literal"><span class="pre">repr</span></tt> function is not supported.</p>
+<tt class="docutils literal"><span class="pre">help</span></tt> and <tt class="docutils literal"><span class="pre">input</span></tt> are are supported only through the object layer.</p>
+<p><tt class="docutils literal"><span class="pre">print</span></tt> is supported through the object layer (default) or through
+<tt class="docutils literal"><span class="pre">printf</span></tt> (nopython mode).</p>
 </div>
 <div class="section" id="formatting">
-<h1>Formatting<a class="headerlink" href="#formatting" title="Permalink to this headline">¶</a></h1>
-<p>Printf style formatting is not supported. The <tt class="docutils literal"><span class="pre">Mod</span></tt> operator
-exclusively maps to numeric modulus.</p>
+<h2>Formatting<a class="headerlink" href="#formatting" title="Permalink to this headline">¶</a></h2>
+<p>String formatting is supported through the object layer.</p>
 </div>
 <div class="section" id="iterators">
-<h1>Iterators<a class="headerlink" href="#iterators" title="Permalink to this headline">¶</a></h1>
-<p>Generators are not supported.</p>
+<h2>Iterators<a class="headerlink" href="#iterators" title="Permalink to this headline">¶</a></h2>
+<p>Generator definitions are not supported. Generator and iterator
+iteration is supported through the object layer.</p>
 <p>Range iterators are syntactic sugar for looping constructs. Custom
 iterators are not supported. The <tt class="docutils literal"><span class="pre">iter</span></tt> and <tt class="docutils literal"><span class="pre">next</span></tt> functions
-are not supported.</p>
-<p><a href="#id3"><span class="problematic" id="id4">``</span></a>`
-for i in xrange(start, stop, step)</p>
-<blockquote>
-<div>foo()</div></blockquote>
-<p><a href="#id5"><span class="problematic" id="id6">``</span></a><a href="#id7"><span class="problematic" id="id8">`</span></a></p>
+are are supported only through the object layer.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">stop</span><span class="p">,</span> <span class="n">step</span><span class="p">):</span>
+    <span class="n">foo</span><span class="p">()</span>
+</pre></div>
+</div>
 <p>Is lowered into some equivalent low-level looping construct that
 roughly corresponds to the following C code:</p>
-<p><a href="#id9"><span class="problematic" id="id10">``</span></a>`
-for (i = start; i &lt; stop; i += step) {</p>
-<blockquote>
-<div>foo();</div></blockquote>
-<div class="section" id="id11">
-<h2>}<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-c"><div class="highlight"><pre><span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="n">start</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">stop</span><span class="p">;</span> <span class="n">i</span> <span class="o">+=</span> <span class="n">step</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">foo</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
+</div>
 <p>The value of <tt class="docutils literal"><span class="pre">i</span></tt> after the loop block follows the Python
 semantics and is set to the last value in the iterator instead of
 the C semantics.</p>
 <p><tt class="docutils literal"><span class="pre">xrange</span></tt> and <cite>range`</cite> are lowered into the same constructs.</p>
-<p><tt class="docutils literal"><span class="pre">enumerate</span></tt> is not supported</p>
-</div>
+<p><tt class="docutils literal"><span class="pre">enumerate</span></tt> is supported through the object layer.</p>
 </div>
 <div class="section" id="comprehensions">
-<h1>Comprehensions<a class="headerlink" href="#comprehensions" title="Permalink to this headline">¶</a></h1>
-<p>TODO</p>
+<h2>Comprehensions<a class="headerlink" href="#comprehensions" title="Permalink to this headline">¶</a></h2>
+<p>List comprehensions are rewritten into equivalent loops with list appending.
+Generator comprehensions are not supported.</p>
 </div>
 <div class="section" id="builtins">
-<h1>Builtins<a class="headerlink" href="#builtins" title="Permalink to this headline">¶</a></h1>
+<h2>Builtins<a class="headerlink" href="#builtins" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>abs            -  Supported</li>
-<li>all            -  Supported</li>
-<li>any            -  Supported</li>
-<li>apply          -  Not Supported</li>
-<li>basestring     -  Not Supported</li>
-<li>bin            -  Not Supported</li>
+<li>all            -  object layer</li>
+<li>any            -  object layer</li>
+<li>apply          -  object layer</li>
+<li>basestring     -  object layer</li>
+<li>bin            -  object layer</li>
 <li>bool           -  Supported</li>
-<li>buffer         -  Not Supported</li>
-<li>bytearray      -  Not Supported</li>
-<li>bytes          -  Not Supported</li>
-<li>callable       -  Not Supported</li>
-<li>chr            -  Not Supported</li>
-<li>classmethod    -  Not Supported</li>
-<li>cmp            -  Supported</li>
-<li>coerce         -  Not Supported</li>
-<li>compile        -  Not Supported</li>
+<li>buffer         -  object layer</li>
+<li>bytearray      -  object layer</li>
+<li>bytes          -  object layer</li>
+<li>callable       -  object layer</li>
+<li>chr            -  object layer</li>
+<li>classmethod    -  object layer</li>
+<li>cmp            -  object layer</li>
+<li>coerce         -  object layer</li>
+<li>compile        -  object layer</li>
 <li>complex        -  Supported</li>
-<li>copyright      -  Not Supported</li>
-<li>credits        -  Not Supported</li>
-<li>delattr        -  Not Supported</li>
-<li>dict           -  Not Supported</li>
-<li>dir            -  Not Supported</li>
-<li>divmod         -  Supported</li>
-<li>enumerate      -  Not Supported</li>
-<li>eval           -  Not Supported</li>
-<li>execfile       -  Not Supported</li>
-<li>exit           -  Not Supported</li>
-<li>file           -  Not Supported</li>
+<li>delattr        -  object layer</li>
+<li>dict           -  object layer</li>
+<li>dir            -  object layer</li>
+<li>divmod         -  object layer</li>
+<li>enumerate      -  object layer</li>
+<li>eval           -  object layer</li>
+<li>execfile       -  object layer</li>
+<li>exit           -  object layer</li>
+<li>file           -  object layer</li>
 <li>filter         -  Supported</li>
 <li>float          -  Supported</li>
-<li>format         -  Not Supported</li>
-<li>frozenset      -  Not Supported</li>
-<li>getattr        -  Not Supported</li>
-<li>globals        -  Not Supported</li>
-<li>hasattr        -  Not Supported</li>
-<li>hash           -  Not Supported</li>
-<li>help           -  Not Supported</li>
-<li>hex            -  Not Supported</li>
-<li>id             -  Not Supported</li>
-<li>input          -  Not Supported</li>
+<li>format         -  object layer</li>
+<li>frozenset      -  object layer</li>
+<li>getattr        -  object layer</li>
+<li>globals        -  object layer</li>
+<li>hasattr        -  object layer</li>
+<li>hash           -  object layer</li>
+<li>help           -  object layer</li>
+<li>hex            -  object layer</li>
+<li>id             -  object layer</li>
+<li>input          -  object layer</li>
 <li>int            -  Supported</li>
-<li>intern         -  Not Supported</li>
-<li>isinstance     -  Not Supported</li>
-<li>issubclass     -  Not Supported</li>
-<li>iter           -  Not Supported</li>
+<li>intern         -  object layer</li>
+<li>isinstance     -  object layer</li>
+<li>issubclass     -  object layer</li>
+<li>iter           -  object layer</li>
 <li>len            -  Supported</li>
-<li>license        -  Not Supported</li>
-<li>list           -  Supported</li>
-<li>locals         -  Not Supported</li>
-<li>long           -  Not Supported</li>
-<li>map            -  Supported</li>
-<li>max            -  Supported</li>
-<li>memoryview     -  Not Supported</li>
+<li>list           -  object layer</li>
+<li>locals         -  object layer</li>
+<li>long           -  Supported</li>
+<li>map            -  object layer</li>
+<li>max            -  object layer</li>
+<li>memoryview     -  object layer</li>
 <li>min            -  Supported</li>
-<li>next           -  Not Supported</li>
-<li>object         -  Not Supported</li>
-<li>oct            -  Not Supported</li>
-<li>open           -  Not Supported</li>
-<li>ord            -  Not Supported</li>
+<li>next           -  object layer</li>
+<li>object         -  object layer</li>
+<li>oct            -  object layer</li>
+<li>open           -  object layer</li>
+<li>ord            -  object layer</li>
 <li>pow            -  Supported</li>
-<li>print          -  Not Supported</li>
-<li>property       -  Not Supported</li>
-<li>quit           -  Not Supported</li>
+<li>print          -  Supported</li>
+<li>property       -  object layer</li>
+<li>quit           -  object layer</li>
 <li>range          -  Supported</li>
-<li>raw_input      -  Not Supported</li>
-<li>reduce         -  Supported</li>
-<li>reload         -  Not Supported</li>
-<li>repr           -  Not Supported</li>
-<li>reversed       -  Not Supported</li>
+<li>raw_input      -  object layer</li>
+<li>reduce         -  object layer</li>
+<li>reload         -  object layer</li>
+<li>repr           -  object layer</li>
+<li>reversed       -  object layer</li>
 <li>round          -  Supported</li>
-<li>set            -  Not Supported</li>
-<li>setattr        -  Not Supported</li>
-<li>slice          -  Not Supported</li>
-<li>sorted         -  Supported</li>
-<li>staticmethod   -  Not Supported</li>
+<li>set            -  object layer</li>
+<li>setattr        -  object layer</li>
+<li>slice          -  object layer</li>
+<li>sorted         -  object layer</li>
+<li>staticmethod   -  object layer</li>
 <li>str            -  Supported</li>
-<li>sum            -  Supported</li>
-<li>super          -  Not Supported</li>
-<li>tuple          -  Not Supported</li>
-<li>type           -  Not Supported</li>
-<li>unichr         -  Not Supported</li>
-<li>unicode        -  Supported</li>
-<li>vars           -  Not Supported</li>
+<li>sum            -  object layer</li>
+<li>super          -  object layer</li>
+<li>tuple          -  object layer</li>
+<li>type           -  object layer</li>
+<li>unichr         -  object layer</li>
+<li>unicode        -  object layer</li>
+<li>vars           -  object layer</li>
 <li>xrange         -  Supported</li>
-<li>zip            -  Supported</li>
+<li>zip            -  object layer</li>
 </ul>
-</div>
-<div class="section" id="filter">
-<h1>Filter<a class="headerlink" href="#filter" title="Permalink to this headline">¶</a></h1>
-<p><a href="#id12"><span class="problematic" id="id13">``</span></a><a href="#id14"><span class="problematic" id="id15">`</span></a>python
-filter :: (a -&gt; bool) -&gt; [a] -&gt; [a]
-def filter(p, xs):</p>
-<blockquote>
-<div>return [x for x in xs if p(x)]</div></blockquote>
-<p><a href="#id16"><span class="problematic" id="id17">``</span></a><a href="#id18"><span class="problematic" id="id19">`</span></a></p>
-</div>
-<div class="section" id="all">
-<h1>All<a class="headerlink" href="#all" title="Permalink to this headline">¶</a></h1>
-<p><a href="#id20"><span class="problematic" id="id21">``</span></a><a href="#id22"><span class="problematic" id="id23">`</span></a>python
-all :: (a -&gt; bool) -&gt; [a] -&gt; bool
-def all(p, xs):</p>
-<blockquote>
-<div><dl class="docutils">
-<dt>for i in xs:</dt>
-<dd><dl class="first last docutils">
-<dt>if not p(i):</dt>
-<dd>return False</dd>
-</dl>
-</dd>
-</dl>
-<p>return True</p>
-</div></blockquote>
-<p><a href="#id24"><span class="problematic" id="id25">``</span></a><a href="#id26"><span class="problematic" id="id27">`</span></a></p>
-</div>
-<div class="section" id="any">
-<h1>Any<a class="headerlink" href="#any" title="Permalink to this headline">¶</a></h1>
-<p><a href="#id28"><span class="problematic" id="id29">``</span></a><a href="#id30"><span class="problematic" id="id31">`</span></a>python
-any :: (a -&gt; bool) -&gt; [a] -&gt; bool
-def any(p, xs):</p>
-<blockquote>
-<div><dl class="docutils">
-<dt>for i in xs:</dt>
-<dd><dl class="first last docutils">
-<dt>if not p(i):</dt>
-<dd>return True</dd>
-</dl>
-</dd>
-</dl>
-<p>return False</p>
-</div></blockquote>
-<p><a href="#id32"><span class="problematic" id="id33">``</span></a><a href="#id34"><span class="problematic" id="id35">`</span></a></p>
-</div>
-<div class="section" id="map">
-<h1>Map<a class="headerlink" href="#map" title="Permalink to this headline">¶</a></h1>
-<p><a href="#id36"><span class="problematic" id="id37">``</span></a><a href="#id38"><span class="problematic" id="id39">`</span></a>python
-map :: (a -&gt; b) -&gt; [a] -&gt; [b]
-def map(f, xs):</p>
-<blockquote>
-<div>return [f(x) for x in xs]</div></blockquote>
-<p><a href="#id40"><span class="problematic" id="id41">``</span></a><a href="#id42"><span class="problematic" id="id43">`</span></a></p>
-</div>
-<div class="section" id="reduce">
-<h1>Reduce<a class="headerlink" href="#reduce" title="Permalink to this headline">¶</a></h1>
-<p><a href="#id44"><span class="problematic" id="id45">``</span></a><a href="#id46"><span class="problematic" id="id47">`</span></a>python
-reduce :: (a -&gt; b -&gt; a) -&gt; a -&gt; [b] -&gt; a
-def reduce(p, xs, x0):</p>
-<blockquote>
-<div><p>acc = x0
-for x in xs:</p>
-<blockquote>
-<div>acc = f(acc)</div></blockquote>
-<p>return acc</p>
-</div></blockquote>
-<p><a href="#id48"><span class="problematic" id="id49">``</span></a><a href="#id50"><span class="problematic" id="id51">`</span></a></p>
-</div>
-<div class="section" id="max">
-<h1>Max<a class="headerlink" href="#max" title="Permalink to this headline">¶</a></h1>
-<p><a href="#id52"><span class="problematic" id="id53">``</span></a><a href="#id54"><span class="problematic" id="id55">`</span></a>python</p>
-<p>max :: [a] -&gt; a
-def max(xs):</p>
-<blockquote>
-<div><p>assert len(xs) &gt; 0
-x0 = xs[0]
-for x in xs:</p>
-<blockquote>
-<div><dl class="docutils">
-<dt>if x &gt; x0:</dt>
-<dd>x0 = x</dd>
-</dl>
-</div></blockquote>
-<p>return x0</p>
-</div></blockquote>
-<p><a href="#id56"><span class="problematic" id="id57">``</span></a><a href="#id58"><span class="problematic" id="id59">`</span></a></p>
-</div>
-<div class="section" id="min">
-<h1>Min<a class="headerlink" href="#min" title="Permalink to this headline">¶</a></h1>
-<p><a href="#id60"><span class="problematic" id="id61">``</span></a><a href="#id62"><span class="problematic" id="id63">`</span></a>python</p>
-<p>min :: [a] -&gt; a
-def min(xs):</p>
-<blockquote>
-<div><p>assert len(xs) &gt; 0
-x0 = xs[0]
-for x in xs:</p>
-<blockquote>
-<div><dl class="docutils">
-<dt>if x &lt; x0:</dt>
-<dd>x0 = x</dd>
-</dl>
-</div></blockquote>
-<p>return x0</p>
-</div></blockquote>
-<p><a href="#id64"><span class="problematic" id="id65">``</span></a><a href="#id66"><span class="problematic" id="id67">`</span></a></p>
-</div>
-<div class="section" id="zip">
-<h1>Zip<a class="headerlink" href="#zip" title="Permalink to this headline">¶</a></h1>
-<p><a href="#id68"><span class="problematic" id="id69">``</span></a><a href="#id70"><span class="problematic" id="id71">`</span></a>python
-min :: [a] -&gt; [b] -&gt; [(a, b)]
-def min(xs, ys):</p>
-<blockquote>
-<div><p>out = []
-for i in min(len(xs), len(ys)):</p>
-<blockquote>
-<div>out.append((xs[i], ys[i]))</div></blockquote>
-<p>return out</p>
-</div></blockquote>
-<p><a href="#id72"><span class="problematic" id="id73">``</span></a><a href="#id74"><span class="problematic" id="id75">`</span></a></p>
-</div>
-<div class="section" id="reverse">
-<h1>Reverse<a class="headerlink" href="#reverse" title="Permalink to this headline">¶</a></h1>
-<p><a href="#id76"><span class="problematic" id="id77">``</span></a>`
-reverse :: [a] -&gt; [a]
-def reverse(xs):</p>
-<blockquote>
-<div><p>out = []
-for i in len(xs):</p>
-<blockquote>
-<div>out.append(xs[len(xs)-i])</div></blockquote>
-<p>return out</p>
-</div></blockquote>
-<p><a href="#id78"><span class="problematic" id="id79">``</span></a><a href="#id80"><span class="problematic" id="id81">`</span></a></p>
-</div>
-<div class="section" id="sorted">
-<h1>Sorted<a class="headerlink" href="#sorted" title="Permalink to this headline">¶</a></h1>
-<p>Sorted sorts the underlying list data structure. The
-implementation is compiler specific.</p>
-<p><tt class="docutils literal"><span class="pre">`python</span>
-<span class="pre">sorted</span> <span class="pre">::</span> <span class="pre">[a]</span> <span class="pre">-&gt;</span> <span class="pre">[a]</span>
-<span class="pre">`</span></tt></p>
 </div>
 <div class="section" id="slice">
-<h1>Slice<a class="headerlink" href="#slice" title="Permalink to this headline">¶</a></h1>
-<p>Named slicing is not supported. Slice types are not supported.
-Slicing as an indexing operation is supported.</p>
-<p><tt class="docutils literal"><span class="pre">`</span>
-<span class="pre">a</span> <span class="pre">=</span> <span class="pre">slice(0,</span> <span class="pre">1,</span> <span class="pre">2)</span>
-<span class="pre">`</span></tt></p>
+<h2>Slice<a class="headerlink" href="#slice" title="Permalink to this headline">¶</a></h2>
+<p>Named slicing is not supported. Slice types are supported only through the
+object layer. Slicing as an indexing operation is supported.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">a</span> <span class="o">=</span> <span class="nb">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
 </div>
 <div class="section" id="classes">
-<h1>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h1>
-<p>Classes are not supported. The corresponding descriptor methods
-are not implemented.</p>
-<ul class="simple">
-<li>property</li>
-<li>classmethod</li>
-<li>staticmethod</li>
-</ul>
+<h2>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h2>
+<p>Classes are supported through extension types.</p>
 </div>
 <div class="section" id="casts">
-<h1>Casts<a class="headerlink" href="#casts" title="Permalink to this headline">¶</a></h1>
-<p><tt class="docutils literal"><span class="pre">`</span>
-<span class="pre">int</span> <span class="pre">::</span> <span class="pre">a</span> <span class="pre">-&gt;</span> <span class="pre">int</span>
-<span class="pre">bool</span> <span class="pre">::</span> <span class="pre">a</span> <span class="pre">-&gt;</span> <span class="pre">bool</span>
-<span class="pre">complex</span> <span class="pre">::</span> <span class="pre">a</span> <span class="pre">-&gt;</span> <span class="pre">bool</span>
-<span class="pre">`</span></tt></p>
+<h2>Casts<a class="headerlink" href="#casts" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><pre>int :: a -&gt; int
+bool :: a -&gt; bool
+complex :: a -&gt; bool</pre>
+</div>
 <p>The coerce function is not supported.</p>
 <p>The <tt class="docutils literal"><span class="pre">str</span></tt>, <tt class="docutils literal"><span class="pre">list</span></tt> and <tt class="docutils literal"><span class="pre">tuple</span></tt> casts are not supported.</p>
 </div>
 <div class="section" id="characters">
-<h1>Characters<a class="headerlink" href="#characters" title="Permalink to this headline">¶</a></h1>
-<p>The <tt class="docutils literal"><span class="pre">chr</span></tt>, <tt class="docutils literal"><span class="pre">ord</span></tt> and <tt class="docutils literal"><span class="pre">unichr</span></tt>, <tt class="docutils literal"><span class="pre">hex</span></tt>, <tt class="docutils literal"><span class="pre">bin</span></tt>, <tt class="docutils literal"><span class="pre">oct</span></tt>
-functions are not supported.</p>
+<h2>Characters<a class="headerlink" href="#characters" title="Permalink to this headline">¶</a></h2>
+<p>The <tt class="docutils literal"><span class="pre">chr</span></tt>, <tt class="docutils literal"><span class="pre">ord</span></tt> are supported for the integer and character types.
+<tt class="docutils literal"><span class="pre">unichr</span></tt>, <tt class="docutils literal"><span class="pre">hex</span></tt>, <tt class="docutils literal"><span class="pre">bin</span></tt>, <tt class="docutils literal"><span class="pre">oct</span></tt> functions are supported through the
+object layer.</p>
 </div>
 <div class="section" id="closures">
-<h1>Closures<a class="headerlink" href="#closures" title="Permalink to this headline">¶</a></h1>
-<p>Nested functions and closures are not supported.</p>
+<h2>Closures<a class="headerlink" href="#closures" title="Permalink to this headline">¶</a></h2>
+<p>Nested functions and closures are supported. Construction goes through
+the object layer. Calling from numba does not.</p>
+<p>The <tt class="docutils literal"><span class="pre">nonlocal</span></tt> keyword is not supported.</p>
 </div>
 <div class="section" id="globals">
-<h1>Globals<a class="headerlink" href="#globals" title="Permalink to this headline">¶</a></h1>
-<p>Global variables are not supported.</p>
+<h2>Globals<a class="headerlink" href="#globals" title="Permalink to this headline">¶</a></h2>
+<p>Global variables are not supported and resolved as constants. The <tt class="docutils literal"><span class="pre">global</span></tt>
+keyword is not supported.</p>
 </div>
 <div class="section" id="arguments">
-<h1>Arguments<a class="headerlink" href="#arguments" title="Permalink to this headline">¶</a></h1>
+<h2>Arguments<a class="headerlink" href="#arguments" title="Permalink to this headline">¶</a></h2>
 <p>Variadic and keyword arguments are not supported.</p>
 </div>
 <div class="section" id="assertions">
-<h1>Assertions<a class="headerlink" href="#assertions" title="Permalink to this headline">¶</a></h1>
+<h2>Assertions<a class="headerlink" href="#assertions" title="Permalink to this headline">¶</a></h2>
 <p>Assertions are not supported.</p>
 </div>
-<div class="section" id="syntax">
-<h1>Syntax<a class="headerlink" href="#syntax" title="Permalink to this headline">¶</a></h1>
-<p>Language Features</p>
-<p><a href="#id82"><span class="problematic" id="id83">``</span></a><a href="#id84"><span class="problematic" id="id85">`</span></a></p>
-<p>module SmallPython
-{</p>
-<blockquote>
-<div><dl class="docutils">
-<dt>mod = Module(stmt* body)</dt>
-<dd><div class="first last line-block">
-<div class="line">Expression(expr body)</div>
-</div>
-</dd>
-<dt>stmt = FunctionDef(identifier name, arguments args,</dt>
-<dd><blockquote class="first">
-<div>stmt* body, expr? returns)</div></blockquote>
-<div class="line-block">
-<div class="line">Return(expr? value)</div>
-</div>
-<div class="line-block">
-<div class="line">Assign(expr* targets, expr value)</div>
-<div class="line">AugAssign(expr target, operator op, expr value)</div>
-</div>
-<div class="line-block">
-<div class="line">For(expr target, expr iter, stmt* body, stmt* orelse)</div>
-<div class="line">While(expr test, stmt* body, stmt* orelse)</div>
-<div class="line">If(expr test, stmt* body, stmt* orelse)</div>
-</div>
-<div class="line-block">
-<div class="line">Expr(expr value)</div>
-<div class="line">Pass | Break | Continue</div>
-</div>
-<p class="last">attributes (int lineno, int col_offset)</p>
-</dd>
-<dt>expr = BoolOp(boolop op, expr* values)</dt>
-<dd><div class="first line-block">
-<div class="line">BinOp(expr left, operator op, expr right)</div>
-<div class="line">UnaryOp(unaryop op, expr operand)</div>
-<div class="line">IfExp(expr test, expr body, expr orelse)</div>
-<div class="line">ListComp(expr elt, comprehension* generators)</div>
-<div class="line">Compare(expr left, cmpop* ops, expr* comparators)</div>
-<div class="line">Call(expr func, expr* args, keyword* keywords,
-expr? starargs, expr? kwargs)</div>
-<div class="line">Num(object n) &#8211; a number as a PyObject.</div>
-<div class="line">Str(string s) &#8211; need to specify raw, unicode, etc?</div>
-<div class="line">Bytes(string s)</div>
-</div>
-<div class="line-block">
-<div class="line">Attribute(expr value, identifier attr, expr_context ctx)</div>
-<div class="line">Subscript(expr value, slice slice, expr_context ctx)</div>
-<div class="line">Name(identifier id, expr_context ctx)</div>
-<div class="line">List(expr* elts, expr_context ctx)</div>
-<div class="line">Tuple(expr* elts, expr_context ctx)</div>
-</div>
-<blockquote class="last">
-<div>attributes (int lineno, int col_offset)</div></blockquote>
-</dd>
-</dl>
-<p>expr_context = Load | Store | AugLoad | AugStore | Param</p>
-<dl class="docutils">
-<dt>slice = Slice(expr? lower, expr? upper, expr? step)</dt>
-<dd><div class="first last line-block">
-<div class="line">ExtSlice(slice* dims)</div>
-<div class="line">Index(expr value)</div>
-</div>
-</dd>
-</dl>
-<p>boolop = And | Or</p>
-<dl class="docutils">
-<dt>operator = Add | Sub | Mult | Div | Mod | Pow | LShift</dt>
-<dd><div class="first last line-block">
-<div class="line">RShift | BitOr | BitXor | BitAnd | FloorDiv</div>
-</div>
-</dd>
-</dl>
-<p>unaryop = Invert | Not | UAdd | USub</p>
-<p>cmpop = Eq | NotEq | Lt | LtE | Gt | GtE</p>
-<p>comprehension = (expr target, expr iter, expr* ifs)</p>
-<dl class="docutils">
-<dt>arguments = (arg* args, identifier? vararg, expr? varargannotation,</dt>
-<dd>arg* kwonlyargs, identifier? kwarg,
-expr? kwargannotation, expr* defaults,
-expr* kw_defaults)</dd>
-</dl>
-<p>arg = (identifier arg, expr? annotation)</p>
-<p>keyword = (identifier arg, expr value)
-alias = (identifier name, identifier? asname)</p>
-</div></blockquote>
-<p>}</p>
-<p><a href="#id86"><span class="problematic" id="id87">``</span></a><a href="#id88"><span class="problematic" id="id89">`</span></a></p>
-</div>
 <div class="section" id="operators">
-<h1>Operators<a class="headerlink" href="#operators" title="Permalink to this headline">¶</a></h1>
+<h2>Operators<a class="headerlink" href="#operators" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>And</li>
 <li>Or</li>
@@ -806,14 +554,14 @@ alias = (identifier name, identifier? asname)</p>
 <li>GtE</li>
 </ul>
 <p>Comparison operator chaining is supported and is desugared into
-boolean conjunctions of the comparison operators.</p>
-<p><tt class="docutils literal"><span class="pre">`</span>
-<span class="pre">(x</span> <span class="pre">&gt;</span> <span class="pre">y</span> <span class="pre">&gt;</span> <span class="pre">z)</span>
-<span class="pre">`</span></tt></p>
-<p><tt class="docutils literal"><span class="pre">`</span>
-<span class="pre">(x</span> <span class="pre">&gt;</span> <span class="pre">y)</span> <span class="pre">and</span> <span class="pre">(y</span> <span class="pre">&gt;</span> <span class="pre">z)</span>
-<span class="pre">`</span></tt></p>
-<p>Smallpy explictly does not support the following operators.</p>
+boolean conjunctions of the comparison operators:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">(</span><span class="n">x</span> <span class="o">&gt;</span> <span class="n">y</span> <span class="o">&gt;</span> <span class="n">z</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">(</span><span class="n">x</span> <span class="o">&gt;</span> <span class="n">y</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">y</span> <span class="o">&gt;</span> <span class="n">z</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Not supported:</p>
 <ul class="simple">
 <li>Is</li>
 <li>IsNot</li>
@@ -822,92 +570,84 @@ boolean conjunctions of the comparison operators.</p>
 </ul>
 </div>
 <div class="section" id="division">
-<h1>Division<a class="headerlink" href="#division" title="Permalink to this headline">¶</a></h1>
+<h2>Division<a class="headerlink" href="#division" title="Permalink to this headline">¶</a></h2>
 <p>Division follows the Python semantics for distinction between
 <tt class="docutils literal"><span class="pre">floordiv</span></tt> and <tt class="docutils literal"><span class="pre">truediv</span></tt> but operates over unboxed types
 with no error checking.</p>
 </div>
 <div class="section" id="math-functions">
-<h1>Math Functions<a class="headerlink" href="#math-functions" title="Permalink to this headline">¶</a></h1>
+<h2>Math Functions<a class="headerlink" href="#math-functions" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>abs</li>
-<li>cmp</li>
-<li>divmod</li>
 <li>pow</li>
 <li>round</li>
 </ul>
-<p>sorted</p>
 </div>
 <div class="section" id="floating-point-math">
-<h1>Floating Point Math<a class="headerlink" href="#floating-point-math" title="Permalink to this headline">¶</a></h1>
-<p><tt class="docutils literal"><span class="pre">`</span>
-<span class="pre">acos</span>
-<span class="pre">acosh</span>
-<span class="pre">asin</span>
-<span class="pre">asinh</span>
-<span class="pre">atan</span>
-<span class="pre">atan2</span>
-<span class="pre">atanh</span>
-<span class="pre">ceil</span>
-<span class="pre">copysign</span>
-<span class="pre">cos</span>
-<span class="pre">cosh</span>
-<span class="pre">degrees</span>
-<span class="pre">e</span>
-<span class="pre">erf</span>
-<span class="pre">erfc</span>
-<span class="pre">exp</span>
-<span class="pre">expm1</span>
-<span class="pre">fabs</span>
-<span class="pre">factorial</span>
-<span class="pre">floor</span>
-<span class="pre">fmod</span>
-<span class="pre">frexp</span>
-<span class="pre">fsum</span>
-<span class="pre">gamma</span>
-<span class="pre">hypot</span>
-<span class="pre">isinf</span>
-<span class="pre">isnan</span>
-<span class="pre">ldexp</span>
-<span class="pre">lgamma</span>
-<span class="pre">log</span>
-<span class="pre">log10</span>
-<span class="pre">log1p</span>
-<span class="pre">modf</span>
-<span class="pre">pi</span>
-<span class="pre">pow</span>
-<span class="pre">radians</span>
-<span class="pre">sin</span>
-<span class="pre">sinh</span>
-<span class="pre">sqrt</span>
-<span class="pre">tan</span>
-<span class="pre">tanh</span>
-<span class="pre">trunc</span>
-<span class="pre">`</span></tt></p>
-<p>Complex Math</p>
-<p><tt class="docutils literal"><span class="pre">`</span>
-<span class="pre">acos</span>
-<span class="pre">acosh</span>
-<span class="pre">asin</span>
-<span class="pre">asinh</span>
-<span class="pre">atan</span>
-<span class="pre">atanh</span>
-<span class="pre">cos</span>
-<span class="pre">cosh</span>
-<span class="pre">exp</span>
-<span class="pre">isinf</span>
-<span class="pre">isnan</span>
-<span class="pre">log</span>
-<span class="pre">log10</span>
-<span class="pre">phase</span>
-<span class="pre">polar</span>
-<span class="pre">rect</span>
-<span class="pre">sin</span>
-<span class="pre">sinh</span>
-<span class="pre">sqrt</span>
-<span class="pre">tan</span>
-<span class="pre">tanh</span>
-<span class="pre">`</span></tt></p>
+<h2>Floating Point Math<a class="headerlink" href="#floating-point-math" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>acos</li>
+<li>acosh</li>
+<li>asin</li>
+<li>asinh</li>
+<li>atan</li>
+<li>atan2</li>
+<li>atanh</li>
+<li>ceil</li>
+<li>cos</li>
+<li>cosh</li>
+<li>degrees</li>
+<li>erf</li>
+<li>erfc</li>
+<li>exp</li>
+<li>expm1</li>
+<li>exp2</li>
+<li>fabs</li>
+<li>floor</li>
+<li>fmod</li>
+<li>hypot</li>
+<li>log</li>
+<li>logaddexp</li>
+<li>logaddexp2</li>
+<li>log10</li>
+<li>log1p</li>
+<li>modf</li>
+<li>pow</li>
+<li>rint</li>
+<li>sin</li>
+<li>sinh</li>
+<li>sqrt</li>
+<li>tan</li>
+<li>tanh</li>
+<li>trunc</li>
+</ul>
+<p>Constants such as <tt class="docutils literal"><span class="pre">math.e</span></tt> and <tt class="docutils literal"><span class="pre">math.pi</span></tt> are resolved as constants.</p>
+</div>
+<div class="section" id="complex-math">
+<h2>Complex Math<a class="headerlink" href="#complex-math" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>abs</li>
+<li>acos</li>
+<li>acosh</li>
+<li>asin</li>
+<li>asinh</li>
+<li>atan</li>
+<li>atanh</li>
+<li>cos</li>
+<li>cosh</li>
+<li>exp</li>
+<li>expm1</li>
+<li>exp2</li>
+<li>log</li>
+<li>log10</li>
+<li>log1p</li>
+<li>sin</li>
+<li>sinh</li>
+<li>sqrt</li>
+<li>tan</li>
+<li>tanh</li>
+</ul>
+</div>
 </div>
 
 
@@ -927,7 +667,9 @@ with no error checking.</p>
     <ul class="nav pull-right">
       
         <li><a href="genindex.html" title="General Index" >index</a></li>
-        <li><a href="index.html">numba 0.9.0-133-g449e4d1 documentation</a></li> 
+        <li><a href="pycc.html" title="Static Compilation (pycc)" >next</a></li>
+        <li><a href="interface_c.html" title="Interfacing with C" >previous</a></li>
+        <li><a href="index.html">numba 0.9.0-141-gb718785 documentation</a></li> 
       
     </ul>
   </div>
