@@ -1,0 +1,1097 @@
+
+<!DOCTYPE html>
+
+
+
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+    <title>control_flow Package &mdash; numba 0.10.0 documentation</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    
+<link rel="stylesheet" href="../_static/css/basicstrap-base.css" type="text/css" />
+<link rel="stylesheet" href="../_static/css/bootstrap.min.css" type="text/css" />
+<link rel="stylesheet" href="../_static/css/font-awesome.min.css">
+<!--[if IE 7]>
+<link rel="stylesheet" href="../_static/css/font-awesome-ie7.min.css">
+<![endif]-->
+<style type="text/css">
+  body {
+    padding-top: 60px;
+    padding-bottom: 40px;
+  }
+}
+</style>
+<link rel="stylesheet" href="../_static/basicstrap.css" type="text/css" />
+<link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+<link rel="stylesheet" href="../_static/css/bootstrap-responsive.min.css" type="text/css" />
+    
+<script type="text/javascript">
+  var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:    '../',
+            VERSION:     '0.10.0',
+            COLLAPSE_INDEX: false,
+            FILE_SUFFIX: '.html',
+            HAS_SOURCE:  true
+  };
+</script>
+<script type="text/javascript" src="../_static/js/jquery.min.js"></script>
+<script type="text/javascript" src="../_static/underscore.js"></script>
+<script type="text/javascript" src="../_static/doctools.js"></script>
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/javascript" src="../_static/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+  $(document).ready(function(){
+    $('.show-sidebar').click(function(e) {
+       e.preventDefault();
+       if ($(".show-sidebar").html() == "Open Table Of Contents") {
+          $('.for-mobile').removeClass('hidden-phone');
+          $(".show-sidebar").html("Close Table Of Contents");
+       } else {
+          $(".show-sidebar").html("Open Table Of Contents");
+       }
+    });
+  });
+</script>
+    <link rel="top" title="numba 0.10.0 documentation" href="../index.html" />
+    <link rel="up" title="numba Package" href="numba.html" />
+    <link rel="next" title="external Package" href="numba.external.html" />
+    <link rel="prev" title="containers Package" href="numba.containers.html" /> 
+  </head>
+  <body>
+    <div class="navbar navbar-fixed-top ">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="../index.html">numba 0.10.0 documentation</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav pull-right">
+              
+                <li>
+                <a href="../genindex.html" title="General Index" accesskey="I">index</a>
+                </li>
+                <li>
+                <a href="../py-modindex.html" title="Python Module Index" >modules</a>
+                </li>
+                <li>
+                <a href="numba.external.html" title="external Package" accesskey="N">next</a>
+                </li>
+                <li>
+                <a href="numba.containers.html" title="containers Package" accesskey="P">previous</a>
+                </li>
+                <li>
+                <a href="modules.html" >Numba Module Reference</a>
+                </li>
+                <li>
+                <a href="numba.html" accesskey="U">numba Package</a>
+                </li>
+              
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <!-- container -->
+    <div class="container-fluid">
+
+
+      
+      <div class="row-fluid hidden-desktop hidden-tablet">
+      
+<div class="span3 ">
+  <a class="visible-phone btn btn-small show-sidebar" data-toggle="collapse" data-target=".for-mobile">Open Table Of Contents</a>
+  <div class="for-mobile sidebar hidden-phone">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">control_flow Package</a><ul>
+<li><a class="reference internal" href="#id1"><tt class="docutils literal"><span class="pre">control_flow</span></tt> Package</a></li>
+<li><a class="reference internal" href="#module-numba.control_flow.block"><tt class="docutils literal"><span class="pre">block</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-numba.control_flow.cfstats"><tt class="docutils literal"><span class="pre">cfstats</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-numba.control_flow.control_flow"><tt class="docutils literal"><span class="pre">control_flow</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-numba.control_flow.debug"><tt class="docutils literal"><span class="pre">debug</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-numba.control_flow.delete_cfnode"><tt class="docutils literal"><span class="pre">delete_cfnode</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-numba.control_flow.graphviz"><tt class="docutils literal"><span class="pre">graphviz</span></tt> Module</a></li>
+<li><a class="reference internal" href="#reaching-module"><tt class="docutils literal"><span class="pre">reaching</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-numba.control_flow.ssa"><tt class="docutils literal"><span class="pre">ssa</span></tt> Module</a></li>
+<li><a class="reference internal" href="#subpackages">Subpackages</a><ul>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="numba.containers.html"
+                        title="previous chapter">containers Package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="numba.external.html"
+                        title="next chapter">external Package</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/modules/numba.control_flow.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox">
+  <h3>Quick search</h3>
+  <form class="search form-search" action="../search.html" method="get">
+      <div class="input-append">
+        <input type="text" class="search-query" name="q">
+        <input type="submit" class="btn" value="Go" />
+      </div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+  </div>
+</div>
+      </div>
+      
+
+      <!-- row -->
+      <div class="row-fluid">
+         
+<div class="span3 visible-desktop visible-tablet">
+  <div class=" sidebar hidden-phone">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">control_flow Package</a><ul>
+<li><a class="reference internal" href="#id1"><tt class="docutils literal"><span class="pre">control_flow</span></tt> Package</a></li>
+<li><a class="reference internal" href="#module-numba.control_flow.block"><tt class="docutils literal"><span class="pre">block</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-numba.control_flow.cfstats"><tt class="docutils literal"><span class="pre">cfstats</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-numba.control_flow.control_flow"><tt class="docutils literal"><span class="pre">control_flow</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-numba.control_flow.debug"><tt class="docutils literal"><span class="pre">debug</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-numba.control_flow.delete_cfnode"><tt class="docutils literal"><span class="pre">delete_cfnode</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-numba.control_flow.graphviz"><tt class="docutils literal"><span class="pre">graphviz</span></tt> Module</a></li>
+<li><a class="reference internal" href="#reaching-module"><tt class="docutils literal"><span class="pre">reaching</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-numba.control_flow.ssa"><tt class="docutils literal"><span class="pre">ssa</span></tt> Module</a></li>
+<li><a class="reference internal" href="#subpackages">Subpackages</a><ul>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="numba.containers.html"
+                        title="previous chapter">containers Package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="numba.external.html"
+                        title="next chapter">external Package</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/modules/numba.control_flow.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox">
+  <h3>Quick search</h3>
+  <form class="search form-search" action="../search.html" method="get">
+      <div class="input-append">
+        <input type="text" class="search-query" name="q">
+        <input type="submit" class="btn" value="Go" />
+      </div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+  </div>
+</div> 
+        
+
+        <div class="span9">
+          <div class="document">
+            <div class="documentwrapper">
+              <div class="bodywrapper">
+                <div class="body">
+                  
+  <div class="section" id="control-flow-package">
+<h1>control_flow Package<a class="headerlink" href="#control-flow-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id1">
+<h2><tt class="xref py py-mod docutils literal"><span class="pre">control_flow</span></tt> Package<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-numba.control_flow"></span></div>
+<div class="section" id="module-numba.control_flow.block">
+<span id="block-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">block</span></tt> Module<a class="headerlink" href="#module-numba.control_flow.block" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-numba.control_flow.cfstats">
+<span id="cfstats-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">cfstats</span></tt> Module<a class="headerlink" href="#module-numba.control_flow.cfstats" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="numba.control_flow.cfstats.Argument">
+<em class="property">class </em><tt class="descclassname">numba.control_flow.cfstats.</tt><tt class="descname">Argument</tt><big>(</big><em>lhs</em>, <em>rhs</em>, <em>entry</em><big>)</big><a class="headerlink" href="#numba.control_flow.cfstats.Argument" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.control_flow.cfstats.NameAssignment" title="numba.control_flow.cfstats.NameAssignment"><tt class="xref py py-class docutils literal"><span class="pre">numba.control_flow.cfstats.NameAssignment</span></tt></a></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.control_flow.cfstats.AttributeAssignment">
+<em class="property">class </em><tt class="descclassname">numba.control_flow.cfstats.</tt><tt class="descname">AttributeAssignment</tt><big>(</big><em>assmnt</em><big>)</big><a class="headerlink" href="#numba.control_flow.cfstats.AttributeAssignment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Assignment to some attribute. We need to detect assignments in the
+constructor of extension types.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.control_flow.cfstats.ExceptionDescr">
+<em class="property">class </em><tt class="descclassname">numba.control_flow.cfstats.</tt><tt class="descname">ExceptionDescr</tt><big>(</big><em>entry_point</em>, <em>finally_enter=None</em>, <em>finally_exit=None</em><big>)</big><a class="headerlink" href="#numba.control_flow.cfstats.ExceptionDescr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Exception handling helper.</p>
+<p>entry_point   ControlBlock Exception handling entry point
+finally_enter ControlBlock Normal finally clause entry point
+finally_exit  ControlBlock Normal finally clause exit point</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.control_flow.cfstats.LoopDescr">
+<em class="property">class </em><tt class="descclassname">numba.control_flow.cfstats.</tt><tt class="descname">LoopDescr</tt><big>(</big><em>next_block</em>, <em>loop_block</em><big>)</big><a class="headerlink" href="#numba.control_flow.cfstats.LoopDescr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.control_flow.cfstats.NameAssignment">
+<em class="property">class </em><tt class="descclassname">numba.control_flow.cfstats.</tt><tt class="descname">NameAssignment</tt><big>(</big><em>lhs</em>, <em>rhs</em>, <em>entry</em>, <em>assignment_node</em>, <em>warn_unused=True</em><big>)</big><a class="headerlink" href="#numba.control_flow.cfstats.NameAssignment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<dl class="method">
+<dt id="numba.control_flow.cfstats.NameAssignment.infer_type">
+<tt class="descname">infer_type</tt><big>(</big><em>scope</em><big>)</big><a class="headerlink" href="#numba.control_flow.cfstats.NameAssignment.infer_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="numba.control_flow.cfstats.NameAssignment.is_assignment">
+<tt class="descname">is_assignment</tt><em class="property"> = True</em><a class="headerlink" href="#numba.control_flow.cfstats.NameAssignment.is_assignment" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.control_flow.cfstats.NameAssignment.type_dependencies">
+<tt class="descname">type_dependencies</tt><big>(</big><em>scope</em><big>)</big><a class="headerlink" href="#numba.control_flow.cfstats.NameAssignment.type_dependencies" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.control_flow.cfstats.NameDeletion">
+<em class="property">class </em><tt class="descclassname">numba.control_flow.cfstats.</tt><tt class="descname">NameDeletion</tt><big>(</big><em>lhs</em>, <em>entry</em><big>)</big><a class="headerlink" href="#numba.control_flow.cfstats.NameDeletion" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.control_flow.cfstats.NameAssignment" title="numba.control_flow.cfstats.NameAssignment"><tt class="xref py py-class docutils literal"><span class="pre">numba.control_flow.cfstats.NameAssignment</span></tt></a></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.control_flow.cfstats.NameReference">
+<em class="property">class </em><tt class="descclassname">numba.control_flow.cfstats.</tt><tt class="descname">NameReference</tt><big>(</big><em>node</em>, <em>entry</em><big>)</big><a class="headerlink" href="#numba.control_flow.cfstats.NameReference" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.control_flow.cfstats.PhiNode">
+<em class="property">class </em><tt class="descclassname">numba.control_flow.cfstats.</tt><tt class="descname">PhiNode</tt><big>(</big><em>block</em>, <em>variable</em><big>)</big><a class="headerlink" href="#numba.control_flow.cfstats.PhiNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="numba.nodes.html#numba.nodes.basenodes.Node" title="numba.nodes.basenodes.Node"><tt class="xref py py-class docutils literal"><span class="pre">numba.nodes.basenodes.Node</span></tt></a></p>
+<dl class="method">
+<dt id="numba.control_flow.cfstats.PhiNode.add">
+<tt class="descname">add</tt><big>(</big><em>block</em>, <em>assmnt</em><big>)</big><a class="headerlink" href="#numba.control_flow.cfstats.PhiNode.add" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.control_flow.cfstats.PhiNode.add_incoming_block">
+<tt class="descname">add_incoming_block</tt><big>(</big><em>block</em><big>)</big><a class="headerlink" href="#numba.control_flow.cfstats.PhiNode.add_incoming_block" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="numba.control_flow.cfstats.PhiNode.entry">
+<tt class="descname">entry</tt><a class="headerlink" href="#numba.control_flow.cfstats.PhiNode.entry" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.control_flow.cfstats.PhiNode.find_incoming">
+<tt class="descname">find_incoming</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.control_flow.cfstats.PhiNode.find_incoming" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.control_flow.cfstats.StatementDescr">
+<em class="property">class </em><tt class="descclassname">numba.control_flow.cfstats.</tt><tt class="descname">StatementDescr</tt><a class="headerlink" href="#numba.control_flow.cfstats.StatementDescr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<dl class="attribute">
+<dt id="numba.control_flow.cfstats.StatementDescr.is_assignment">
+<tt class="descname">is_assignment</tt><em class="property"> = False</em><a class="headerlink" href="#numba.control_flow.cfstats.StatementDescr.is_assignment" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.control_flow.cfstats.Uninitialized">
+<em class="property">class </em><tt class="descclassname">numba.control_flow.cfstats.</tt><tt class="descname">Uninitialized</tt><a class="headerlink" href="#numba.control_flow.cfstats.Uninitialized" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-numba.control_flow.control_flow">
+<span id="control-flow-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">control_flow</span></tt> Module<a class="headerlink" href="#module-numba.control_flow.control_flow" title="Permalink to this headline">¶</a></h2>
+<p>Control flow for the AST backend.</p>
+<p>Adapted from Cython/Compiler/FlowControl.py</p>
+<dl class="class">
+<dt id="numba.control_flow.control_flow.AssignmentList">
+<em class="property">class </em><tt class="descclassname">numba.control_flow.control_flow.</tt><tt class="descname">AssignmentList</tt><a class="headerlink" href="#numba.control_flow.control_flow.AssignmentList" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="numba.control_flow.control_flow.ControlBlock">
+<em class="property">class </em><tt class="descclassname">numba.control_flow.control_flow.</tt><tt class="descname">ControlBlock</tt><big>(</big><em>id</em>, <em>label='empty'</em>, <em>have_code=True</em>, <em>is_expr=False</em>, <em>is_exit=False</em>, <em>pos=None</em>, <em>is_fabricated=False</em><big>)</big><a class="headerlink" href="#numba.control_flow.control_flow.ControlBlock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="numba.nodes.html#numba.nodes.cfnodes.LowLevelBasicBlockNode" title="numba.nodes.cfnodes.LowLevelBasicBlockNode"><tt class="xref py py-class docutils literal"><span class="pre">numba.nodes.cfnodes.LowLevelBasicBlockNode</span></tt></a></p>
+<p>Control flow graph node. Sequence of assignments and name references.
+This is simultaneously an AST node.</p>
+<blockquote>
+<div><p>children  set of children nodes
+parents   set of parent nodes
+positions set of position markers</p>
+<p>stats     list of block statements
+gen       dict of assignments generated by this block
+bound     set  of entries that are definitely bounded in this block</p>
+<p>Example:</p>
+<blockquote>
+<div><p>a = 1
+b = a + c # &#8216;c&#8217; is already bounded or exception here</p>
+<dl class="docutils">
+<dt>stats = [Assignment(a), NameReference(a), NameReference(c),</dt>
+<dd>Assignment(b)]</dd>
+</dl>
+<p>gen = {Entry(a): Assignment(a), Entry(b): Assignment(b)}
+bound = set([Entry(a), Entry(c)])</p>
+</div></blockquote>
+</div></blockquote>
+<dl class="method">
+<dt id="numba.control_flow.control_flow.ControlBlock.add_child">
+<tt class="descname">add_child</tt><big>(</big><em>block</em><big>)</big><a class="headerlink" href="#numba.control_flow.control_flow.ControlBlock.add_child" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.control_flow.control_flow.ControlBlock.delete">
+<tt class="descname">delete</tt><big>(</big><em>flow</em><big>)</big><a class="headerlink" href="#numba.control_flow.control_flow.ControlBlock.delete" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete a block from the cfg.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.control_flow.control_flow.ControlBlock.detach">
+<tt class="descname">detach</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.control_flow.control_flow.ControlBlock.detach" title="Permalink to this definition">¶</a></dt>
+<dd><p>Detach block from parents and children.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.control_flow.control_flow.ControlBlock.empty">
+<tt class="descname">empty</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.control_flow.control_flow.ControlBlock.empty" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.control_flow.control_flow.ControlBlock.reparent">
+<tt class="descname">reparent</tt><big>(</big><em>new_block</em><big>)</big><a class="headerlink" href="#numba.control_flow.control_flow.ControlBlock.reparent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Re-parent all children to the new block</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.control_flow.control_flow.ControlFlow">
+<em class="property">class </em><tt class="descclassname">numba.control_flow.control_flow.</tt><tt class="descname">ControlFlow</tt><big>(</big><em>env</em>, <em>source_descr</em><big>)</big><a class="headerlink" href="#numba.control_flow.control_flow.ControlFlow" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Control-flow graph.</p>
+<blockquote>
+<div>entry_point ControlBlock entry point for this graph
+exit_point  ControlBlock normal exit point
+block       ControlBlock current block
+blocks      set    children nodes
+entries     set    tracked entries
+loops       list   stack for loop descriptors
+exceptions  list   stack for exception descriptors</div></blockquote>
+<dl class="method">
+<dt id="numba.control_flow.control_flow.ControlFlow.add_exit">
+<tt class="descname">add_exit</tt><big>(</big><em>exit_block</em><big>)</big><a class="headerlink" href="#numba.control_flow.control_flow.ControlFlow.add_exit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add an exit block after visiting the body</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.control_flow.control_flow.ControlFlow.compute_dominance_frontier">
+<tt class="descname">compute_dominance_frontier</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.control_flow.control_flow.ControlFlow.compute_dominance_frontier" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the dominance frontier for all blocks. This indicates for
+each block where dominance stops in the CFG. We use this as the place
+to insert Φ functions, since at the dominance frontier there are
+multiple control flow paths to the block, which means multiple
+variable definitions can reach there.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.control_flow.control_flow.ControlFlow.compute_dominators">
+<tt class="descname">compute_dominators</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.control_flow.control_flow.ControlFlow.compute_dominators" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the dominators for the CFG, i.e. for each basic block the
+set of basic blocks that dominate that block. This mean from the
+entry block to that block must go through the blocks in the dominator
+set.</p>
+<p>dominators(x) = {x} ∪ (∩ dominators(y) for y ∈ preds(x))</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.control_flow.control_flow.ControlFlow.exit_block">
+<tt class="descname">exit_block</tt><big>(</big><em>parent=None</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#numba.control_flow.control_flow.ControlFlow.exit_block" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a floating exit block. This can later be added to self.blocks.
+This is useful to ensure topological order.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.control_flow.control_flow.ControlFlow.immediate_dominator">
+<tt class="descname">immediate_dominator</tt><big>(</big><em>x</em><big>)</big><a class="headerlink" href="#numba.control_flow.control_flow.ControlFlow.immediate_dominator" title="Permalink to this definition">¶</a></dt>
+<dd><p>The dominator of x that is dominated by all other dominators of x.
+This is the block that has the largest dominator set.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.control_flow.control_flow.ControlFlow.initialize">
+<tt class="descname">initialize</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.control_flow.control_flow.ControlFlow.initialize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set initial state, map assignments to bits.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.control_flow.control_flow.ControlFlow.initialize_sets">
+<tt class="descname">initialize_sets</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.control_flow.control_flow.ControlFlow.initialize_sets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set initial state, run after SSA. There is only ever one live
+definition of a variable in a block, so we can simply track input
+and output definitions as the Variable/Entry they came as.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.control_flow.control_flow.ControlFlow.is_listcomp_var">
+<tt class="descname">is_listcomp_var</tt><big>(</big><em>name</em><big>)</big><a class="headerlink" href="#numba.control_flow.control_flow.ControlFlow.is_listcomp_var" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.control_flow.control_flow.ControlFlow.is_tracked">
+<tt class="descname">is_tracked</tt><big>(</big><em>entry</em><big>)</big><a class="headerlink" href="#numba.control_flow.control_flow.ControlFlow.is_tracked" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.control_flow.control_flow.ControlFlow.map_one">
+<tt class="descname">map_one</tt><big>(</big><em>istate</em>, <em>entry</em><big>)</big><a class="headerlink" href="#numba.control_flow.control_flow.ControlFlow.map_one" title="Permalink to this definition">¶</a></dt>
+<dd><p>Map the bitstate of a variable to the definitions it represents</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.control_flow.control_flow.ControlFlow.mark_argument">
+<tt class="descname">mark_argument</tt><big>(</big><em>lhs</em>, <em>rhs</em>, <em>entry</em><big>)</big><a class="headerlink" href="#numba.control_flow.control_flow.ControlFlow.mark_argument" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.control_flow.control_flow.ControlFlow.mark_assignment">
+<tt class="descname">mark_assignment</tt><big>(</big><em>lhs</em>, <em>rhs</em>, <em>entry</em>, <em>assignment</em>, <em>warn_unused=True</em><big>)</big><a class="headerlink" href="#numba.control_flow.control_flow.ControlFlow.mark_assignment" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.control_flow.control_flow.ControlFlow.mark_deletion">
+<tt class="descname">mark_deletion</tt><big>(</big><em>node</em>, <em>entry</em><big>)</big><a class="headerlink" href="#numba.control_flow.control_flow.ControlFlow.mark_deletion" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.control_flow.control_flow.ControlFlow.mark_position">
+<tt class="descname">mark_position</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.control_flow.control_flow.ControlFlow.mark_position" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mark position, will be used to draw graph nodes.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.control_flow.control_flow.ControlFlow.mark_reference">
+<tt class="descname">mark_reference</tt><big>(</big><em>node</em>, <em>entry</em><big>)</big><a class="headerlink" href="#numba.control_flow.control_flow.ControlFlow.mark_reference" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.control_flow.control_flow.ControlFlow.newblock">
+<tt class="descname">newblock</tt><big>(</big><em>parent=None</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#numba.control_flow.control_flow.ControlFlow.newblock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create floating block linked to <cite>parent</cite> if given.
+Does NOT set the current block to the new block.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.control_flow.control_flow.ControlFlow.nextblock">
+<tt class="descname">nextblock</tt><big>(</big><em>parent=None</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#numba.control_flow.control_flow.ControlFlow.nextblock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create child block linked to current or <cite>parent</cite> if given.
+Sets the current block to the new block.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.control_flow.control_flow.ControlFlow.normalize">
+<tt class="descname">normalize</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.control_flow.control_flow.ControlFlow.normalize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete unreachable and orphan blocks.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.control_flow.control_flow.ControlFlow.reaching_definitions">
+<tt class="descname">reaching_definitions</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.control_flow.control_flow.ControlFlow.reaching_definitions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Per-block reaching definitions analysis.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.control_flow.control_flow.ControlFlow.rename_assignments">
+<tt class="descname">rename_assignments</tt><big>(</big><em>block</em><big>)</big><a class="headerlink" href="#numba.control_flow.control_flow.ControlFlow.rename_assignments" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.control_flow.control_flow.ControlFlow.update_for_ssa">
+<tt class="descname">update_for_ssa</tt><big>(</big><em>ast</em>, <em>symbol_table</em><big>)</big><a class="headerlink" href="#numba.control_flow.control_flow.ControlFlow.update_for_ssa" title="Permalink to this definition">¶</a></dt>
+<dd><ol class="arabic">
+<li><p class="first">Compute phi nodes</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>for each variable v</dt>
+<dd><ol class="first last arabic simple">
+<li>insert empty phi nodes in dominance frontier of each block
+that defines v</li>
+<li>this phi defines a new assignment in each block in which
+it is inserted, so propagate (recursively)</li>
+</ol>
+</dd>
+</dl>
+</div></blockquote>
+</li>
+<li><p class="first">Reaching definitions</p>
+<blockquote>
+<div><p>Set block-local symbol table for each block.
+This is a rudimentary form of reaching definitions, but we can
+do it in a single pass because all assignments are known (since
+we inserted the phi functions, which also count as assignments).
+This means the output set is known up front for each block
+and never changes. After setting all output sets, we can compute
+the input sets in a single pass:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li>compute output sets for each block</li>
+<li>compute input sets for each block</li>
+</ol>
+</div></blockquote>
+</div></blockquote>
+</li>
+<li><p class="first">Update phis with incoming variables. The incoming variables are
+last assignments of the predecessor blocks in the CFG.</p>
+</li>
+</ol>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.control_flow.control_flow.ControlFlowAnalysis">
+<em class="property">class </em><tt class="descclassname">numba.control_flow.control_flow.</tt><tt class="descname">ControlFlowAnalysis</tt><big>(</big><em>context</em>, <em>func</em>, <em>ast</em>, <em>allow_rebind_args</em>, <em>env</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#numba.control_flow.control_flow.ControlFlowAnalysis" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="numba.html#numba.visitors.NumbaTransformer" title="numba.visitors.NumbaTransformer"><tt class="xref py py-class docutils literal"><span class="pre">numba.visitors.NumbaTransformer</span></tt></a></p>
+<p>Control flow analysis pass that builds the CFG and injects the blocks
+into the AST (but not all blocks are injected).</p>
+<p>The CFG must be build in topological DFS order, e.g. the &#8216;if&#8217; condition
+block must precede the clauses and the clauses must precede the exit.</p>
+<dl class="method">
+<dt id="numba.control_flow.control_flow.ControlFlowAnalysis.exit_block">
+<tt class="descname">exit_block</tt><big>(</big><em>exit_block</em>, <em>node</em><big>)</big><a class="headerlink" href="#numba.control_flow.control_flow.ControlFlowAnalysis.exit_block" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="numba.control_flow.control_flow.ControlFlowAnalysis.function_level">
+<tt class="descname">function_level</tt><em class="property"> = 0</em><a class="headerlink" href="#numba.control_flow.control_flow.ControlFlowAnalysis.function_level" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="numba.control_flow.control_flow.ControlFlowAnalysis.graphviz">
+<tt class="descname">graphviz</tt><em class="property"> = False</em><a class="headerlink" href="#numba.control_flow.control_flow.ControlFlowAnalysis.graphviz" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="numba.control_flow.control_flow.ControlFlowAnalysis.gv_ctx">
+<tt class="descname">gv_ctx</tt><em class="property"> = None</em><a class="headerlink" href="#numba.control_flow.control_flow.ControlFlowAnalysis.gv_ctx" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.control_flow.control_flow.ControlFlowAnalysis.handle_inner_function">
+<tt class="descname">handle_inner_function</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.control_flow.control_flow.ControlFlowAnalysis.handle_inner_function" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create assignment code for inner functions and mark the assignment</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.control_flow.control_flow.ControlFlowAnalysis.initialize_symtab">
+<tt class="descname">initialize_symtab</tt><big>(</big><em>allow_rebind_args</em><big>)</big><a class="headerlink" href="#numba.control_flow.control_flow.ControlFlowAnalysis.initialize_symtab" title="Permalink to this definition">¶</a></dt>
+<dd><p>Populate the symbol table with variables and set their renaming status.</p>
+<p>Variables appearing in locals, or arguments typed through the &#8216;jit&#8217;
+decorator are not renameable.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.control_flow.control_flow.ControlFlowAnalysis.mark_assignment">
+<tt class="descname">mark_assignment</tt><big>(</big><em>lhs</em>, <em>rhs=None</em>, <em>assignment=None</em>, <em>warn_unused=True</em><big>)</big><a class="headerlink" href="#numba.control_flow.control_flow.ControlFlowAnalysis.mark_assignment" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.control_flow.control_flow.ControlFlowAnalysis.mark_position">
+<tt class="descname">mark_position</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.control_flow.control_flow.ControlFlowAnalysis.mark_position" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mark position if DOT output is enabled.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.control_flow.control_flow.ControlFlowAnalysis.render_gv">
+<tt class="descname">render_gv</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.control_flow.control_flow.ControlFlowAnalysis.render_gv" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.control_flow.control_flow.ControlFlowAnalysis.set_default_directives">
+<tt class="descname">set_default_directives</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.control_flow.control_flow.ControlFlowAnalysis.set_default_directives" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set some defaults for warnings</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="numba.control_flow.control_flow.ControlFlowAnalysis.source_descr">
+<tt class="descname">source_descr</tt><em class="property"> = None</em><a class="headerlink" href="#numba.control_flow.control_flow.ControlFlowAnalysis.source_descr" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.control_flow.control_flow.ControlFlowAnalysis.visit">
+<tt class="descname">visit</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.control_flow.control_flow.ControlFlowAnalysis.visit" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.control_flow.control_flow.ControlFlowAnalysis.visit_Assign">
+<tt class="descname">visit_Assign</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.control_flow.control_flow.ControlFlowAnalysis.visit_Assign" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.control_flow.control_flow.ControlFlowAnalysis.visit_AugAssign">
+<tt class="descname">visit_AugAssign</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.control_flow.control_flow.ControlFlowAnalysis.visit_AugAssign" title="Permalink to this definition">¶</a></dt>
+<dd><p>Inplace assignment.</p>
+<p>Resolve a += b to a = a + b. Set &#8216;inplace_op&#8217; attribute of the
+Assign node so later stages may recognize inplace assignment.</p>
+<p>Do this now, so that we can correctly mark the RHS reference.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.control_flow.control_flow.ControlFlowAnalysis.visit_Break">
+<tt class="descname">visit_Break</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.control_flow.control_flow.ControlFlowAnalysis.visit_Break" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.control_flow.control_flow.ControlFlowAnalysis.visit_Continue">
+<tt class="descname">visit_Continue</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.control_flow.control_flow.ControlFlowAnalysis.visit_Continue" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.control_flow.control_flow.ControlFlowAnalysis.visit_DictComp">
+<tt class="descname">visit_DictComp</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.control_flow.control_flow.ControlFlowAnalysis.visit_DictComp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.control_flow.control_flow.ControlFlowAnalysis.visit_For">
+<tt class="descname">visit_For</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.control_flow.control_flow.ControlFlowAnalysis.visit_For" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.control_flow.control_flow.ControlFlowAnalysis.visit_FunctionDef">
+<tt class="descname">visit_FunctionDef</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.control_flow.control_flow.ControlFlowAnalysis.visit_FunctionDef" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.control_flow.control_flow.ControlFlowAnalysis.visit_GeneratorExp">
+<tt class="descname">visit_GeneratorExp</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.control_flow.control_flow.ControlFlowAnalysis.visit_GeneratorExp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.control_flow.control_flow.ControlFlowAnalysis.visit_If">
+<tt class="descname">visit_If</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.control_flow.control_flow.ControlFlowAnalysis.visit_If" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.control_flow.control_flow.ControlFlowAnalysis.visit_ImportFrom">
+<tt class="descname">visit_ImportFrom</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.control_flow.control_flow.ControlFlowAnalysis.visit_ImportFrom" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.control_flow.control_flow.ControlFlowAnalysis.visit_ListComp">
+<tt class="descname">visit_ListComp</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.control_flow.control_flow.ControlFlowAnalysis.visit_ListComp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rewrite list comprehensions to the equivalent for loops.</p>
+<p>AST syntax:</p>
+<blockquote>
+<div><p>ListComp(expr elt, comprehension* generators)
+comprehension = (expr target, expr iter, expr* ifs)</p>
+<p>&#8216;ifs&#8217; represent a chain of ANDs</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.control_flow.control_flow.ControlFlowAnalysis.visit_MaybeUnusedNode">
+<tt class="descname">visit_MaybeUnusedNode</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.control_flow.control_flow.ControlFlowAnalysis.visit_MaybeUnusedNode" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.control_flow.control_flow.ControlFlowAnalysis.visit_Name">
+<tt class="descname">visit_Name</tt><big>(</big><em>old_node</em><big>)</big><a class="headerlink" href="#numba.control_flow.control_flow.ControlFlowAnalysis.visit_Name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.control_flow.control_flow.ControlFlowAnalysis.visit_Print">
+<tt class="descname">visit_Print</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.control_flow.control_flow.ControlFlowAnalysis.visit_Print" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.control_flow.control_flow.ControlFlowAnalysis.visit_Raise">
+<tt class="descname">visit_Raise</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.control_flow.control_flow.ControlFlowAnalysis.visit_Raise" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.control_flow.control_flow.ControlFlowAnalysis.visit_Return">
+<tt class="descname">visit_Return</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.control_flow.control_flow.ControlFlowAnalysis.visit_Return" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.control_flow.control_flow.ControlFlowAnalysis.visit_SetComp">
+<tt class="descname">visit_SetComp</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.control_flow.control_flow.ControlFlowAnalysis.visit_SetComp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.control_flow.control_flow.ControlFlowAnalysis.visit_Suite">
+<tt class="descname">visit_Suite</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.control_flow.control_flow.ControlFlowAnalysis.visit_Suite" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.control_flow.control_flow.ControlFlowAnalysis.visit_While">
+<tt class="descname">visit_While</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.control_flow.control_flow.ControlFlowAnalysis.visit_While" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.control_flow.control_flow.ControlFlowAnalysis.visit_With">
+<tt class="descname">visit_With</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.control_flow.control_flow.ControlFlowAnalysis.visit_With" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.control_flow.control_flow.ControlFlowAnalysis.visit_arg">
+<tt class="descname">visit_arg</tt><big>(</big><em>old_node</em>, <em>lineno</em>, <em>col_offset</em><big>)</big><a class="headerlink" href="#numba.control_flow.control_flow.ControlFlowAnalysis.visit_arg" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.control_flow.control_flow.ExitBlock">
+<em class="property">class </em><tt class="descclassname">numba.control_flow.control_flow.</tt><tt class="descname">ExitBlock</tt><big>(</big><em>id</em>, <em>label='empty'</em>, <em>have_code=True</em>, <em>is_expr=False</em>, <em>is_exit=False</em>, <em>pos=None</em>, <em>is_fabricated=False</em><big>)</big><a class="headerlink" href="#numba.control_flow.control_flow.ExitBlock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.control_flow.control_flow.ControlBlock" title="numba.control_flow.control_flow.ControlBlock"><tt class="xref py py-class docutils literal"><span class="pre">numba.control_flow.control_flow.ControlBlock</span></tt></a></p>
+<p>Non-empty exit point block.</p>
+<dl class="method">
+<dt id="numba.control_flow.control_flow.ExitBlock.empty">
+<tt class="descname">empty</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.control_flow.control_flow.ExitBlock.empty" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.control_flow.control_flow.FuncDefExprNode">
+<em class="property">class </em><tt class="descclassname">numba.control_flow.control_flow.</tt><tt class="descname">FuncDefExprNode</tt><big>(</big><em>**kwargs</em><big>)</big><a class="headerlink" href="#numba.control_flow.control_flow.FuncDefExprNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="numba.nodes.html#numba.nodes.basenodes.Node" title="numba.nodes.basenodes.Node"><tt class="xref py py-class docutils literal"><span class="pre">numba.nodes.basenodes.Node</span></tt></a></p>
+<p>Wraps an inner function node until the closure code kicks in.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-numba.control_flow.debug">
+<span id="debug-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">debug</span></tt> Module<a class="headerlink" href="#module-numba.control_flow.debug" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-numba.control_flow.delete_cfnode">
+<span id="delete-cfnode-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">delete_cfnode</span></tt> Module<a class="headerlink" href="#module-numba.control_flow.delete_cfnode" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="numba.control_flow.delete_cfnode.DeleteStatement">
+<em class="property">class </em><tt class="descclassname">numba.control_flow.delete_cfnode.</tt><tt class="descname">DeleteStatement</tt><big>(</big><em>flow</em><big>)</big><a class="headerlink" href="#numba.control_flow.delete_cfnode.DeleteStatement" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="numba.html#numba.visitors.NumbaVisitor" title="numba.visitors.NumbaVisitor"><tt class="xref py py-class docutils literal"><span class="pre">numba.visitors.NumbaVisitor</span></tt></a></p>
+<p>Delete a (compound) statement that contains basic blocks.
+The statement must be at the start of the entry block.</p>
+<p>idom: the immediate dominator of</p>
+<dl class="method">
+<dt id="numba.control_flow.delete_cfnode.DeleteStatement.visit_ControlBlock">
+<tt class="descname">visit_ControlBlock</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.control_flow.delete_cfnode.DeleteStatement.visit_ControlBlock" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.control_flow.delete_cfnode.DeleteStatement.visit_For">
+<tt class="descname">visit_For</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.control_flow.delete_cfnode.DeleteStatement.visit_For" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.control_flow.delete_cfnode.DeleteStatement.visit_If">
+<tt class="descname">visit_If</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.control_flow.delete_cfnode.DeleteStatement.visit_If" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.control_flow.delete_cfnode.DeleteStatement.visit_Name">
+<tt class="descname">visit_Name</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.control_flow.delete_cfnode.DeleteStatement.visit_Name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.control_flow.delete_cfnode.DeleteStatement.visit_While">
+<tt class="descname">visit_While</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.control_flow.delete_cfnode.DeleteStatement.visit_While" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-numba.control_flow.graphviz">
+<span id="graphviz-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">graphviz</span></tt> Module<a class="headerlink" href="#module-numba.control_flow.graphviz" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="numba.control_flow.graphviz.GV">
+<em class="property">class </em><tt class="descclassname">numba.control_flow.graphviz.</tt><tt class="descname">GV</tt><big>(</big><em>name</em>, <em>flow</em><big>)</big><a class="headerlink" href="#numba.control_flow.graphviz.GV" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Graphviz DOT renderer.</p>
+<dl class="method">
+<dt id="numba.control_flow.graphviz.GV.format_phis">
+<tt class="descname">format_phis</tt><big>(</big><em>block</em><big>)</big><a class="headerlink" href="#numba.control_flow.graphviz.GV.format_phis" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.control_flow.graphviz.GV.render">
+<tt class="descname">render</tt><big>(</big><em>fp</em>, <em>ctx</em>, <em>annotate_defs=False</em><big>)</big><a class="headerlink" href="#numba.control_flow.graphviz.GV.render" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.control_flow.graphviz.GVContext">
+<em class="property">class </em><tt class="descclassname">numba.control_flow.graphviz.</tt><tt class="descname">GVContext</tt><a class="headerlink" href="#numba.control_flow.graphviz.GVContext" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Graphviz subgraph object.</p>
+<dl class="method">
+<dt id="numba.control_flow.graphviz.GVContext.add">
+<tt class="descname">add</tt><big>(</big><em>child</em><big>)</big><a class="headerlink" href="#numba.control_flow.graphviz.GVContext.add" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.control_flow.graphviz.GVContext.escape">
+<tt class="descname">escape</tt><big>(</big><em>text</em><big>)</big><a class="headerlink" href="#numba.control_flow.graphviz.GVContext.escape" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.control_flow.graphviz.GVContext.extract_sources">
+<tt class="descname">extract_sources</tt><big>(</big><em>block</em><big>)</big><a class="headerlink" href="#numba.control_flow.graphviz.GVContext.extract_sources" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.control_flow.graphviz.GVContext.nodeid">
+<tt class="descname">nodeid</tt><big>(</big><em>block</em><big>)</big><a class="headerlink" href="#numba.control_flow.graphviz.GVContext.nodeid" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.control_flow.graphviz.GVContext.render">
+<tt class="descname">render</tt><big>(</big><em>fp</em>, <em>name</em>, <em>annotate_defs=False</em><big>)</big><a class="headerlink" href="#numba.control_flow.graphviz.GVContext.render" title="Permalink to this definition">¶</a></dt>
+<dd><p>Render graphviz dot graph</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.control_flow.graphviz.get_png_output_name">
+<tt class="descclassname">numba.control_flow.graphviz.</tt><tt class="descname">get_png_output_name</tt><big>(</big><em>dot_output</em><big>)</big><a class="headerlink" href="#numba.control_flow.graphviz.get_png_output_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.control_flow.graphviz.render_gv">
+<tt class="descclassname">numba.control_flow.graphviz.</tt><tt class="descname">render_gv</tt><big>(</big><em>node</em>, <em>gv_ctx</em>, <em>flow</em>, <em>current_directives</em><big>)</big><a class="headerlink" href="#numba.control_flow.graphviz.render_gv" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.control_flow.graphviz.write_dotfile">
+<tt class="descclassname">numba.control_flow.graphviz.</tt><tt class="descname">write_dotfile</tt><big>(</big><em>current_directives</em>, <em>dot_output</em>, <em>gv_ctx</em><big>)</big><a class="headerlink" href="#numba.control_flow.graphviz.write_dotfile" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.control_flow.graphviz.write_image">
+<tt class="descclassname">numba.control_flow.graphviz.</tt><tt class="descname">write_image</tt><big>(</big><em>dot_output</em><big>)</big><a class="headerlink" href="#numba.control_flow.graphviz.write_image" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="reaching-module">
+<h2><tt class="xref py py-mod docutils literal"><span class="pre">reaching</span></tt> Module<a class="headerlink" href="#reaching-module" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-numba.control_flow.reaching"></span><dl class="class">
+<dt id="numba.control_flow.reaching.CFWarner">
+<em class="property">class </em><tt class="descclassname">numba.control_flow.reaching.</tt><tt class="descname">CFWarner</tt><big>(</big><em>message_collection</em>, <em>directives</em><big>)</big><a class="headerlink" href="#numba.control_flow.reaching.CFWarner" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Generate control flow related warnings.</p>
+<dl class="method">
+<dt id="numba.control_flow.reaching.CFWarner.check_uninitialized">
+<tt class="descname">check_uninitialized</tt><big>(</big><em>references</em><big>)</big><a class="headerlink" href="#numba.control_flow.reaching.CFWarner.check_uninitialized" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find uninitialized references and cf-hints</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.control_flow.reaching.CFWarner.warn_unreachable">
+<tt class="descname">warn_unreachable</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.control_flow.reaching.CFWarner.warn_unreachable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate a warning for unreachable code</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.control_flow.reaching.CFWarner.warn_unused_entries">
+<tt class="descname">warn_unused_entries</tt><big>(</big><em>flow</em><big>)</big><a class="headerlink" href="#numba.control_flow.reaching.CFWarner.warn_unused_entries" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate warnings for unused variables or arguments. This is issues when
+an argument or variable is unused entirely in the function.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.control_flow.reaching.CFWarner.warn_unused_result">
+<tt class="descname">warn_unused_result</tt><big>(</big><em>assignments</em><big>)</big><a class="headerlink" href="#numba.control_flow.reaching.CFWarner.warn_unused_result" title="Permalink to this definition">¶</a></dt>
+<dd><p>Warn about unused variable definitions. This is issued for individual
+definitions, e.g.</p>
+<blockquote>
+<div>i = 0   # this definition generates a warning
+i = 1
+print i</div></blockquote>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.control_flow.reaching.allow_null">
+<tt class="descclassname">numba.control_flow.reaching.</tt><tt class="descname">allow_null</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.control_flow.reaching.allow_null" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.control_flow.reaching.check_definitions">
+<tt class="descclassname">numba.control_flow.reaching.</tt><tt class="descname">check_definitions</tt><big>(</big><em>env</em>, <em>flow</em>, <em>warner</em><big>)</big><a class="headerlink" href="#numba.control_flow.reaching.check_definitions" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-numba.control_flow.ssa">
+<span id="ssa-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">ssa</span></tt> Module<a class="headerlink" href="#module-numba.control_flow.ssa" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="numba.control_flow.ssa.handle_phis">
+<tt class="descclassname">numba.control_flow.ssa.</tt><tt class="descname">handle_phis</tt><big>(</big><em>flow</em><big>)</big><a class="headerlink" href="#numba.control_flow.ssa.handle_phis" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update all our phi nodes after translation is done and all Variables
+have their llvm values set.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.control_flow.ssa.iter_phi_vars">
+<tt class="descclassname">numba.control_flow.ssa.</tt><tt class="descname">iter_phi_vars</tt><big>(</big><em>flow</em><big>)</big><a class="headerlink" href="#numba.control_flow.ssa.iter_phi_vars" title="Permalink to this definition">¶</a></dt>
+<dd><p>Iterate over all phi nodes</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.control_flow.ssa.iter_phis">
+<tt class="descclassname">numba.control_flow.ssa.</tt><tt class="descname">iter_phis</tt><big>(</big><em>flow</em><big>)</big><a class="headerlink" href="#numba.control_flow.ssa.iter_phis" title="Permalink to this definition">¶</a></dt>
+<dd><p>Iterate over all phi nodes</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.control_flow.ssa.kill_phi">
+<tt class="descclassname">numba.control_flow.ssa.</tt><tt class="descname">kill_phi</tt><big>(</big><em>block</em>, <em>phi</em><big>)</big><a class="headerlink" href="#numba.control_flow.ssa.kill_phi" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.control_flow.ssa.kill_unused_phis">
+<tt class="descclassname">numba.control_flow.ssa.</tt><tt class="descname">kill_unused_phis</tt><big>(</big><em>cfg</em><big>)</big><a class="headerlink" href="#numba.control_flow.ssa.kill_unused_phis" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used before running type inference.</p>
+<p>Kill phis which are not referenced. We need to do this bottom-up,
+i.e. in reverse topological dominator-tree order, since in SSA
+a definition always lexically precedes a reference.</p>
+<p>This is important, since it kills any unnecessary promotions (e.g.
+ones to object, which LLVM wouldn&#8217;t be able to optimize out).</p>
+<p>TODO: Kill phi cycles, or do reachability analysis before inserting phis.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.control_flow.ssa.process_incoming">
+<tt class="descclassname">numba.control_flow.ssa.</tt><tt class="descname">process_incoming</tt><big>(</big><em>phi_node</em><big>)</big><a class="headerlink" href="#numba.control_flow.ssa.process_incoming" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add all incoming phis to the phi instruction.</p>
+<p>Handle promotions by using the promoted value from the incoming block.
+E.g.</p>
+<blockquote>
+<div><p>bb0: if C:
+bb1:     x = 2</p>
+<blockquote>
+<div>else:</div></blockquote>
+<p>bb2:     x = 2.0</p>
+<p>bb3: x = phi(x_bb1, x_bb2)</p>
+</div></blockquote>
+<p>has a promotion for &#8216;x&#8217; in basic block 1 (from int to float).</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.control_flow.ssa.specialize_phi">
+<tt class="descclassname">numba.control_flow.ssa.</tt><tt class="descname">specialize_phi</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.control_flow.ssa.specialize_phi" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.control_flow.ssa.specialize_ssa">
+<tt class="descclassname">numba.control_flow.ssa.</tt><tt class="descname">specialize_ssa</tt><big>(</big><em>funcdef</em><big>)</big><a class="headerlink" href="#numba.control_flow.ssa.specialize_ssa" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle phi nodes:</p>
+<ol class="arabic">
+<li><p class="first">Handle incoming variables which are not initialized. Set
+incoming_variable.uninitialized_value to a constant &#8216;bad&#8217;
+value (e.g. 0xbad for integers, NaN for floats, NULL for
+objects)</p>
+</li>
+<li><p class="first">Handle incoming variables which need promotions. An incoming
+variable needs a promotion if it has a different type than
+the the phi. The promotion happens in each ancestor block that
+defines the variable which reaches us.</p>
+<p>Promotions are set separately in the symbol table, since the
+ancestor may not be our immediate parent, we cannot introduce
+a rename and look up the latest version since there may be
+multiple different promotions. So during codegen, we first
+check whether incoming_type == phi_type, and otherwise we
+look up the promotion in the parent block or an ancestor.</p>
+</li>
+</ol>
+</dd></dl>
+
+</div>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul class="simple">
+</ul>
+</div>
+</div>
+</div>
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        
+      </div><!-- /row -->
+
+      <!-- row -->
+      <div class="row-fluid">
+<div class="related navbar ">
+  <div class="navbar-inner">
+    <ul class="nav pull-right">
+      
+        <li><a href="../genindex.html" title="General Index" >index</a></li>
+        <li><a href="../py-modindex.html" title="Python Module Index" >modules</a></li>
+        <li><a href="numba.external.html" title="external Package" >next</a></li>
+        <li><a href="numba.containers.html" title="containers Package" >previous</a></li>
+        <li><a href="../index.html">numba 0.10.0 documentation</a></li>
+        <li><a href="modules.html" >Numba Module Reference</a></li>
+        <li><a href="numba.html" >numba Package</a></li> 
+      
+    </ul>
+  </div>
+</div>
+      </div><!-- /row -->
+
+      <!-- footer -->
+      <footer>
+          &copy; Copyright 2012-2013, Continuum Analytics.
+        Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+      </footer>
+      <!-- /footer -->
+
+    </div>
+    <!-- /container -->
+
+  </body>
+</html>

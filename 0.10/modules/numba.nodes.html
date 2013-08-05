@@ -1,0 +1,1333 @@
+
+<!DOCTYPE html>
+
+
+
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+    <title>nodes Package &mdash; numba 0.10.0 documentation</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    
+<link rel="stylesheet" href="../_static/css/basicstrap-base.css" type="text/css" />
+<link rel="stylesheet" href="../_static/css/bootstrap.min.css" type="text/css" />
+<link rel="stylesheet" href="../_static/css/font-awesome.min.css">
+<!--[if IE 7]>
+<link rel="stylesheet" href="../_static/css/font-awesome-ie7.min.css">
+<![endif]-->
+<style type="text/css">
+  body {
+    padding-top: 60px;
+    padding-bottom: 40px;
+  }
+}
+</style>
+<link rel="stylesheet" href="../_static/basicstrap.css" type="text/css" />
+<link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+<link rel="stylesheet" href="../_static/css/bootstrap-responsive.min.css" type="text/css" />
+    
+<script type="text/javascript">
+  var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:    '../',
+            VERSION:     '0.10.0',
+            COLLAPSE_INDEX: false,
+            FILE_SUFFIX: '.html',
+            HAS_SOURCE:  true
+  };
+</script>
+<script type="text/javascript" src="../_static/js/jquery.min.js"></script>
+<script type="text/javascript" src="../_static/underscore.js"></script>
+<script type="text/javascript" src="../_static/doctools.js"></script>
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/javascript" src="../_static/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+  $(document).ready(function(){
+    $('.show-sidebar').click(function(e) {
+       e.preventDefault();
+       if ($(".show-sidebar").html() == "Open Table Of Contents") {
+          $('.for-mobile').removeClass('hidden-phone');
+          $(".show-sidebar").html("Close Table Of Contents");
+       } else {
+          $(".show-sidebar").html("Open Table Of Contents");
+       }
+    });
+  });
+</script>
+    <link rel="top" title="numba 0.10.0 documentation" href="../index.html" />
+    <link rel="up" title="numba Package" href="numba.html" />
+    <link rel="next" title="pycc Package" href="numba.pycc.html" />
+    <link rel="prev" title="intrinsic Package" href="numba.intrinsic.html" /> 
+  </head>
+  <body>
+    <div class="navbar navbar-fixed-top ">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="../index.html">numba 0.10.0 documentation</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav pull-right">
+              
+                <li>
+                <a href="../genindex.html" title="General Index" accesskey="I">index</a>
+                </li>
+                <li>
+                <a href="../py-modindex.html" title="Python Module Index" >modules</a>
+                </li>
+                <li>
+                <a href="numba.pycc.html" title="pycc Package" accesskey="N">next</a>
+                </li>
+                <li>
+                <a href="numba.intrinsic.html" title="intrinsic Package" accesskey="P">previous</a>
+                </li>
+                <li>
+                <a href="modules.html" >Numba Module Reference</a>
+                </li>
+                <li>
+                <a href="numba.html" accesskey="U">numba Package</a>
+                </li>
+              
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <!-- container -->
+    <div class="container-fluid">
+
+
+      
+      <div class="row-fluid hidden-desktop hidden-tablet">
+      
+<div class="span3 ">
+  <a class="visible-phone btn btn-small show-sidebar" data-toggle="collapse" data-target=".for-mobile">Open Table Of Contents</a>
+  <div class="for-mobile sidebar hidden-phone">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">nodes Package</a><ul>
+<li><a class="reference internal" href="#id1"><tt class="docutils literal"><span class="pre">nodes</span></tt> Package</a></li>
+<li><a class="reference internal" href="#module-numba.nodes.basenodes"><tt class="docutils literal"><span class="pre">basenodes</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-numba.nodes.bitwise"><tt class="docutils literal"><span class="pre">bitwise</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-numba.nodes.callnodes"><tt class="docutils literal"><span class="pre">callnodes</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-numba.nodes.cfnodes"><tt class="docutils literal"><span class="pre">cfnodes</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-numba.nodes.closurenodes"><tt class="docutils literal"><span class="pre">closurenodes</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-numba.nodes.coercionnodes"><tt class="docutils literal"><span class="pre">coercionnodes</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-numba.nodes.constnodes"><tt class="docutils literal"><span class="pre">constnodes</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-numba.nodes.excnodes"><tt class="docutils literal"><span class="pre">excnodes</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-numba.nodes.extnodes"><tt class="docutils literal"><span class="pre">extnodes</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-numba.nodes.llvmnodes"><tt class="docutils literal"><span class="pre">llvmnodes</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-numba.nodes.metadata"><tt class="docutils literal"><span class="pre">metadata</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-numba.nodes.numpynodes"><tt class="docutils literal"><span class="pre">numpynodes</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-numba.nodes.objectnodes"><tt class="docutils literal"><span class="pre">objectnodes</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-numba.nodes.pointernodes"><tt class="docutils literal"><span class="pre">pointernodes</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-numba.nodes.structnodes"><tt class="docutils literal"><span class="pre">structnodes</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-numba.nodes.tempnodes"><tt class="docutils literal"><span class="pre">tempnodes</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-numba.nodes.usernode"><tt class="docutils literal"><span class="pre">usernode</span></tt> Module</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="numba.intrinsic.html"
+                        title="previous chapter">intrinsic Package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="numba.pycc.html"
+                        title="next chapter">pycc Package</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/modules/numba.nodes.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox">
+  <h3>Quick search</h3>
+  <form class="search form-search" action="../search.html" method="get">
+      <div class="input-append">
+        <input type="text" class="search-query" name="q">
+        <input type="submit" class="btn" value="Go" />
+      </div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+  </div>
+</div>
+      </div>
+      
+
+      <!-- row -->
+      <div class="row-fluid">
+         
+<div class="span3 visible-desktop visible-tablet">
+  <div class=" sidebar hidden-phone">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">nodes Package</a><ul>
+<li><a class="reference internal" href="#id1"><tt class="docutils literal"><span class="pre">nodes</span></tt> Package</a></li>
+<li><a class="reference internal" href="#module-numba.nodes.basenodes"><tt class="docutils literal"><span class="pre">basenodes</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-numba.nodes.bitwise"><tt class="docutils literal"><span class="pre">bitwise</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-numba.nodes.callnodes"><tt class="docutils literal"><span class="pre">callnodes</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-numba.nodes.cfnodes"><tt class="docutils literal"><span class="pre">cfnodes</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-numba.nodes.closurenodes"><tt class="docutils literal"><span class="pre">closurenodes</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-numba.nodes.coercionnodes"><tt class="docutils literal"><span class="pre">coercionnodes</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-numba.nodes.constnodes"><tt class="docutils literal"><span class="pre">constnodes</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-numba.nodes.excnodes"><tt class="docutils literal"><span class="pre">excnodes</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-numba.nodes.extnodes"><tt class="docutils literal"><span class="pre">extnodes</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-numba.nodes.llvmnodes"><tt class="docutils literal"><span class="pre">llvmnodes</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-numba.nodes.metadata"><tt class="docutils literal"><span class="pre">metadata</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-numba.nodes.numpynodes"><tt class="docutils literal"><span class="pre">numpynodes</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-numba.nodes.objectnodes"><tt class="docutils literal"><span class="pre">objectnodes</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-numba.nodes.pointernodes"><tt class="docutils literal"><span class="pre">pointernodes</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-numba.nodes.structnodes"><tt class="docutils literal"><span class="pre">structnodes</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-numba.nodes.tempnodes"><tt class="docutils literal"><span class="pre">tempnodes</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-numba.nodes.usernode"><tt class="docutils literal"><span class="pre">usernode</span></tt> Module</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="numba.intrinsic.html"
+                        title="previous chapter">intrinsic Package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="numba.pycc.html"
+                        title="next chapter">pycc Package</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/modules/numba.nodes.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox">
+  <h3>Quick search</h3>
+  <form class="search form-search" action="../search.html" method="get">
+      <div class="input-append">
+        <input type="text" class="search-query" name="q">
+        <input type="submit" class="btn" value="Go" />
+      </div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+  </div>
+</div> 
+        
+
+        <div class="span9">
+          <div class="document">
+            <div class="documentwrapper">
+              <div class="bodywrapper">
+                <div class="body">
+                  
+  <div class="section" id="nodes-package">
+<h1>nodes Package<a class="headerlink" href="#nodes-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id1">
+<h2><tt class="xref py py-mod docutils literal"><span class="pre">nodes</span></tt> Package<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-numba.nodes"></span><dl class="function">
+<dt id="numba.nodes.badval">
+<tt class="descclassname">numba.nodes.</tt><tt class="descname">badval</tt><big>(</big><em>type</em><big>)</big><a class="headerlink" href="#numba.nodes.badval" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.nodes.call_obj">
+<tt class="descclassname">numba.nodes.</tt><tt class="descname">call_obj</tt><big>(</big><em>call_node</em>, <em>py_func=None</em><big>)</big><a class="headerlink" href="#numba.nodes.call_obj" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.nodes.call_pyfunc">
+<tt class="descclassname">numba.nodes.</tt><tt class="descname">call_pyfunc</tt><big>(</big><em>py_func</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.nodes.call_pyfunc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate an object call for a python function given during compilation time</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.nodes.const">
+<tt class="descclassname">numba.nodes.</tt><tt class="descname">const</tt><big>(</big><em>obj</em>, <em>type</em><big>)</big><a class="headerlink" href="#numba.nodes.const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.nodes.index">
+<tt class="descclassname">numba.nodes.</tt><tt class="descname">index</tt><big>(</big><em>node</em>, <em>constant_index</em>, <em>load=True</em>, <em>type=int</em><big>)</big><a class="headerlink" href="#numba.nodes.index" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.nodes.inject_print">
+<tt class="descclassname">numba.nodes.</tt><tt class="descname">inject_print</tt><big>(</big><em>context</em>, <em>module</em>, <em>node</em><big>)</big><a class="headerlink" href="#numba.nodes.inject_print" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.nodes.is_name">
+<tt class="descclassname">numba.nodes.</tt><tt class="descname">is_name</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.nodes.is_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns whether the given node is a Name</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.nodes.objconst">
+<tt class="descclassname">numba.nodes.</tt><tt class="descname">objconst</tt><big>(</big><em>obj</em><big>)</big><a class="headerlink" href="#numba.nodes.objconst" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.nodes.print_">
+<tt class="descclassname">numba.nodes.</tt><tt class="descname">print_</tt><big>(</big><em>env</em>, <em>node</em><big>)</big><a class="headerlink" href="#numba.nodes.print_" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.nodes.print_llvm">
+<tt class="descclassname">numba.nodes.</tt><tt class="descname">print_llvm</tt><big>(</big><em>env</em>, <em>type</em>, <em>llvm_value</em><big>)</big><a class="headerlink" href="#numba.nodes.print_llvm" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.nodes.typednode">
+<tt class="descclassname">numba.nodes.</tt><tt class="descname">typednode</tt><big>(</big><em>node</em>, <em>type</em><big>)</big><a class="headerlink" href="#numba.nodes.typednode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set a type and simple typed variable on a node</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-numba.nodes.basenodes">
+<span id="basenodes-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">basenodes</span></tt> Module<a class="headerlink" href="#module-numba.nodes.basenodes" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="numba.nodes.basenodes.CloneNode">
+<em class="property">class </em><tt class="descclassname">numba.nodes.basenodes.</tt><tt class="descname">CloneNode</tt><big>(</big><em>node</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#numba.nodes.basenodes.CloneNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.nodes.basenodes.ExprNode" title="numba.nodes.basenodes.ExprNode"><tt class="xref py py-class docutils literal"><span class="pre">numba.nodes.basenodes.ExprNode</span></tt></a></p>
+<p>Clone a CloneableNode. This allows the node&#8217;s sub-expressions to be
+re-used without re-evaluating them.</p>
+<p>The CloneableNode must be evaluated before the CloneNode is evaluated!</p>
+<dl class="attribute">
+<dt id="numba.nodes.basenodes.CloneNode.clone">
+<tt class="descname">clone</tt><a class="headerlink" href="#numba.nodes.basenodes.CloneNode.clone" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.basenodes.CloneableNode">
+<em class="property">class </em><tt class="descclassname">numba.nodes.basenodes.</tt><tt class="descname">CloneableNode</tt><big>(</big><em>node</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#numba.nodes.basenodes.CloneableNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.nodes.basenodes.ExprNode" title="numba.nodes.basenodes.ExprNode"><tt class="xref py py-class docutils literal"><span class="pre">numba.nodes.basenodes.ExprNode</span></tt></a></p>
+<p>Create a node that can be cloned. This allows sub-expressions to be
+re-used without re-evaluating them.</p>
+<dl class="attribute">
+<dt id="numba.nodes.basenodes.CloneableNode.clone">
+<tt class="descname">clone</tt><a class="headerlink" href="#numba.nodes.basenodes.CloneableNode.clone" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.basenodes.ExprNode">
+<em class="property">class </em><tt class="descclassname">numba.nodes.basenodes.</tt><tt class="descname">ExprNode</tt><big>(</big><em>**kwargs</em><big>)</big><a class="headerlink" href="#numba.nodes.basenodes.ExprNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.nodes.basenodes.Node" title="numba.nodes.basenodes.Node"><tt class="xref py py-class docutils literal"><span class="pre">numba.nodes.basenodes.Node</span></tt></a></p>
+<p>Node that is an expression.</p>
+<dl class="attribute">
+<dt id="numba.nodes.basenodes.ExprNode.cloneable">
+<tt class="descname">cloneable</tt><a class="headerlink" href="#numba.nodes.basenodes.ExprNode.cloneable" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.nodes.basenodes.ExprNode.coerce">
+<tt class="descname">coerce</tt><big>(</big><em>dst_type</em><big>)</big><a class="headerlink" href="#numba.nodes.basenodes.ExprNode.coerce" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="numba.nodes.basenodes.ExprNode.variable">
+<tt class="descname">variable</tt><a class="headerlink" href="#numba.nodes.basenodes.ExprNode.variable" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.basenodes.ExpressionNode">
+<em class="property">class </em><tt class="descclassname">numba.nodes.basenodes.</tt><tt class="descname">ExpressionNode</tt><big>(</big><em>stmts</em>, <em>expr</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#numba.nodes.basenodes.ExpressionNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.nodes.basenodes.ExprNode" title="numba.nodes.basenodes.ExprNode"><tt class="xref py py-class docutils literal"><span class="pre">numba.nodes.basenodes.ExprNode</span></tt></a></p>
+<p>Node that allows an expression to execute a bunch of statements first.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.basenodes.FunctionWrapperNode">
+<em class="property">class </em><tt class="descclassname">numba.nodes.basenodes.</tt><tt class="descname">FunctionWrapperNode</tt><big>(</big><em>wrapped_function</em>, <em>signature</em>, <em>orig_py_func</em>, <em>fake_pyfunc</em>, <em>orig_py_func_name</em><big>)</big><a class="headerlink" href="#numba.nodes.basenodes.FunctionWrapperNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.nodes.basenodes.Node" title="numba.nodes.basenodes.Node"><tt class="xref py py-class docutils literal"><span class="pre">numba.nodes.basenodes.Node</span></tt></a></p>
+<p>This code is a wrapper function callable from Python using NumbaFunction
+(see numba/numbafunction.c):</p>
+<blockquote>
+<div>PyObject <em>(</em>)(PyObject <a href="#id2"><span class="problematic" id="id3">*</span></a>self, PyObject <a href="#id4"><span class="problematic" id="id5">*</span></a>args)</div></blockquote>
+<p>It unpacks the tuple to native types, calls the wrapped function, and
+coerces the return type back to an object.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.basenodes.Name">
+<em class="property">class </em><tt class="descclassname">numba.nodes.basenodes.</tt><tt class="descname">Name</tt><big>(</big><em>id</em>, <em>ctx</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#numba.nodes.basenodes.Name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">_ast.Name</span></tt>, <a class="reference internal" href="#numba.nodes.basenodes.ExprNode" title="numba.nodes.basenodes.ExprNode"><tt class="xref py py-class docutils literal"><span class="pre">numba.nodes.basenodes.ExprNode</span></tt></a></p>
+<dl class="attribute">
+<dt id="numba.nodes.basenodes.Name.cf_maybe_null">
+<tt class="descname">cf_maybe_null</tt><em class="property"> = False</em><a class="headerlink" href="#numba.nodes.basenodes.Name.cf_maybe_null" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="numba.nodes.basenodes.Name.raise_unbound_node">
+<tt class="descname">raise_unbound_node</tt><em class="property"> = None</em><a class="headerlink" href="#numba.nodes.basenodes.Name.raise_unbound_node" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.basenodes.Node">
+<em class="property">class </em><tt class="descclassname">numba.nodes.basenodes.</tt><tt class="descname">Node</tt><big>(</big><em>**kwargs</em><big>)</big><a class="headerlink" href="#numba.nodes.basenodes.Node" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">_ast.AST</span></tt></p>
+<p>Superclass for Numba AST nodes</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.basenodes.WithNoPythonNode">
+<em class="property">class </em><tt class="descclassname">numba.nodes.basenodes.</tt><tt class="descname">WithNoPythonNode</tt><big>(</big><em>**kwargs</em><big>)</big><a class="headerlink" href="#numba.nodes.basenodes.WithNoPythonNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.nodes.basenodes.WithPythonNode" title="numba.nodes.basenodes.WithPythonNode"><tt class="xref py py-class docutils literal"><span class="pre">numba.nodes.basenodes.WithPythonNode</span></tt></a></p>
+<p>with nopython: ...</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.basenodes.WithPythonNode">
+<em class="property">class </em><tt class="descclassname">numba.nodes.basenodes.</tt><tt class="descname">WithPythonNode</tt><big>(</big><em>**kwargs</em><big>)</big><a class="headerlink" href="#numba.nodes.basenodes.WithPythonNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.nodes.basenodes.Node" title="numba.nodes.basenodes.Node"><tt class="xref py py-class docutils literal"><span class="pre">numba.nodes.basenodes.Node</span></tt></a></p>
+<p>with python: ...</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.nodes.basenodes.is_expr">
+<tt class="descclassname">numba.nodes.basenodes.</tt><tt class="descname">is_expr</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.nodes.basenodes.is_expr" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-numba.nodes.bitwise">
+<span id="bitwise-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">bitwise</span></tt> Module<a class="headerlink" href="#module-numba.nodes.bitwise" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="numba.nodes.bitwise.is_bitwise">
+<tt class="descclassname">numba.nodes.bitwise.</tt><tt class="descname">is_bitwise</tt><big>(</big><em>op</em><big>)</big><a class="headerlink" href="#numba.nodes.bitwise.is_bitwise" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-numba.nodes.callnodes">
+<span id="callnodes-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">callnodes</span></tt> Module<a class="headerlink" href="#module-numba.nodes.callnodes" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="numba.nodes.callnodes.ComplexConjugateNode">
+<em class="property">class </em><tt class="descclassname">numba.nodes.callnodes.</tt><tt class="descname">ComplexConjugateNode</tt><big>(</big><em>complex_node</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#numba.nodes.callnodes.ComplexConjugateNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.nodes.basenodes.ExprNode" title="numba.nodes.basenodes.ExprNode"><tt class="xref py py-class docutils literal"><span class="pre">numba.nodes.basenodes.ExprNode</span></tt></a></p>
+<p>mycomplex.conjugate()</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.callnodes.FunctionCallNode">
+<em class="property">class </em><tt class="descclassname">numba.nodes.callnodes.</tt><tt class="descname">FunctionCallNode</tt><big>(</big><em>signature</em>, <em>args</em>, <em>name=''</em><big>)</big><a class="headerlink" href="#numba.nodes.callnodes.FunctionCallNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.nodes.basenodes.ExprNode" title="numba.nodes.basenodes.ExprNode"><tt class="xref py py-class docutils literal"><span class="pre">numba.nodes.basenodes.ExprNode</span></tt></a></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.callnodes.LLMacroNode">
+<em class="property">class </em><tt class="descclassname">numba.nodes.callnodes.</tt><tt class="descname">LLMacroNode</tt><big>(</big><em>signature</em>, <em>macro</em>, <em>*args</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#numba.nodes.callnodes.LLMacroNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.nodes.callnodes.NativeCallNode" title="numba.nodes.callnodes.NativeCallNode"><tt class="xref py py-class docutils literal"><span class="pre">numba.nodes.callnodes.NativeCallNode</span></tt></a></p>
+<p>Inject a low-level macro in the function at the call site.</p>
+<p>Low-level macros are Python functions that take a FunctionCache
+instance, a LLVM builder instance, and a set of arguments,
+construct LLVM code, and return some kind of LLVM value result.
+The passed signature should reflect the Numba types of the
+expected input parameters, and the type of the resulting value
+(this does not restrict polymorphism at the LLVM type level in the
+macro expansion function).</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.callnodes.LLVMExternalFunctionNode">
+<em class="property">class </em><tt class="descclassname">numba.nodes.callnodes.</tt><tt class="descname">LLVMExternalFunctionNode</tt><big>(</big><em>signature</em>, <em>fname</em><big>)</big><a class="headerlink" href="#numba.nodes.callnodes.LLVMExternalFunctionNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.nodes.basenodes.ExprNode" title="numba.nodes.basenodes.ExprNode"><tt class="xref py py-class docutils literal"><span class="pre">numba.nodes.basenodes.ExprNode</span></tt></a></p>
+<p>For calling an external llvm function where you only have the
+signature and the function name.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.callnodes.LLVMIntrinsicNode">
+<em class="property">class </em><tt class="descclassname">numba.nodes.callnodes.</tt><tt class="descname">LLVMIntrinsicNode</tt><big>(</big><em>signature</em>, <em>args</em>, <em>func_name</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#numba.nodes.callnodes.LLVMIntrinsicNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.nodes.callnodes.NativeCallNode" title="numba.nodes.callnodes.NativeCallNode"><tt class="xref py py-class docutils literal"><span class="pre">numba.nodes.callnodes.NativeCallNode</span></tt></a></p>
+<p>Call an llvm intrinsic function</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.callnodes.MathCallNode">
+<em class="property">class </em><tt class="descclassname">numba.nodes.callnodes.</tt><tt class="descname">MathCallNode</tt><big>(</big><em>signature</em>, <em>args</em>, <em>llvm_func</em>, <em>py_func=None</em>, <em>badval=None</em>, <em>goodval=None</em>, <em>exc_type=None</em>, <em>exc_msg=None</em>, <em>exc_args=None</em>, <em>skip_self=False</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#numba.nodes.callnodes.MathCallNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.nodes.callnodes.NativeCallNode" title="numba.nodes.callnodes.NativeCallNode"><tt class="xref py py-class docutils literal"><span class="pre">numba.nodes.callnodes.NativeCallNode</span></tt></a></p>
+<p>Low level call a libc math function</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.callnodes.NativeCallNode">
+<em class="property">class </em><tt class="descclassname">numba.nodes.callnodes.</tt><tt class="descname">NativeCallNode</tt><big>(</big><em>signature</em>, <em>args</em>, <em>llvm_func</em>, <em>py_func=None</em>, <em>badval=None</em>, <em>goodval=None</em>, <em>exc_type=None</em>, <em>exc_msg=None</em>, <em>exc_args=None</em>, <em>skip_self=False</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#numba.nodes.callnodes.NativeCallNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.nodes.callnodes.FunctionCallNode" title="numba.nodes.callnodes.FunctionCallNode"><tt class="xref py py-class docutils literal"><span class="pre">numba.nodes.callnodes.FunctionCallNode</span></tt></a></p>
+<dl class="method">
+<dt id="numba.nodes.callnodes.NativeCallNode.coerce_args">
+<tt class="descname">coerce_args</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.nodes.callnodes.NativeCallNode.coerce_args" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.callnodes.NativeFunctionCallNode">
+<em class="property">class </em><tt class="descclassname">numba.nodes.callnodes.</tt><tt class="descname">NativeFunctionCallNode</tt><big>(</big><em>signature</em>, <em>function_node</em>, <em>args</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#numba.nodes.callnodes.NativeFunctionCallNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.nodes.callnodes.NativeCallNode" title="numba.nodes.callnodes.NativeCallNode"><tt class="xref py py-class docutils literal"><span class="pre">numba.nodes.callnodes.NativeCallNode</span></tt></a></p>
+<p>Call a function which is given as a node</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.callnodes.ObjectCallNode">
+<em class="property">class </em><tt class="descclassname">numba.nodes.callnodes.</tt><tt class="descname">ObjectCallNode</tt><big>(</big><em>signature</em>, <em>func</em>, <em>args</em>, <em>keywords=None</em>, <em>py_func=None</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#numba.nodes.callnodes.ObjectCallNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.nodes.callnodes.FunctionCallNode" title="numba.nodes.callnodes.FunctionCallNode"><tt class="xref py py-class docutils literal"><span class="pre">numba.nodes.callnodes.FunctionCallNode</span></tt></a></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.callnodes.PointerCallNode">
+<em class="property">class </em><tt class="descclassname">numba.nodes.callnodes.</tt><tt class="descname">PointerCallNode</tt><big>(</big><em>signature</em>, <em>args</em>, <em>pointer</em>, <em>py_func=None</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#numba.nodes.callnodes.PointerCallNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.nodes.callnodes.NativeCallNode" title="numba.nodes.callnodes.NativeCallNode"><tt class="xref py py-class docutils literal"><span class="pre">numba.nodes.callnodes.NativeCallNode</span></tt></a></p>
+<p>Call a ctypes function</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-numba.nodes.cfnodes">
+<span id="cfnodes-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">cfnodes</span></tt> Module<a class="headerlink" href="#module-numba.nodes.cfnodes" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="numba.nodes.cfnodes.FlowNode">
+<em class="property">class </em><tt class="descclassname">numba.nodes.cfnodes.</tt><tt class="descname">FlowNode</tt><big>(</big><em>**kwargs</em><big>)</big><a class="headerlink" href="#numba.nodes.cfnodes.FlowNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.nodes.basenodes.Node" title="numba.nodes.basenodes.Node"><tt class="xref py py-class docutils literal"><span class="pre">numba.nodes.basenodes.Node</span></tt></a></p>
+<p>Node that has control flow basic blocks.</p>
+<dl class="attribute">
+<dt id="numba.nodes.cfnodes.FlowNode.cond_block">
+<tt class="descname">cond_block</tt><em class="property"> = None</em><a class="headerlink" href="#numba.nodes.cfnodes.FlowNode.cond_block" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="numba.nodes.cfnodes.FlowNode.else_block">
+<tt class="descname">else_block</tt><em class="property"> = None</em><a class="headerlink" href="#numba.nodes.cfnodes.FlowNode.else_block" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="numba.nodes.cfnodes.FlowNode.exit_block">
+<tt class="descname">exit_block</tt><em class="property"> = None</em><a class="headerlink" href="#numba.nodes.cfnodes.FlowNode.exit_block" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="numba.nodes.cfnodes.FlowNode.if_block">
+<tt class="descname">if_block</tt><em class="property"> = None</em><a class="headerlink" href="#numba.nodes.cfnodes.FlowNode.if_block" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.cfnodes.For">
+<em class="property">class </em><tt class="descclassname">numba.nodes.cfnodes.</tt><tt class="descname">For</tt><big>(</big><em>**kwargs</em><big>)</big><a class="headerlink" href="#numba.nodes.cfnodes.For" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">_ast.For</span></tt>, <a class="reference internal" href="#numba.nodes.cfnodes.FlowNode" title="numba.nodes.cfnodes.FlowNode"><tt class="xref py py-class docutils literal"><span class="pre">numba.nodes.cfnodes.FlowNode</span></tt></a></p>
+<p>A for loop node. Has the basic block attributes from FlowNode</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.cfnodes.If">
+<em class="property">class </em><tt class="descclassname">numba.nodes.cfnodes.</tt><tt class="descname">If</tt><big>(</big><em>**kwargs</em><big>)</big><a class="headerlink" href="#numba.nodes.cfnodes.If" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">_ast.If</span></tt>, <a class="reference internal" href="#numba.nodes.cfnodes.FlowNode" title="numba.nodes.cfnodes.FlowNode"><tt class="xref py py-class docutils literal"><span class="pre">numba.nodes.cfnodes.FlowNode</span></tt></a></p>
+<p>An if statement node. Has the basic block attributes from FlowNode</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.cfnodes.LowLevelBasicBlockNode">
+<em class="property">class </em><tt class="descclassname">numba.nodes.cfnodes.</tt><tt class="descname">LowLevelBasicBlockNode</tt><big>(</big><em>body</em>, <em>label='unnamed'</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#numba.nodes.cfnodes.LowLevelBasicBlockNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.nodes.basenodes.Node" title="numba.nodes.basenodes.Node"><tt class="xref py py-class docutils literal"><span class="pre">numba.nodes.basenodes.Node</span></tt></a></p>
+<p>Evaluate a statement or expression in a new LLVM basic block.</p>
+<dl class="method">
+<dt id="numba.nodes.cfnodes.LowLevelBasicBlockNode.create_block">
+<tt class="descname">create_block</tt><big>(</big><em>translator</em>, <em>label=None</em><big>)</big><a class="headerlink" href="#numba.nodes.cfnodes.LowLevelBasicBlockNode.create_block" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.cfnodes.MaybeUnusedNode">
+<em class="property">class </em><tt class="descclassname">numba.nodes.cfnodes.</tt><tt class="descname">MaybeUnusedNode</tt><big>(</big><em>name_node</em><big>)</big><a class="headerlink" href="#numba.nodes.cfnodes.MaybeUnusedNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.nodes.basenodes.Node" title="numba.nodes.basenodes.Node"><tt class="xref py py-class docutils literal"><span class="pre">numba.nodes.basenodes.Node</span></tt></a></p>
+<p>Wraps an ast.Name() to indicate that the result may be unused.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.cfnodes.While">
+<em class="property">class </em><tt class="descclassname">numba.nodes.cfnodes.</tt><tt class="descname">While</tt><big>(</big><em>**kwargs</em><big>)</big><a class="headerlink" href="#numba.nodes.cfnodes.While" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">_ast.While</span></tt>, <a class="reference internal" href="#numba.nodes.cfnodes.FlowNode" title="numba.nodes.cfnodes.FlowNode"><tt class="xref py py-class docutils literal"><span class="pre">numba.nodes.cfnodes.FlowNode</span></tt></a></p>
+<p>A while loop node. Has the basic block attributes from FlowNode</p>
+<dl class="attribute">
+<dt id="numba.nodes.cfnodes.While.continue_block">
+<tt class="descname">continue_block</tt><em class="property"> = None</em><a class="headerlink" href="#numba.nodes.cfnodes.While.continue_block" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.nodes.cfnodes.build_for">
+<tt class="descclassname">numba.nodes.cfnodes.</tt><tt class="descname">build_for</tt><big>(</big><em>**kwargs</em><big>)</big><a class="headerlink" href="#numba.nodes.cfnodes.build_for" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.nodes.cfnodes.build_if">
+<tt class="descclassname">numba.nodes.cfnodes.</tt><tt class="descname">build_if</tt><big>(</big><em>cls=&lt;class 'numba.nodes.cfnodes.If'&gt;</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#numba.nodes.cfnodes.build_if" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.nodes.cfnodes.build_while">
+<tt class="descclassname">numba.nodes.cfnodes.</tt><tt class="descname">build_while</tt><big>(</big><em>**kwargs</em><big>)</big><a class="headerlink" href="#numba.nodes.cfnodes.build_while" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.nodes.cfnodes.delete_control_blocks">
+<tt class="descclassname">numba.nodes.cfnodes.</tt><tt class="descname">delete_control_blocks</tt><big>(</big><em>flow_node</em>, <em>flow</em><big>)</big><a class="headerlink" href="#numba.nodes.cfnodes.delete_control_blocks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove all control flow basic blocks from the CFG given a FlowNode
+and the CFG. Also removes Name references from cf_references.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.nodes.cfnodes.if_else">
+<tt class="descclassname">numba.nodes.cfnodes.</tt><tt class="descname">if_else</tt><big>(</big><em>op</em>, <em>cond_left</em>, <em>cond_right</em>, <em>lhs</em>, <em>rhs</em><big>)</big><a class="headerlink" href="#numba.nodes.cfnodes.if_else" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements &#8216;lhs if cond_left &lt;op&gt; cond_right else rhs&#8217;</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.nodes.cfnodes.merge_cfg_in_ast">
+<tt class="descclassname">numba.nodes.cfnodes.</tt><tt class="descname">merge_cfg_in_ast</tt><big>(</big><em>basic_block_fields</em>, <em>bodies</em>, <em>node</em><big>)</big><a class="headerlink" href="#numba.nodes.cfnodes.merge_cfg_in_ast" title="Permalink to this definition">¶</a></dt>
+<dd><p>Merge CFG blocks into the AST. E.g.</p>
+<blockquote>
+<div>While(test=x, body=y)</div></blockquote>
+<p>becomes</p>
+<blockquote>
+<div>While(test=ControlBlock(0, body=[x]), body=ControlBlock(1, body=[y]))</div></blockquote>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.nodes.cfnodes.merge_cfg_in_while">
+<tt class="descclassname">numba.nodes.cfnodes.</tt><tt class="descname">merge_cfg_in_while</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.nodes.cfnodes.merge_cfg_in_while" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-numba.nodes.closurenodes">
+<span id="closurenodes-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">closurenodes</span></tt> Module<a class="headerlink" href="#module-numba.nodes.closurenodes" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="numba.nodes.closurenodes.ClosureCallNode">
+<em class="property">class </em><tt class="descclassname">numba.nodes.closurenodes.</tt><tt class="descname">ClosureCallNode</tt><big>(</big><em>closure_type</em>, <em>call_node</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#numba.nodes.closurenodes.ClosureCallNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.nodes.callnodes.NativeCallNode" title="numba.nodes.callnodes.NativeCallNode"><tt class="xref py py-class docutils literal"><span class="pre">numba.nodes.callnodes.NativeCallNode</span></tt></a></p>
+<p>Call to closure or inner function.</p>
+<dl class="attribute">
+<dt id="numba.nodes.closurenodes.ClosureCallNode.func_def">
+<tt class="descname">func_def</tt><a class="headerlink" href="#numba.nodes.closurenodes.ClosureCallNode.func_def" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="numba.nodes.closurenodes.ClosureCallNode.need_closure_scope">
+<tt class="descname">need_closure_scope</tt><a class="headerlink" href="#numba.nodes.closurenodes.ClosureCallNode.need_closure_scope" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.closurenodes.ClosureNode">
+<em class="property">class </em><tt class="descclassname">numba.nodes.closurenodes.</tt><tt class="descname">ClosureNode</tt><big>(</big><em>env</em>, <em>func_def</em>, <em>closure_type</em>, <em>outer_py_func</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#numba.nodes.closurenodes.ClosureNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.nodes.basenodes.ExprNode" title="numba.nodes.basenodes.ExprNode"><tt class="xref py py-class docutils literal"><span class="pre">numba.nodes.basenodes.ExprNode</span></tt></a></p>
+<p>Inner functions or closures.</p>
+<p>When coerced to an object, a wrapper PyMethodDef gets created, and at
+call time a function is dynamically created with the closure scope.</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>func_def:</dt>
+<dd>AST FunctionDef of the function</dd>
+<dt>closure_type:</dt>
+<dd>numba.typesystem.ClosureType</dd>
+<dt>outer_py_func:</dt>
+<dd>Outer Python function (or None!)</dd>
+</dl>
+</div></blockquote>
+<dl class="method">
+<dt id="numba.nodes.closurenodes.ClosureNode.make_pyfunc">
+<tt class="descname">make_pyfunc</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.nodes.closurenodes.ClosureNode.make_pyfunc" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.closurenodes.ClosureScopeLoadNode">
+<em class="property">class </em><tt class="descclassname">numba.nodes.closurenodes.</tt><tt class="descname">ClosureScopeLoadNode</tt><big>(</big><em>**kwargs</em><big>)</big><a class="headerlink" href="#numba.nodes.closurenodes.ClosureScopeLoadNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.nodes.basenodes.ExprNode" title="numba.nodes.basenodes.ExprNode"><tt class="xref py py-class docutils literal"><span class="pre">numba.nodes.basenodes.ExprNode</span></tt></a></p>
+<p>Load the closure scope for the function or NULL</p>
+<dl class="attribute">
+<dt id="numba.nodes.closurenodes.ClosureScopeLoadNode.type">
+<tt class="descname">type</tt><em class="property"> = void *</em><a class="headerlink" href="#numba.nodes.closurenodes.ClosureScopeLoadNode.type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.closurenodes.InstantiateClosureScope">
+<em class="property">class </em><tt class="descclassname">numba.nodes.closurenodes.</tt><tt class="descname">InstantiateClosureScope</tt><big>(</big><em>func_def</em>, <em>scope_ext_type</em>, <em>scope_type</em>, <em>outer_scope</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#numba.nodes.closurenodes.InstantiateClosureScope" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.nodes.basenodes.ExprNode" title="numba.nodes.basenodes.ExprNode"><tt class="xref py py-class docutils literal"><span class="pre">numba.nodes.basenodes.ExprNode</span></tt></a></p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-numba.nodes.coercionnodes">
+<span id="coercionnodes-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">coercionnodes</span></tt> Module<a class="headerlink" href="#module-numba.nodes.coercionnodes" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="numba.nodes.coercionnodes.CastNode">
+<em class="property">class </em><tt class="descclassname">numba.nodes.coercionnodes.</tt><tt class="descname">CastNode</tt><big>(</big><em>node</em>, <em>type</em><big>)</big><a class="headerlink" href="#numba.nodes.coercionnodes.CastNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.nodes.basenodes.ExprNode" title="numba.nodes.basenodes.ExprNode"><tt class="xref py py-class docutils literal"><span class="pre">numba.nodes.basenodes.ExprNode</span></tt></a></p>
+<p>Explicit cast by user, e.g. double(value)</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.coercionnodes.CoerceToNative">
+<em class="property">class </em><tt class="descclassname">numba.nodes.coercionnodes.</tt><tt class="descname">CoerceToNative</tt><big>(</big><em>node</em>, <em>dst_type</em>, <em>name=''</em><big>)</big><a class="headerlink" href="#numba.nodes.coercionnodes.CoerceToNative" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.nodes.coercionnodes.CoercionNode" title="numba.nodes.coercionnodes.CoercionNode"><tt class="xref py py-class docutils literal"><span class="pre">numba.nodes.coercionnodes.CoercionNode</span></tt></a></p>
+<p>Coerce objects to native values</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.coercionnodes.CoerceToObject">
+<em class="property">class </em><tt class="descclassname">numba.nodes.coercionnodes.</tt><tt class="descname">CoerceToObject</tt><big>(</big><em>node</em>, <em>dst_type</em>, <em>name=''</em><big>)</big><a class="headerlink" href="#numba.nodes.coercionnodes.CoerceToObject" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.nodes.coercionnodes.CoercionNode" title="numba.nodes.coercionnodes.CoercionNode"><tt class="xref py py-class docutils literal"><span class="pre">numba.nodes.coercionnodes.CoercionNode</span></tt></a></p>
+<p>Coerce native values to objects</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.coercionnodes.CoercionNode">
+<em class="property">class </em><tt class="descclassname">numba.nodes.coercionnodes.</tt><tt class="descname">CoercionNode</tt><big>(</big><em>node</em>, <em>dst_type</em>, <em>name=''</em><big>)</big><a class="headerlink" href="#numba.nodes.coercionnodes.CoercionNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.nodes.basenodes.ExprNode" title="numba.nodes.basenodes.ExprNode"><tt class="xref py py-class docutils literal"><span class="pre">numba.nodes.basenodes.ExprNode</span></tt></a></p>
+<p>Coerce a node to a different type</p>
+<dl class="classmethod">
+<dt id="numba.nodes.coercionnodes.CoercionNode.coerce">
+<em class="property">classmethod </em><tt class="descname">coerce</tt><big>(</big><em>node_or_nodes</em>, <em>dst_type</em><big>)</big><a class="headerlink" href="#numba.nodes.coercionnodes.CoercionNode.coerce" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.nodes.coercionnodes.CoercionNode.coerce_numpy_attribute">
+<tt class="descname">coerce_numpy_attribute</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.nodes.coercionnodes.CoercionNode.coerce_numpy_attribute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Numpy array attributes, such as &#8216;data&#8217;, get rewritten to direct
+accesses. Since they are being coerced back to objects, use a generic
+attribute access instead.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="numba.nodes.coercionnodes.CoercionNode.dst_type">
+<tt class="descname">dst_type</tt><a class="headerlink" href="#numba.nodes.coercionnodes.CoercionNode.dst_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>dst_type is always the same as type, and &#8216;type&#8217; is kept consistent
+with Variable.type</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.nodes.coercionnodes.CoercionNode.verify_conversion">
+<tt class="descname">verify_conversion</tt><big>(</big><em>dst_type</em>, <em>node</em><big>)</big><a class="headerlink" href="#numba.nodes.coercionnodes.CoercionNode.verify_conversion" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.coercionnodes.DeferredCoercionNode">
+<em class="property">class </em><tt class="descclassname">numba.nodes.coercionnodes.</tt><tt class="descname">DeferredCoercionNode</tt><big>(</big><em>node</em>, <em>variable</em><big>)</big><a class="headerlink" href="#numba.nodes.coercionnodes.DeferredCoercionNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.nodes.basenodes.ExprNode" title="numba.nodes.basenodes.ExprNode"><tt class="xref py py-class docutils literal"><span class="pre">numba.nodes.basenodes.ExprNode</span></tt></a></p>
+<p>Coerce to the type of the given variable. The type of the variable may
+change in the meantime (e.g. may be promoted or demoted).</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.coercionnodes.PromotionNode">
+<em class="property">class </em><tt class="descclassname">numba.nodes.coercionnodes.</tt><tt class="descname">PromotionNode</tt><big>(</big><em>**kwargs</em><big>)</big><a class="headerlink" href="#numba.nodes.coercionnodes.PromotionNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.nodes.basenodes.ExprNode" title="numba.nodes.basenodes.ExprNode"><tt class="xref py py-class docutils literal"><span class="pre">numba.nodes.basenodes.ExprNode</span></tt></a></p>
+<p>Coerces a variable of some type to another type for a phi node in a
+successor block.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.coercionnodes.UntypedCoercion">
+<em class="property">class </em><tt class="descclassname">numba.nodes.coercionnodes.</tt><tt class="descname">UntypedCoercion</tt><big>(</big><em>node</em>, <em>type</em><big>)</big><a class="headerlink" href="#numba.nodes.coercionnodes.UntypedCoercion" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.nodes.basenodes.ExprNode" title="numba.nodes.basenodes.ExprNode"><tt class="xref py py-class docutils literal"><span class="pre">numba.nodes.basenodes.ExprNode</span></tt></a></p>
+<p>Coerce a node to the destination type. The node need not yet have a
+type or variable.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-numba.nodes.constnodes">
+<span id="constnodes-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">constnodes</span></tt> Module<a class="headerlink" href="#module-numba.nodes.constnodes" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="numba.nodes.constnodes.ConstNode">
+<em class="property">class </em><tt class="descclassname">numba.nodes.constnodes.</tt><tt class="descname">ConstNode</tt><big>(</big><em>pyval</em>, <em>type=None</em><big>)</big><a class="headerlink" href="#numba.nodes.constnodes.ConstNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.nodes.basenodes.ExprNode" title="numba.nodes.basenodes.ExprNode"><tt class="xref py py-class docutils literal"><span class="pre">numba.nodes.basenodes.ExprNode</span></tt></a></p>
+<p>Wrap a constant.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.nodes.constnodes.get_pointer_address">
+<tt class="descclassname">numba.nodes.constnodes.</tt><tt class="descname">get_pointer_address</tt><big>(</big><em>value</em>, <em>type</em><big>)</big><a class="headerlink" href="#numba.nodes.constnodes.get_pointer_address" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.nodes.constnodes.is_null_constant">
+<tt class="descclassname">numba.nodes.constnodes.</tt><tt class="descname">is_null_constant</tt><big>(</big><em>constant</em><big>)</big><a class="headerlink" href="#numba.nodes.constnodes.is_null_constant" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-numba.nodes.excnodes">
+<span id="excnodes-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">excnodes</span></tt> Module<a class="headerlink" href="#module-numba.nodes.excnodes" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="numba.nodes.excnodes.CheckErrorNode">
+<em class="property">class </em><tt class="descclassname">numba.nodes.excnodes.</tt><tt class="descname">CheckErrorNode</tt><big>(</big><em>return_value</em>, <em>badval=None</em>, <em>goodval=None</em>, <em>exc_type=None</em>, <em>exc_msg=None</em>, <em>exc_args=None</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#numba.nodes.excnodes.CheckErrorNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.nodes.basenodes.ExprNode" title="numba.nodes.basenodes.ExprNode"><tt class="xref py py-class docutils literal"><span class="pre">numba.nodes.basenodes.ExprNode</span></tt></a></p>
+<p>Check for an exception.</p>
+<blockquote>
+<div>badval: if this value is returned, propagate an error
+goodval: if this value is not returned, propagate an error</div></blockquote>
+<p>If exc_type, exc_msg and optionally exc_args are given, an error is
+raised instead of propagating it.</p>
+<p>See RaiseNode for the exc_* arguments.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.excnodes.PropagateNode">
+<em class="property">class </em><tt class="descclassname">numba.nodes.excnodes.</tt><tt class="descname">PropagateNode</tt><big>(</big><em>**kwargs</em><big>)</big><a class="headerlink" href="#numba.nodes.excnodes.PropagateNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.nodes.basenodes.ExprNode" title="numba.nodes.basenodes.ExprNode"><tt class="xref py py-class docutils literal"><span class="pre">numba.nodes.basenodes.ExprNode</span></tt></a></p>
+<p>Propagate an exception (jump to the error label). This is resolved
+at code generation time and can be generated at any moment.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.excnodes.PyErr_OccurredNode">
+<em class="property">class </em><tt class="descclassname">numba.nodes.excnodes.</tt><tt class="descname">PyErr_OccurredNode</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.nodes.excnodes.PyErr_OccurredNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.nodes.basenodes.ExprNode" title="numba.nodes.basenodes.ExprNode"><tt class="xref py py-class docutils literal"><span class="pre">numba.nodes.basenodes.ExprNode</span></tt></a></p>
+<p>Check for a set Python exception using PyErr_Occurred().</p>
+<p>Can be set any time after type inference. This node is resolved during
+late specialization.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.excnodes.RaiseNode">
+<em class="property">class </em><tt class="descclassname">numba.nodes.excnodes.</tt><tt class="descname">RaiseNode</tt><big>(</big><em>exc_type</em>, <em>exc_msg</em>, <em>exc_args=None</em>, <em>print_on_trap=True</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#numba.nodes.excnodes.RaiseNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.nodes.basenodes.ExprNode" title="numba.nodes.basenodes.ExprNode"><tt class="xref py py-class docutils literal"><span class="pre">numba.nodes.basenodes.ExprNode</span></tt></a></p>
+<p>Raise an exception.</p>
+<blockquote>
+<div><p>exception_type: The Python exception type</p>
+<dl class="docutils">
+<dt>exc_type: The Python exception as an AST node</dt>
+<dd>May be passed in as a Python exception type</dd>
+<dt>exc_msg: The message to print as an AST node</dt>
+<dd>May be passed in as a string</dd>
+<dt>exc_args: If given, must be an list of AST nodes representing the</dt>
+<dd>arguments to PyErr_Format (matching the format specifiers
+at runtime in exc_msg)</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+</div>
+<div class="section" id="module-numba.nodes.extnodes">
+<span id="extnodes-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">extnodes</span></tt> Module<a class="headerlink" href="#module-numba.nodes.extnodes" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="numba.nodes.extnodes.AutojitExtensionMethod">
+<em class="property">class </em><tt class="descclassname">numba.nodes.extnodes.</tt><tt class="descname">AutojitExtensionMethod</tt><big>(</big><em>obj</em>, <em>attr</em>, <em>method</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#numba.nodes.extnodes.AutojitExtensionMethod" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.nodes.extnodes.ExtensionMethod" title="numba.nodes.extnodes.ExtensionMethod"><tt class="xref py py-class docutils literal"><span class="pre">numba.nodes.extnodes.ExtensionMethod</span></tt></a></p>
+<dl class="method">
+<dt id="numba.nodes.extnodes.AutojitExtensionMethod.initialize_type">
+<tt class="descname">initialize_type</tt><big>(</big><em>method</em><big>)</big><a class="headerlink" href="#numba.nodes.extnodes.AutojitExtensionMethod.initialize_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.extnodes.ExtTypeAttribute">
+<em class="property">class </em><tt class="descclassname">numba.nodes.extnodes.</tt><tt class="descname">ExtTypeAttribute</tt><big>(</big><em>value</em>, <em>attr</em>, <em>variable</em>, <em>ctx</em>, <em>ext_type</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#numba.nodes.extnodes.ExtTypeAttribute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.nodes.basenodes.ExprNode" title="numba.nodes.basenodes.ExprNode"><tt class="xref py py-class docutils literal"><span class="pre">numba.nodes.basenodes.ExprNode</span></tt></a></p>
+<dl class="classmethod">
+<dt id="numba.nodes.extnodes.ExtTypeAttribute.from_known_attribute">
+<em class="property">classmethod </em><tt class="descname">from_known_attribute</tt><big>(</big><em>value</em>, <em>attr</em>, <em>ctx</em>, <em>ext_type</em><big>)</big><a class="headerlink" href="#numba.nodes.extnodes.ExtTypeAttribute.from_known_attribute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create an extension type attribute node if the attribute is known
+to exist (and isn&#8217;t being inferred)</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.extnodes.ExtensionMethod">
+<em class="property">class </em><tt class="descclassname">numba.nodes.extnodes.</tt><tt class="descname">ExtensionMethod</tt><big>(</big><em>obj</em>, <em>attr</em>, <em>method</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#numba.nodes.extnodes.ExtensionMethod" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.nodes.basenodes.ExprNode" title="numba.nodes.basenodes.ExprNode"><tt class="xref py py-class docutils literal"><span class="pre">numba.nodes.basenodes.ExprNode</span></tt></a></p>
+<dl class="attribute">
+<dt id="numba.nodes.extnodes.ExtensionMethod.call_node">
+<tt class="descname">call_node</tt><em class="property"> = None</em><a class="headerlink" href="#numba.nodes.extnodes.ExtensionMethod.call_node" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.nodes.extnodes.ExtensionMethod.initialize_type">
+<tt class="descname">initialize_type</tt><big>(</big><em>method</em><big>)</big><a class="headerlink" href="#numba.nodes.extnodes.ExtensionMethod.initialize_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.extnodes.NewExtObjectNode">
+<em class="property">class </em><tt class="descclassname">numba.nodes.extnodes.</tt><tt class="descname">NewExtObjectNode</tt><big>(</big><em>ext_type</em>, <em>args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#numba.nodes.extnodes.NewExtObjectNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.nodes.basenodes.ExprNode" title="numba.nodes.basenodes.ExprNode"><tt class="xref py py-class docutils literal"><span class="pre">numba.nodes.basenodes.ExprNode</span></tt></a></p>
+<p>Instantiate an extension type. Currently unused.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-numba.nodes.llvmnodes">
+<span id="llvmnodes-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">llvmnodes</span></tt> Module<a class="headerlink" href="#module-numba.nodes.llvmnodes" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="numba.nodes.llvmnodes.BadValue">
+<em class="property">class </em><tt class="descclassname">numba.nodes.llvmnodes.</tt><tt class="descname">BadValue</tt><big>(</big><em>type</em><big>)</big><a class="headerlink" href="#numba.nodes.llvmnodes.BadValue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.nodes.llvmnodes.LLVMValueRefNode" title="numba.nodes.llvmnodes.LLVMValueRefNode"><tt class="xref py py-class docutils literal"><span class="pre">numba.nodes.llvmnodes.LLVMValueRefNode</span></tt></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="numba.nodes.llvmnodes.LLVMCBuilderNode">
+<tt class="descclassname">numba.nodes.llvmnodes.</tt><tt class="descname">LLVMCBuilderNode</tt><a class="headerlink" href="#numba.nodes.llvmnodes.LLVMCBuilderNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <tt class="xref py py-class docutils literal"><span class="pre">UserNode</span></tt></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.llvmnodes.LLVMValueRefNode">
+<em class="property">class </em><tt class="descclassname">numba.nodes.llvmnodes.</tt><tt class="descname">LLVMValueRefNode</tt><big>(</big><em>type</em>, <em>llvm_value</em><big>)</big><a class="headerlink" href="#numba.nodes.llvmnodes.LLVMValueRefNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.nodes.basenodes.ExprNode" title="numba.nodes.basenodes.ExprNode"><tt class="xref py py-class docutils literal"><span class="pre">numba.nodes.basenodes.ExprNode</span></tt></a></p>
+<p>Wrap an LLVM value.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-numba.nodes.metadata">
+<span id="metadata-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">metadata</span></tt> Module<a class="headerlink" href="#module-numba.nodes.metadata" title="Permalink to this headline">¶</a></h2>
+<p>Allow annotating AST nodes with some metadata, and querying for that metadata.</p>
+<dl class="function">
+<dt id="numba.nodes.metadata.annotate">
+<tt class="descclassname">numba.nodes.metadata.</tt><tt class="descname">annotate</tt><big>(</big><em>env</em>, <em>node</em>, <em>**flags</em><big>)</big><a class="headerlink" href="#numba.nodes.metadata.annotate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.nodes.metadata.create_metadata_env">
+<tt class="descclassname">numba.nodes.metadata.</tt><tt class="descname">create_metadata_env</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.nodes.metadata.create_metadata_env" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.nodes.metadata.query">
+<tt class="descclassname">numba.nodes.metadata.</tt><tt class="descname">query</tt><big>(</big><em>env</em>, <em>node</em>, <em>key</em>, <em>default=None</em><big>)</big><a class="headerlink" href="#numba.nodes.metadata.query" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-numba.nodes.numpynodes">
+<span id="numpynodes-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">numpynodes</span></tt> Module<a class="headerlink" href="#module-numba.nodes.numpynodes" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="numba.nodes.numpynodes.ArrayAttributeNode">
+<em class="property">class </em><tt class="descclassname">numba.nodes.numpynodes.</tt><tt class="descname">ArrayAttributeNode</tt><big>(</big><em>attribute_name</em>, <em>array</em><big>)</big><a class="headerlink" href="#numba.nodes.numpynodes.ArrayAttributeNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.nodes.basenodes.ExprNode" title="numba.nodes.basenodes.ExprNode"><tt class="xref py py-class docutils literal"><span class="pre">numba.nodes.basenodes.ExprNode</span></tt></a></p>
+<dl class="attribute">
+<dt id="numba.nodes.numpynodes.ArrayAttributeNode.is_read_only">
+<tt class="descname">is_read_only</tt><em class="property"> = True</em><a class="headerlink" href="#numba.nodes.numpynodes.ArrayAttributeNode.is_read_only" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.numpynodes.ArrayNewEmptyNode">
+<em class="property">class </em><tt class="descclassname">numba.nodes.numpynodes.</tt><tt class="descname">ArrayNewEmptyNode</tt><big>(</big><em>type</em>, <em>shape</em>, <em>is_fortran=False</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#numba.nodes.numpynodes.ArrayNewEmptyNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.nodes.basenodes.ExprNode" title="numba.nodes.basenodes.ExprNode"><tt class="xref py py-class docutils literal"><span class="pre">numba.nodes.basenodes.ExprNode</span></tt></a></p>
+<p>Allocate a new array with data.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.numpynodes.ArrayNewNode">
+<em class="property">class </em><tt class="descclassname">numba.nodes.numpynodes.</tt><tt class="descname">ArrayNewNode</tt><big>(</big><em>type</em>, <em>data</em>, <em>shape</em>, <em>strides</em>, <em>base=None</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#numba.nodes.numpynodes.ArrayNewNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.nodes.basenodes.ExprNode" title="numba.nodes.basenodes.ExprNode"><tt class="xref py py-class docutils literal"><span class="pre">numba.nodes.basenodes.ExprNode</span></tt></a></p>
+<p>Allocate a new array given the attributes.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.numpynodes.DataPointerNode">
+<em class="property">class </em><tt class="descclassname">numba.nodes.numpynodes.</tt><tt class="descname">DataPointerNode</tt><big>(</big><em>node</em>, <em>slice</em>, <em>ctx</em><big>)</big><a class="headerlink" href="#numba.nodes.numpynodes.DataPointerNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.nodes.basenodes.ExprNode" title="numba.nodes.basenodes.ExprNode"><tt class="xref py py-class docutils literal"><span class="pre">numba.nodes.basenodes.ExprNode</span></tt></a></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.numpynodes.MultiArrayAPINode">
+<em class="property">class </em><tt class="descclassname">numba.nodes.numpynodes.</tt><tt class="descname">MultiArrayAPINode</tt><big>(</big><em>name</em>, <em>signature</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.nodes.numpynodes.MultiArrayAPINode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.nodes.callnodes.NativeCallNode" title="numba.nodes.callnodes.NativeCallNode"><tt class="xref py py-class docutils literal"><span class="pre">numba.nodes.callnodes.NativeCallNode</span></tt></a></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.nodes.numpynodes.PyArray_Empty">
+<tt class="descclassname">numba.nodes.numpynodes.</tt><tt class="descname">PyArray_Empty</tt><big>(</big><em>args</em>, <em>name='PyArray_Empty'</em><big>)</big><a class="headerlink" href="#numba.nodes.numpynodes.PyArray_Empty" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.nodes.numpynodes.PyArray_NewFromDescr">
+<tt class="descclassname">numba.nodes.numpynodes.</tt><tt class="descname">PyArray_NewFromDescr</tt><big>(</big><em>args</em><big>)</big><a class="headerlink" href="#numba.nodes.numpynodes.PyArray_NewFromDescr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Low-level specialized equivalent of ArrayNewNode</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.nodes.numpynodes.PyArray_SetBaseObject">
+<tt class="descclassname">numba.nodes.numpynodes.</tt><tt class="descname">PyArray_SetBaseObject</tt><big>(</big><em>args</em><big>)</big><a class="headerlink" href="#numba.nodes.numpynodes.PyArray_SetBaseObject" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.nodes.numpynodes.PyArray_UpdateFlags">
+<tt class="descclassname">numba.nodes.numpynodes.</tt><tt class="descname">PyArray_UpdateFlags</tt><big>(</big><em>args</em><big>)</big><a class="headerlink" href="#numba.nodes.numpynodes.PyArray_UpdateFlags" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.nodes.numpynodes.PyArray_Zeros">
+<tt class="descclassname">numba.nodes.numpynodes.</tt><tt class="descname">PyArray_Zeros</tt><big>(</big><em>args</em><big>)</big><a class="headerlink" href="#numba.nodes.numpynodes.PyArray_Zeros" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.numpynodes.ShapeAttributeNode">
+<em class="property">class </em><tt class="descclassname">numba.nodes.numpynodes.</tt><tt class="descname">ShapeAttributeNode</tt><big>(</big><em>array</em><big>)</big><a class="headerlink" href="#numba.nodes.numpynodes.ShapeAttributeNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.nodes.numpynodes.ArrayAttributeNode" title="numba.nodes.numpynodes.ArrayAttributeNode"><tt class="xref py py-class docutils literal"><span class="pre">numba.nodes.numpynodes.ArrayAttributeNode</span></tt></a></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.nodes.numpynodes.get_shape">
+<tt class="descclassname">numba.nodes.numpynodes.</tt><tt class="descname">get_shape</tt><big>(</big><em>builder</em>, <em>tbaa_metadata</em>, <em>shape_pointer</em>, <em>ndim</em><big>)</big><a class="headerlink" href="#numba.nodes.numpynodes.get_shape" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load the shape values from an ndarray</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.nodes.numpynodes.get_strides">
+<tt class="descclassname">numba.nodes.numpynodes.</tt><tt class="descname">get_strides</tt><big>(</big><em>builder</em>, <em>tbaa_metadata</em>, <em>strides_pointer</em>, <em>ndim</em><big>)</big><a class="headerlink" href="#numba.nodes.numpynodes.get_strides" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load the stride values from an ndarray</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.nodes.numpynodes.is_constant_index">
+<tt class="descclassname">numba.nodes.numpynodes.</tt><tt class="descname">is_constant_index</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.nodes.numpynodes.is_constant_index" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.nodes.numpynodes.is_ellipsis">
+<tt class="descclassname">numba.nodes.numpynodes.</tt><tt class="descname">is_ellipsis</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.nodes.numpynodes.is_ellipsis" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.nodes.numpynodes.is_newaxis">
+<tt class="descclassname">numba.nodes.numpynodes.</tt><tt class="descname">is_newaxis</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.nodes.numpynodes.is_newaxis" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-numba.nodes.objectnodes">
+<span id="objectnodes-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">objectnodes</span></tt> Module<a class="headerlink" href="#module-numba.nodes.objectnodes" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="numba.nodes.objectnodes.DecrefNode">
+<em class="property">class </em><tt class="descclassname">numba.nodes.objectnodes.</tt><tt class="descname">DecrefNode</tt><big>(</big><em>value</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#numba.nodes.objectnodes.DecrefNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.nodes.objectnodes.IncrefNode" title="numba.nodes.objectnodes.IncrefNode"><tt class="xref py py-class docutils literal"><span class="pre">numba.nodes.objectnodes.IncrefNode</span></tt></a></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.objectnodes.IncrefNode">
+<em class="property">class </em><tt class="descclassname">numba.nodes.objectnodes.</tt><tt class="descname">IncrefNode</tt><big>(</big><em>value</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#numba.nodes.objectnodes.IncrefNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.nodes.basenodes.ExprNode" title="numba.nodes.basenodes.ExprNode"><tt class="xref py py-class docutils literal"><span class="pre">numba.nodes.basenodes.ExprNode</span></tt></a></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.objectnodes.NoneNode">
+<em class="property">class </em><tt class="descclassname">numba.nodes.objectnodes.</tt><tt class="descname">NoneNode</tt><big>(</big><em>**kwargs</em><big>)</big><a class="headerlink" href="#numba.nodes.objectnodes.NoneNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.nodes.basenodes.ExprNode" title="numba.nodes.basenodes.ExprNode"><tt class="xref py py-class docutils literal"><span class="pre">numba.nodes.basenodes.ExprNode</span></tt></a></p>
+<p>Return None.</p>
+<dl class="attribute">
+<dt id="numba.nodes.objectnodes.NoneNode.type">
+<tt class="descname">type</tt><em class="property"> = none</em><a class="headerlink" href="#numba.nodes.objectnodes.NoneNode.type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="numba.nodes.objectnodes.NoneNode.variable">
+<tt class="descname">variable</tt><em class="property"> = &lt;Variable(type=none)&gt;</em><a class="headerlink" href="#numba.nodes.objectnodes.NoneNode.variable" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.objectnodes.ObjectInjectNode">
+<em class="property">class </em><tt class="descclassname">numba.nodes.objectnodes.</tt><tt class="descname">ObjectInjectNode</tt><big>(</big><em>object</em>, <em>type=None</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#numba.nodes.objectnodes.ObjectInjectNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.nodes.basenodes.ExprNode" title="numba.nodes.basenodes.ExprNode"><tt class="xref py py-class docutils literal"><span class="pre">numba.nodes.basenodes.ExprNode</span></tt></a></p>
+<p>Refer to a Python object in the llvm code.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.objectnodes.ObjectTempNode">
+<em class="property">class </em><tt class="descclassname">numba.nodes.objectnodes.</tt><tt class="descname">ObjectTempNode</tt><big>(</big><em>node</em>, <em>incref=False</em><big>)</big><a class="headerlink" href="#numba.nodes.objectnodes.ObjectTempNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.nodes.basenodes.ExprNode" title="numba.nodes.basenodes.ExprNode"><tt class="xref py py-class docutils literal"><span class="pre">numba.nodes.basenodes.ExprNode</span></tt></a></p>
+<p>Coerce a node to a temporary which is reference counted.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.objectnodes.ObjectTempRefNode">
+<em class="property">class </em><tt class="descclassname">numba.nodes.objectnodes.</tt><tt class="descname">ObjectTempRefNode</tt><big>(</big><em>obj_temp_node</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#numba.nodes.objectnodes.ObjectTempRefNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.nodes.basenodes.ExprNode" title="numba.nodes.basenodes.ExprNode"><tt class="xref py py-class docutils literal"><span class="pre">numba.nodes.basenodes.ExprNode</span></tt></a></p>
+<p>Reference an ObjectTempNode, without evaluating its subexpressions.
+The ObjectTempNode must already have been evaluated.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-numba.nodes.pointernodes">
+<span id="pointernodes-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">pointernodes</span></tt> Module<a class="headerlink" href="#module-numba.nodes.pointernodes" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="numba.nodes.pointernodes.DereferenceNode">
+<em class="property">class </em><tt class="descclassname">numba.nodes.pointernodes.</tt><tt class="descname">DereferenceNode</tt><big>(</big><em>pointer</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#numba.nodes.pointernodes.DereferenceNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.nodes.basenodes.ExprNode" title="numba.nodes.basenodes.ExprNode"><tt class="xref py py-class docutils literal"><span class="pre">numba.nodes.basenodes.ExprNode</span></tt></a></p>
+<p>Dereference a pointer</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.pointernodes.PointerFromObject">
+<em class="property">class </em><tt class="descclassname">numba.nodes.pointernodes.</tt><tt class="descname">PointerFromObject</tt><big>(</big><em>node</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#numba.nodes.pointernodes.PointerFromObject" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.nodes.basenodes.ExprNode" title="numba.nodes.basenodes.ExprNode"><tt class="xref py py-class docutils literal"><span class="pre">numba.nodes.basenodes.ExprNode</span></tt></a></p>
+<p>Bitcast objects to void *</p>
+<dl class="attribute">
+<dt id="numba.nodes.pointernodes.PointerFromObject.type">
+<tt class="descname">type</tt><em class="property"> = void *</em><a class="headerlink" href="#numba.nodes.pointernodes.PointerFromObject.type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="numba.nodes.pointernodes.PointerFromObject.variable">
+<tt class="descname">variable</tt><em class="property"> = &lt;Variable(type=void *)&gt;</em><a class="headerlink" href="#numba.nodes.pointernodes.PointerFromObject.variable" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.nodes.pointernodes.pointer_add">
+<tt class="descclassname">numba.nodes.pointernodes.</tt><tt class="descname">pointer_add</tt><big>(</big><em>pointer</em>, <em>offset</em><big>)</big><a class="headerlink" href="#numba.nodes.pointernodes.pointer_add" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.nodes.pointernodes.ptrfromint">
+<tt class="descclassname">numba.nodes.pointernodes.</tt><tt class="descname">ptrfromint</tt><big>(</big><em>intval</em>, <em>dst_ptr_type</em><big>)</big><a class="headerlink" href="#numba.nodes.pointernodes.ptrfromint" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.nodes.pointernodes.ptrfromobj">
+<tt class="descclassname">numba.nodes.pointernodes.</tt><tt class="descname">ptrfromobj</tt><big>(</big><em>obj</em><big>)</big><a class="headerlink" href="#numba.nodes.pointernodes.ptrfromobj" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.nodes.pointernodes.ptrtoint">
+<tt class="descclassname">numba.nodes.pointernodes.</tt><tt class="descname">ptrtoint</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.nodes.pointernodes.ptrtoint" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.nodes.pointernodes.value_at_offset">
+<tt class="descclassname">numba.nodes.pointernodes.</tt><tt class="descname">value_at_offset</tt><big>(</big><em>obj_node</em>, <em>offset</em>, <em>dst_type</em><big>)</big><a class="headerlink" href="#numba.nodes.pointernodes.value_at_offset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform (dst_type) (((char <a href="#id6"><span class="problematic" id="id7">*</span></a>) my_object) + offset)</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-numba.nodes.structnodes">
+<span id="structnodes-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">structnodes</span></tt> Module<a class="headerlink" href="#module-numba.nodes.structnodes" title="Permalink to this headline">¶</a></h2>
+<p>Struct and complex nodes.</p>
+<p>Structs are allocated on the stack, and not mutated as values. This is
+because mutations are attribute or index assignments, which are not
+recognized as variable assignments. Hence mutation cannot propagate new
+values. So we mutate what we have on the stack.</p>
+<dl class="class">
+<dt id="numba.nodes.structnodes.ComplexAttributeNode">
+<em class="property">class </em><tt class="descclassname">numba.nodes.structnodes.</tt><tt class="descname">ComplexAttributeNode</tt><big>(</big><em>value</em>, <em>attr</em><big>)</big><a class="headerlink" href="#numba.nodes.structnodes.ComplexAttributeNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.nodes.basenodes.ExprNode" title="numba.nodes.basenodes.ExprNode"><tt class="xref py py-class docutils literal"><span class="pre">numba.nodes.basenodes.ExprNode</span></tt></a></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.structnodes.ComplexNode">
+<em class="property">class </em><tt class="descclassname">numba.nodes.structnodes.</tt><tt class="descname">ComplexNode</tt><big>(</big><em>real</em>, <em>imag</em><big>)</big><a class="headerlink" href="#numba.nodes.structnodes.ComplexNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.nodes.basenodes.ExprNode" title="numba.nodes.basenodes.ExprNode"><tt class="xref py py-class docutils literal"><span class="pre">numba.nodes.basenodes.ExprNode</span></tt></a></p>
+<dl class="attribute">
+<dt id="numba.nodes.structnodes.ComplexNode.type">
+<tt class="descname">type</tt><em class="property"> = complex128</em><a class="headerlink" href="#numba.nodes.structnodes.ComplexNode.type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="numba.nodes.structnodes.ComplexNode.variable">
+<tt class="descname">variable</tt><em class="property"> = &lt;Variable(type=complex128)&gt;</em><a class="headerlink" href="#numba.nodes.structnodes.ComplexNode.variable" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.structnodes.StructAttribute">
+<em class="property">class </em><tt class="descclassname">numba.nodes.structnodes.</tt><tt class="descname">StructAttribute</tt><big>(</big><em>value</em>, <em>attr</em>, <em>ctx</em>, <em>type</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#numba.nodes.structnodes.StructAttribute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.nodes.basenodes.ExprNode" title="numba.nodes.basenodes.ExprNode"><tt class="xref py py-class docutils literal"><span class="pre">numba.nodes.basenodes.ExprNode</span></tt></a></p>
+<dl class="attribute">
+<dt id="numba.nodes.structnodes.StructAttribute.field_idx">
+<tt class="descname">field_idx</tt><a class="headerlink" href="#numba.nodes.structnodes.StructAttribute.field_idx" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.structnodes.StructVariable">
+<em class="property">class </em><tt class="descclassname">numba.nodes.structnodes.</tt><tt class="descname">StructVariable</tt><big>(</big><em>node</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#numba.nodes.structnodes.StructVariable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.nodes.basenodes.ExprNode" title="numba.nodes.basenodes.ExprNode"><tt class="xref py py-class docutils literal"><span class="pre">numba.nodes.basenodes.ExprNode</span></tt></a></p>
+<p>Tells the type inferencer that the node is actually a valid struct that
+we can mutate. For instance</p>
+<blockquote>
+<div>func().a = 2</div></blockquote>
+<p>is wrong if func() returns a struct by value. So we only allow references
+like struct.a = 2 and array[i].a = 2.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.nodes.structnodes.struct_type">
+<tt class="descclassname">numba.nodes.structnodes.</tt><tt class="descname">struct_type</tt><big>(</big><em>type</em><big>)</big><a class="headerlink" href="#numba.nodes.structnodes.struct_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-numba.nodes.tempnodes">
+<span id="tempnodes-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">tempnodes</span></tt> Module<a class="headerlink" href="#module-numba.nodes.tempnodes" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="numba.nodes.tempnodes.TempLoadNode">
+<em class="property">class </em><tt class="descclassname">numba.nodes.tempnodes.</tt><tt class="descname">TempLoadNode</tt><big>(</big><em>temp</em>, <em>invariant=False</em><big>)</big><a class="headerlink" href="#numba.nodes.tempnodes.TempLoadNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.nodes.basenodes.ExprNode" title="numba.nodes.basenodes.ExprNode"><tt class="xref py py-class docutils literal"><span class="pre">numba.nodes.basenodes.ExprNode</span></tt></a></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.tempnodes.TempNode">
+<em class="property">class </em><tt class="descclassname">numba.nodes.tempnodes.</tt><tt class="descname">TempNode</tt><big>(</big><em>type</em>, <em>name=None</em>, <em>dst_variable=None</em><big>)</big><a class="headerlink" href="#numba.nodes.tempnodes.TempNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.nodes.basenodes.ExprNode" title="numba.nodes.basenodes.ExprNode"><tt class="xref py py-class docutils literal"><span class="pre">numba.nodes.basenodes.ExprNode</span></tt></a></p>
+<p>Create a temporary to store values in. Does not perform reference counting.</p>
+<dl class="method">
+<dt id="numba.nodes.tempnodes.TempNode.get_tbaa_node">
+<tt class="descname">get_tbaa_node</tt><big>(</big><em>tbaa</em><big>)</big><a class="headerlink" href="#numba.nodes.tempnodes.TempNode.get_tbaa_node" title="Permalink to this definition">¶</a></dt>
+<dd><p>TBAA metadata node unique to this temporary. This is valid
+since one cannot take the address of a temporary.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.nodes.tempnodes.TempNode.load">
+<tt class="descname">load</tt><big>(</big><em>invariant=False</em><big>)</big><a class="headerlink" href="#numba.nodes.tempnodes.TempNode.load" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.nodes.tempnodes.TempNode.store">
+<tt class="descname">store</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.nodes.tempnodes.TempNode.store" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="numba.nodes.tempnodes.TempNode.temp_counter">
+<tt class="descname">temp_counter</tt><em class="property"> = 0</em><a class="headerlink" href="#numba.nodes.tempnodes.TempNode.temp_counter" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.tempnodes.TempStoreNode">
+<em class="property">class </em><tt class="descclassname">numba.nodes.tempnodes.</tt><tt class="descname">TempStoreNode</tt><big>(</big><em>temp</em>, <em>invariant=False</em><big>)</big><a class="headerlink" href="#numba.nodes.tempnodes.TempStoreNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.nodes.tempnodes.TempLoadNode" title="numba.nodes.tempnodes.TempLoadNode"><tt class="xref py py-class docutils literal"><span class="pre">numba.nodes.tempnodes.TempLoadNode</span></tt></a></p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-numba.nodes.usernode">
+<span id="usernode-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">usernode</span></tt> Module<a class="headerlink" href="#module-numba.nodes.usernode" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="numba.nodes.usernode.UserNode">
+<em class="property">class </em><tt class="descclassname">numba.nodes.usernode.</tt><tt class="descname">UserNode</tt><big>(</big><em>**kwargs</em><big>)</big><a class="headerlink" href="#numba.nodes.usernode.UserNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.nodes.basenodes.ExprNode" title="numba.nodes.basenodes.ExprNode"><tt class="xref py py-class docutils literal"><span class="pre">numba.nodes.basenodes.ExprNode</span></tt></a></p>
+<p>Node that users can subclass and insert in the AST without using mixins
+to provide user-specified functionality.</p>
+<dl class="attribute">
+<dt id="numba.nodes.usernode.UserNode.actual_name">
+<tt class="descname">actual_name</tt><em class="property"> = 'UserNode'</em><a class="headerlink" href="#numba.nodes.usernode.UserNode.actual_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.nodes.usernode.UserNode.codegen">
+<tt class="descname">codegen</tt><big>(</big><em>codegen</em><big>)</big><a class="headerlink" href="#numba.nodes.usernode.UserNode.codegen" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate code for this node.</p>
+<p>Must return an LLVM Value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.nodes.usernode.UserNode.infer_types">
+<tt class="descname">infer_types</tt><big>(</big><em>type_inferer</em><big>)</big><a class="headerlink" href="#numba.nodes.usernode.UserNode.infer_types" title="Permalink to this definition">¶</a></dt>
+<dd><p>Infer the type of this node and set it self.type.</p>
+<p>The return value will replace this node in the AST.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.nodes.usernode.UserNode.specialize">
+<tt class="descname">specialize</tt><big>(</big><em>specializer</em><big>)</big><a class="headerlink" href="#numba.nodes.usernode.UserNode.specialize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Just before code generation. Useful to rewrite this node in terms
+of other existing fundamental operations.</p>
+<p>Implementing this method is optional.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.nodes.usernode.UserNodeMeta">
+<em class="property">class </em><tt class="descclassname">numba.nodes.usernode.</tt><tt class="descname">UserNodeMeta</tt><big>(</big><em>what</em>, <em>bases=None</em>, <em>dict=None</em><big>)</big><a class="headerlink" href="#numba.nodes.usernode.UserNodeMeta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">type</span></tt></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="numba.nodes.usernode.dont_infer">
+<tt class="descclassname">numba.nodes.usernode.</tt><tt class="descname">dont_infer</tt><a class="headerlink" href="#numba.nodes.usernode.dont_infer" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#numba.nodes.usernode.UserNode" title="numba.nodes.usernode.UserNode"><tt class="xref py py-class docutils literal"><span class="pre">UserNode</span></tt></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="numba.nodes.usernode.infer_now">
+<tt class="descclassname">numba.nodes.usernode.</tt><tt class="descname">infer_now</tt><a class="headerlink" href="#numba.nodes.usernode.infer_now" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#numba.nodes.usernode.UserNode" title="numba.nodes.usernode.UserNode"><tt class="xref py py-class docutils literal"><span class="pre">UserNode</span></tt></a></p>
+</dd></dl>
+
+</div>
+</div>
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        
+      </div><!-- /row -->
+
+      <!-- row -->
+      <div class="row-fluid">
+<div class="related navbar ">
+  <div class="navbar-inner">
+    <ul class="nav pull-right">
+      
+        <li><a href="../genindex.html" title="General Index" >index</a></li>
+        <li><a href="../py-modindex.html" title="Python Module Index" >modules</a></li>
+        <li><a href="numba.pycc.html" title="pycc Package" >next</a></li>
+        <li><a href="numba.intrinsic.html" title="intrinsic Package" >previous</a></li>
+        <li><a href="../index.html">numba 0.10.0 documentation</a></li>
+        <li><a href="modules.html" >Numba Module Reference</a></li>
+        <li><a href="numba.html" >numba Package</a></li> 
+      
+    </ul>
+  </div>
+</div>
+      </div><!-- /row -->
+
+      <!-- footer -->
+      <footer>
+          &copy; Copyright 2012-2013, Continuum Analytics.
+        Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+      </footer>
+      <!-- /footer -->
+
+    </div>
+    <!-- /container -->
+
+  </body>
+</html>
