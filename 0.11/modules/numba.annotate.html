@@ -1,0 +1,562 @@
+
+<!DOCTYPE html>
+
+
+
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+    <title>annotate Package &mdash; numba 0.11.0 documentation</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    
+<link rel="stylesheet" href="../_static/css/basicstrap-base.css" type="text/css" />
+<link rel="stylesheet" href="../_static/css/bootstrap.min.css" type="text/css" />
+<link rel="stylesheet" href="../_static/css/font-awesome.min.css">
+<!--[if IE 7]>
+<link rel="stylesheet" href="../_static/css/font-awesome-ie7.min.css">
+<![endif]-->
+<style type="text/css">
+  body {
+    padding-top: 60px;
+    padding-bottom: 40px;
+  }
+}
+</style>
+<link rel="stylesheet" href="../_static/basicstrap.css" type="text/css" />
+<link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+<link rel="stylesheet" href="../_static/css/bootstrap-responsive.min.css" type="text/css" />
+    
+<script type="text/javascript">
+  var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:    '../',
+            VERSION:     '0.11.0',
+            COLLAPSE_INDEX: false,
+            FILE_SUFFIX: '.html',
+            HAS_SOURCE:  true
+  };
+</script>
+<script type="text/javascript" src="../_static/js/jquery.min.js"></script>
+<script type="text/javascript" src="../_static/underscore.js"></script>
+<script type="text/javascript" src="../_static/doctools.js"></script>
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/javascript" src="../_static/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+  $(document).ready(function(){
+    $('.show-sidebar').click(function(e) {
+       e.preventDefault();
+       if ($(".show-sidebar").html() == "Open Table Of Contents") {
+          $('.for-mobile').removeClass('hidden-phone');
+          $(".show-sidebar").html("Close Table Of Contents");
+       } else {
+          $(".show-sidebar").html("Open Table Of Contents");
+       }
+    });
+  });
+</script>
+    <link rel="top" title="numba 0.11.0 documentation" href="../index.html" />
+    <link rel="up" title="numba Package" href="numba.html" />
+    <link rel="next" title="codegen Package" href="numba.codegen.html" />
+    <link rel="prev" title="numba Package" href="numba.html" /> 
+  </head>
+  <body>
+    <div class="navbar navbar-fixed-top ">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="../index.html">numba 0.11.0 documentation</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav pull-right">
+              
+                <li>
+                <a href="../genindex.html" title="General Index" accesskey="I">index</a>
+                </li>
+                <li>
+                <a href="../py-modindex.html" title="Python Module Index" >modules</a>
+                </li>
+                <li>
+                <a href="numba.codegen.html" title="codegen Package" accesskey="N">next</a>
+                </li>
+                <li>
+                <a href="numba.html" title="numba Package" accesskey="P">previous</a>
+                </li>
+                <li>
+                <a href="modules.html" >Numba Module Reference</a>
+                </li>
+                <li>
+                <a href="numba.html" accesskey="U">numba Package</a>
+                </li>
+              
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <!-- container -->
+    <div class="container-fluid">
+
+
+      
+      <div class="row-fluid hidden-desktop hidden-tablet">
+      
+<div class="span3 ">
+  <a class="visible-phone btn btn-small show-sidebar" data-toggle="collapse" data-target=".for-mobile">Open Table Of Contents</a>
+  <div class="for-mobile sidebar hidden-phone">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">annotate Package</a><ul>
+<li><a class="reference internal" href="#id1"><tt class="docutils literal"><span class="pre">annotate</span></tt> Package</a></li>
+<li><a class="reference internal" href="#module-numba.annotate.annotate"><tt class="docutils literal"><span class="pre">annotate</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-numba.annotate.annotators"><tt class="docutils literal"><span class="pre">annotators</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-numba.annotate.htmlrender"><tt class="docutils literal"><span class="pre">htmlrender</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-numba.annotate.ir_capture"><tt class="docutils literal"><span class="pre">ir_capture</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-numba.annotate.step"><tt class="docutils literal"><span class="pre">step</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-numba.annotate.textrender"><tt class="docutils literal"><span class="pre">textrender</span></tt> Module</a></li>
+<li><a class="reference internal" href="#subpackages">Subpackages</a><ul>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="numba.html"
+                        title="previous chapter">numba Package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="numba.codegen.html"
+                        title="next chapter">codegen Package</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/modules/numba.annotate.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox">
+  <h3>Quick search</h3>
+  <form class="search form-search" action="../search.html" method="get">
+      <div class="input-append">
+        <input type="text" class="search-query" name="q">
+        <input type="submit" class="btn" value="Go" />
+      </div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+  </div>
+</div>
+      </div>
+      
+
+      <!-- row -->
+      <div class="row-fluid">
+         
+<div class="span3 visible-desktop visible-tablet">
+  <div class=" sidebar hidden-phone">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">annotate Package</a><ul>
+<li><a class="reference internal" href="#id1"><tt class="docutils literal"><span class="pre">annotate</span></tt> Package</a></li>
+<li><a class="reference internal" href="#module-numba.annotate.annotate"><tt class="docutils literal"><span class="pre">annotate</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-numba.annotate.annotators"><tt class="docutils literal"><span class="pre">annotators</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-numba.annotate.htmlrender"><tt class="docutils literal"><span class="pre">htmlrender</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-numba.annotate.ir_capture"><tt class="docutils literal"><span class="pre">ir_capture</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-numba.annotate.step"><tt class="docutils literal"><span class="pre">step</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-numba.annotate.textrender"><tt class="docutils literal"><span class="pre">textrender</span></tt> Module</a></li>
+<li><a class="reference internal" href="#subpackages">Subpackages</a><ul>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="numba.html"
+                        title="previous chapter">numba Package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="numba.codegen.html"
+                        title="next chapter">codegen Package</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/modules/numba.annotate.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox">
+  <h3>Quick search</h3>
+  <form class="search form-search" action="../search.html" method="get">
+      <div class="input-append">
+        <input type="text" class="search-query" name="q">
+        <input type="submit" class="btn" value="Go" />
+      </div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+  </div>
+</div> 
+        
+
+        <div class="span9">
+          <div class="document">
+            <div class="documentwrapper">
+              <div class="bodywrapper">
+                <div class="body">
+                  
+  <div class="section" id="annotate-package">
+<h1>annotate Package<a class="headerlink" href="#annotate-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id1">
+<h2><tt class="xref py py-mod docutils literal"><span class="pre">annotate</span></tt> Package<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-numba.annotate"></span></div>
+<div class="section" id="module-numba.annotate.annotate">
+<span id="annotate-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">annotate</span></tt> Module<a class="headerlink" href="#module-numba.annotate.annotate" title="Permalink to this headline">¶</a></h2>
+<p>numba &#8211;annotate</p>
+<dl class="class">
+<dt id="numba.annotate.annotate.Annotation">
+<em class="property">class </em><tt class="descclassname">numba.annotate.annotate.</tt><tt class="descname">Annotation</tt><a class="headerlink" href="#numba.annotate.annotate.Annotation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">tuple</span></tt></p>
+<p>Annotation(type, value)</p>
+<dl class="attribute">
+<dt id="numba.annotate.annotate.Annotation.type">
+<tt class="descname">type</tt><a class="headerlink" href="#numba.annotate.annotate.Annotation.type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="numba.annotate.annotate.Annotation.value">
+<tt class="descname">value</tt><a class="headerlink" href="#numba.annotate.annotate.Annotation.value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.annotate.annotate.DotIntermediate">
+<em class="property">class </em><tt class="descclassname">numba.annotate.annotate.</tt><tt class="descname">DotIntermediate</tt><a class="headerlink" href="#numba.annotate.annotate.DotIntermediate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">tuple</span></tt></p>
+<p>DotIntermediate(name, dotcode)</p>
+<dl class="attribute">
+<dt id="numba.annotate.annotate.DotIntermediate.dotcode">
+<tt class="descname">dotcode</tt><a class="headerlink" href="#numba.annotate.annotate.DotIntermediate.dotcode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="numba.annotate.annotate.DotIntermediate.name">
+<tt class="descname">name</tt><a class="headerlink" href="#numba.annotate.annotate.DotIntermediate.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.annotate.annotate.Program">
+<em class="property">class </em><tt class="descclassname">numba.annotate.annotate.</tt><tt class="descname">Program</tt><a class="headerlink" href="#numba.annotate.annotate.Program" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">tuple</span></tt></p>
+<p>Program(python_source, intermediates)</p>
+<dl class="attribute">
+<dt id="numba.annotate.annotate.Program.intermediates">
+<tt class="descname">intermediates</tt><a class="headerlink" href="#numba.annotate.annotate.Program.intermediates" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="numba.annotate.annotate.Program.python_source">
+<tt class="descname">python_source</tt><a class="headerlink" href="#numba.annotate.annotate.Program.python_source" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.annotate.annotate.Source">
+<em class="property">class </em><tt class="descclassname">numba.annotate.annotate.</tt><tt class="descname">Source</tt><a class="headerlink" href="#numba.annotate.annotate.Source" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">tuple</span></tt></p>
+<p>Source(linemap, annotations)</p>
+<dl class="attribute">
+<dt id="numba.annotate.annotate.Source.annotations">
+<tt class="descname">annotations</tt><a class="headerlink" href="#numba.annotate.annotate.Source.annotations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="numba.annotate.annotate.Source.linemap">
+<tt class="descname">linemap</tt><a class="headerlink" href="#numba.annotate.annotate.Source.linemap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.annotate.annotate.SourceIntermediate">
+<em class="property">class </em><tt class="descclassname">numba.annotate.annotate.</tt><tt class="descname">SourceIntermediate</tt><a class="headerlink" href="#numba.annotate.annotate.SourceIntermediate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">tuple</span></tt></p>
+<p>SourceIntermediate(name, linenomap, source)</p>
+<dl class="attribute">
+<dt id="numba.annotate.annotate.SourceIntermediate.linenomap">
+<tt class="descname">linenomap</tt><a class="headerlink" href="#numba.annotate.annotate.SourceIntermediate.linenomap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="numba.annotate.annotate.SourceIntermediate.name">
+<tt class="descname">name</tt><a class="headerlink" href="#numba.annotate.annotate.SourceIntermediate.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="numba.annotate.annotate.SourceIntermediate.source">
+<tt class="descname">source</tt><a class="headerlink" href="#numba.annotate.annotate.SourceIntermediate.source" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 2</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.annotate.annotate.build_linemap">
+<tt class="descclassname">numba.annotate.annotate.</tt><tt class="descname">build_linemap</tt><big>(</big><em>func</em><big>)</big><a class="headerlink" href="#numba.annotate.annotate.build_linemap" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.annotate.annotate.format_annotations">
+<tt class="descclassname">numba.annotate.annotate.</tt><tt class="descname">format_annotations</tt><big>(</big><em>annotations</em><big>)</big><a class="headerlink" href="#numba.annotate.annotate.format_annotations" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.annotate.annotate.groupdict">
+<tt class="descclassname">numba.annotate.annotate.</tt><tt class="descname">groupdict</tt><big>(</big><em>xs</em>, <em>attr</em><big>)</big><a class="headerlink" href="#numba.annotate.annotate.groupdict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-numba.annotate.annotators">
+<span id="annotators-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">annotators</span></tt> Module<a class="headerlink" href="#module-numba.annotate.annotators" title="Permalink to this headline">¶</a></h2>
+<p>Numba annotators.</p>
+<dl class="class">
+<dt id="numba.annotate.annotators.AnnotateTypes">
+<em class="property">class </em><tt class="descclassname">numba.annotate.annotators.</tt><tt class="descname">AnnotateTypes</tt><a class="headerlink" href="#numba.annotate.annotators.AnnotateTypes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<dl class="method">
+<dt id="numba.annotate.annotators.AnnotateTypes.visit_Name">
+<tt class="descname">visit_Name</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.annotate.annotators.AnnotateTypes.visit_Name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.annotate.annotators.annotate_pyapi">
+<tt class="descclassname">numba.annotate.annotators.</tt><tt class="descname">annotate_pyapi</tt><big>(</big><em>llvm_intermediate</em>, <em>py_annotations</em><big>)</big><a class="headerlink" href="#numba.annotate.annotators.annotate_pyapi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Produce annotations for CPython C API calls from an LLVM SourceIntermediate</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-numba.annotate.htmlrender">
+<span id="htmlrender-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">htmlrender</span></tt> Module<a class="headerlink" href="#module-numba.annotate.htmlrender" title="Permalink to this headline">¶</a></h2>
+<p>HTML annotation rendering. Heavily based on Cython/Compiler/Annotate.py</p>
+<dl class="function">
+<dt id="numba.annotate.htmlrender.render">
+<tt class="descclassname">numba.annotate.htmlrender.</tt><tt class="descname">render</tt><big>(</big><em>annotation_blocks</em>, <em>emit=&lt;built-in method write of file object at 0x10028d150&gt;</em>, <em>intermediate_names=()</em>, <em>inline=True</em><big>)</big><a class="headerlink" href="#numba.annotate.htmlrender.render" title="Permalink to this definition">¶</a></dt>
+<dd><p>Render a Program as html.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-numba.annotate.ir_capture">
+<span id="ir-capture-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">ir_capture</span></tt> Module<a class="headerlink" href="#module-numba.annotate.ir_capture" title="Permalink to this headline">¶</a></h2>
+<p>Capture IR emissions.</p>
+<dl class="class">
+<dt id="numba.annotate.ir_capture.IRBuilder">
+<em class="property">class </em><tt class="descclassname">numba.annotate.ir_capture.</tt><tt class="descname">IRBuilder</tt><big>(</big><em>name</em>, <em>builder</em><big>)</big><a class="headerlink" href="#numba.annotate.ir_capture.IRBuilder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<dl class="method">
+<dt id="numba.annotate.ir_capture.IRBuilder.get_pos">
+<tt class="descname">get_pos</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.annotate.ir_capture.IRBuilder.get_pos" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.annotate.ir_capture.IRBuilder.update_pos">
+<tt class="descname">update_pos</tt><big>(</big><em>pos</em><big>)</big><a class="headerlink" href="#numba.annotate.ir_capture.IRBuilder.update_pos" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.annotate.ir_capture.filter_llvm">
+<tt class="descclassname">numba.annotate.ir_capture.</tt><tt class="descname">filter_llvm</tt><big>(</big><em>captured</em><big>)</big><a class="headerlink" href="#numba.annotate.ir_capture.filter_llvm" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.annotate.ir_capture.filter_unique">
+<tt class="descclassname">numba.annotate.ir_capture.</tt><tt class="descname">filter_unique</tt><big>(</big><em>captured</em><big>)</big><a class="headerlink" href="#numba.annotate.ir_capture.filter_unique" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.annotate.ir_capture.get_intermediate">
+<tt class="descclassname">numba.annotate.ir_capture.</tt><tt class="descname">get_intermediate</tt><big>(</big><em>ir_builder</em><big>)</big><a class="headerlink" href="#numba.annotate.ir_capture.get_intermediate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get IR source from an IR builder as a SourceIntermediate</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.annotate.ir_capture.order_llvm">
+<tt class="descclassname">numba.annotate.ir_capture.</tt><tt class="descname">order_llvm</tt><big>(</big><em>blocks</em><big>)</big><a class="headerlink" href="#numba.annotate.ir_capture.order_llvm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Put llvm instructions and basic blocks in the right order.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>blocks</strong> &#8211; { llvm_block : [llvm_instr] }</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">[llvm_line]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-numba.annotate.step">
+<span id="step-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">step</span></tt> Module<a class="headerlink" href="#module-numba.annotate.step" title="Permalink to this headline">¶</a></h2>
+<p>Copyright (c) 2012, Daniele Mazzocchio  
+All rights reserved.</p>
+<p>Redistribution and use in source and binary forms, with or without modification,
+are permitted provided that the following conditions are met:</p>
+<ul class="simple">
+<li>Redistributions of source code must retain the above copyright notice, this
+list of conditions and the following disclaimer.</li>
+<li>Redistributions in binary form must reproduce the above copyright notice,
+this list of conditions and the following disclaimer in the documentation
+and/or other materials provided with the distribution.</li>
+<li>Neither the name of the developer nor the names of its contributors may be
+used to endorse or promote products derived from this software without
+specific prior written permission.</li>
+</ul>
+<p>THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &#8220;AS IS&#8221; AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</p>
+<dl class="class">
+<dt id="numba.annotate.step.Template">
+<em class="property">class </em><tt class="descclassname">numba.annotate.step.</tt><tt class="descname">Template</tt><big>(</big><em>template</em><big>)</big><a class="headerlink" href="#numba.annotate.step.Template" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<dl class="method">
+<dt id="numba.annotate.step.Template.expand">
+<tt class="descname">expand</tt><big>(</big><em>namespace={}</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#numba.annotate.step.Template.expand" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the expanded template string</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-numba.annotate.textrender">
+<span id="textrender-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">textrender</span></tt> Module<a class="headerlink" href="#module-numba.annotate.textrender" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="numba.annotate.textrender.Emitter">
+<em class="property">class </em><tt class="descclassname">numba.annotate.textrender.</tt><tt class="descname">Emitter</tt><a class="headerlink" href="#numba.annotate.textrender.Emitter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">tuple</span></tt></p>
+<p>Emitter(emit, emitline)</p>
+<dl class="attribute">
+<dt id="numba.annotate.textrender.Emitter.emit">
+<tt class="descname">emit</tt><a class="headerlink" href="#numba.annotate.textrender.Emitter.emit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="numba.annotate.textrender.Emitter.emitline">
+<tt class="descname">emitline</tt><a class="headerlink" href="#numba.annotate.textrender.Emitter.emitline" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.annotate.textrender.render">
+<tt class="descclassname">numba.annotate.textrender.</tt><tt class="descname">render</tt><big>(</big><em>annotation_blocks</em>, <em>emit=&lt;built-in method write of file object at 0x10028d150&gt;</em>, <em>intermediate_names=()</em>, <em>inline=True</em><big>)</big><a class="headerlink" href="#numba.annotate.textrender.render" title="Permalink to this definition">¶</a></dt>
+<dd><p>Render a Program as text.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>intermediate_names</strong> &#8211; [intermediate_name], e.g. [&#8220;llvm&#8221;]</li>
+<li><strong>inline</strong> &#8211; whether to display intermediate code inline</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.annotate.textrender.render_source">
+<tt class="descclassname">numba.annotate.textrender.</tt><tt class="descname">render_source</tt><big>(</big><em>source</em>, <em>emitter</em>, <em>indent</em>, <em>intermediates</em>, <em>linenomap=None</em><big>)</big><a class="headerlink" href="#numba.annotate.textrender.render_source" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print a Source and its annotations. Print any given Intermediates inline.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul class="simple">
+</ul>
+</div>
+</div>
+</div>
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        
+      </div><!-- /row -->
+
+      <!-- row -->
+      <div class="row-fluid">
+<div class="related navbar ">
+  <div class="navbar-inner">
+    <ul class="nav pull-right">
+      
+        <li><a href="../genindex.html" title="General Index" >index</a></li>
+        <li><a href="../py-modindex.html" title="Python Module Index" >modules</a></li>
+        <li><a href="numba.codegen.html" title="codegen Package" >next</a></li>
+        <li><a href="numba.html" title="numba Package" >previous</a></li>
+        <li><a href="../index.html">numba 0.11.0 documentation</a></li>
+        <li><a href="modules.html" >Numba Module Reference</a></li>
+        <li><a href="numba.html" >numba Package</a></li> 
+      
+    </ul>
+  </div>
+</div>
+      </div><!-- /row -->
+
+      <!-- footer -->
+      <footer>
+          &copy; Copyright 2012-2013, Continuum Analytics.
+        Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+      </footer>
+      <!-- /footer -->
+
+    </div>
+    <!-- /container -->
+
+  </body>
+</html>
