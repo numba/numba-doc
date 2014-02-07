@@ -1,0 +1,1210 @@
+
+<!DOCTYPE html>
+
+
+
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+    <title>Development crash course &mdash; numba 0.12.0 documentation</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    
+<link rel="stylesheet" href="_static/css/basicstrap-base.css" type="text/css" />
+<link rel="stylesheet" href="_static/css/bootstrap.min.css" type="text/css" />
+<link rel="stylesheet" href="_static/css/font-awesome.min.css">
+<!--[if IE 7]>
+<link rel="stylesheet" href="_static/css/font-awesome-ie7.min.css">
+<![endif]-->
+<style type="text/css">
+  body {
+    padding-top: 60px;
+    padding-bottom: 40px;
+  }
+}
+</style>
+<link rel="stylesheet" href="_static/basicstrap.css" type="text/css" />
+<link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+<link rel="stylesheet" href="_static/css/bootstrap-responsive.min.css" type="text/css" />
+    
+<script type="text/javascript">
+  var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:    '',
+            VERSION:     '0.12.0',
+            COLLAPSE_INDEX: false,
+            FILE_SUFFIX: '.html',
+            HAS_SOURCE:  true
+  };
+</script>
+<script type="text/javascript" src="_static/js/jquery.min.js"></script>
+<script type="text/javascript" src="_static/underscore.js"></script>
+<script type="text/javascript" src="_static/doctools.js"></script>
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/javascript" src="_static/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+  $(document).ready(function(){
+    $('.show-sidebar').click(function(e) {
+       e.preventDefault();
+       if ($(".show-sidebar").html() == "Open Table Of Contents") {
+          $('.for-mobile').removeClass('hidden-phone');
+          $(".show-sidebar").html("Close Table Of Contents");
+       } else {
+          $(".show-sidebar").html("Open Table Of Contents");
+       }
+    });
+  });
+</script>
+    <link rel="top" title="numba 0.12.0 documentation" href="index.html" />
+    <link rel="next" title="Numba Module Reference" href="modules/modules.html" />
+    <link rel="prev" title="Numba Roadmap" href="roadmap.html" /> 
+  </head>
+  <body>
+    <div class="navbar navbar-fixed-top ">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="index.html">numba 0.12.0 documentation</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav pull-right">
+              
+                <li>
+                <a href="genindex.html" title="General Index" accesskey="I">index</a>
+                </li>
+                <li>
+                <a href="py-modindex.html" title="Python Module Index" >modules</a>
+                </li>
+                <li>
+                <a href="modules/modules.html" title="Numba Module Reference" accesskey="N">next</a>
+                </li>
+                <li>
+                <a href="roadmap.html" title="Numba Roadmap" accesskey="P">previous</a>
+                </li>
+              
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <!-- container -->
+    <div class="container-fluid">
+
+
+      
+      <div class="row-fluid hidden-desktop hidden-tablet">
+      
+<div class="span3 ">
+  <a class="visible-phone btn btn-small show-sidebar" data-toggle="collapse" data-target=".for-mobile">Open Table Of Contents</a>
+  <div class="for-mobile sidebar hidden-phone">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Development crash course</a><ul>
+<li><a class="reference internal" href="#overview">Overview</a><ul>
+<li><a class="reference internal" href="#stages">Stages</a><ul>
+<li><a class="reference internal" href="#package-structure">Package Structure</a></li>
+<li><a class="reference internal" href="#type-dependence-graph-construction">Type Dependence Graph Construction</a></li>
+<li><a class="reference internal" href="#closures">Closures</a></li>
+<li><a class="reference internal" href="#extension-classes">Extension Classes</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#jit">&#64;jit</a></li>
+<li><a class="reference internal" href="#autojit">&#64;autojit</a><ul>
+<li><a class="reference internal" href="#wrappers">Wrappers</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id6">&#64;jit</a></li>
+<li><a class="reference internal" href="#id7">&#64;autojit</a></li>
+<li><a class="reference internal" href="#classes">classes</a><ul>
+<li><a class="reference internal" href="#array-expressions">Array Expressions</a></li>
+<li><a class="reference internal" href="#testing">Testing</a></li>
+<li><a class="reference internal" href="#debugging">Debugging</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#debugging-asts">Debugging ASTs</a></li>
+<li><a class="reference internal" href="#debugging-types">Debugging Types</a></li>
+<li><a class="reference internal" href="#debugging-the-translator">Debugging the Translator</a><ul>
+<li><a class="reference internal" href="#problems">Problems</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="roadmap.html"
+                        title="previous chapter">Numba Roadmap</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="modules/modules.html"
+                        title="next chapter">Numba Module Reference</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/dev.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox">
+  <h3>Quick search</h3>
+  <form class="search form-search" action="search.html" method="get">
+      <div class="input-append">
+        <input type="text" class="search-query" name="q">
+        <input type="submit" class="btn" value="Go" />
+      </div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+  </div>
+</div>
+      </div>
+      
+
+      <!-- row -->
+      <div class="row-fluid">
+         
+<div class="span3 visible-desktop visible-tablet">
+  <div class=" sidebar hidden-phone">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Development crash course</a><ul>
+<li><a class="reference internal" href="#overview">Overview</a><ul>
+<li><a class="reference internal" href="#stages">Stages</a><ul>
+<li><a class="reference internal" href="#package-structure">Package Structure</a></li>
+<li><a class="reference internal" href="#type-dependence-graph-construction">Type Dependence Graph Construction</a></li>
+<li><a class="reference internal" href="#closures">Closures</a></li>
+<li><a class="reference internal" href="#extension-classes">Extension Classes</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#jit">&#64;jit</a></li>
+<li><a class="reference internal" href="#autojit">&#64;autojit</a><ul>
+<li><a class="reference internal" href="#wrappers">Wrappers</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id6">&#64;jit</a></li>
+<li><a class="reference internal" href="#id7">&#64;autojit</a></li>
+<li><a class="reference internal" href="#classes">classes</a><ul>
+<li><a class="reference internal" href="#array-expressions">Array Expressions</a></li>
+<li><a class="reference internal" href="#testing">Testing</a></li>
+<li><a class="reference internal" href="#debugging">Debugging</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#debugging-asts">Debugging ASTs</a></li>
+<li><a class="reference internal" href="#debugging-types">Debugging Types</a></li>
+<li><a class="reference internal" href="#debugging-the-translator">Debugging the Translator</a><ul>
+<li><a class="reference internal" href="#problems">Problems</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="roadmap.html"
+                        title="previous chapter">Numba Roadmap</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="modules/modules.html"
+                        title="next chapter">Numba Module Reference</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/dev.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox">
+  <h3>Quick search</h3>
+  <form class="search form-search" action="search.html" method="get">
+      <div class="input-append">
+        <input type="text" class="search-query" name="q">
+        <input type="submit" class="btn" value="Go" />
+      </div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+  </div>
+</div> 
+        
+
+        <div class="span9">
+          <div class="document">
+            <div class="documentwrapper">
+              <div class="bodywrapper">
+                <div class="body">
+                  
+  <div class="section" id="development-crash-course">
+<h1>Development crash course<a class="headerlink" href="#development-crash-course" title="Permalink to this headline">¶</a></h1>
+<p>This document describes a short crash-course for numba development, where
+things are and where we want them at.</p>
+<div class="section" id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<p>We start with a Python AST, compiled from source code or decompiled from
+bytecode using meta. We run a series of stages that transform the program
+as an AST to something from which we can generate code. The pipeline and
+environment are central pieces in this story:</p>
+<blockquote>
+<div><ul>
+<li><p class="first"><a class="reference external" href="https://github.com/numba/numba/blob/devel/numba/pipeline.py">https://github.com/numba/numba/blob/devel/numba/pipeline.py</a></p>
+<blockquote>
+<div><p>The pipeline has a series of functions that mostly dispatch to
+the actual transformations or visitors.</p>
+</div></blockquote>
+</li>
+<li><p class="first"><a class="reference external" href="https://github.com/numba/numba/blob/devel/numba/environment.py">https://github.com/numba/numba/blob/devel/numba/environment.py</a></p>
+<blockquote>
+<div><p>The environment defines the pipeline order. Noteworthy is
+<a href="#id1"><span class="problematic" id="id2">:py-class:`numba.environment.FunctionEnvironment`</span></a></p>
+</div></blockquote>
+</li>
+</ul>
+</div></blockquote>
+<div class="section" id="stages">
+<h3>Stages<a class="headerlink" href="#stages" title="Permalink to this headline">¶</a></h3>
+<p>The main stages are:</p>
+<blockquote>
+<div><ul>
+<li><p class="first">Control flow analysis: <tt class="docutils literal"><span class="pre">numba/control_flow</span></tt></p>
+<blockquote>
+<div><p>This builds a Control Flow Graph from the AST and computes the
+SSA graph for the variable definitions. In this representation,
+each variable assignment is a definition, e.g.:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">x</span> <span class="o">=</span> <span class="mi">0</span>         <span class="c"># definition 1</span>
+<span class="n">x</span> <span class="o">=</span> <span class="s">&quot;hello&quot;</span>   <span class="c"># definition 2</span>
+</pre></div>
+</div>
+<p>Assignments and variable references are recorded as abstract
+statements in the basic blocks of the CFG, such as</p>
+<blockquote>
+<div><ul class="simple">
+<li>numba.control_flow.cfstats.NameAssignment</li>
+<li>numba.control_flow.cfstats.NameReference</li>
+<li>numba.control_flow.cfstats.PhiNode</li>
+</ul>
+</div></blockquote>
+<p>The phi node occurs at control flow joint points, e.g. after an
+<tt class="docutils literal"><span class="pre">if</span></tt>-statement, or in the condition block of a loop with a
+loop-carried dependency for a variable:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">if</span> <span class="n">c</span><span class="p">:</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="c"># phi here</span>
+</pre></div>
+</div>
+<p>and:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">x</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>  <span class="c"># phi in condition block: x_1 = phi(x_0, x_2)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">i</span> <span class="c"># loop-carried dependency</span>
+</pre></div>
+</div>
+<p>The phi nodes are themselves variable definitions, and they define
+the points where variables merge and need a unifyable type (e.g.
+(int, int), or (int, float), as opposed to (int, string)).</p>
+</div></blockquote>
+</li>
+<li><p class="first">Type inference: <tt class="docutils literal"><span class="pre">numba.type_inference</span></tt></p>
+<blockquote>
+<div><p>Infer types of all expressions, and fix the types of all local
+variables. This operates in two stages:</p>
+<blockquote>
+<div><ul>
+<li><p class="first">Infer types for all local variable definitions (including phis)</p>
+<blockquote>
+<div><p>For an overview of this see <a class="reference internal" href="#dependence"><em>Type Dependence Graph Construction</em></a> below.</p>
+</div></blockquote>
+</li>
+<li><p class="first">Now that all variable definitions have a type, we can
+easily infer types for all expressions by propagating
+type information up the tree</p>
+</li>
+</ul>
+</div></blockquote>
+<div class="line-block">
+<div class="line">When the type inferencer cannot determine a type, such as when it</div>
+<div class="line">calls a Python function or method that is not a Numba function, it</div>
+<div class="line">assumes type <tt class="docutils literal"><span class="pre">object</span></tt>. Object variables may be coerced to and from</div>
+<div class="line">most native types.</div>
+</div>
+<div class="line-block">
+<div class="line">The type inferencer and other code insert CoercionNode nodes that</div>
+<div class="line">perform such coercions, as well as coercions between promotable</div>
+<div class="line">native types.</div>
+</div>
+<div class="line-block">
+<div class="line">It also resolves the return type of many math functions called</div>
+<div class="line">in the numpy, math and cmath modules.</div>
+</div>
+<div class="line-block">
+<div class="line">Each AST expression node has a Variable that holds the type of</div>
+<div class="line">the expression, as well as any meta-data such as constant values</div>
+<div class="line">that have been determined.</div>
+</div>
+<div class="line-block">
+<div class="line">To see how builtins, math and numpy callables are handled, have</div>
+<div class="line">a read through <a class="reference internal" href="type_inference.html#type-inference"><em>Adding Type Inference for External Code</em></a> in the user documentation,</div>
+<div class="line">as well as <tt class="docutils literal"><span class="pre">numba.type_inference.modules</span></tt>::</div>
+</div>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/numba/numba/tree/devel/numba/type_inference/modules">https://github.com/numba/numba/tree/devel/numba/type_inference/modules</a></p>
+</div></blockquote>
+<div class="line-block">
+<div class="line">This above sub-package is an important part of numba that</div>
+<div class="line">infers (and sometimes grossly rewrites) calls to known functions.</div>
+</div>
+</div></blockquote>
+</li>
+<li><p class="first">Specialization/Lowering: numba/specialize and numba/transforms.py</p>
+<blockquote>
+<div><p>What follows over the typed code are a series of transformations to
+lower the level of the code into something low-level - something
+amenable to code generation:</p>
+<blockquote>
+<div><ul>
+<li><p class="first">Rewrite loops over <tt class="docutils literal"><span class="pre">range</span></tt> or <tt class="docutils literal"><span class="pre">xrange</span></tt> into a <tt class="docutils literal"><span class="pre">while</span></tt>
+loop with a counter</p>
+</li>
+<li><p class="first">Rewrite iteration over arrays to a loop over <tt class="docutils literal"><span class="pre">range</span></tt> with
+an index into the array</p>
+</li>
+<li><p class="first">Lower object conversions into calls into the Python C-API.
+For instance it resolves coercions to and from object into
+calls such as <tt class="docutils literal"><span class="pre">PyFloat_FromDouble</span></tt>, with a fallback to
+<tt class="docutils literal"><span class="pre">Py_BuildValue</span></tt>/<tt class="docutils literal"><span class="pre">PyArg_ParseTuple</span></tt>.</p>
+</li>
+<li><p class="first">Lower exception code into calls into the C-API and insert
+NULL pointer checks in places</p>
+</li>
+<li><p class="first">Normalize comparisons (e.g. <tt class="docutils literal"><span class="pre">a</span> <span class="pre">&lt;</span> <span class="pre">b</span> <span class="pre">&lt;</span> <span class="pre">c</span></tt> =&gt; <tt class="docutils literal"><span class="pre">a</span> <span class="pre">&lt;</span> <span class="pre">b</span> <span class="pre">and</span> <span class="pre">b</span> <span class="pre">&lt;</span> <span class="pre">c</span></tt>)</p>
+</li>
+<li><p class="first">Keep track of refcounts. This is mostly done with
+ObjectTempNode, which hold a temporary for an object (a new
+reference). These temporaries are decreffed at cleanup:</p>
+<div class="highlight-llvm"><pre>define double @func()  {
+entry:
+  %retval = alloca double           ; return value
+  %tmp = alloca object              ; object temporary
+  ...
+  %obj = call PyObject_SomeNewObject()
+  %have_error = cmp obj NULL        ; check return value
+  cbranch %have_error, label %error, label %success
+
+success:                            ; no error
+  do something interesting with %obj
+  store %something %retval          ; return some value
+  br return_block                   ; ok, we're done
+
+error:                              ; some error occurred :(
+  store NaN retval
+  br cleanup
+
+return_block:                       ; clean up objects
+  call void Py_XDECREF(%0)
+  %result = load %retval
+  ret %result                       ; return result
+}</pre>
+</div>
+</li>
+</ul>
+</div></blockquote>
+</div></blockquote>
+</li>
+<li><p class="first">Code generation: numba/codegen</p>
+<blockquote>
+<div><p>Generate LLVM code from the transformed AST. This is relatively
+straightforward at this point. One tricky problem is that the basic
+blocks from the LLVM code no longer correspond to the basic blocks
+of the CFG, since error checks have been inserted. This makes
+tracking phis harder than it should be.</p>
+<p>The code generator uses utility functions from numba/utility and
+numba/external to do things like refcounting (<tt class="docutils literal"><span class="pre">Py_INCREF</span></tt>, etc)
+and uses helpers to slice and broadcast arrays.</p>
+</div></blockquote>
+</li>
+</ul>
+</div></blockquote>
+<div class="section" id="package-structure">
+<span id="structure"></span><h4>Package Structure<a class="headerlink" href="#package-structure" title="Permalink to this headline">¶</a></h4>
+<ul>
+<li><p class="first">numba/type_inference</p>
+<blockquote>
+<div><p>Type inference</p>
+</div></blockquote>
+</li>
+<li><p class="first">numba/typesystem</p>
+<blockquote>
+<div><p>Numba typesystem, see also <a class="reference internal" href="types.html#types"><em>Types and Variables</em></a></p>
+</div></blockquote>
+</li>
+<li><p class="first">numba/specialize</p>
+<blockquote>
+<div><p>Lowering transformations, along with numba/transforms.py .
+Coercions are in numba/transforms.py</p>
+</div></blockquote>
+</li>
+</ul>
+<ul id="nodes">
+<li><p class="first">numba/nodes</p>
+<blockquote>
+<div><p>Contains AST nodes. Some nodes that need some explaining:</p>
+<blockquote>
+<div><ul>
+<li><p class="first">ObjectTempNode:</p>
+<blockquote>
+<div><p>Holds a PyObject * temporary that it manages a refcount for</p>
+</div></blockquote>
+</li>
+<li><p class="first">CloneNode/CloneableNode:</p>
+<blockquote>
+<div><p>These nodes are used for subtree sharing, to avoid re-evaluation
+of the subtree. Consider e.g. the expression &#8216;x * 2&#8217;, which we
+want to refer to twice, but evaluate once. We can do the
+following:</p>
+<div class="highlight-python"><pre>cloneable = CloneableNode(&lt;x * 2 expression&gt;)
+clone  = CloneNode(cloneable)</pre>
+</div>
+<p>Here <tt class="docutils literal"><span class="pre">cloneable</span></tt> must be evaluated before <tt class="docutils literal"><span class="pre">clone</span></tt>. We can
+now generate as many clones as we want without re-evaluating
+<tt class="docutils literal"><span class="pre">x</span> <span class="pre">*</span> <span class="pre">2</span></tt></p>
+</div></blockquote>
+</li>
+</ul>
+</div></blockquote>
+</div></blockquote>
+</li>
+<li><p class="first">numba/exttypes</p>
+<blockquote>
+<div><p>Numba extension types, have a read through <a class="reference internal" href="pythonstuff.html#extclasses"><em>Extension Types (Classes)</em></a> first.
+These are fairly well documented. To see how they work, see below
+<a class="reference internal" href="#extcls"><em>Extension Classes</em></a></p>
+</div></blockquote>
+</li>
+<li><p class="first">numba/closures</p>
+<blockquote>
+<div><p>Implements closures for numba. See <a class="reference internal" href="pythonstuff.html#closures"><em>Closures</em></a> and
+<em class="xref std std-ref">closureimpl</em> below for how they work.</p>
+</div></blockquote>
+</li>
+<li><p class="first">numba/support</p>
+<blockquote>
+<div><p>Ctypes, CFFI and NumPy support (slicing, etc)</p>
+</div></blockquote>
+</li>
+<li><p class="first">numba/array_expressions.py</p>
+<blockquote>
+<div><p>Implements array expressions using minivect. Since we don&#8217;t actually
+use the tiling specializers or desperately need crazy optimizations
+for special cases, we should really use lair&#8217;s <tt class="docutils literal"><span class="pre">loop_nest</span></tt> instead
+and throw away numba/minivect</p>
+</div></blockquote>
+</li>
+<li><p class="first">numba/vectorize</p>
+<blockquote>
+<div><p>The &#64;vectorize functionality to build (generalized) ufuncs</p>
+</div></blockquote>
+</li>
+<li><p class="first">numba/wrapping</p>
+<blockquote>
+<div><p>Entry points to compile numba functions, classes and methods</p>
+</div></blockquote>
+</li>
+<li><p class="first">numba/utility and numba/external</p>
+<blockquote>
+<div><p>Runtime support utilities. And yes, you make a valid point,
+this should really be one package.</p>
+</div></blockquote>
+</li>
+<li><p class="first">numba/intrinsic</p>
+<blockquote>
+<div><p>Intrinsics and instruction support for numba, as well as... internal
+intrinsics. Merge internal stuff in numba/external :)</p>
+<p>See <a class="reference internal" href="interface_c.html#intrinsics"><em>Using Intrinsics</em></a> for what intrinsics do.</p>
+</div></blockquote>
+</li>
+<li><p class="first">numba/containers</p>
+<blockquote>
+<div><p>Numba typed containers, see <a class="reference internal" href="pythonstuff.html#containers"><em>Typed Containers</em></a></p>
+</div></blockquote>
+</li>
+<li><p class="first">numba/asdl and numba/ir</p>
+<blockquote>
+<div><p>Utilities to validate ASTs and generate fast visitors/AST implementations
+from ASDL. This should be factored out into asdlpy or somesuch.</p>
+</div></blockquote>
+</li>
+<li><p class="first">numba/viz</p>
+<blockquote>
+<div><p>Format ASTs and CFGs with graphviz. See also the &#8216;annotate&#8217; branch</p>
+</div></blockquote>
+</li>
+<li><p class="first">numba/minivect</p>
+<blockquote>
+<div><p>Array expression compiler. <tt class="docutils literal"><span class="pre">numba.array_expressions</span></tt> is the only
+remaining module depending on this. However, since none of the
+optimizations are actually used, it doens&#8217;t make sense to keep this.
+Instead we can use the <tt class="docutils literal"><span class="pre">loop_nest</span></tt> function from the lair project.</p>
+<p>More on how the array expressions work: <a class="reference internal" href="#arrayexprs"><em>Array Expressions</em></a></p>
+</div></blockquote>
+</li>
+</ul>
+</div>
+<div class="section" id="type-dependence-graph-construction">
+<span id="dependence"></span><h4>Type Dependence Graph Construction<a class="headerlink" href="#type-dependence-graph-construction" title="Permalink to this headline">¶</a></h4>
+<p>From the SSA graph we compute a type graph by inferring all variable
+assignments. This graph often has cycles, due to the back-edge in
+the CFG for loops. For instance we may have the following code:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">x</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+<span class="n">y</span> <span class="o">=</span> <span class="n">x</span>
+</pre></div>
+</div>
+<p>Where <tt class="docutils literal"><span class="pre">f</span></tt> is an external autojit function (i.e., it&#8217;s output type depends
+on it&#8217;s dynamic input type).</p>
+<p>We get the following type graph:</p>
+<p class="graphviz">
+<img src="_images/graphviz-d31f43050eeba7b8b1310d8bb012551d8e8f94d3.png" alt="digraph typegraph {
+x_0 -&gt; int
+
+x_1 -&gt; x_0
+x_1 -&gt; x_2
+x_2 -&gt; f
+f -&gt; x_1
+
+y_0 -&gt; x_1
+
+i_0 -&gt; range
+range -&gt; int
+}" />
+</p>
+<p>Below we show the correspondence of the SSA variable definitions to their
+basic blocks:</p>
+<p class="graphviz">
+<img src="_images/graphviz-0d9527069f69872cfb4e428da17e5519bb5c0423.png" alt="digraph cfg {
+&quot;entry: [ x_0, i_0 ]&quot; -&gt; &quot;condition: [ x_1 ]&quot; -&gt; &quot;body: [ x_2 ]&quot;
+&quot;body: [ x_2 ]&quot; -&gt; &quot;condition: [ x_1 ]&quot;
+&quot;condition: [ x_1 ]&quot; -&gt; &quot;exit: [ y_2 ]&quot;
+}" />
+</p>
+<p>Our goal is to resolve this type graph in topological order, such that
+we know the type for each variable definition (<tt class="docutils literal"><span class="pre">x_0</span></tt>, <tt class="docutils literal"><span class="pre">x_1</span></tt>, etc).</p>
+<p>In order to do a topological sort, we compute the condensation graph
+by finding the strongly connected components and condensing them
+into single graph nodes. The resulting graph looks like this:</p>
+<p class="graphviz">
+<img src="_images/graphviz-bcba21ba0c2ac0644d3f762c6e4f4e385e768337.png" alt="digraph typegraph {
+x_0 -&gt; int
+SCC0 -&gt; x_0
+y_0 -&gt; SCC0
+
+i_0 -&gt; range
+range -&gt; int
+}" />
+</p>
+<p>And <tt class="docutils literal"><span class="pre">SCC0</span></tt> contains the cycle in the type graph. We now have a
+well-defined preorder for which we can process each node in topological
+order on the transpose graph, doing the following:</p>
+<blockquote>
+<div><ul class="simple">
+<li>If the node represents a concrete type, propagate result along edge</li>
+<li>If the node represents a function over an argument of the given input types,
+infer the result type of this function</li>
+<li>For each SCC, process all internal nodes using fixpoint iteration
+given all input types to the SCC. Update internal nodes with their result
+types.</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="closures">
+<span id="id3"></span><h4>Closures<a class="headerlink" href="#closures" title="Permalink to this headline">¶</a></h4>
+<p><tt class="docutils literal"><span class="pre">numba/closures.py</span></tt> provides support for closures and inner functions:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@autojit</span>
+<span class="k">def</span> <span class="nf">outer</span><span class="p">():</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="mi">10</span> <span class="c"># this is a cellvar</span>
+
+    <span class="nd">@jit</span><span class="p">(</span><span class="s">&#39;void()&#39;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">inner</span><span class="p">():</span>
+        <span class="k">print</span> <span class="n">a</span> <span class="c"># this is a freevar</span>
+
+    <span class="n">inner</span><span class="p">()</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="mi">12</span>
+    <span class="k">return</span> <span class="n">inner</span>
+</pre></div>
+</div>
+<p>The &#8216;inner&#8217; function closes over the outer scope. Each function with
+cellvars packs them into a heap-allocated structure, the closure scope.</p>
+<p>The closure scope is passed into &#8216;inner&#8217; when called from within outer.</p>
+<p>The execution of <tt class="docutils literal"><span class="pre">def</span></tt> creates a NumbaFunction, which has itself as the
+m_self attribute. So when &#8216;inner&#8217; is invoked from Python, the numba
+wrapper function gets called with NumbaFunction object and the args
+tuple. The closure scope is then set in NumbaFunction.func_closure.</p>
+<p>The closure scope is an extension type with the cellvars as attributes.
+Closure scopes are chained together, since multiple inner scopes may need
+to share a single outer scope. E.g.:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">outer</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">inner</span><span class="p">(</span><span class="n">b</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">inner_inner</span><span class="p">():</span>
+            <span class="k">print</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span>
+        <span class="k">return</span> <span class="n">inner_inner</span>
+
+    <span class="k">return</span> <span class="n">inner</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">inner</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We have three live closure scopes here:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">scope_outer</span> <span class="o">=</span> <span class="p">{</span> <span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="n">a</span> <span class="p">}</span>  <span class="c"># call to &#39;outer&#39;</span>
+<span class="n">scope_inner_1</span> <span class="o">=</span> <span class="p">{</span> <span class="s">&#39;scope_outer&#39;</span><span class="p">:</span> <span class="n">scope_outer</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">:</span> <span class="mi">1</span> <span class="p">}</span> <span class="c"># call to &#39;inner&#39; with b=1</span>
+<span class="n">scope_inner_2</span> <span class="o">=</span> <span class="p">{</span> <span class="s">&#39;scope_outer&#39;</span><span class="p">:</span> <span class="n">scope_outer</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">:</span> <span class="mi">2</span> <span class="p">}</span> <span class="c"># call to &#39;inner&#39; with b=2</span>
+</pre></div>
+</div>
+<p>Function &#8216;inner_inner&#8217; defines no new scope, since it contains no cellvars.
+But it does contain a freevar from scope_outer and scope_inner, so it gets
+scope_inner passed as first argument. scope_inner has a reference to scope
+outer, so all variables can be resolved.</p>
+<p>These scopes are instances of dynamic numba extension classes.</p>
+</div>
+<div class="section" id="extension-classes">
+<span id="extcls"></span><h4>Extension Classes<a class="headerlink" href="#extension-classes" title="Permalink to this headline">¶</a></h4>
+<p>Extension classes live in numba/exttypes.</p>
+</div>
+</div>
+<div class="section" id="jit">
+<h3>&#64;jit<a class="headerlink" href="#jit" title="Permalink to this headline">¶</a></h3>
+<p>Compiling &#64;jit extension classes works as follows:</p>
+<blockquote>
+<div><ul>
+<li><p class="first">Create an extension Numba type holding a symbol table</p>
+</li>
+<li><p class="first">Capture attribute types in the symtab ...</p>
+<blockquote>
+<div><ul>
+<li><p class="first">... from the class attributes:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@jit</span>
+<span class="k">class</span> <span class="nc">Foo</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="n">attr</span> <span class="o">=</span> <span class="n">double</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">... from __init__:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@jit</span>
+<span class="k">class</span> <span class="nc">Foo</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attr</span> <span class="o">=</span> <span class="n">double</span><span class="p">(</span><span class="n">attr</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first">Type infer all methods</p>
+</li>
+<li><p class="first">Compile all extension methods</p>
+<blockquote>
+<div><ul class="simple">
+<li>Process signatures such as &#64;void(double)</li>
+<li>Infer native attributes through type inference on __init__</li>
+<li>Path the extension type with a native attributes struct</li>
+<li>Infer types for all other methods</li>
+<li>Update the ext_type with a vtab type</li>
+<li>Compile all methods</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first">Create descriptors that wrap the native attributes</p>
+</li>
+<li><p class="first">Create an extension type:</p>
+<dl class="docutils">
+<dt>{</dt>
+<dd><p class="first last">PyObject_HEAD
+...
+virtual function table (func <a href="#id4"><span class="problematic" id="id5">**</span></a>)
+native attributes</p>
+</dd>
+</dl>
+<p>}</p>
+</li>
+</ul>
+<p>The virtual function table (vtab) is a ctypes structure set as
+attribute of the extension types. Objects have a direct pointer
+for efficiency.</p>
+</div></blockquote>
+</div>
+<div class="section" id="autojit">
+<h3>&#64;autojit<a class="headerlink" href="#autojit" title="Permalink to this headline">¶</a></h3>
+<p>Compiling &#64;autojit extension classes works as follows:</p>
+<blockquote>
+<div><ul>
+<li><p class="first">Create an extension Numba type holding a symtab</p>
+</li>
+<li><p class="first">Capture attribute types in the symtab in the same was as &#64;jit</p>
+</li>
+<li><p class="first">Build attribute hash-based vtable, hashing on (attr_name, attr_type).</p>
+<blockquote>
+<div><p>(attr_name, attr_type) is the only allowed key for that attribute
+(i.e. this is fixed at compile time (for now). This means consumers
+will always know the attribute type (and don&#8217;t need to specialize
+on different attribute types).</p>
+<p>However, using a hash-based attribute table allows easy implementation
+of multiple inheritance (virtual inheritance), without complicated
+C++ dynamic offsets to base objects (see also virtual.py).</p>
+</div></blockquote>
+</li>
+</ul>
+<dl class="docutils">
+<dt>For all methods M with static input types:</dt>
+<dd><ul class="first last simple">
+<li>Compile M</li>
+<li>Register M in a list of compiled methods</li>
+</ul>
+</dd>
+</dl>
+<ul>
+<li><p class="first">Build initial hash-based virtual method table from compiled methods</p>
+<blockquote>
+<div><ul>
+<li><dl class="first docutils">
+<dt>Create pre-hash values for the signatures</dt>
+<dd><ul class="first last simple">
+<li>We use these values to look up methods at runtime</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p class="first">Parametrize the virtual method table to build a final hash function:</p>
+<blockquote>
+<div><div class="highlight-c"><div class="highlight"><pre><span class="n">slot_index</span> <span class="o">=</span> <span class="p">(((</span><span class="n">prehash</span> <span class="o">&gt;&gt;</span> <span class="n">table</span><span class="p">.</span><span class="n">r</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">self</span><span class="p">.</span><span class="n">table</span><span class="p">.</span><span class="n">m_f</span><span class="p">)</span> <span class="o">^</span>
+               <span class="n">self</span><span class="p">.</span><span class="n">displacements</span><span class="p">[</span><span class="n">prehash</span> <span class="o">&amp;</span> <span class="n">self</span><span class="p">.</span><span class="n">table</span><span class="p">.</span><span class="n">m_g</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>Note that for &#64;jit classes, we do not support multiple inheritance with
+incompatible base objects. We could use a dynamic offset to base classes,
+and adjust object pointers for method calls, like in C++:</p>
+<blockquote>
+<div><p><a class="reference external" href="http://www.phpcompiler.org/articles/virtualinheritance.html">http://www.phpcompiler.org/articles/virtualinheritance.html</a></p>
+</div></blockquote>
+<p>However, this is quite complicated, and still doesn&#8217;t allow dynamic extension
+for autojit classes. Instead we will use Dag Sverre Seljebotn&#8217;s hash-based
+virtual method tables:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/numfocus/sep/blob/master/sep200.rst">https://github.com/numfocus/sep/blob/master/sep200.rst</a>
+<a class="reference external" href="https://github.com/numfocus/sep/blob/master/sep201.rst">https://github.com/numfocus/sep/blob/master/sep201.rst</a></p>
+</div></blockquote>
+<p>The following paper helps understand the perfect hashing scheme:</p>
+<blockquote>
+<div><p>Hash and Displace: Efficient Evaluation of Minimal Perfect
+Hash Functions (1999) by Rasmus Pagn:</p>
+<blockquote>
+<div><p><a class="reference external" href="http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.32.6530">http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.32.6530</a></p>
+</div></blockquote>
+</div></blockquote>
+</div></blockquote>
+</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first">Create descriptors that wrap the native attributes</p>
+</li>
+<li><p class="first">Create an extension type:</p>
+<blockquote>
+<div><div class="highlight-c"><div class="highlight"><pre><span class="p">{</span>
+    <span class="n">hash</span><span class="o">-</span><span class="n">based</span> <span class="n">virtual</span> <span class="n">method</span> <span class="n">table</span> <span class="p">(</span><span class="n">PyCustomSlots_Table</span> <span class="o">**</span><span class="p">)</span>
+    <span class="n">PyGC_HEAD</span>
+    <span class="n">PyObject_HEAD</span>
+    <span class="p">...</span>
+    <span class="n">native</span> <span class="n">attributes</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>We precede the object with the table to make this work in a more
+generic scheme, e.g. where a caller is dealing with an unknown
+object, and we quickly want to see whether it support such a
+perfect-hashing virtual method table:</p>
+<dl class="docutils">
+<dt>NOTE: What we want is to actually use a separate attribute table</dt>
+<dd><p class="first last">in addition to the virtual method table, giving all extension
+objects a compatible layout.</p>
+</dd>
+</dl>
+<div class="highlight-c"><div class="highlight"><pre><span class="k">if</span> <span class="p">(</span><span class="n">o</span><span class="o">-&gt;</span><span class="n">ob_type</span><span class="o">-&gt;</span><span class="n">tp_flags</span> <span class="o">&amp;</span> <span class="n">NATIVELY_CALLABLE_TABLE</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">PyCustomSlots_Table</span> <span class="o">***</span><span class="n">slot_p</span> <span class="o">=</span> <span class="p">((</span><span class="kt">char</span> <span class="o">*</span><span class="p">)</span> <span class="n">o</span><span class="p">)</span> <span class="o">-</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">PyGC_HEAD</span><span class="p">)</span>
+    <span class="n">PyCustomSlots_Table</span> <span class="o">*</span><span class="n">vtab</span> <span class="o">=</span> <span class="o">**</span><span class="n">slot_p</span>
+    <span class="n">look</span> <span class="n">up</span> <span class="n">function</span>
+<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="n">PyObject_Call</span><span class="p">(...)</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>We need to store a PyCustomSlots_Table ** in the object to allow
+the producer of the table to replace the table with a new table
+for all live objects (e.g. by adding a specialization for
+an autojit method).</p>
+</div></blockquote>
+</li>
+</ul>
+</div></blockquote>
+<div class="section" id="wrappers">
+<h4>Wrappers<a class="headerlink" href="#wrappers" title="Permalink to this headline">¶</a></h4>
+<p>There are several wrappers in numba that wrap functions, classes and methods.
+The key implementations are in:</p>
+<blockquote>
+<div><ul class="simple">
+<li>numba/numbawrapper.pyx</li>
+<li>numba/numbafunction.c</li>
+<li>numba/codegen/llvmwrapper.py</li>
+</ul>
+</div></blockquote>
+<p>What numba does is it creates a function like this (in C pseudo-code):</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="kt">double</span> <span class="nf">square</span><span class="p">(</span><span class="kt">double</span> <span class="n">arg</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">arg</span> <span class="o">*</span> <span class="n">arg</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>and it wraps it as follows:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">PyObject</span> <span class="o">*</span><span class="nf">square_wrapper</span><span class="p">(</span><span class="n">PyObject</span> <span class="o">*</span><span class="n">self</span><span class="p">,</span> <span class="n">PyObject</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">double</span> <span class="n">arg</span><span class="p">;</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">PyArg_ParseTuple</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="s">&quot;d&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">arg</span><span class="p">))</span>
+        <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+
+    <span class="k">return</span> <span class="n">PyFloat_FromDouble</span><span class="p">(</span><span class="n">square</span><span class="p">(</span><span class="n">arg</span><span class="p">));</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The wrapper is a CPython compatible function the likes of which you often
+see in extension modules. It is created by llvmwrapper.py.
+This wrapper is turned into an <tt class="docutils literal"><span class="pre">PyCFunctionObject</span></tt>,
+defined in <tt class="docutils literal"><span class="pre">Include/methodobject.h</span></tt> in CPython&#8217;s source tree:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="k">typedef</span> <span class="k">struct</span> <span class="p">{</span>
+    <span class="n">PyObject_HEAD</span>
+    <span class="n">PyMethodDef</span> <span class="o">*</span><span class="n">m_ml</span><span class="p">;</span> <span class="cm">/* Description of the C function to call */</span>
+    <span class="n">PyObject</span>    <span class="o">*</span><span class="n">m_self</span><span class="p">;</span> <span class="cm">/* Passed as &#39;self&#39; arg to the C func, can be NULL */</span>
+    <span class="n">PyObject</span>    <span class="o">*</span><span class="n">m_module</span><span class="p">;</span> <span class="cm">/* The __module__ attribute, can be anything */</span>
+<span class="p">}</span> <span class="n">PyCFunctionObject</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Numba uses a wrapper (a subclass) of <tt class="docutils literal"><span class="pre">PyCFunctionObject</span></tt>, called
+<tt class="docutils literal"><span class="pre">numbafunction</span></tt>, which has some extra fields and gives the function a
+more pythonic interface, such as a dict, a way to override <tt class="docutils literal"><span class="pre">__doc__</span></tt>, etc.
+It also has a field to hold a closure frame (see <a class="reference internal" href="pythonstuff.html#closures"><em>Closures</em></a>).</p>
+<p>This function object is created after compilation of the function and its
+wrapper (<tt class="docutils literal"><span class="pre">square_wrapper</span></tt>). It is instantiated in
+<tt class="docutils literal"><span class="pre">llvmwrapper.py:numbafunction_new</span></tt>, calling <tt class="docutils literal"><span class="pre">NumbaFunction_NewEx</span></tt>.</p>
+</div>
+</div>
+<div class="section" id="id6">
+<h3>&#64;jit<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<p>Jit functions are wrapped typically by the <tt class="docutils literal"><span class="pre">NumbaFunction</span></tt> in
+<tt class="docutils literal"><span class="pre">numbafunction.c</span></tt>. The <tt class="docutils literal"><span class="pre">NumbaCompiledWrapper</span></tt> is only a temporary wrapper
+used in case of a recursive function that is still being compiled, and for
+which we have no pointer.</p>
+</div>
+<div class="section" id="id7">
+<h3>&#64;autojit<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<p>Autojit functions are handled by <tt class="docutils literal"><span class="pre">NumbaSpecializingWrapper</span></tt>, which wraps
+a Python function and when called does a lookup in a cache to see if a
+previously compiled version is available. This code in in <tt class="docutils literal"><span class="pre">numbawrapper.pyx</span></tt>.</p>
+<p><tt class="docutils literal"><span class="pre">NumbaSpecializingWrapper</span></tt> holds an <tt class="docutils literal"><span class="pre">AutojitCache</span></tt> which tries to find
+a match very quickly. However, it may not always find a compiled version
+even though it&#8217;s in the cache, for instance because there are values of
+different Python types which are represented using the same numba type.</p>
+<p>This is then corrected by a slower path which tries to compile the function,
+and creates a type for each argument. It uses these types to do a lookup
+in <tt class="docutils literal"><span class="pre">numba.functions.FunctionCache</span></tt>.</p>
+</div>
+<div class="section" id="classes">
+<h3>classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h3>
+<p>The story for classes is slightly different. <tt class="docutils literal"><span class="pre">&#64;jit</span></tt> classes are simply
+turned into a compiled extension type, with compiled methods set as class
+attributes. The <tt class="docutils literal"><span class="pre">NumbaFunction</span></tt> handles binding to bound or unbound methods.</p>
+<p><tt class="docutils literal"><span class="pre">&#64;autojit</span></tt> classes are wrapped in the same way as autojit functions, but
+with a different compiler entry point that triggers when the wrapper is
+called. The entry point compiles a special version of the extension class,
+and any methods that are not specialized (e.g. because they take further
+arguments than <tt class="docutils literal"><span class="pre">self</span></tt>), are wrapped by wrappers (again
+<tt class="docutils literal"><span class="pre">NumbaSpecializingWrapper</span></tt>) that compile a method on call and update the
+method table (the table supporting fast call from numba space).</p>
+<p>The only special case are unbound methods, consider the code below:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="nd">@autojit</span>
+<span class="k">class</span> <span class="nc">A</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">arg</span> <span class="o">=</span> <span class="n">arg</span>
+
+    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">arg</span> <span class="o">*</span> <span class="n">other</span>
+
+<span class="k">print</span> <span class="n">A</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">exttype</span>     <span class="c"># &lt;AutojitExtension A({&#39;arg&#39;: int})&gt;</span>
+<span class="k">print</span> <span class="n">A</span><span class="p">(</span><span class="mf">10.0</span><span class="p">)</span><span class="o">.</span><span class="n">exttype</span>   <span class="c"># &lt;AutojitExtension A({&#39;arg&#39;: float64})&gt;</span>
+</pre></div>
+</div>
+<p>We have two versions of our extension type, one with <tt class="docutils literal"><span class="pre">arg</span> <span class="pre">=</span> <span class="pre">int</span></tt> and one
+with <tt class="docutils literal"><span class="pre">arg</span> <span class="pre">=</span> <span class="pre">float64</span></tt>. Now consider calling <tt class="docutils literal"><span class="pre">add</span></tt> as an unbound method:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">print</span> <span class="n">A</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">A</span><span class="p">(</span><span class="mf">10.0</span><span class="p">),</span> <span class="mf">5.0</span><span class="p">)</span>   <span class="c"># 50.0</span>
+</pre></div>
+</div>
+<p>To dispatch from unbound method <tt class="docutils literal"><span class="pre">A.add</span></tt> of unspecialized class <tt class="docutils literal"><span class="pre">A</span></tt> to
+specialized method <tt class="docutils literal"><span class="pre">A[{'arg':int_}].add</span></tt>, numba creates a
+<tt class="docutils literal"><span class="pre">UnboundDelegatingMethod</span></tt> defined in <tt class="docutils literal"><span class="pre">numba.exttypes.autojitclass</span></tt>.</p>
+<div class="section" id="array-expressions">
+<span id="arrayexprs"></span><h4>Array Expressions<a class="headerlink" href="#array-expressions" title="Permalink to this headline">¶</a></h4>
+<p>Array expressions live in <tt class="docutils literal"><span class="pre">numba.array_expressions</span></tt>. Array expressions
+roughly work as follows:</p>
+<blockquote>
+<div><ul>
+<li><p class="first">Detect array expressions (<tt class="docutils literal"><span class="pre">ArrayExpressionRewrite</span></tt>)</p>
+<blockquote>
+<div><p>This code finds a maximal sub-expression that operates on arrays,
+e.g. <tt class="docutils literal"><span class="pre">A</span> <span class="pre">+</span> <span class="pre">B</span> <span class="pre">*</span> <span class="pre">C</span></tt>. These expressions are captured via
+<tt class="docutils literal"><span class="pre">register_array_expression</span></tt>.</p>
+</div></blockquote>
+</li>
+<li><p class="first">The registered expression is extracted using <tt class="docutils literal"><span class="pre">get_py_ufunc_ast</span></tt>.
+This function traverses the subexpression and does the following:</p>
+<blockquote>
+<div><ul class="simple">
+<li>demote types from arrays to scalars</li>
+<li>register any non-array sub-expression of our expression as an
+operand. More on this below.</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first">Compile the extracted sub-expression as a seprate function</p>
+</li>
+<li><p class="first">Generate a loop nest using minivect that calls this compiled function</p>
+</li>
+</ul>
+</div></blockquote>
+<p>Let&#8217;s walk through an example, consider for argument&#8217;s sake the following
+expression:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">A</span> <span class="o">+</span> <span class="n">sin</span><span class="p">(</span><span class="n">B</span><span class="p">)</span> <span class="o">*</span> <span class="n">g</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Where <tt class="docutils literal"><span class="pre">g(x)</span></tt> returns a scalar and is not part of the array expression.
+Our AST looks like this:</p>
+<p class="graphviz">
+<img src="_images/graphviz-4bed41405f7b5e6dd06d4fe5eb69dbc69d1c0389.png" alt="digraph expr {
+mul -&gt; add
+mul -&gt; &quot;g(x)&quot;
+add -&gt; a
+add -&gt; &quot;sin(b)&quot;
+}" />
+</p>
+<p>We take this expression and build a function with <tt class="docutils literal"><span class="pre">g(x)</span></tt> as operand:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">kernel</span><span class="p">(</span><span class="n">op0</span><span class="p">,</span> <span class="n">op1</span><span class="p">,</span> <span class="n">op2</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">op0</span> <span class="o">+</span> <span class="n">sin</span><span class="p">(</span><span class="n">op1</span><span class="p">)</span> <span class="o">*</span> <span class="n">op2</span>
+</pre></div>
+</div>
+<p>Each operation acts on scalars. Note that the <tt class="docutils literal"><span class="pre">g(x)</span></tt> is not part of the
+kernel. We now use minivect to generate a loop nest, e.g. for 2D arrays:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">loop_nest</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">g_of_x</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+            <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">kernel</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">],</span> <span class="n">B</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">],</span> <span class="n">g_of_x</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Result is allocated, or in cases of slice assignment it is the LHS:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">LHS</span><span class="p">[:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">A</span> <span class="o">+</span> <span class="n">sin</span><span class="p">(</span><span class="n">B</span><span class="p">)</span> <span class="o">*</span> <span class="n">g</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The passed in <tt class="docutils literal"><span class="pre">shape</span></tt> is the broadcasted result of the shapes of <tt class="docutils literal"><span class="pre">A</span></tt>
+and <tt class="docutils literal"><span class="pre">B</span></tt>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">shape</span> <span class="o">=</span> <span class="n">broadcast</span><span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">B</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">loop_nest</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">g</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="testing">
+<h4>Testing<a class="headerlink" href="#testing" title="Permalink to this headline">¶</a></h4>
+<p>Whenever you make changes to the code, you should see what impact this has
+on by running the test suite:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>python runtests.py                <span class="c"># run whole test suite</span>
+<span class="nv">$ </span>python runtests.py mypackage      <span class="c"># run tests under mypackage</span>
+<span class="nv">$ </span>python runtests.py mypkg.mymod    <span class="c"># run test(s) matched by mypkg.mymod</span>
+</pre></div>
+</div>
+<p>The test runner matches by substring, i.e.:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>python runtests.py conv
+Running tests in /home/mark/numba/numba/numba
+numba.tests.test_object_conversion                                     SUCCESS
+numba.typesystem.tests.test_conversion                                 SUCCESS
+</pre></div>
+</div>
+<p>To isolate problems it&#8217;s best to create an isolated test-case that is as
+small as possible yet still exhibits the problem, often using just a simple
+test script.</p>
+<p>Debugging compiler tracebacks can be handled through prints, but if the
+problem is less obvious (or the codebase unfamiliar) it is often simpler
+to use post-mortem debugging, which can help understand what&#8217;s going wrong
+without modifying any code (and later tracking down print statements that
+you accidentally committed):</p>
+<div class="highlight-bash" id="post-mortem"><div class="highlight"><pre><span class="nv">$ </span>python -m pdb test.py
+</pre></div>
+</div>
+<p>When using post-mortem debugging it&#8217;s useful to enable the post-mortem
+option in numba.environment.FunctionErrorEnvironment:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">enable_post_mortem</span> <span class="o">=</span> <span class="n">TypedProperty</span><span class="p">(</span>
+    <span class="nb">bool</span><span class="p">,</span>
+    <span class="s">&quot;Enable post-mortem debugging for the Numba compiler&quot;</span><span class="p">,</span>
+    <span class="bp">False</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Set the default value to <tt class="docutils literal"><span class="pre">True</span></tt> there. This way exceptions are not
+swallowed and accumulated (and hence raised from the error reporter,
+instead of the failing place in the compiler).</p>
+</div>
+<div class="section" id="debugging">
+<h4>Debugging<a class="headerlink" href="#debugging" title="Permalink to this headline">¶</a></h4>
+<p>Depending on the nature of the problem, there are some tools available for
+debugging what&#8217;s going on. In the annotate branch there is functionality
+to debug pretty-print to the terminal, create a graphviz visualization or
+generate a webpage:</p>
+<div class="highlight-bash"><div class="highlight"><pre>usage: numba <span class="o">[</span>-h<span class="o">]</span> <span class="o">[</span>--annotate<span class="o">]</span> <span class="o">[</span>--dump-llvm<span class="o">]</span> <span class="o">[</span>--dump-optimized<span class="o">]</span> <span class="o">[</span>--dump-cfg<span class="o">]</span>
+         <span class="o">[</span>--dump-ast<span class="o">]</span> <span class="o">[</span>--fancy<span class="o">]</span>
+         filename
+
+positional arguments:
+  filename          Python <span class="nb">source </span>filename
+
+optional arguments:
+  -h, --help        show this <span class="nb">help </span>message and <span class="nb">exit</span>
+  --annotate        Annotate <span class="nb">source</span>
+  --dump-llvm       Print generated llvm assembly
+  --dump-optimized  Dump the optimized llvm assembly
+  --dump-cfg        Dump the control flow graph
+  --dump-ast        Dump the AST
+  --fancy           Try to output fancy files <span class="o">(</span>.dot or .html<span class="o">)</span>
+</pre></div>
+</div>
+<p>The <tt class="docutils literal"><span class="pre">--annotate</span></tt> feature also prints the types of each variable used in a
+certain expression.</p>
+</div>
+</div>
+<div class="section" id="debugging-asts">
+<h3>Debugging ASTs<a class="headerlink" href="#debugging-asts" title="Permalink to this headline">¶</a></h3>
+<p>You get more control over when the AST is dumped by adding the <tt class="docutils literal"><span class="pre">dump_ast</span></tt>
+stage in <tt class="docutils literal"><span class="pre">numba.environment</span></tt> at the right place in the pipeline. If you
+just quickly want to debug print an AST from Python, there is:</p>
+<blockquote>
+<div><ul class="simple">
+<li><tt class="docutils literal"><span class="pre">ast.dump(mynode)</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">utils.pformat_ast</span></tt> or <tt class="docutils literal"><span class="pre">utils.dump</span></tt></li>
+</ul>
+</div></blockquote>
+<p>It can also help sometimes to look at an instance of the data of certain
+piece of code is dealing with interactively, to try and make sense of what
+is happening. You can do this with a breakpoint using your favorite
+Python debugger, e.g. <tt class="docutils literal"><span class="pre">import</span> <span class="pre">pdb;</span> <span class="pre">pdb.set_trace()</span></tt>.</p>
+</div>
+<div class="section" id="debugging-types">
+<h3>Debugging Types<a class="headerlink" href="#debugging-types" title="Permalink to this headline">¶</a></h3>
+<p>Debugging types can be tricky, but something that is often valuable
+is <tt class="docutils literal"><span class="pre">numba.typeof</span></tt>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@jit</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">myfunc</span><span class="p">(</span><span class="o">...</span><span class="p">):</span>
+    <span class="o">...</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">numba</span><span class="o">.</span><span class="n">typeof</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">numba</span><span class="o">.</span><span class="n">typeof</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">y</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>You can also always force types through casts or <tt class="docutils literal"><span class="pre">locals</span></tt>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@jit</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="nb">locals</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;x&#39;</span><span class="p">:</span><span class="n">double</span><span class="p">})</span> <span class="c"># locals</span>
+<span class="k">def</span> <span class="nf">myfunc</span><span class="p">(</span><span class="o">...</span><span class="p">):</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">double</span><span class="p">(</span><span class="n">y</span><span class="p">))</span>           <span class="c"># cast</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="debugging-the-translator">
+<h3>Debugging the Translator<a class="headerlink" href="#debugging-the-translator" title="Permalink to this headline">¶</a></h3>
+<p>To debug the translator, one can again stick with prints or post-mortem
+debugging. If the latter option is desirable, make absolutely sure that
+you enable the post-mortem debug option (see <em class="xref std std-ref">post-mortem</em>). This
+makes sure numba does not delete the LLVM function, which means the LLVM
+values referenced in the translator will still be in a consistent state.</p>
+<div class="section" id="problems">
+<h4>Problems<a class="headerlink" href="#problems" title="Permalink to this headline">¶</a></h4>
+<p>There are several problems with the codebase, stemming from our IR.
+The AST is too high level for most of the operations that we need to do,
+and has too much information, which leads to code having to deal with
+different in-memory formats that are doing similar things - which should
+be encoded in a uniform way. Consider e.g. the following code:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">x</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">x</span><span class="p">:</span>
+    <span class="o">...</span>
+
+<span class="c"># And</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+    <span class="o">...</span>
+</pre></div>
+</div>
+<p>The code that detects and transforms iteration over <tt class="docutils literal"><span class="pre">range</span></tt> should
+be written in a uniform way, depending on the flow of values irregardless
+of the syntax. Besides the level of information ASTs are not always
+amenable to transformations, e.g. when you want to execute some statements
+in the middle of an expression, or when you want to share a subtree (see
+the Clone(able)Node discussion above <em class="xref std std-ref">nodes</em>).</p>
+<p>Another issue is that refcounting and the Python C-API
+as well as NumPy are baked into the transformations. Coupling these
+APIs like this can be a real problem when you want to switch to a different
+runtime environment or library (CPython, NumPy).</p>
+</div>
+</div>
+</div>
+</div>
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        
+      </div><!-- /row -->
+
+      <!-- row -->
+      <div class="row-fluid">
+<div class="related navbar ">
+  <div class="navbar-inner">
+    <ul class="nav pull-right">
+      
+        <li><a href="genindex.html" title="General Index" >index</a></li>
+        <li><a href="py-modindex.html" title="Python Module Index" >modules</a></li>
+        <li><a href="modules/modules.html" title="Numba Module Reference" >next</a></li>
+        <li><a href="roadmap.html" title="Numba Roadmap" >previous</a></li>
+        <li><a href="index.html">numba 0.12.0 documentation</a></li> 
+      
+    </ul>
+  </div>
+</div>
+      </div><!-- /row -->
+
+      <!-- footer -->
+      <footer>
+          &copy; Copyright 2012-2013, Continuum Analytics.
+        Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+      </footer>
+      <!-- /footer -->
+
+    </div>
+    <!-- /container -->
+
+  </body>
+</html>
