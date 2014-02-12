@@ -60,7 +60,8 @@
   });
 </script>
     <link rel="top" title="numba 0.12.0 documentation" href="index.html" />
-    <link rel="prev" title="wrapping Package" href="modules/numba.wrapping.html" /> 
+    <link rel="next" title="Numba Language Specification" href="spec.html" />
+    <link rel="prev" title="Numba Debugging Tips" href="debugging.html" /> 
   </head>
   <body>
     <div class="navbar navbar-fixed-top ">
@@ -82,7 +83,10 @@
                 <a href="py-modindex.html" title="Python Module Index" >modules</a>
                 </li>
                 <li>
-                <a href="modules/numba.wrapping.html" title="wrapping Package" accesskey="P">previous</a>
+                <a href="spec.html" title="Numba Language Specification" accesskey="N">next</a>
+                </li>
+                <li>
+                <a href="debugging.html" title="Numba Debugging Tips" accesskey="P">previous</a>
                 </li>
               
             </ul>
@@ -125,8 +129,11 @@
 </ul>
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="modules/numba.wrapping.html"
-                        title="previous chapter">wrapping Package</a></p>
+  <p class="topless"><a href="debugging.html"
+                        title="previous chapter">Numba Debugging Tips</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="spec.html"
+                        title="next chapter">Numba Language Specification</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/releases.txt"
@@ -179,8 +186,11 @@
 </ul>
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="modules/numba.wrapping.html"
-                        title="previous chapter">wrapping Package</a></p>
+  <p class="topless"><a href="debugging.html"
+                        title="previous chapter">Numba Debugging Tips</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="spec.html"
+                        title="next chapter">Numba Language Specification</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/releases.txt"
@@ -214,27 +224,44 @@
 <h1>Release Notes<a class="headerlink" href="#release-notes" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="version-0-12">
 <h2>Version 0.12<a class="headerlink" href="#version-0-12" title="Permalink to this headline">¶</a></h2>
-<ul>
-<li><p class="first">Major refactor of compiler</p>
-</li>
-<li><p class="first">Better fallback to object mode when native mode fails</p>
-</li>
-<li><p class="first">Merge autojit into jit for unified interface</p>
-</li>
-<li><p class="first">Jitted function can now be overloaded</p>
-</li>
-<li><p class="first">Add njit for nopython mode jit</p>
-</li>
-<li><dl class="first docutils">
-<dt>Provide numba.vectorize and numba.guvectorize</dt>
-<dd><ul class="first last simple">
-<li>Old numba.vectorize.vectorize is removed</li>
+<p>Version 0.12 contains a big refactor of the compiler. The main objective for
+this refactor was to simplify the code base to create a better foundation for
+further work. A secondary objective was to improve the worst case performance
+to ensure that compiled functions in object mode never run slower than pure
+Python code (this was a problem in several cases with the old code base). This
+refactor is still a work in progress and further testing is needed.</p>
+<p>Main improvements:</p>
+<ul class="simple">
+<li>Major refactor of compiler for performance and maintenance reasons</li>
+<li>Better fallback to object mode when native mode fails</li>
+<li>Improved worst case performance in object mode</li>
 </ul>
-</dd>
-</dl>
-</li>
-<li><p class="first">Deprecate autojit, GUVectorize</p>
-</li>
+<p>The public interface of numba has been slightly changed. The idea is to
+make it cleaner and more rational:</p>
+<ul class="simple">
+<li>jit decorator has been modified, so that it can be called without a signature.
+When called without a signature, it behaves as the old autojit. Autojit
+has been deprecated in favour of this approach.</li>
+<li>Jitted functions can now be overloaded.</li>
+<li>Added a &#8220;njit&#8221; decorator that behaves like &#8220;jit&#8221; decorator with nopython=True.</li>
+<li>The numba.vectorize namespace is gone. The vectorize decorator will
+be in the main numba namespace.</li>
+<li>Added a guvectorize decorator in the main numba namespace. It is
+similiar to numba.vectorize, but takes a dimension signature. It
+generates gufuncs. This is a replacement for the GUVectorize gufunc
+factory which has been deprecated.</li>
+</ul>
+<p>Main regressions (will be fixed in a future release):</p>
+<ul class="simple">
+<li>Creating new NumPy arrays is not supported in nopython mode</li>
+<li>Returning NumPy arrays is not supported in nopython mode</li>
+<li>NumPy array slicing is not supported in nopython mode</li>
+<li>lists and tuples are not supported in nopython mode</li>
+<li>string, datetime, cdecimal, and struct types are not implemented yet</li>
+<li>Extension types (classes) are not supported in nopython mode</li>
+<li>Closures are not supported</li>
+<li>Raise keyword is not supported</li>
+<li>Recursion is not support in nopython mode</li>
 </ul>
 </div>
 <div class="section" id="version-0-11">
@@ -495,7 +522,8 @@ binary ufuncs + methods (reduce, accumulate, reduceat, outer)</li>
       
         <li><a href="genindex.html" title="General Index" >index</a></li>
         <li><a href="py-modindex.html" title="Python Module Index" >modules</a></li>
-        <li><a href="modules/numba.wrapping.html" title="wrapping Package" >previous</a></li>
+        <li><a href="spec.html" title="Numba Language Specification" >next</a></li>
+        <li><a href="debugging.html" title="Numba Debugging Tips" >previous</a></li>
         <li><a href="index.html">numba 0.12.0 documentation</a></li> 
       
     </ul>
