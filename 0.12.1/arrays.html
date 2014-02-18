@@ -203,7 +203,8 @@ nopython mode too (with much more to come).</p>
 <li>Arrays can be passed in to a function in nopython mode, but not returned.
 Arrays can only be returned in object mode.</li>
 <li>New arrays can only be created in object mode.</li>
-<li>Currently there are no bounds checking for array indexing and slicing.</li>
+<li>Currently there are no bounds checking for array indexing and slicing,
+although negative indices will wrap around correctly.</li>
 <li>NumPy array ufunc support in nopython node is incomplete at this time. Most
 if not all ufuncs should work in object mode though.</li>
 <li>Array slicing only works in object mode.</li>
@@ -211,10 +212,9 @@ if not all ufuncs should work in object mode though.</li>
 <div class="section" id="array-creation">
 <h2>Array Creation<a class="headerlink" href="#array-creation" title="Permalink to this headline">¶</a></h2>
 <p>NumPy array creation is not supported in nopython mode. Numba mitigates this by
-automatically trying to &#8220;lift&#8221; loops out of an object mode function and compile
-them in nopython mode. This allows for array creation at the top of a function
-while still getting almost all the performance of nopython mode. For example,
-the following simple function:</p>
+automatically trying to jit loops in nopython mode. This allows for array
+creation at the top of a function while still getting almost all the performance
+of nopython mode. For example, the following simple function:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="c"># compiled in object mode</span>
 <span class="nd">@jit</span>
 <span class="k">def</span> <span class="nf">sum</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
@@ -229,7 +229,7 @@ the following simple function:</p>
 <p>looks like the equivalent of the following after being compiled by Numba:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="c"># compiled in nopython mode</span>
 <span class="nd">@njit</span>
-<span class="k">def</span> <span class="nf">lifted_loop</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">jitted_loop</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
     <span class="nb">sum</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">y</span><span class="p">):</span>
@@ -240,7 +240,7 @@ the following simple function:</p>
 <span class="nd">@jit</span>
 <span class="k">def</span> <span class="nf">sum</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
     <span class="n">array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">lifted_loop</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">jitted_loop</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Another consequence of array creation being restricted to object mode is that
@@ -256,7 +256,7 @@ pass that in to the ufunc to store our result. For example, the following:</p>
         <span class="n">result</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>should be rewritten like the following to take advantage of loop lifting:</p>
+<p>should be rewritten like the following to take advantage of loop jitting:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="nd">@jit</span>
 <span class="k">def</span> <span class="nf">foo</span><span class="p">():</span>
     <span class="c"># initialize stuff</span>
@@ -264,7 +264,7 @@ pass that in to the ufunc to store our result. For example, the following:</p>
     <span class="c"># create output array</span>
     <span class="n">result</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
 
-    <span class="c"># loop now compiled in nopython mode</span>
+    <span class="c"># jitted loop in nopython mode</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
         <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
 </pre></div>
