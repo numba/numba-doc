@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 
 
@@ -34,7 +33,7 @@
     
 <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:    '',
+            URL_ROOT:    './',
             VERSION:     '0.12.1',
             COLLAPSE_INDEX: false,
             FILE_SUFFIX: '.html',
@@ -231,9 +230,10 @@
 <span class="k">print</span><span class="p">(</span><span class="s">&quot;numba version: </span><span class="si">%s</span><span class="s"> </span><span class="se">\n</span><span class="s">NumPy version: </span><span class="si">%s</span><span class="se">\n</span><span class="s">llvm version: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">numba</span><span class="o">.</span><span class="n">__version__</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">__version__</span><span class="p">,</span> <span class="n">llvm</span><span class="o">.</span><span class="n">__version__</span><span class="p">))</span>
 </pre></div>
 </div>
-<div class="highlight-python"><pre>numba version: 0.12.0
+<div class="highlight-python"><div class="highlight"><pre>numba version: 0.12.0
 NumPy version: 1.7.1
-llvm version: 0.12.1</pre>
+llvm version: 0.12.1
+</pre></div>
 </div>
 <div class="section" id="numba-and-types">
 <h1>Numba and types<a class="headerlink" href="#numba-and-types" title="Permalink to this headline">¶</a></h1>
@@ -288,9 +288,10 @@ associated to a value.</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="k">print</span><span class="p">(</span><span class="n">numba</span><span class="o">.</span><span class="n">typeof</span><span class="o">.</span><span class="n">__doc__</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-python"><pre>Get the type of a variable or value.
+<div class="highlight-python"><div class="highlight"><pre>Get the type of a variable or value.
 
-Used outside of Numba code, infers the type for the object.</pre>
+Used outside of Numba code, infers the type for the object.
+</pre></div>
 </div>
 <p>Bear in mind that, when used from the <em>Python</em> interpreter,
 <em>numba.typeof</em> will return the <em>numba type</em> associated to the object
@@ -338,7 +339,7 @@ behavior of object mode has changed quite a bit as well in this release.</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="n">numba</span><span class="o">.</span><span class="n">jit</span><span class="p">(</span><span class="s">&#39;c16(f8)&#39;</span><span class="p">,</span> <span class="n">nopython</span><span class="o">=</span><span class="bp">True</span><span class="p">)(</span><span class="n">jit_sample_1</span><span class="p">)</span><span class="o">.</span><span class="n">inspect_types</span><span class="p">()</span>
 </pre></div>
 </div>
-<div class="highlight-python"><pre>jit_sample_1 (float64,) -&gt; complex128
+<div class="highlight-python"><div class="highlight"><pre>jit_sample_1 (float64,) -&gt; complex128
 --------------------------------------------------------------------------------
 # --- LINE 1 ---
 
@@ -346,21 +347,22 @@ def jit_sample_1(n):
 
     # --- LINE 2 ---
     # label 0
-    #   $0.1 = const(&lt;type 'int'&gt;, 4)  :: int32
+    #   $0.1 = const(&lt;type &#39;int&#39;&gt;, 4)  :: int32
     #   $0.2 = n + $0.1  :: float64
     #   tmp = $0.2  :: float64
 
     tmp = n + 4;
 
     # --- LINE 3 ---
-    #   $0.3 = const(&lt;type 'complex'&gt;, 3j)  :: complex128
+    #   $0.3 = const(&lt;type &#39;complex&#39;&gt;, 3j)  :: complex128
     #   $0.4 = tmp + $0.3  :: complex128
     #   return $0.4
 
     return tmp + 3j;
 
 
-================================================================================</pre>
+================================================================================
+</pre></div>
 </div>
 <p>The source code of the original function should be shown with lines
 annotated with the values involved in that lines with its type annotated
@@ -382,7 +384,7 @@ mode:</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="n">numba</span><span class="o">.</span><span class="n">jit</span><span class="p">(</span><span class="s">&#39;c16(f8)&#39;</span><span class="p">,</span> <span class="n">forceobj</span><span class="o">=</span><span class="bp">True</span><span class="p">)(</span><span class="n">jit_sample_1</span><span class="p">)</span><span class="o">.</span><span class="n">inspect_types</span><span class="p">()</span>
 </pre></div>
 </div>
-<div class="highlight-python"><pre>jit_sample_1 (pyobject,) -&gt; pyobject
+<div class="highlight-python"><div class="highlight"><pre>jit_sample_1 (pyobject,) -&gt; pyobject
 --------------------------------------------------------------------------------
 # --- LINE 1 ---
 
@@ -390,20 +392,21 @@ def jit_sample_1(n):
 
     # --- LINE 2 ---
     # label 0
-    #   $0.1 = const(&lt;type 'int'&gt;, 4)  :: pyobject
+    #   $0.1 = const(&lt;type &#39;int&#39;&gt;, 4)  :: pyobject
     #   tmp = n + $0.1  :: pyobject
 
     tmp = n + 4;
 
     # --- LINE 3 ---
-    #   $0.3 = const(&lt;type 'complex'&gt;, 3j)  :: pyobject
+    #   $0.3 = const(&lt;type &#39;complex&#39;&gt;, 3j)  :: pyobject
     #   $0.4 = tmp + $0.3  :: pyobject
     #   return $0.4
 
     return tmp + 3j;
 
 
-================================================================================</pre>
+================================================================================
+</pre></div>
 </div>
 <p>As can be seen, everything is now a <em>pyobject</em>. That means that the
 operations will be executed by the Python runtime in the generated code.</p>
@@ -413,7 +416,7 @@ different code generation):</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="n">numba</span><span class="o">.</span><span class="n">jit</span><span class="p">(</span><span class="s">&#39;c16(i1)&#39;</span><span class="p">)(</span><span class="n">jit_sample_1</span><span class="p">)</span><span class="o">.</span><span class="n">inspect_types</span><span class="p">()</span>
 </pre></div>
 </div>
-<div class="highlight-python"><pre>jit_sample_1 (int8,) -&gt; complex128
+<div class="highlight-python"><div class="highlight"><pre>jit_sample_1 (int8,) -&gt; complex128
 --------------------------------------------------------------------------------
 # --- LINE 1 ---
 
@@ -421,21 +424,22 @@ def jit_sample_1(n):
 
     # --- LINE 2 ---
     # label 0
-    #   $0.1 = const(&lt;type 'int'&gt;, 4)  :: int32
+    #   $0.1 = const(&lt;type &#39;int&#39;&gt;, 4)  :: int32
     #   $0.2 = n + $0.1  :: int64
     #   tmp = $0.2  :: int64
 
     tmp = n + 4;
 
     # --- LINE 3 ---
-    #   $0.3 = const(&lt;type 'complex'&gt;, 3j)  :: complex128
+    #   $0.3 = const(&lt;type &#39;complex&#39;&gt;, 3j)  :: complex128
     #   $0.4 = tmp + $0.3  :: complex128
     #   return $0.4
 
     return tmp + 3j;
 
 
-================================================================================</pre>
+================================================================================
+</pre></div>
 </div>
 <p>In this case, the input is an int8, but tmp ends being and int64 as it
 is added to an int32. Note that integer overflow of int64 is not handled
@@ -455,7 +459,7 @@ that type to that variable.</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="n">numba</span><span class="o">.</span><span class="n">jit</span><span class="p">(</span><span class="s">&#39;c16(i1)&#39;</span><span class="p">,</span> <span class="nb">locals</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;tmp&#39;</span><span class="p">:</span> <span class="n">numba</span><span class="o">.</span><span class="n">float64</span><span class="p">})(</span><span class="n">jit_sample_1</span><span class="p">)</span><span class="o">.</span><span class="n">inspect_types</span><span class="p">()</span>
 </pre></div>
 </div>
-<div class="highlight-python"><pre>jit_sample_1 (int8,) -&gt; complex128
+<div class="highlight-python"><div class="highlight"><pre>jit_sample_1 (int8,) -&gt; complex128
 --------------------------------------------------------------------------------
 # --- LINE 1 ---
 
@@ -463,21 +467,22 @@ def jit_sample_1(n):
 
     # --- LINE 2 ---
     # label 0
-    #   $0.1 = const(&lt;type 'int'&gt;, 4)  :: int32
+    #   $0.1 = const(&lt;type &#39;int&#39;&gt;, 4)  :: int32
     #   $0.2 = n + $0.1  :: int64
     #   tmp = $0.2  :: float64
 
     tmp = n + 4;
 
     # --- LINE 3 ---
-    #   $0.3 = const(&lt;type 'complex'&gt;, 3j)  :: complex128
+    #   $0.3 = const(&lt;type &#39;complex&#39;&gt;, 3j)  :: complex128
     #   $0.4 = tmp + $0.3  :: complex128
     #   return $0.4
 
     return tmp + 3j;
 
 
-================================================================================</pre>
+================================================================================
+</pre></div>
 </div>
 <p>Note that as of numba 0.12, any type inference or type hints are ignored
 if object mode ends being generated, as everything gets treated as an
@@ -486,7 +491,7 @@ versions.</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="n">numba</span><span class="o">.</span><span class="n">jit</span><span class="p">(</span><span class="s">&#39;c16(i1)&#39;</span><span class="p">,</span> <span class="n">forceobj</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="nb">locals</span><span class="o">=</span><span class="p">{</span> <span class="s">&#39;tmp&#39;</span><span class="p">:</span> <span class="n">numba</span><span class="o">.</span><span class="n">float64</span> <span class="p">})(</span><span class="n">jit_sample_1</span><span class="p">)</span><span class="o">.</span><span class="n">inspect_types</span><span class="p">()</span>
 </pre></div>
 </div>
-<div class="highlight-python"><pre>jit_sample_1 (pyobject,) -&gt; pyobject
+<div class="highlight-python"><div class="highlight"><pre>jit_sample_1 (pyobject,) -&gt; pyobject
 --------------------------------------------------------------------------------
 # --- LINE 1 ---
 
@@ -494,20 +499,21 @@ def jit_sample_1(n):
 
     # --- LINE 2 ---
     # label 0
-    #   $0.1 = const(&lt;type 'int'&gt;, 4)  :: pyobject
+    #   $0.1 = const(&lt;type &#39;int&#39;&gt;, 4)  :: pyobject
     #   tmp = n + $0.1  :: pyobject
 
     tmp = n + 4;
 
     # --- LINE 3 ---
-    #   $0.3 = const(&lt;type 'complex'&gt;, 3j)  :: pyobject
+    #   $0.3 = const(&lt;type &#39;complex&#39;&gt;, 3j)  :: pyobject
     #   $0.4 = tmp + $0.3  :: pyobject
     #   return $0.4
 
     return tmp + 3j;
 
 
-================================================================================</pre>
+================================================================================
+</pre></div>
 </div>
 </div>
 <div class="section" id="importance-of-type-inference">
@@ -615,45 +621,53 @@ examples follow:</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="n">numba</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">float32</span><span class="p">[:]</span>
 </pre></div>
 </div>
-<div class="highlight-python"><pre>array(float32, 1d, A)</pre>
+<div class="highlight-python"><div class="highlight"><pre>array(float32, 1d, A)
+</pre></div>
 </div>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="n">numba</span><span class="o">.</span><span class="n">typeof</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">12</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)[:,</span><span class="mi">0</span><span class="p">])</span> <span class="c"># slicing out the inner dimension to avoid defaulting to C array order in the result</span>
 </pre></div>
 </div>
-<div class="highlight-python"><pre>array(float32, 1d, A)</pre>
+<div class="highlight-python"><div class="highlight"><pre>array(float32, 1d, A)
+</pre></div>
 </div>
 <p>A two dimensional array of integers</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="n">numba</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">int_</span><span class="p">[:,:]</span>
 </pre></div>
 </div>
-<div class="highlight-python"><pre>array(uint32, 2d, A)</pre>
+<div class="highlight-python"><div class="highlight"><pre>array(uint32, 2d, A)
+</pre></div>
 </div>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="n">numba</span><span class="o">.</span><span class="n">typeof</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">12</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="s">&#39;i&#39;</span><span class="p">)[:,</span><span class="mi">0</span><span class="p">])</span> <span class="c"># slicing out the inner dimension to avoid defaulting to C array order in the result</span>
 </pre></div>
 </div>
-<div class="highlight-python"><pre>array(int32, 2d, A)</pre>
+<div class="highlight-python"><div class="highlight"><pre>array(int32, 2d, A)
+</pre></div>
 </div>
 <p>A two dimensional array of type &#8216;c8&#8217; (complex64) in C array order</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="n">numba</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">c8</span><span class="p">[:,::</span><span class="mi">1</span><span class="p">]</span>
 </pre></div>
 </div>
-<div class="highlight-python"><pre>array(complex64, 2d, C)</pre>
+<div class="highlight-python"><div class="highlight"><pre>array(complex64, 2d, C)
+</pre></div>
 </div>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="n">numba</span><span class="o">.</span><span class="n">typeof</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">12</span><span class="p">,</span><span class="mi">12</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="s">&#39;c8&#39;</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="s">&#39;C&#39;</span><span class="p">))</span>
 </pre></div>
 </div>
-<div class="highlight-python"><pre>array(complex64, 2d, C)</pre>
+<div class="highlight-python"><div class="highlight"><pre>array(complex64, 2d, C)
+</pre></div>
 </div>
 <p>A two dimensional array of type uint16 in FORTRAN array order</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="n">numba</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">uint16</span><span class="p">[::</span><span class="mi">1</span><span class="p">,:]</span>
 </pre></div>
 </div>
-<div class="highlight-python"><pre>array(uint16, 2d, F)</pre>
+<div class="highlight-python"><div class="highlight"><pre>array(uint16, 2d, F)
+</pre></div>
 </div>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="n">numba</span><span class="o">.</span><span class="n">typeof</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">12</span><span class="p">,</span><span class="mi">12</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="s">&#39;u2&#39;</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="s">&#39;F&#39;</span><span class="p">))</span>
 </pre></div>
 </div>
-<div class="highlight-python"><pre>array(uint16, 2d, F)</pre>
+<div class="highlight-python"><div class="highlight"><pre>array(uint16, 2d, F)
+</pre></div>
 </div>
 <p>Notice that the arity of the dimensions is not part of the types, only
 the number of dimensions. In that sense, an array with a shape (4,4) has
@@ -673,7 +687,8 @@ argument and a float64 argument</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="n">numba</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">float64</span><span class="p">(</span><span class="n">numba</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">float64</span><span class="p">[:,:],</span> <span class="n">numba</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-python"><pre>float64(array(float64, 2d, A), float64)</pre>
+<div class="highlight-python"><div class="highlight"><pre>float64(array(float64, 2d, A), float64)
+</pre></div>
 </div>
 <p>As can be seen the signature is just a type specification. In many
 places that a <em>function signature</em> is expected a string can be used
@@ -690,7 +705,8 @@ matches the other one, while keeping the syn</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="n">numba</span><span class="o">.</span><span class="n">sigutils</span><span class="o">.</span><span class="n">parse_signature</span><span class="p">(</span><span class="s">&#39;float64(float64[:,:], float64)&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-python"><pre>float64(array(float64, 2d, A), float64)</pre>
+<div class="highlight-python"><div class="highlight"><pre>float64(array(float64, 2d, A), float64)
+</pre></div>
 </div>
 <p>A generic Python object</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="n">numba</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">pyobject</span>
@@ -737,10 +753,11 @@ types.</li>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="n">numba</span><span class="o">.</span><span class="n">typeof</span><span class="p">(</span><span class="n">old_style_sample</span><span class="p">(</span><span class="mi">42</span><span class="p">))</span>
 </pre></div>
 </div>
-<div class="highlight-python"><pre>arg n: int32
+<div class="highlight-python"><div class="highlight"><pre>arg n: int32
 literal 4: int32
 tmp: int32
-literal 3j:complex128</pre>
+literal 3j:complex128
+</pre></div>
 </div>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">complex128</span>
 </pre></div>
@@ -748,10 +765,11 @@ literal 3j:complex128</pre>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="n">numba</span><span class="o">.</span><span class="n">typeof</span><span class="p">(</span><span class="n">old_style_sample_jit</span><span class="p">(</span><span class="mi">42</span><span class="p">))</span>
 </pre></div>
 </div>
-<div class="highlight-python"><pre>arg n: int32
+<div class="highlight-python"><div class="highlight"><pre>arg n: int32
 literal 4: int32
 tmp: int32
-literal 3j:complex128</pre>
+literal 3j:complex128
+</pre></div>
 </div>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">complex128</span>
 </pre></div>
@@ -764,7 +782,7 @@ that everything is in fact a <em>pyobject</em></p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="n">old_style_sample_jit</span><span class="o">.</span><span class="n">inspect_types</span><span class="p">()</span>
 </pre></div>
 </div>
-<div class="highlight-python"><pre>old_style_sample (pyobject,) -&gt; pyobject
+<div class="highlight-python"><div class="highlight"><pre>old_style_sample (pyobject,) -&gt; pyobject
 --------------------------------------------------------------------------------
 # --- LINE 1 ---
 
@@ -773,73 +791,74 @@ def old_style_sample(n):
     # --- LINE 2 ---
     # label 0
     #   $0.1 = global(print: &lt;built-in function print&gt;)  :: pyobject
-    #   $0.2 = const(&lt;type 'str'&gt;, arg n: )  :: pyobject
-    #   $0.3 = global(str: &lt;type 'str'&gt;)  :: pyobject
-    #   $0.4 = global(numba: &lt;module 'numba' from '/Users/jayvius/Projects/numba/numba/__init__.pyc'&gt;)  :: pyobject
+    #   $0.2 = const(&lt;type &#39;str&#39;&gt;, arg n: )  :: pyobject
+    #   $0.3 = global(str: &lt;type &#39;str&#39;&gt;)  :: pyobject
+    #   $0.4 = global(numba: &lt;module &#39;numba&#39; from &#39;/Users/jayvius/Projects/numba/numba/__init__.pyc&#39;&gt;)  :: pyobject
     #   $0.5 = getattr(attr=typeof, value=$0.4)  :: pyobject
     #   $0.6 = call $0.5(n, )  :: pyobject
     #   $0.7 = call $0.3($0.6, )  :: pyobject
     #   $0.8 = $0.2 + $0.7  :: pyobject
     #   $0.9 = call $0.1($0.8, )  :: pyobject
 
-    print('arg n: '+ str(numba.typeof(n)))
+    print(&#39;arg n: &#39;+ str(numba.typeof(n)))
 
     # --- LINE 3 ---
     #   $0.10 = global(print: &lt;built-in function print&gt;)  :: pyobject
-    #   $0.11 = const(&lt;type 'str'&gt;, literal 4: )  :: pyobject
-    #   $0.12 = global(str: &lt;type 'str'&gt;)  :: pyobject
-    #   $0.13 = global(numba: &lt;module 'numba' from '/Users/jayvius/Projects/numba/numba/__init__.pyc'&gt;)  :: pyobject
+    #   $0.11 = const(&lt;type &#39;str&#39;&gt;, literal 4: )  :: pyobject
+    #   $0.12 = global(str: &lt;type &#39;str&#39;&gt;)  :: pyobject
+    #   $0.13 = global(numba: &lt;module &#39;numba&#39; from &#39;/Users/jayvius/Projects/numba/numba/__init__.pyc&#39;&gt;)  :: pyobject
     #   $0.14 = getattr(attr=typeof, value=$0.13)  :: pyobject
-    #   $0.15 = const(&lt;type 'int'&gt;, 4)  :: pyobject
+    #   $0.15 = const(&lt;type &#39;int&#39;&gt;, 4)  :: pyobject
     #   $0.16 = call $0.14($0.15, )  :: pyobject
     #   $0.17 = call $0.12($0.16, )  :: pyobject
     #   $0.18 = $0.11 + $0.17  :: pyobject
     #   $0.19 = call $0.10($0.18, )  :: pyobject
 
-    print('literal 4: ' + str(numba.typeof(4)))
+    print(&#39;literal 4: &#39; + str(numba.typeof(4)))
 
     # --- LINE 4 ---
-    #   $0.20 = const(&lt;type 'int'&gt;, 4)  :: pyobject
+    #   $0.20 = const(&lt;type &#39;int&#39;&gt;, 4)  :: pyobject
     #   tmp = n + $0.20  :: pyobject
 
     tmp = n + 4;
 
     # --- LINE 5 ---
     #   $0.22 = global(print: &lt;built-in function print&gt;)  :: pyobject
-    #   $0.23 = const(&lt;type 'str'&gt;, tmp: )  :: pyobject
-    #   $0.24 = global(str: &lt;type 'str'&gt;)  :: pyobject
-    #   $0.25 = global(numba: &lt;module 'numba' from '/Users/jayvius/Projects/numba/numba/__init__.pyc'&gt;)  :: pyobject
+    #   $0.23 = const(&lt;type &#39;str&#39;&gt;, tmp: )  :: pyobject
+    #   $0.24 = global(str: &lt;type &#39;str&#39;&gt;)  :: pyobject
+    #   $0.25 = global(numba: &lt;module &#39;numba&#39; from &#39;/Users/jayvius/Projects/numba/numba/__init__.pyc&#39;&gt;)  :: pyobject
     #   $0.26 = getattr(attr=typeof, value=$0.25)  :: pyobject
     #   $0.27 = call $0.26(tmp, )  :: pyobject
     #   $0.28 = call $0.24($0.27, )  :: pyobject
     #   $0.29 = $0.23 + $0.28  :: pyobject
     #   $0.30 = call $0.22($0.29, )  :: pyobject
 
-    print('tmp: '+ str(numba.typeof(tmp)))
+    print(&#39;tmp: &#39;+ str(numba.typeof(tmp)))
 
     # --- LINE 6 ---
     #   $0.31 = global(print: &lt;built-in function print&gt;)  :: pyobject
-    #   $0.32 = const(&lt;type 'str'&gt;, literal 3j:)  :: pyobject
-    #   $0.33 = global(str: &lt;type 'str'&gt;)  :: pyobject
-    #   $0.34 = global(numba: &lt;module 'numba' from '/Users/jayvius/Projects/numba/numba/__init__.pyc'&gt;)  :: pyobject
+    #   $0.32 = const(&lt;type &#39;str&#39;&gt;, literal 3j:)  :: pyobject
+    #   $0.33 = global(str: &lt;type &#39;str&#39;&gt;)  :: pyobject
+    #   $0.34 = global(numba: &lt;module &#39;numba&#39; from &#39;/Users/jayvius/Projects/numba/numba/__init__.pyc&#39;&gt;)  :: pyobject
     #   $0.35 = getattr(attr=typeof, value=$0.34)  :: pyobject
-    #   $0.36 = const(&lt;type 'complex'&gt;, 3j)  :: pyobject
+    #   $0.36 = const(&lt;type &#39;complex&#39;&gt;, 3j)  :: pyobject
     #   $0.37 = call $0.35($0.36, )  :: pyobject
     #   $0.38 = call $0.33($0.37, )  :: pyobject
     #   $0.39 = $0.32 + $0.38  :: pyobject
     #   $0.40 = call $0.31($0.39, )  :: pyobject
 
-    print('literal 3j:' + str(numba.typeof(3j)))
+    print(&#39;literal 3j:&#39; + str(numba.typeof(3j)))
 
     # --- LINE 7 ---
-    #   $0.41 = const(&lt;type 'complex'&gt;, 3j)  :: pyobject
+    #   $0.41 = const(&lt;type &#39;complex&#39;&gt;, 3j)  :: pyobject
     #   $0.42 = tmp + $0.41  :: pyobject
     #   return $0.42
 
     return tmp + 3j;
 
 
-================================================================================</pre>
+================================================================================
+</pre></div>
 </div>
 <p>Even more illustrating would be if <em>locals</em> was used to type an
 intermediate value:</p>
@@ -849,10 +868,11 @@ intermediate value:</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="n">numba</span><span class="o">.</span><span class="n">typeof</span><span class="p">(</span><span class="n">old_style_sample_jit_2</span><span class="p">(</span><span class="mi">42</span><span class="p">))</span>
 </pre></div>
 </div>
-<div class="highlight-python"><pre>arg n: int32
+<div class="highlight-python"><div class="highlight"><pre>arg n: int32
 literal 4: int32
 tmp: int32
-literal 3j:complex128</pre>
+literal 3j:complex128
+</pre></div>
 </div>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">complex128</span>
 </pre></div>
@@ -896,7 +916,7 @@ dump caused by the call to inspect_types.</p>
       <!-- footer -->
       <footer>
           &copy; Copyright 2012-2013, Continuum Analytics.
-        Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+        Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.1.
       </footer>
       <!-- /footer -->
 

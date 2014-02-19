@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 
 
@@ -34,7 +33,7 @@
     
 <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:    '',
+            URL_ROOT:    './',
             VERSION:     '0.12.1',
             COLLAPSE_INDEX: false,
             FILE_SUFFIX: '.html',
@@ -524,24 +523,28 @@ following:</p>
 <div class="section" id="proposal">
 <h5>Proposal<a class="headerlink" href="#proposal" title="Permalink to this headline">¶</a></h5>
 <p>We should add the following constructor to expr:</p>
-<div class="highlight-python"><pre>expr |= Let(identifier name, expr def, expr user)</pre>
+<div class="highlight-python"><div class="highlight"><pre>expr |= Let(identifier name, expr def, expr user)
+</pre></div>
 </div>
 <p>Semantically, this is sugar for the following:</p>
-<div class="highlight-python"><pre>Call(Lambda(name, user), [def])</pre>
+<div class="highlight-python"><div class="highlight"><pre>Call(Lambda(name, user), [def])
+</pre></div>
 </div>
 <p>Later stages of the compiler should not bother to do this desugaring.
 They should instead prefer to just create a SSA definition:</p>
-<div class="highlight-python"><pre>$name = [| def |]
-$0 = [| user |]</pre>
+<div class="highlight-python"><div class="highlight"><pre>$name = [| def |]
+$0 = [| user |]
+</pre></div>
 </div>
 <p>In the case of a chained comparison, we can then make the following
 transformation:</p>
-<div class="highlight-python"><pre>Compare(e0, [cmp0, ...], [e1, ...])
+<div class="highlight-python"><div class="highlight"><pre>Compare(e0, [cmp0, ...], [e1, ...])
 ==&gt;
 Let(fresh0, e0,
     Let(fresh1, e1,
         BoolOp(Compare(fresh0, cmp0, fresh1), And,
-               Compare(fresh1, [...], [...]))</pre>
+               Compare(fresh1, [...], [...]))
+</pre></div>
 </div>
 <p>Where <tt class="docutils literal"><span class="pre">fresh0</span></tt> and <tt class="docutils literal"><span class="pre">fresh1</span></tt> are fresh variable names.  The
 normalization transformer should recursively apply this rewrite until
@@ -555,7 +558,7 @@ it reaches a case where the comparison is binary.</p>
 control-flow analysis, data-flow analysis for phi-node injection,
 closure conversion, and lambda lifting.  These transformations result
 in the following intermediate representation:</p>
-<div class="highlight-python"><pre>mod = Module(unit* units)
+<div class="highlight-python"><div class="highlight"><pre>mod = Module(unit* units)
 
 unit = CodeObject(..., block* blocks)
      | DataObject(identifier label, expr init)
@@ -571,7 +574,8 @@ defn = (identifier? def_id, expr value)
 
 expr |= Phi(phi_source* incomming)
 
-phi_source = (identifier in_block, expr in_val)</pre>
+phi_source = (identifier in_block, expr in_val)
+</pre></div>
 </div>
 </div>
 <div class="section" id="typed-ir-in-ssa-form">
@@ -596,10 +600,11 @@ can only ever be a single phi node).</p>
 <p>I.e. we rewrite <tt class="docutils literal"><span class="pre">y_1</span> <span class="pre">=</span> <span class="pre">2</span></tt> to <tt class="docutils literal"><span class="pre">[</span> <span class="pre">y_1</span> <span class="pre">=</span> <span class="pre">2</span> <span class="pre">;</span> <span class="pre">%0</span> <span class="pre">=</span> <span class="pre">Promote(y_1,</span> <span class="pre">float)</span> <span class="pre">]</span></tt> and
 <tt class="docutils literal"><span class="pre">PhiNode(NameRef(y_1),</span> <span class="pre">NameRef(y_2))</span></tt> to <tt class="docutils literal"><span class="pre">PhiNode(%0,</span> <span class="pre">NameRef(y_2))</span></tt>.</p>
 <p>All types adhere themselves to a schema, e.g.:</p>
-<div class="highlight-python"><pre>type
+<div class="highlight-python"><div class="highlight"><pre>type
   = Array(type dtype, int ndim)
   | Pointer(type base_type, int? size)
-  | ...</pre>
+  | ...
+</pre></div>
 </div>
 <p>Since the schema specifies the interfaces of the different nodes, users
 can supply their own node implementation (something we can do with the
@@ -667,7 +672,8 @@ SSA IR is closure conversion.  For example, given the following code:</p>
 <p>The above convention implies the following ASDL definition of the
 <tt class="docutils literal"><span class="pre">MakeFrame</span></tt> constructor (XXX cross reference discussion of IR expr
 language):</p>
-<div class="highlight-python"><pre>MakeFrame(expr parent, identifier* ids)</pre>
+<div class="highlight-python"><div class="highlight"><pre>MakeFrame(expr parent, identifier* ids)
+</pre></div>
 </div>
 <p>The parent frame provides a name space for identifiers unresolved in
 the current frame.  If we employ this constructor, we diverge slightly
@@ -718,36 +724,38 @@ to use exception handling constructs.  Given the following code:</p>
 </div>
 <p>Translation to the untyped IR could result in something like the
 following:</p>
-<div class="highlight-python"><pre>bb0: ...
-     $0 = Call(Constant(numba.ct.iter), [Name("i", Load())])
+<div class="highlight-python"><div class="highlight"><pre>bb0: ...
+     $0 = Call(Constant(numba.ct.iter), [Name(&quot;i&quot;, Load())])
      Try(bb1, [ExceptHandler(Constant(StopIteration), None, bb2)],
          None, None)
 
 bb1: $1 = Call(Constant(numba.ct.next), [$0])
-     If(Compare($1, Eq(), Name("thingy", Load())), bb3, bb1)
+     If(Compare($1, Eq(), Name(&quot;thingy&quot;, Load())), bb3, bb1)
 
-bb2: Call(Name("bar", Load()), [])
+bb2: Call(Name(&quot;bar&quot;, Load()), [])
      Jump(bb3)
 
-bb3: Call(name("baz", Load()), [])
-     ...</pre>
+bb3: Call(name(&quot;baz&quot;, Load()), [])
+     ...
+</pre></div>
 </div>
 <p>The second option was defining a <tt class="docutils literal"><span class="pre">Next()</span></tt> terminator.  <tt class="docutils literal"><span class="pre">Next()</span></tt>
 could provide sugar for the special case where we are specifically
 waiting for a <tt class="docutils literal"><span class="pre">StopIteration</span></tt> exception:</p>
-<div class="highlight-python"><pre>bb0: ...
-     $0 = Call(Constant(numba.ct.iter), [Name("i", Load())])
+<div class="highlight-python"><div class="highlight"><pre>bb0: ...
+     $0 = Call(Constant(numba.ct.iter), [Name(&quot;i&quot;, Load())])
      Jump(bb1)
 
-bb1: Next(Name("x", Store()), $0, bb2, bb3)
+bb1: Next(Name(&quot;x&quot;, Store()), $0, bb2, bb3)
 
-bb2: If(Compare(Name("x", Load()), Eq, Name("thingy", Load())), bb4, bb1)
+bb2: If(Compare(Name(&quot;x&quot;, Load()), Eq, Name(&quot;thingy&quot;, Load())), bb4, bb1)
 
-bb3: Call(Name("bar", Load()), [])
+bb3: Call(Name(&quot;bar&quot;, Load()), [])
      Jump(bb4)
 
-bb4: Call(Name("baz", Load()), [])
-     ...</pre>
+bb4: Call(Name(&quot;baz&quot;, Load()), [])
+     ...
+</pre></div>
 </div>
 <p>We loose SSA information, but provide opportunity for more readily
 recognizing for loops.</p>
@@ -755,20 +763,21 @@ recognizing for loops.</p>
 <tt class="docutils literal"><span class="pre">FOR_ITER</span></tt>, where we define <tt class="docutils literal"><span class="pre">Next()</span></tt> as an expression constructor
 which can either return a result or some sentinel (specific to
 CPython, this is the <tt class="docutils literal"><span class="pre">NULL</span></tt> pointer):</p>
-<div class="highlight-python"><pre>bb0: ...
-     $0 = Iter(Name("i", Load()))
+<div class="highlight-python"><div class="highlight"><pre>bb0: ...
+     $0 = Iter(Name(&quot;i&quot;, Load()))
      Jump(bb1)
 
 bb1: $1 = Next($0)
      If(Compare($1, Neq(), Constant(numba.ct.NULL)), bb2, bb3)
 
-bb2: If(Compare($1, Eq(), Name("thingy", Load())), bb3, bb1)
+bb2: If(Compare($1, Eq(), Name(&quot;thingy&quot;, Load())), bb3, bb1)
 
-bb3: Call(Name("bar", Load()), [])
+bb3: Call(Name(&quot;bar&quot;, Load()), [])
      Jump(bb4)
 
-bb4: Call(name("baz", Load()), [])
-     ...</pre>
+bb4: Call(name(&quot;baz&quot;, Load()), [])
+     ...
+</pre></div>
 </div>
 <p>This final output looks very similar to the output of the second
 option, but prevents us from having to use the <tt class="docutils literal"><span class="pre">Name()</span></tt> expression
@@ -813,7 +822,7 @@ techniques:</p>
 <h4>Exceptions and exception handling<a class="headerlink" href="#exceptions-and-exception-handling" title="Permalink to this headline">¶</a></h4>
 <p>Both the raise and try-except-finally language constructs map into the
 untyped SSA IR as basic-block terminators:</p>
-<div class="highlight-python"><pre>tail = ...
+<div class="highlight-python"><div class="highlight"><pre>tail = ...
      | Raise(expr exn)
      | Try(identifier body,
            excepthandler* handlers,
@@ -825,46 +834,49 @@ untyped SSA IR as basic-block terminators:</p>
 excepthandler = ExceptHandler(expr *types,
                               identifier? name,
                               identifier body)
-                attributes (int lineno, int col_offset)</pre>
+                attributes (int lineno, int col_offset)
+</pre></div>
 </div>
 <p>In the low-level IR, these constructs lower into Numba run-time calls:</p>
-<div class="highlight-python"><pre>bb0:  ...
-      Try('bb1', [ExceptHandler([ty0,...], 'name0', 'bb2'),
+<div class="highlight-python"><div class="highlight"><pre>bb0:  ...
+      Try(&#39;bb1&#39;, [ExceptHandler([ty0,...], &#39;name0&#39;, &#39;bb2&#39;),
                   ...
-                  ExceptHandler([tyn,...], 'namen', 'bbn0')],
-          'bbn1', 'bbn2')
+                  ExceptHandler([tyn,...], &#39;namen&#39;, &#39;bbn0&#39;)],
+          &#39;bbn1&#39;, &#39;bbn2&#39;)
 bb1:  ...
-      Jump('bbn2')
+      Jump(&#39;bbn2&#39;)
 bb2:  ...
-      Jump('bbn2')
+      Jump(&#39;bbn2&#39;)
 ...
 bbn0: ...
-      Jump('bbn2')
+      Jump(&#39;bbn2&#39;)
 bbn1: ...
-      Jump('bbn2')
-bbn2: ...</pre>
+      Jump(&#39;bbn2&#39;)
+bbn2: ...
+</pre></div>
 </div>
 <p>Goes to:</p>
-<div class="highlight-python"><pre>bb0:  ...
+<div class="highlight-python"><div class="highlight"><pre>bb0:  ...
       $0 = SetupTry()
-      If($0, 'bb1', 'bb2')
+      If($0, &#39;bb1&#39;, &#39;bb2&#39;)
 bb1:  ...
-      Jump('bbn2')
+      Jump(&#39;bbn2&#39;)
 bb2:  $1 = TestExn([ty0, ...])
-      If($1, 'bbx2', 'bb3')
+      If($1, &#39;bbx2&#39;, &#39;bb3&#39;)
 bbx2: $name0 = GetExn()
       ...
-      Jump('bbn2')
+      Jump(&#39;bbn2&#39;)
 ...
 bbn0: $2 = TestExn([tyn, ...])
-      If($2, 'bbxn', 'bbn1')
+      If($2, &#39;bbxn&#39;, &#39;bbn1&#39;)
 bbxn: $namen = GetExn()
       ...
-      Jump('bbn2')
+      Jump(&#39;bbn2&#39;)
 bbn1: GetExn()
       ...
-      Jump('bbn2')
-bbn2: ...</pre>
+      Jump(&#39;bbn2&#39;)
+bbn2: ...
+</pre></div>
 </div>
 </div>
 <div class="section" id="decorators">
@@ -1048,7 +1060,7 @@ resolving in an analogous and cooperative manner to how we resolve the type grap
       <!-- footer -->
       <footer>
           &copy; Copyright 2012-2013, Continuum Analytics.
-        Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+        Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.1.
       </footer>
       <!-- /footer -->
 

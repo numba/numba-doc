@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 
 
@@ -34,7 +33,7 @@
     
 <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:    '',
+            URL_ROOT:    './',
             VERSION:     '0.12.1',
             COLLAPSE_INDEX: false,
             FILE_SUFFIX: '.html',
@@ -208,7 +207,8 @@
 <span class="k">print</span><span class="p">(</span><span class="n">numba</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-python"><pre>0.12.0</pre>
+<div class="highlight-python"><div class="highlight"><pre>0.12.0
+</pre></div>
 </div>
 <div class="section" id="introduction-to-numba">
 <h2>Introduction to numba<a class="headerlink" href="#introduction-to-numba" title="Permalink to this headline">¶</a></h2>
@@ -256,10 +256,12 @@ we&#8217;ll create an array of sorted values and randomly shuffle them:</p>
 </pre></div>
 </div>
 <p>Let&#8217;s see how it behaves in execution time:</p>
-<div class="code python highlight-python"><pre>sorted[:] = shuffled[:]
-%timeit sorted[:] = shuffled[:]; bubblesort(sorted)</pre>
+<div class="code python highlight-python"><div class="highlight"><pre>sorted[:] = shuffled[:]
+%timeit sorted[:] = shuffled[:]; bubblesort(sorted)
+</pre></div>
 </div>
-<div class="highlight-python"><pre>1 loops, best of 3: 328 ms per loop</pre>
+<div class="highlight-python"><div class="highlight"><pre>1 loops, best of 3: 328 ms per loop
+</pre></div>
 </div>
 <p>Note that as execution time may depend on its input and the function
 itself is destructive, I make sure to use the same input in all the
@@ -270,9 +272,11 @@ first iteration. As bubblesort works better on vectors that are already
 sorted, the next runs would be selected and we will get the time when
 running bubblesort in an already sorted array. In our case the copy time
 is minimal, though:</p>
-<div class="code python highlight-python"><pre>%timeit sorted[:] = shuffled[:]</pre>
+<div class="code python highlight-python"><div class="highlight"><pre>%timeit sorted[:] = shuffled[:]
+</pre></div>
 </div>
-<div class="highlight-python"><pre>1000000 loops, best of 3: 1.17 µs per loop</pre>
+<div class="highlight-python"><div class="highlight"><pre>1000000 loops, best of 3: 1.17 µs per loop
+</pre></div>
 </div>
 </div>
 <div class="section" id="compiling-a-function-with-numba-jit-using-an-explicit-function-signature">
@@ -287,12 +291,12 @@ has in <em>numba</em>.</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="k">print</span><span class="p">(</span><span class="n">numba</span><span class="o">.</span><span class="n">jit</span><span class="o">.</span><span class="n">__doc__</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-python"><pre>jit([signature_or_function, [locals={}, [target='cpu',
+<div class="highlight-python"><div class="highlight"><pre>jit([signature_or_function, [locals={}, [target=&#39;cpu&#39;,
             [**targetoptions]]]])
 
     The function can be used as the following versions:
 
-    1) jit(signature, [target='cpu', [**targetoptions]]) -&gt; jit(function)
+    1) jit(signature, [target=&#39;cpu&#39;, [**targetoptions]]) -&gt; jit(function)
 
         Equivalent to:
 
@@ -304,7 +308,7 @@ has in <em>numba</em>.</p>
 
         Example:
 
-            @jit("void(int32, float32)")
+            @jit(&quot;void(int32, float32)&quot;)
             def foo(x, y):
                 return x + y
 
@@ -319,7 +323,7 @@ has in <em>numba</em>.</p>
             def foo(x, y):
                 return x + y
 
-    3) jit([target='cpu', [**targetoptions]]) -&gt; configured_jit(function)
+    3) jit([target=&#39;cpu&#39;, [**targetoptions]]) -&gt; configured_jit(function)
 
         Same as old autojit and 2).  But configure with target and default
         target-options.
@@ -327,7 +331,7 @@ has in <em>numba</em>.</p>
 
         Example:
 
-            @jit(target='cpu', nopython=True)
+            @jit(target=&#39;cpu&#39;, nopython=True)
             def foo(x, y):
                 return x + y
 
@@ -344,7 +348,8 @@ has in <em>numba</em>.</p>
         - forceobj: [bool]
 
             Set to True to force the use of PyObjects for every value.  Default
-            value is False.</pre>
+            value is False.
+</pre></div>
 </div>
 <p>So let&#8217;s make a compiled version of our bubblesort:</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="n">bubblesort_jit</span> <span class="o">=</span> <span class="n">numba</span><span class="o">.</span><span class="n">jit</span><span class="p">(</span><span class="s">&quot;void(f4[:])&quot;</span><span class="p">)(</span><span class="n">bubblesort</span><span class="p">)</span>
@@ -366,13 +371,17 @@ of the function to generate (more on this later).</p>
 </div>
 <p>Now let&#8217;s compare the time it takes to execute the compiled function
 compared to the original</p>
-<div class="code python highlight-python"><pre>%timeit sorted[:] = shuffled[:]; bubblesort_jit(sorted)</pre>
+<div class="code python highlight-python"><div class="highlight"><pre>%timeit sorted[:] = shuffled[:]; bubblesort_jit(sorted)
+</pre></div>
 </div>
-<div class="highlight-python"><pre>1000 loops, best of 3: 1.25 ms per loop</pre>
+<div class="highlight-python"><div class="highlight"><pre>1000 loops, best of 3: 1.25 ms per loop
+</pre></div>
 </div>
-<div class="code python highlight-python"><pre>%timeit sorted[:] = shuffled[:]; bubblesort(sorted)</pre>
+<div class="code python highlight-python"><div class="highlight"><pre>%timeit sorted[:] = shuffled[:]; bubblesort(sorted)
+</pre></div>
 </div>
-<div class="highlight-python"><pre>1 loops, best of 3: 323 ms per loop</pre>
+<div class="highlight-python"><div class="highlight"><pre>1 loops, best of 3: 323 ms per loop
+</pre></div>
 </div>
 <p>Bear in mind that numba.jit is a decorator, although for practical
 reasons in this tutorial we will be calling it like a function to have
@@ -472,9 +481,11 @@ option.</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="n">bubblesort_autojit</span> <span class="o">=</span> <span class="n">numba</span><span class="o">.</span><span class="n">jit</span><span class="p">(</span><span class="n">bubblesort</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="code python highlight-python"><pre>%timeit sorted[:] = shuffled[:]; bubblesort_autojit(sorted)</pre>
+<div class="code python highlight-python"><div class="highlight"><pre>%timeit sorted[:] = shuffled[:]; bubblesort_autojit(sorted)
+</pre></div>
 </div>
-<div class="highlight-python"><pre>1000 loops, best of 3: 1.25 ms per loop</pre>
+<div class="highlight-python"><div class="highlight"><pre>1000 loops, best of 3: 1.25 ms per loop
+</pre></div>
 </div>
 </div>
 <div class="section" id="some-extra-remarks">
@@ -524,13 +535,17 @@ slowdown in the generated code:</p>
 <span class="n">res</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">10000</span><span class="p">,),</span> <span class="n">dtype</span><span class="o">=</span><span class="s">&quot;i1&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="code python highlight-python"><pre>%timeit test(res)</pre>
+<div class="code python highlight-python"><div class="highlight"><pre>%timeit test(res)
+</pre></div>
 </div>
-<div class="highlight-python"><pre>10000 loops, best of 3: 31.9 µs per loop</pre>
+<div class="highlight-python"><div class="highlight"><pre>10000 loops, best of 3: 31.9 µs per loop
+</pre></div>
 </div>
-<div class="code python highlight-python"><pre>%timeit test2(res)</pre>
+<div class="code python highlight-python"><div class="highlight"><pre>%timeit test2(res)
+</pre></div>
 </div>
-<div class="highlight-python"><pre>1 loops, best of 3: 283 ms per loop</pre>
+<div class="highlight-python"><div class="highlight"><pre>1 loops, best of 3: 283 ms per loop
+</pre></div>
 </div>
 <p>It is possible to force a failure if the <em>nopython</em> code generation
 fails. This allows getting some feedback about whether it is possible to
@@ -550,11 +565,11 @@ can have a huge performance penalty.</p>
         <span class="n">value</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span> <span class="o">%</span> <span class="n">Decimal</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-python"><pre>---------------------------------------------------------------------------
+<div class="highlight-python"><div class="highlight"><pre>---------------------------------------------------------------------------
 TypingError                               Traceback (most recent call last)
 
 &lt;ipython-input-19-6038b783c49c&gt; in &lt;module&gt;()
-----&gt; 1 @numba.jit("void(i1[:])", nopython=True)
+----&gt; 1 @numba.jit(&quot;void(i1[:])&quot;, nopython=True)
       2 def test2(value):
       3     for i in xrange(len(value)):
       4         value[i] = i % Decimal(100)
@@ -618,14 +633,15 @@ TypingError                               Traceback (most recent call last)
 
 /Users/jayvius/Projects/numba/numba/typeinfer.pyc in typeof_global(self, inst, target, gvar)
     470             except KeyError:
-    471                 raise TypingError("Untyped global name '%s'" % gvar.name,
+    471                 raise TypingError(&quot;Untyped global name &#39;%s&#39;&quot; % gvar.name,
 --&gt; 472                                   loc=inst.loc)
     473             self.assumed_immutables.add(inst)
     474             self.typevars[target.name].lock(gvty)
 
 
-TypingError: Untyped global name 'Decimal'
-File "&lt;ipython-input-19-6038b783c49c&gt;", line 4</pre>
+TypingError: Untyped global name &#39;Decimal&#39;
+File &quot;&lt;ipython-input-19-6038b783c49c&gt;&quot;, line 4
+</pre></div>
 </div>
 </div>
 </div>
@@ -660,7 +676,7 @@ File "&lt;ipython-input-19-6038b783c49c&gt;", line 4</pre>
       <!-- footer -->
       <footer>
           &copy; Copyright 2012-2013, Continuum Analytics.
-        Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+        Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.1.
       </footer>
       <!-- /footer -->
 
