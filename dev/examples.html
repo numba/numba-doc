@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 
 
@@ -8,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     
-    <title>Examples &mdash; numba 0.9.0-141-gb718785 documentation</title>
+    <title>Examples &mdash; numba 0.12.1 documentation</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
@@ -34,8 +33,8 @@
     
 <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:    '',
-            VERSION:     '0.9.0-141-gb718785',
+            URL_ROOT:    './',
+            VERSION:     '0.12.1',
             COLLAPSE_INDEX: false,
             FILE_SUFFIX: '.html',
             HAS_SOURCE:  true
@@ -59,9 +58,9 @@
     });
   });
 </script>
-    <link rel="top" title="numba 0.9.0-141-gb718785 documentation" href="index.html" />
-    <link rel="next" title="Release Notes" href="releases.html" />
-    <link rel="prev" title="Using doctest with Numba" href="doctest.html" /> 
+    <link rel="top" title="numba 0.12.1 documentation" href="index.html" />
+    <link rel="next" title="First Steps with numba" href="tutorial_firststeps.html" />
+    <link rel="prev" title="UFuncs" href="ufuncs.html" /> 
   </head>
   <body>
     <div class="navbar navbar-fixed-top ">
@@ -72,7 +71,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="index.html">numba 0.9.0-141-gb718785 documentation</a>
+          <a class="brand" href="index.html">numba 0.12.1 documentation</a>
           <div class="nav-collapse collapse">
             <ul class="nav pull-right">
               
@@ -80,10 +79,10 @@
                 <a href="genindex.html" title="General Index" accesskey="I">index</a>
                 </li>
                 <li>
-                <a href="releases.html" title="Release Notes" accesskey="N">next</a>
+                <a href="tutorial_firststeps.html" title="First Steps with numba" accesskey="N">next</a>
                 </li>
                 <li>
-                <a href="doctest.html" title="Using doctest with Numba" accesskey="P">previous</a>
+                <a href="ufuncs.html" title="UFuncs" accesskey="P">previous</a>
                 </li>
               
             </ul>
@@ -107,25 +106,21 @@
   <ul>
 <li><a class="reference internal" href="#">Examples</a><ul>
 <li><a class="reference internal" href="#a-simple-function">A Simple Function</a></li>
-<li><a class="reference internal" href="#classes">Classes</a></li>
-<li><a class="reference internal" href="#closures">Closures</a></li>
-<li><a class="reference internal" href="#structs">Structs</a></li>
-<li><a class="reference internal" href="#pointers">Pointers</a></li>
 <li><a class="reference internal" href="#objects">Objects</a></li>
+<li><a class="reference internal" href="#ufuncs">UFuncs</a></li>
 <li><a class="reference internal" href="#mandelbrot">Mandelbrot</a></li>
 <li><a class="reference internal" href="#filterbank-correlation">Filterbank Correlation</a></li>
 <li><a class="reference internal" href="#multi-threading">Multi threading</a></li>
-<li><a class="reference internal" href="#strings-and-libc">Strings and libc</a></li>
 </ul>
 </li>
 </ul>
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="doctest.html"
-                        title="previous chapter">Using doctest with Numba</a></p>
+  <p class="topless"><a href="ufuncs.html"
+                        title="previous chapter">UFuncs</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="releases.html"
-                        title="next chapter">Release Notes</a></p>
+  <p class="topless"><a href="tutorial_firststeps.html"
+                        title="next chapter">First Steps with numba</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/examples.txt"
@@ -159,25 +154,21 @@
   <ul>
 <li><a class="reference internal" href="#">Examples</a><ul>
 <li><a class="reference internal" href="#a-simple-function">A Simple Function</a></li>
-<li><a class="reference internal" href="#classes">Classes</a></li>
-<li><a class="reference internal" href="#closures">Closures</a></li>
-<li><a class="reference internal" href="#structs">Structs</a></li>
-<li><a class="reference internal" href="#pointers">Pointers</a></li>
 <li><a class="reference internal" href="#objects">Objects</a></li>
+<li><a class="reference internal" href="#ufuncs">UFuncs</a></li>
 <li><a class="reference internal" href="#mandelbrot">Mandelbrot</a></li>
 <li><a class="reference internal" href="#filterbank-correlation">Filterbank Correlation</a></li>
 <li><a class="reference internal" href="#multi-threading">Multi threading</a></li>
-<li><a class="reference internal" href="#strings-and-libc">Strings and libc</a></li>
 </ul>
 </li>
 </ul>
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="doctest.html"
-                        title="previous chapter">Using doctest with Numba</a></p>
+  <p class="topless"><a href="ufuncs.html"
+                        title="previous chapter">UFuncs</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="releases.html"
-                        title="next chapter">Release Notes</a></p>
+  <p class="topless"><a href="tutorial_firststeps.html"
+                        title="next chapter">First Steps with numba</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/examples.txt"
@@ -250,197 +241,17 @@ Python wrapper to that low-level function so that the function can be
 called from Python.   The first function can be called from other
 numba functions to eliminate all python overhead in function calling.</p>
 </div>
-<div class="section" id="classes">
-<span id="id2"></span><h2>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-python"><div class="highlight"><pre><span class="c"># -*- coding: utf-8 -*-</span>
-<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Example for extension classes.</span>
-
-<span class="sd">Things that work:</span>
-
-<span class="sd">    - overriding Numba methods in Numba (all methods are virtual)</span>
-<span class="sd">    - inheritance</span>
-<span class="sd">    - instance attributes</span>
-<span class="sd">    - subclassing in python and calling overridden methods in Python</span>
-<span class="sd">    - arbitrary new attributes on extension classes and objects</span>
-<span class="sd">    - weakrefs to extension objects</span>
-
-<span class="sd">Things that do NOT (yet) work:</span>
-
-<span class="sd">    - overriding methods in Python and calling the method from Numba</span>
-<span class="sd">    - multiple inheritance of Numba classes</span>
-<span class="sd">        (multiple inheritance with Python classes should work)</span>
-<span class="sd">    - subclassing variable sized objects like &#39;str&#39; or &#39;tuple&#39;</span>
-<span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">absolute_import</span>
-
-<span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">jit</span><span class="p">,</span> <span class="n">void</span><span class="p">,</span> <span class="n">int_</span><span class="p">,</span> <span class="n">double</span>
-
-<span class="c"># All methods must be given signatures</span>
-
-<span class="nd">@jit</span>
-<span class="k">class</span> <span class="nc">Shrubbery</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="nd">@void</span><span class="p">(</span><span class="n">int_</span><span class="p">,</span> <span class="n">int_</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">):</span>
-        <span class="c"># All instance attributes must be defined in the initializer</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">w</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="n">h</span>
-
-        <span class="c"># Types can be explicitly specified through casts</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">some_attr</span> <span class="o">=</span> <span class="n">double</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span>
-
-    <span class="nd">@int_</span><span class="p">()</span>
-    <span class="k">def</span> <span class="nf">area</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span>
-
-    <span class="nd">@void</span><span class="p">()</span>
-    <span class="k">def</span> <span class="nf">describe</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">print</span><span class="p">(</span><span class="s">&quot;This shrubbery is &quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">,</span>
-              <span class="s">&quot;by&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">,</span> <span class="s">&quot;cubits.&quot;</span><span class="p">)</span>
- 
-<span class="n">shrub</span> <span class="o">=</span> <span class="n">Shrubbery</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
-<span class="k">print</span><span class="p">(</span><span class="n">shrub</span><span class="o">.</span><span class="n">area</span><span class="p">())</span>
-<span class="n">shrub</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
-<span class="k">print</span><span class="p">(</span><span class="n">shrub</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="n">shrub</span><span class="o">.</span><span class="n">height</span><span class="p">)</span>
-<span class="n">shrub</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="mi">30</span>
-<span class="k">print</span><span class="p">(</span><span class="n">shrub</span><span class="o">.</span><span class="n">area</span><span class="p">())</span>
-<span class="k">print</span><span class="p">(</span><span class="n">shrub</span><span class="o">.</span><span class="n">_numba_attrs</span><span class="o">.</span><span class="n">_fields_</span><span class="p">)</span> <span class="c"># This is an internal attribute subject to change!</span>
-
-<span class="k">class</span> <span class="nc">MyClass</span><span class="p">(</span><span class="n">Shrubbery</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">newmethod</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">print</span><span class="p">(</span><span class="s">&quot;This is a new method.&quot;</span><span class="p">)</span>
-
-<span class="n">shrub2</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span><span class="mi">40</span><span class="p">)</span>
-<span class="n">shrub2</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
-<span class="n">shrub2</span><span class="o">.</span><span class="n">newmethod</span><span class="p">()</span>
-<span class="k">print</span><span class="p">(</span><span class="n">shrub</span><span class="o">.</span><span class="n">_numba_attrs</span><span class="o">.</span><span class="n">_fields_</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="section" id="closures">
-<h2>Closures<a class="headerlink" href="#closures" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-python"><div class="highlight"><pre><span class="c"># -*- coding: utf-8 -*-</span>
-<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Example for closures. Closures may be of arbitrary dept, and they keep</span>
-<span class="sd">the scope alive as long as the closure is alive. Only variables that are</span>
-<span class="sd">closed over (cell variables in the defining function, free variables in the</span>
-<span class="sd">closure), are kept alive. See also numba/tests/closures/test_closure.py</span>
-<span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">absolute_import</span>
-
-<span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">autojit</span><span class="p">,</span> <span class="n">jit</span><span class="p">,</span> <span class="n">float_</span>
-<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">linspace</span>
-
-<span class="nd">@autojit</span>
-<span class="k">def</span> <span class="nf">generate_power_func</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
-    <span class="nd">@jit</span><span class="p">(</span><span class="n">float_</span><span class="p">(</span><span class="n">float_</span><span class="p">))</span>
-    <span class="k">def</span> <span class="nf">nth_power</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">x</span> <span class="o">**</span> <span class="n">n</span>
-
-    <span class="c"># This is a native call</span>
-    <span class="k">print</span><span class="p">(</span><span class="n">nth_power</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
-
-    <span class="c"># Return closure and keep all cell variables alive</span>
-    <span class="k">return</span> <span class="n">nth_power</span>
-
-<span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">):</span>
-    <span class="n">func</span> <span class="o">=</span> <span class="n">generate_power_func</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
-    <span class="k">print</span><span class="p">([</span><span class="n">func</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">linspace</span><span class="p">(</span><span class="mf">1.</span><span class="p">,</span><span class="mf">2.</span><span class="p">,</span><span class="mf">10.</span><span class="p">)])</span>
-</pre></div>
-</div>
-</div>
-<div class="section" id="structs">
-<span id="structexample"></span><h2>Structs<a class="headerlink" href="#structs" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-python"><div class="highlight"><pre><span class="c"># -*- coding: utf-8 -*-</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">absolute_import</span>
-<span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">struct</span><span class="p">,</span> <span class="n">jit</span><span class="p">,</span> <span class="n">double</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
-
-<span class="n">record_type</span> <span class="o">=</span> <span class="n">struct</span><span class="p">([(</span><span class="s">&#39;x&#39;</span><span class="p">,</span> <span class="n">double</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;y&#39;</span><span class="p">,</span> <span class="n">double</span><span class="p">)])</span>
-<span class="n">record_dtype</span> <span class="o">=</span> <span class="n">record_type</span><span class="o">.</span><span class="n">get_dtype</span><span class="p">()</span>
-<span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">),</span> <span class="p">(</span><span class="mf">3.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">)],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">record_dtype</span><span class="p">)</span>
-
-<span class="nd">@jit</span><span class="p">(</span><span class="n">argtypes</span><span class="o">=</span><span class="p">[</span><span class="n">record_type</span><span class="p">[:]])</span>
-<span class="k">def</span> <span class="nf">hypot</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
-    <span class="c"># return types of numpy functions are inferred</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty_like</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span> 
-    <span class="c"># notice access to structure elements &#39;x&#39; and &#39;y&#39; via attribute access</span>
-    <span class="c"># You can also index by field name or field index:</span>
-    <span class="c">#       data[i].x == data[i][&#39;x&#39;] == data[i][0]</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
-        <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">y</span> <span class="o">*</span> <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">result</span>
-
-<span class="k">print</span><span class="p">(</span><span class="n">hypot</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
-
-<span class="c"># Notice inferred return type</span>
-<span class="k">print</span><span class="p">(</span><span class="n">hypot</span><span class="o">.</span><span class="n">signature</span><span class="p">)</span>
-<span class="c"># Notice native sqrt calls and for.body direct access to memory...</span>
-<span class="c">#print(hypot.lfunc)</span>
-</pre></div>
-</div>
-</div>
-<div class="section" id="pointers">
-<span id="pointerexample"></span><h2>Pointers<a class="headerlink" href="#pointers" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-python"><div class="highlight"><pre><span class="c"># -*- coding: utf-8 -*-</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">absolute_import</span>
-<span class="kn">import</span> <span class="nn">numba</span>
-<span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">numba.tests.test_support</span> <span class="kn">import</span> <span class="n">autojit_py3doc</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
-
-<span class="n">int32p</span> <span class="o">=</span> <span class="n">int32</span><span class="o">.</span><span class="n">pointer</span><span class="p">()</span>
-<span class="n">voidp</span> <span class="o">=</span> <span class="n">void</span><span class="o">.</span><span class="n">pointer</span><span class="p">()</span>
-
-<span class="nd">@autojit_py3doc</span>
-<span class="k">def</span> <span class="nf">test_pointer_arithmetic</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    &gt;&gt;&gt; test_pointer_arithmetic()</span>
-<span class="sd">    48L</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">p</span> <span class="o">=</span> <span class="n">int32p</span><span class="p">(</span><span class="n">Py_uintptr_t</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
-    <span class="n">p</span> <span class="o">=</span> <span class="n">p</span> <span class="o">+</span> <span class="mi">10</span>
-    <span class="n">p</span> <span class="o">+=</span> <span class="mi">2</span>
-    <span class="k">return</span> <span class="n">Py_uintptr_t</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="c"># 0 + 4 * 12</span>
-
-<span class="nd">@autojit_py3doc</span><span class="p">(</span><span class="nb">locals</span><span class="o">=</span><span class="p">{</span><span class="s">&quot;pointer_value&quot;</span><span class="p">:</span> <span class="n">Py_uintptr_t</span><span class="p">})</span>
-<span class="k">def</span> <span class="nf">test_pointer_indexing</span><span class="p">(</span><span class="n">pointer_value</span><span class="p">,</span> <span class="n">type_p</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    &gt;&gt;&gt; a = np.array([1, 2, 3, 4], dtype=np.float32)</span>
-<span class="sd">    &gt;&gt;&gt; test_pointer_indexing(a.ctypes.data, float32.pointer())</span>
-<span class="sd">    (1.0, 2.0, 3.0, 4.0)</span>
-
-<span class="sd">    &gt;&gt;&gt; a = np.array([1, 2, 3, 4], dtype=np.int64)</span>
-<span class="sd">    &gt;&gt;&gt; test_pointer_indexing(a.ctypes.data, int64.pointer())</span>
-<span class="sd">    (1L, 2L, 3L, 4L)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">p</span> <span class="o">=</span> <span class="n">type_p</span><span class="p">(</span><span class="n">pointer_value</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">p</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">p</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">p</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
-
-<span class="nd">@autojit</span>
-<span class="k">def</span> <span class="nf">test_compare_null</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    &gt;&gt;&gt; test_compare_null()</span>
-<span class="sd">    True</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">voidp</span><span class="p">(</span><span class="n">Py_uintptr_t</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span> <span class="o">==</span> <span class="n">numba</span><span class="o">.</span><span class="n">NULL</span>
-
-<span class="n">numba</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">testmod</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
 <div class="section" id="objects">
 <h2>Objects<a class="headerlink" href="#objects" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-python"><div class="highlight"><pre><span class="c"># -*- coding: utf-8 -*-</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">absolute_import</span>
-<span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">double</span><span class="p">,</span> <span class="n">autojit</span>
+<span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">jit</span>
 
 <span class="k">class</span> <span class="nc">MyClass</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">mymethod</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">arg</span> <span class="o">*</span> <span class="mi">2</span>
-    
-<span class="nd">@autojit</span><span class="p">(</span><span class="nb">locals</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">mydouble</span><span class="o">=</span><span class="n">double</span><span class="p">))</span> <span class="c"># specify types for local variables</span>
+
+<span class="nd">@jit</span>
 <span class="k">def</span> <span class="nf">call_method</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
     <span class="k">print</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">mymethod</span><span class="p">(</span><span class="s">&quot;hello&quot;</span><span class="p">))</span>  <span class="c"># object result</span>
     <span class="n">mydouble</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">mymethod</span><span class="p">(</span><span class="mf">10.2</span><span class="p">)</span> <span class="c"># native double</span>
@@ -450,15 +261,160 @@ numba functions to eliminate all python overhead in function calling.</p>
 </pre></div>
 </div>
 </div>
+<div class="section" id="ufuncs">
+<h2>UFuncs<a class="headerlink" href="#ufuncs" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">vectorize</span>
+<span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">autojit</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">jit</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+<span class="nd">@vectorize</span><span class="p">([</span><span class="s">&#39;f8(f8)&#39;</span><span class="p">,</span><span class="s">&#39;f4(f4)&#39;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">sinc</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">x</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mf">1.0</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">x</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+
+<span class="nd">@vectorize</span><span class="p">([</span><span class="s">&#39;int8(int8,int8)&#39;</span><span class="p">,</span>
+            <span class="s">&#39;int16(int16,int16)&#39;</span><span class="p">,</span>
+            <span class="s">&#39;int32(int32,int32)&#39;</span><span class="p">,</span>
+            <span class="s">&#39;int64(int64,int64)&#39;</span><span class="p">,</span>
+            <span class="s">&#39;f4(f4,f4)&#39;</span><span class="p">,</span>
+            <span class="s">&#39;f8(f8,f8)&#39;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
+
+<span class="nd">@vectorize</span><span class="p">([</span><span class="s">&#39;f8(f8)&#39;</span><span class="p">,</span><span class="s">&#39;f4(f4)&#39;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">logit</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">x</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">x</span><span class="p">))</span>
+
+<span class="nd">@vectorize</span><span class="p">([</span><span class="s">&#39;f8(f8)&#39;</span><span class="p">,</span><span class="s">&#39;f4(f4)&#39;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">expit</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">x</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">x</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">math</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">x</span><span class="p">))</span>
+
+<span class="nd">@jit</span><span class="p">(</span><span class="s">&#39;f8(f8,f8[:])&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">polevl</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">coef</span><span class="p">):</span>
+    <span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">coef</span><span class="p">)</span>
+    <span class="n">ans</span> <span class="o">=</span> <span class="n">coef</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">while</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">:</span>
+        <span class="n">ans</span> <span class="o">=</span> <span class="n">ans</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="n">coef</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">ans</span>
+
+<span class="nd">@jit</span><span class="p">(</span><span class="s">&#39;f8(f8,f8[:])&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">p1evl</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">coef</span><span class="p">):</span>
+    <span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">coef</span><span class="p">)</span>
+    <span class="n">ans</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">coef</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">while</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">:</span>
+        <span class="n">ans</span> <span class="o">=</span> <span class="n">ans</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="n">coef</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">ans</span>    
+
+
+<span class="n">PP</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+  <span class="mf">7.96936729297347051624E-4</span><span class="p">,</span>
+  <span class="mf">8.28352392107440799803E-2</span><span class="p">,</span>
+  <span class="mf">1.23953371646414299388E0</span><span class="p">,</span>
+  <span class="mf">5.44725003058768775090E0</span><span class="p">,</span>
+  <span class="mf">8.74716500199817011941E0</span><span class="p">,</span>
+  <span class="mf">5.30324038235394892183E0</span><span class="p">,</span>
+  <span class="mf">9.99999999999999997821E-1</span><span class="p">],</span> <span class="s">&#39;d&#39;</span><span class="p">)</span>
+
+<span class="n">PQ</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+  <span class="mf">9.24408810558863637013E-4</span><span class="p">,</span>
+  <span class="mf">8.56288474354474431428E-2</span><span class="p">,</span>
+  <span class="mf">1.25352743901058953537E0</span><span class="p">,</span>
+  <span class="mf">5.47097740330417105182E0</span><span class="p">,</span>
+  <span class="mf">8.76190883237069594232E0</span><span class="p">,</span>
+  <span class="mf">5.30605288235394617618E0</span><span class="p">,</span>
+  <span class="mf">1.00000000000000000218E0</span><span class="p">],</span> <span class="s">&#39;d&#39;</span><span class="p">)</span>
+  
+<span class="n">DR1</span> <span class="o">=</span> <span class="mf">5.783185962946784521175995758455807035071</span>
+<span class="n">DR2</span> <span class="o">=</span> <span class="mf">30.47126234366208639907816317502275584842</span>
+
+<span class="n">RP</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+<span class="o">-</span><span class="mf">4.79443220978201773821E9</span><span class="p">,</span>
+ <span class="mf">1.95617491946556577543E12</span><span class="p">,</span>
+<span class="o">-</span><span class="mf">2.49248344360967716204E14</span><span class="p">,</span>
+ <span class="mf">9.70862251047306323952E15</span><span class="p">],</span> <span class="s">&#39;d&#39;</span><span class="p">)</span>
+
+<span class="n">RQ</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+    <span class="c"># 1.00000000000000000000E0,</span>
+ <span class="mf">4.99563147152651017219E2</span><span class="p">,</span>
+ <span class="mf">1.73785401676374683123E5</span><span class="p">,</span>
+ <span class="mf">4.84409658339962045305E7</span><span class="p">,</span>
+ <span class="mf">1.11855537045356834862E10</span><span class="p">,</span>
+ <span class="mf">2.11277520115489217587E12</span><span class="p">,</span>
+ <span class="mf">3.10518229857422583814E14</span><span class="p">,</span>
+ <span class="mf">3.18121955943204943306E16</span><span class="p">,</span>
+ <span class="mf">1.71086294081043136091E18</span><span class="p">],</span> <span class="s">&#39;d&#39;</span><span class="p">)</span>
+
+<span class="n">QP</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+<span class="o">-</span><span class="mf">1.13663838898469149931E-2</span><span class="p">,</span>
+<span class="o">-</span><span class="mf">1.28252718670509318512E0</span><span class="p">,</span>
+<span class="o">-</span><span class="mf">1.95539544257735972385E1</span><span class="p">,</span>
+<span class="o">-</span><span class="mf">9.32060152123768231369E1</span><span class="p">,</span>
+<span class="o">-</span><span class="mf">1.77681167980488050595E2</span><span class="p">,</span>
+<span class="o">-</span><span class="mf">1.47077505154951170175E2</span><span class="p">,</span>
+<span class="o">-</span><span class="mf">5.14105326766599330220E1</span><span class="p">,</span>
+<span class="o">-</span><span class="mf">6.05014350600728481186E0</span><span class="p">],</span> <span class="s">&#39;d&#39;</span><span class="p">)</span>
+
+<span class="n">QQ</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+    <span class="c"># 1.00000000000000000000E0,</span>
+  <span class="mf">6.43178256118178023184E1</span><span class="p">,</span>
+  <span class="mf">8.56430025976980587198E2</span><span class="p">,</span>
+  <span class="mf">3.88240183605401609683E3</span><span class="p">,</span>
+  <span class="mf">7.24046774195652478189E3</span><span class="p">,</span>
+  <span class="mf">5.93072701187316984827E3</span><span class="p">,</span>
+  <span class="mf">2.06209331660327847417E3</span><span class="p">,</span>
+  <span class="mf">2.42005740240291393179E2</span><span class="p">],</span> <span class="s">&#39;d&#39;</span><span class="p">)</span>
+
+<span class="n">NPY_PI_4</span> <span class="o">=</span> <span class="o">.</span><span class="mi">78539816339744830962</span>
+<span class="n">SQ2OPI</span>  <span class="o">=</span> <span class="o">.</span><span class="mi">79788456080286535587989</span>
+
+<span class="nd">@jit</span><span class="p">(</span><span class="s">&#39;f8(f8)&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">j0</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">x</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="o">-</span><span class="n">x</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">x</span> <span class="o">&lt;=</span> <span class="mf">5.0</span><span class="p">):</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="n">x</span> <span class="o">*</span> <span class="n">x</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">x</span> <span class="o">&lt;</span> <span class="mf">1.0e-5</span><span class="p">):</span>
+            <span class="k">return</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">z</span> <span class="o">/</span> <span class="mf">4.0</span><span class="p">)</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="p">(</span><span class="n">z</span><span class="o">-</span><span class="n">DR1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">z</span><span class="o">-</span><span class="n">DR2</span><span class="p">)</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">p</span> <span class="o">*</span> <span class="n">polevl</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">RP</span><span class="p">)</span> <span class="o">/</span> <span class="n">polevl</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">RQ</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">p</span>
+    
+    <span class="n">w</span> <span class="o">=</span> <span class="mf">5.0</span> <span class="o">/</span> <span class="n">x</span>
+    <span class="n">q</span> <span class="o">=</span> <span class="mf">25.0</span> <span class="o">/</span> <span class="p">(</span><span class="n">x</span><span class="o">*</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">polevl</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">PP</span><span class="p">)</span> <span class="o">/</span> <span class="n">polevl</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">PQ</span><span class="p">)</span>
+    <span class="n">q</span> <span class="o">=</span> <span class="n">polevl</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">QP</span><span class="p">)</span> <span class="o">/</span> <span class="n">p1evl</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">QQ</span><span class="p">)</span>
+    <span class="n">xn</span> <span class="o">=</span> <span class="n">x</span> <span class="o">-</span> <span class="n">NPY_PI_4</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">p</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">xn</span><span class="p">)</span> <span class="o">-</span> <span class="n">w</span> <span class="o">*</span> <span class="n">q</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">xn</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">p</span> <span class="o">*</span> <span class="n">SQ2OPI</span> <span class="o">/</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10000</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s">&#39;i8&#39;</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10000</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s">&#39;i8&#39;</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
 <div class="section" id="mandelbrot">
 <h2>Mandelbrot<a class="headerlink" href="#mandelbrot" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-python"><div class="highlight"><pre><span class="c"># -*- coding: utf-8 -*-</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">absolute_import</span>
-<span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">autojit</span>
+<span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">jit</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">pylab</span> <span class="kn">import</span> <span class="n">imshow</span><span class="p">,</span> <span class="n">jet</span><span class="p">,</span> <span class="n">show</span><span class="p">,</span> <span class="n">ion</span>
 
-<span class="nd">@autojit</span>
+<span class="nd">@jit</span>
 <span class="k">def</span> <span class="nf">mandel</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">max_iters</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Given the real and imaginary parts of a complex number,</span>
@@ -475,7 +431,7 @@ numba functions to eliminate all python overhead in function calling.</p>
 
     <span class="k">return</span> <span class="mi">255</span>
 
-<span class="nd">@autojit</span>
+<span class="nd">@jit</span>
 <span class="k">def</span> <span class="nf">create_fractal</span><span class="p">(</span><span class="n">min_x</span><span class="p">,</span> <span class="n">max_x</span><span class="p">,</span> <span class="n">min_y</span><span class="p">,</span> <span class="n">max_y</span><span class="p">,</span> <span class="n">image</span><span class="p">,</span> <span class="n">iters</span><span class="p">):</span>
     <span class="n">height</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">width</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
@@ -502,14 +458,19 @@ numba functions to eliminate all python overhead in function calling.</p>
 <div class="section" id="filterbank-correlation">
 <h2>Filterbank Correlation<a class="headerlink" href="#filterbank-correlation" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-python"><div class="highlight"><pre><span class="c"># -*- coding: utf-8 -*-</span>
+
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">This file demonstrates a filterbank correlation loop.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">absolute_import</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">numba</span>
+<span class="kn">from</span> <span class="nn">numba.utils</span> <span class="kn">import</span> <span class="n">IS_PY3</span>
 <span class="kn">from</span> <span class="nn">numba.decorators</span> <span class="kn">import</span> <span class="n">jit</span>
 <span class="n">nd4type</span> <span class="o">=</span> <span class="n">numba</span><span class="o">.</span><span class="n">double</span><span class="p">[:,:,:,:]</span>
+
+<span class="k">if</span> <span class="n">IS_PY3</span><span class="p">:</span>
+    <span class="nb">xrange</span> <span class="o">=</span> <span class="nb">range</span>
 
 <span class="nd">@jit</span><span class="p">(</span><span class="n">argtypes</span><span class="o">=</span><span class="p">(</span><span class="n">nd4type</span><span class="p">,</span> <span class="n">nd4type</span><span class="p">,</span> <span class="n">nd4type</span><span class="p">))</span>
 <span class="k">def</span> <span class="nf">fbcorr</span><span class="p">(</span><span class="n">imgs</span><span class="p">,</span> <span class="n">filters</span><span class="p">,</span> <span class="n">output</span><span class="p">):</span>
@@ -544,7 +505,8 @@ numba functions to eliminate all python overhead in function calling.</p>
 </div>
 <div class="section" id="multi-threading">
 <h2>Multi threading<a class="headerlink" href="#multi-threading" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-python"><div class="highlight"><pre><span class="sd">&quot;&quot;&quot;</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># -*- coding: utf-8 -*-</span>
+<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Example of multithreading by releasing the GIL through ctypes.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">absolute_import</span>
@@ -636,80 +598,6 @@ numba functions to eliminate all python overhead in function calling.</p>
 </pre></div>
 </div>
 </div>
-<div class="section" id="strings-and-libc">
-<h2>Strings and libc<a class="headerlink" href="#strings-and-libc" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-python"><div class="highlight"><pre><span class="c"># -*- coding: utf-8 -*-</span>
-
-<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Example of using strings with numba using libc and some basic string</span>
-<span class="sd">functionality.</span>
-<span class="sd">&quot;&quot;&quot;</span>
-
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span><span class="p">,</span> <span class="n">absolute_import</span>
-<span class="kn">import</span> <span class="nn">struct</span>
-<span class="kn">import</span> <span class="nn">socket</span>
-
-<span class="kn">import</span> <span class="nn">numba</span> <span class="kn">as</span> <span class="nn">nb</span>
-<span class="kn">import</span> <span class="nn">cffi</span>
-
-<span class="n">ffi</span> <span class="o">=</span> <span class="n">cffi</span><span class="o">.</span><span class="n">FFI</span><span class="p">()</span>
-<span class="n">ffi</span><span class="o">.</span><span class="n">cdef</span><span class="p">(</span><span class="s">&quot;&quot;&quot;</span>
-<span class="s">void abort(void);</span>
-<span class="s">char *strstr(const char *s1, const char *s2);</span>
-<span class="s">int atoi(const char *str);</span>
-<span class="s">char *strtok(char *restrict str, const char *restrict sep);</span>
-<span class="s">&quot;&quot;&quot;</span><span class="p">)</span>
-
-<span class="n">lib</span> <span class="o">=</span> <span class="n">ffi</span><span class="o">.</span><span class="n">dlopen</span><span class="p">(</span><span class="bp">None</span><span class="p">)</span>
-
-<span class="c"># For now, we need to make these globals so numba will recognize them</span>
-<span class="n">abort</span><span class="p">,</span> <span class="n">strstr</span><span class="p">,</span> <span class="n">atoi</span><span class="p">,</span> <span class="n">strtok</span> <span class="o">=</span> <span class="n">lib</span><span class="o">.</span><span class="n">abort</span><span class="p">,</span> <span class="n">lib</span><span class="o">.</span><span class="n">strstr</span><span class="p">,</span> <span class="n">lib</span><span class="o">.</span><span class="n">atoi</span><span class="p">,</span> <span class="n">lib</span><span class="o">.</span><span class="n">strtok</span>
-
-<span class="n">int8_p</span> <span class="o">=</span> <span class="n">nb</span><span class="o">.</span><span class="n">int8</span><span class="o">.</span><span class="n">pointer</span><span class="p">()</span>
-<span class="n">int_p</span>  <span class="o">=</span> <span class="n">nb</span><span class="o">.</span><span class="n">int_</span><span class="o">.</span><span class="n">pointer</span><span class="p">()</span>
-
-<span class="nd">@nb.autojit</span><span class="p">(</span><span class="n">nopython</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">parse_int_strtok</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Convert an IP address given as a string to an int, similar to</span>
-<span class="sd">    socket.inet_aton(). Performs no error checking!</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">nb</span><span class="o">.</span><span class="n">uint32</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-    <span class="n">current</span> <span class="o">=</span> <span class="n">strtok</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s">&quot;.&quot;</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
-        <span class="n">byte</span> <span class="o">=</span> <span class="n">atoi</span><span class="p">(</span><span class="n">current</span><span class="p">)</span>
-        <span class="n">shift</span> <span class="o">=</span> <span class="p">(</span><span class="mi">3</span> <span class="o">-</span> <span class="n">i</span><span class="p">)</span> <span class="o">*</span> <span class="mi">8</span>
-        <span class="n">result</span> <span class="o">|=</span> <span class="n">byte</span> <span class="o">&lt;&lt;</span> <span class="n">shift</span>
-        <span class="n">current</span> <span class="o">=</span> <span class="n">strtok</span><span class="p">(</span><span class="n">int_p</span><span class="p">(</span><span class="n">nb</span><span class="o">.</span><span class="n">NULL</span><span class="p">),</span> <span class="s">&quot;.&quot;</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">result</span>
-
-<span class="nd">@nb.autojit</span><span class="p">(</span><span class="n">nopython</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">parse_int_manual</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Convert an IP address given as a string to an int, similar to</span>
-<span class="sd">    socket.inet_aton(). Performs no error checking!</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">nb</span><span class="o">.</span><span class="n">uint32</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-    <span class="n">end</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
-    <span class="n">start</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="n">shift</span> <span class="o">=</span> <span class="mi">3</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">end</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;.&#39;</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">or</span> <span class="n">i</span> <span class="o">==</span> <span class="n">end</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">byte</span> <span class="o">=</span> <span class="n">atoi</span><span class="p">(</span><span class="n">int8_p</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="o">+</span> <span class="n">start</span><span class="p">)</span>
-            <span class="n">result</span> <span class="o">|=</span> <span class="n">byte</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">shift</span> <span class="o">*</span> <span class="mi">8</span><span class="p">)</span>
-            <span class="n">shift</span> <span class="o">-=</span> <span class="mi">1</span>
-            <span class="n">start</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
-
-    <span class="k">return</span> <span class="n">result</span>
-
-<span class="n">result1</span> <span class="o">=</span> <span class="n">parse_int_strtok</span><span class="p">(</span><span class="s">&#39;192.168.1.2&#39;</span><span class="p">)</span>
-<span class="n">result2</span> <span class="o">=</span> <span class="n">parse_int_manual</span><span class="p">(</span><span class="s">&#39;1.2.3.4&#39;</span><span class="p">)</span>
-<span class="k">print</span><span class="p">(</span><span class="n">socket</span><span class="o">.</span><span class="n">inet_ntoa</span><span class="p">(</span><span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s">&#39;&gt;I&#39;</span><span class="p">,</span> <span class="n">result1</span><span class="p">)))</span>
-<span class="k">print</span><span class="p">(</span><span class="n">socket</span><span class="o">.</span><span class="n">inet_ntoa</span><span class="p">(</span><span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s">&#39;&gt;I&#39;</span><span class="p">,</span> <span class="n">result2</span><span class="p">)))</span>
-</pre></div>
-</div>
-</div>
 </div>
 
 
@@ -729,9 +617,9 @@ numba functions to eliminate all python overhead in function calling.</p>
     <ul class="nav pull-right">
       
         <li><a href="genindex.html" title="General Index" >index</a></li>
-        <li><a href="releases.html" title="Release Notes" >next</a></li>
-        <li><a href="doctest.html" title="Using doctest with Numba" >previous</a></li>
-        <li><a href="index.html">numba 0.9.0-141-gb718785 documentation</a></li> 
+        <li><a href="tutorial_firststeps.html" title="First Steps with numba" >next</a></li>
+        <li><a href="ufuncs.html" title="UFuncs" >previous</a></li>
+        <li><a href="index.html">numba 0.12.1 documentation</a></li> 
       
     </ul>
   </div>
@@ -741,7 +629,7 @@ numba functions to eliminate all python overhead in function calling.</p>
       <!-- footer -->
       <footer>
           &copy; Copyright 2012-2013, Continuum Analytics.
-        Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+        Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.1.
       </footer>
       <!-- /footer -->
 
