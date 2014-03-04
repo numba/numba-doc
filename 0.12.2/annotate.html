@@ -1,0 +1,266 @@
+
+<!DOCTYPE html>
+
+
+
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+    <title>Annotating Numba Source &mdash; numba 0.12.2 documentation</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    
+<link rel="stylesheet" href="_static/css/basicstrap-base.css" type="text/css" />
+<link rel="stylesheet" href="_static/css/bootstrap.min.css" type="text/css" />
+<link rel="stylesheet" href="_static/css/font-awesome.min.css">
+<!--[if IE 7]>
+<link rel="stylesheet" href="_static/css/font-awesome-ie7.min.css">
+<![endif]-->
+<style type="text/css">
+  body {
+    padding-top: 60px;
+    padding-bottom: 40px;
+  }
+}
+</style>
+<link rel="stylesheet" href="_static/basicstrap.css" type="text/css" />
+<link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+<link rel="stylesheet" href="_static/css/bootstrap-responsive.min.css" type="text/css" />
+    
+<script type="text/javascript">
+  var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:    '',
+            VERSION:     '0.12.2',
+            COLLAPSE_INDEX: false,
+            FILE_SUFFIX: '.html',
+            HAS_SOURCE:  true
+  };
+</script>
+<script type="text/javascript" src="_static/js/jquery.min.js"></script>
+<script type="text/javascript" src="_static/underscore.js"></script>
+<script type="text/javascript" src="_static/doctools.js"></script>
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/javascript" src="_static/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+  $(document).ready(function(){
+    $('.show-sidebar').click(function(e) {
+       e.preventDefault();
+       if ($(".show-sidebar").html() == "Open Table Of Contents") {
+          $('.for-mobile').removeClass('hidden-phone');
+          $(".show-sidebar").html("Close Table Of Contents");
+       } else {
+          $(".show-sidebar").html("Open Table Of Contents");
+       }
+    });
+  });
+</script>
+    <link rel="top" title="numba 0.12.2 documentation" href="index.html" /> 
+  </head>
+  <body>
+    <div class="navbar navbar-fixed-top ">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="index.html">numba 0.12.2 documentation</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav pull-right">
+              
+                <li>
+                <a href="genindex.html" title="General Index" accesskey="I">index</a>
+                </li>
+                <li>
+                <a href="py-modindex.html" title="Python Module Index" >modules</a>
+                </li>
+              
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <!-- container -->
+    <div class="container-fluid">
+
+
+      
+      <div class="row-fluid hidden-desktop hidden-tablet">
+      
+<div class="span3 ">
+  <a class="visible-phone btn btn-small show-sidebar" data-toggle="collapse" data-target=".for-mobile">Open Table Of Contents</a>
+  <div class="for-mobile sidebar hidden-phone">
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/annotate.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox">
+  <h3>Quick search</h3>
+  <form class="search form-search" action="search.html" method="get">
+      <div class="input-append">
+        <input type="text" class="search-query" name="q">
+        <input type="submit" class="btn" value="Go" />
+      </div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+  </div>
+</div>
+      </div>
+      
+
+      <!-- row -->
+      <div class="row-fluid">
+         
+<div class="span3 visible-desktop visible-tablet">
+  <div class=" sidebar hidden-phone">
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/annotate.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox">
+  <h3>Quick search</h3>
+  <form class="search form-search" action="search.html" method="get">
+      <div class="input-append">
+        <input type="text" class="search-query" name="q">
+        <input type="submit" class="btn" value="Go" />
+      </div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+  </div>
+</div> 
+        
+
+        <div class="span9">
+          <div class="document">
+            <div class="documentwrapper">
+              <div class="bodywrapper">
+                <div class="body">
+                  
+  <div class="section" id="annotating-numba-source">
+<h1>Annotating Numba Source<a class="headerlink" href="#annotating-numba-source" title="Permalink to this headline">¶</a></h1>
+<p>Numba comes with a script to annotate numba source code. The tool can
+dump generated code or types to the terminal or generate a webpage with
+annotated code.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>numba -h
+usage: numba <span class="o">[</span>-h<span class="o">]</span> <span class="o">[</span>--annotate<span class="o">]</span> <span class="o">[</span>--dump-llvm<span class="o">]</span> <span class="o">[</span>--dump-optimized<span class="o">]</span> <span class="o">[</span>--dump-cfg<span class="o">]</span>
+             <span class="o">[</span>--dump-ast<span class="o">]</span> <span class="o">[</span>--fancy<span class="o">]</span>
+             filename
+
+positional arguments:
+  filename          Python <span class="nb">source </span>filename
+
+optional arguments:
+  -h, --help        show this <span class="nb">help </span>message and <span class="nb">exit</span>
+  --annotate        Annotate <span class="nb">source</span>
+  --dump-llvm       Print generated llvm assembly
+  --dump-optimized  Dump the optimized llvm assembly
+  --dump-cfg        Dump the control flow graph
+  --dump-ast        Dump the AST
+  --fancy           Try to output fancy files <span class="o">(</span>.dot or .html<span class="o">)</span>
+</pre></div>
+</div>
+<p>For instance, it&#8217;s easy to dump the generated llvm code to the terminal.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>numba --dump-llvm foo.py
+
+define double @__numba_specialized_0_myfunc<span class="o">(</span>double %y<span class="o">)</span> <span class="o">{</span>
+entry:
+  %return_value <span class="o">=</span> alloca double
+  %0 <span class="o">=</span> fmul double %y, 2.000000e+00
+  store double %0, double* %return_value
+  br label %cleanup_label
+
+cleanup_label:                                    ; <span class="nv">preds</span> <span class="o">=</span> %entry, %error_label
+  %1 <span class="o">=</span> load double* %return_value
+  ret double %1
+
+error_label:                                      ; No predecessors!
+  store double 0x7FF8000000000000, double* %return_value
+  br label %cleanup_label
+<span class="o">}</span>
+
+<span class="nv">$ </span>numba --dump-optimized foo.py
+
+define double @__numba_specialized_0_myfunc<span class="o">(</span>double %y<span class="o">)</span> nounwind readnone <span class="o">{</span>
+entry:
+  %0 <span class="o">=</span> fmul double %y, 2.000000e+00
+  ret double %0
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>To get a clear idea of what the types of variables are and where parts of the code
+may be slow (rely on Python), use the <tt class="docutils literal"><span class="pre">--annotate</span></tt> option. This can also be used
+from the code itself:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@jit</span><span class="p">(</span><span class="n">double</span><span class="p">(</span><span class="n">double</span><span class="p">),</span> <span class="n">annotate</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">square</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">*</span> <span class="n">x</span>
+</pre></div>
+</div>
+<p>When the &#8211;annotate and &#8211;fancy flags are used together, the output is saved in
+html format. The html file name is the same as the Python script name, with the
+.py extension replaced with a .html extension. When viewed in a web browser,
+the Python source code of each jitted function is displayed along with the
+function call and the file name and line number from where the function was
+called. Moving your mouse cursor over a line of Python code displays a box
+showing each Python variable and it&#8217;s type assigned by numba. Clicking on a
+line of python displays the LLVM IR that is generated by that line. Any line of
+python that results in LLVM IR containing a call back into a Python function is
+indicated by an asterick next to the line number.</p>
+</div>
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        
+      </div><!-- /row -->
+
+      <!-- row -->
+      <div class="row-fluid">
+<div class="related navbar ">
+  <div class="navbar-inner">
+    <ul class="nav pull-right">
+      
+        <li><a href="genindex.html" title="General Index" >index</a></li>
+        <li><a href="py-modindex.html" title="Python Module Index" >modules</a></li>
+        <li><a href="index.html">numba 0.12.2 documentation</a></li> 
+      
+    </ul>
+  </div>
+</div>
+      </div><!-- /row -->
+
+      <!-- footer -->
+      <footer>
+          &copy; Copyright 2012-2014, Continuum Analytics.
+        Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+      </footer>
+      <!-- /footer -->
+
+    </div>
+    <!-- /container -->
+
+  </body>
+</html>

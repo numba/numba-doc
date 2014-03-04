@@ -1,0 +1,274 @@
+
+<!DOCTYPE html>
+
+
+
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+    <title>Numba Debugging Tips &mdash; numba 0.12.2 documentation</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    
+<link rel="stylesheet" href="_static/css/basicstrap-base.css" type="text/css" />
+<link rel="stylesheet" href="_static/css/bootstrap.min.css" type="text/css" />
+<link rel="stylesheet" href="_static/css/font-awesome.min.css">
+<!--[if IE 7]>
+<link rel="stylesheet" href="_static/css/font-awesome-ie7.min.css">
+<![endif]-->
+<style type="text/css">
+  body {
+    padding-top: 60px;
+    padding-bottom: 40px;
+  }
+}
+</style>
+<link rel="stylesheet" href="_static/basicstrap.css" type="text/css" />
+<link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+<link rel="stylesheet" href="_static/css/bootstrap-responsive.min.css" type="text/css" />
+    
+<script type="text/javascript">
+  var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:    '',
+            VERSION:     '0.12.2',
+            COLLAPSE_INDEX: false,
+            FILE_SUFFIX: '.html',
+            HAS_SOURCE:  true
+  };
+</script>
+<script type="text/javascript" src="_static/js/jquery.min.js"></script>
+<script type="text/javascript" src="_static/underscore.js"></script>
+<script type="text/javascript" src="_static/doctools.js"></script>
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/javascript" src="_static/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+  $(document).ready(function(){
+    $('.show-sidebar').click(function(e) {
+       e.preventDefault();
+       if ($(".show-sidebar").html() == "Open Table Of Contents") {
+          $('.for-mobile').removeClass('hidden-phone');
+          $(".show-sidebar").html("Close Table Of Contents");
+       } else {
+          $(".show-sidebar").html("Open Table Of Contents");
+       }
+    });
+  });
+</script>
+    <link rel="top" title="numba 0.12.2 documentation" href="index.html" />
+    <link rel="next" title="Release Notes" href="releases.html" />
+    <link rel="prev" title="Static Compilation (pycc)" href="pycc.html" /> 
+  </head>
+  <body>
+    <div class="navbar navbar-fixed-top ">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="index.html">numba 0.12.2 documentation</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav pull-right">
+              
+                <li>
+                <a href="genindex.html" title="General Index" accesskey="I">index</a>
+                </li>
+                <li>
+                <a href="py-modindex.html" title="Python Module Index" >modules</a>
+                </li>
+                <li>
+                <a href="releases.html" title="Release Notes" accesskey="N">next</a>
+                </li>
+                <li>
+                <a href="pycc.html" title="Static Compilation (pycc)" accesskey="P">previous</a>
+                </li>
+              
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <!-- container -->
+    <div class="container-fluid">
+
+
+      
+      <div class="row-fluid hidden-desktop hidden-tablet">
+      
+<div class="span3 ">
+  <a class="visible-phone btn btn-small show-sidebar" data-toggle="collapse" data-target=".for-mobile">Open Table Of Contents</a>
+  <div class="for-mobile sidebar hidden-phone">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="pycc.html"
+                        title="previous chapter">Static Compilation (pycc)</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="releases.html"
+                        title="next chapter">Release Notes</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/debugging.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox">
+  <h3>Quick search</h3>
+  <form class="search form-search" action="search.html" method="get">
+      <div class="input-append">
+        <input type="text" class="search-query" name="q">
+        <input type="submit" class="btn" value="Go" />
+      </div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+  </div>
+</div>
+      </div>
+      
+
+      <!-- row -->
+      <div class="row-fluid">
+         
+<div class="span3 visible-desktop visible-tablet">
+  <div class=" sidebar hidden-phone">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="pycc.html"
+                        title="previous chapter">Static Compilation (pycc)</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="releases.html"
+                        title="next chapter">Release Notes</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/debugging.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox">
+  <h3>Quick search</h3>
+  <form class="search form-search" action="search.html" method="get">
+      <div class="input-append">
+        <input type="text" class="search-query" name="q">
+        <input type="submit" class="btn" value="Go" />
+      </div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+  </div>
+</div> 
+        
+
+        <div class="span9">
+          <div class="document">
+            <div class="documentwrapper">
+              <div class="bodywrapper">
+                <div class="body">
+                  
+  <div class="section" id="numba-debugging-tips">
+<h1>Numba Debugging Tips<a class="headerlink" href="#numba-debugging-tips" title="Permalink to this headline">¶</a></h1>
+<p>The most common problem users run into is slower than expected performance.
+Usually this is because Numba is having trouble inferring a type or doesn&#8217;t
+have a compiled version of a function to call. An easy way to pinpoint the
+source of this problem is to use the nopython flag. By default, Numba tries
+to compile everything down to low level types, but if it runs into trouble it
+will fall back to using Python objects. Setting nopython=True in the jit
+decorator will tell Numba to never use objects, and instead bail out if it
+runs into trouble:</p>
+<div class="highlight-python"><pre>@jit(nopython=True)
+def foo()
+    ...</pre>
+</div>
+<p>which will result in an error if Numba can&#8217;t figure out the type of a variable
+or function.</p>
+<p>Another more advanced method for figuring out what&#8217;s going on is using the
+inspect_types method. Calling inspect_types for a function compiled with Numba
+like so:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@jit</span>
+<span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+<span class="n">foo</span><span class="o">.</span><span class="n">inspect_types</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>will result in output similar to the following:</p>
+<div class="highlight-python"><pre>foo (pyobject,) -&gt; pyobject
+
+---------------------------
+
+# --- LINE 25 ---
+
+@jit(nopython=False)
+
+# --- LINE 26 ---
+
+def foo(x):
+
+    # --- LINE 27 ---
+    # label 0
+    #   $0.1 = global(np: &lt;module 'numpy' from '/Users/jayvius/anaconda/envs/dev/lib/python2.7/site-packages/numpy/__init__.pyc'&gt;)  :: pyobject
+    #   $0.2 = getattr(attr=sin, value=$0.1)  :: pyobject
+    #   $0.3 = call $0.2(x, )  :: pyobject
+    #   return $0.3
+
+    return np.sin(x)</pre>
+</div>
+<p>A few things to take note of here: First, every line of Python code is preceded
+by several lines of Numba IR code that gives a glimpse into what Numba is doing
+to your Python code behind the scenes. More helpful though, at the end of most
+lines there are type annotations that show how Numba is treating variables and
+function calls. In the example above, the &#8216;pyobject&#8217; annotation indicates that
+Numba doesn&#8217;t know about the np.sin function so it has to fall back to the
+Python object layer to call it.</p>
+</div>
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        
+      </div><!-- /row -->
+
+      <!-- row -->
+      <div class="row-fluid">
+<div class="related navbar ">
+  <div class="navbar-inner">
+    <ul class="nav pull-right">
+      
+        <li><a href="genindex.html" title="General Index" >index</a></li>
+        <li><a href="py-modindex.html" title="Python Module Index" >modules</a></li>
+        <li><a href="releases.html" title="Release Notes" >next</a></li>
+        <li><a href="pycc.html" title="Static Compilation (pycc)" >previous</a></li>
+        <li><a href="index.html">numba 0.12.2 documentation</a></li> 
+      
+    </ul>
+  </div>
+</div>
+      </div><!-- /row -->
+
+      <!-- footer -->
+      <footer>
+          &copy; Copyright 2012-2014, Continuum Analytics.
+        Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+      </footer>
+      <!-- /footer -->
+
+    </div>
+    <!-- /container -->
+
+  </body>
+</html>
