@@ -1,0 +1,907 @@
+
+<!DOCTYPE html>
+
+
+
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+    <title>Numba and types &mdash; numba 0.13.0 documentation</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    
+<link rel="stylesheet" href="_static/css/basicstrap-base.css" type="text/css" />
+<link rel="stylesheet" href="_static/css/bootstrap.min.css" type="text/css" />
+<link rel="stylesheet" href="_static/css/font-awesome.min.css">
+<!--[if IE 7]>
+<link rel="stylesheet" href="_static/css/font-awesome-ie7.min.css">
+<![endif]-->
+<style type="text/css">
+  body {
+    padding-top: 60px;
+    padding-bottom: 40px;
+  }
+}
+</style>
+<link rel="stylesheet" href="_static/basicstrap.css" type="text/css" />
+<link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+<link rel="stylesheet" href="_static/css/bootstrap-responsive.min.css" type="text/css" />
+    
+<script type="text/javascript">
+  var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:    '',
+            VERSION:     '0.13.0',
+            COLLAPSE_INDEX: false,
+            FILE_SUFFIX: '.html',
+            HAS_SOURCE:  true
+  };
+</script>
+<script type="text/javascript" src="_static/js/jquery.min.js"></script>
+<script type="text/javascript" src="_static/underscore.js"></script>
+<script type="text/javascript" src="_static/doctools.js"></script>
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/javascript" src="_static/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+  $(document).ready(function(){
+    $('.show-sidebar').click(function(e) {
+       e.preventDefault();
+       if ($(".show-sidebar").html() == "Open Table Of Contents") {
+          $('.for-mobile').removeClass('hidden-phone');
+          $(".show-sidebar").html("Close Table Of Contents");
+       } else {
+          $(".show-sidebar").html("Open Table Of Contents");
+       }
+    });
+  });
+</script>
+    <link rel="top" title="numba 0.13.0 documentation" href="index.html" />
+    <link rel="next" title="Interfacing with C" href="interface_c.html" />
+    <link rel="prev" title="First Steps with numba" href="tutorial_firststeps.html" /> 
+  </head>
+  <body>
+    <div class="navbar navbar-fixed-top ">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="index.html">numba 0.13.0 documentation</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav pull-right">
+              
+                <li>
+                <a href="genindex.html" title="General Index" accesskey="I">index</a>
+                </li>
+                <li>
+                <a href="py-modindex.html" title="Python Module Index" >modules</a>
+                </li>
+                <li>
+                <a href="interface_c.html" title="Interfacing with C" accesskey="N">next</a>
+                </li>
+                <li>
+                <a href="tutorial_firststeps.html" title="First Steps with numba" accesskey="P">previous</a>
+                </li>
+              
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <!-- container -->
+    <div class="container-fluid">
+
+
+      
+      <div class="row-fluid hidden-desktop hidden-tablet">
+      
+<div class="span3 ">
+  <a class="visible-phone btn btn-small show-sidebar" data-toggle="collapse" data-target=".for-mobile">Open Table Of Contents</a>
+  <div class="for-mobile sidebar hidden-phone">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Numba and types</a><ul>
+<li><a class="reference internal" href="#introduction">Introduction</a></li>
+<li><a class="reference internal" href="#type-inference-by-example">Type inference by example</a><ul>
+<li><a class="reference internal" href="#finding-out-the-types-of-values">Finding out the <em>types</em> of values</a></li>
+<li><a class="reference internal" href="#type-inference-in-numba-jit"><em>Type inference</em> in <em>numba.jit</em></a></li>
+<li><a class="reference internal" href="#providing-hints-to-the-type-inferrer">Providing hints to the type inferrer</a></li>
+<li><a class="reference internal" href="#importance-of-type-inference">Importance of type inference</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#supported-types-in-numba">Supported types in <em>numba</em></a><ul>
+<li><a class="reference internal" href="#integral-types">Integral types</a></li>
+<li><a class="reference internal" href="#floating-point-types">Floating point types</a></li>
+<li><a class="reference internal" href="#array-types">Array types</a></li>
+<li><a class="reference internal" href="#some-extra-types">Some extra types</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#notes-about-changes-in-this-tutorial">Notes about changes in this tutorial</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="tutorial_firststeps.html"
+                        title="previous chapter">First Steps with numba</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="interface_c.html"
+                        title="next chapter">Interfacing with C</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/tutorial_types.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox">
+  <h3>Quick search</h3>
+  <form class="search form-search" action="search.html" method="get">
+      <div class="input-append">
+        <input type="text" class="search-query" name="q">
+        <input type="submit" class="btn" value="Go" />
+      </div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+  </div>
+</div>
+      </div>
+      
+
+      <!-- row -->
+      <div class="row-fluid">
+         
+<div class="span3 visible-desktop visible-tablet">
+  <div class=" sidebar hidden-phone">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Numba and types</a><ul>
+<li><a class="reference internal" href="#introduction">Introduction</a></li>
+<li><a class="reference internal" href="#type-inference-by-example">Type inference by example</a><ul>
+<li><a class="reference internal" href="#finding-out-the-types-of-values">Finding out the <em>types</em> of values</a></li>
+<li><a class="reference internal" href="#type-inference-in-numba-jit"><em>Type inference</em> in <em>numba.jit</em></a></li>
+<li><a class="reference internal" href="#providing-hints-to-the-type-inferrer">Providing hints to the type inferrer</a></li>
+<li><a class="reference internal" href="#importance-of-type-inference">Importance of type inference</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#supported-types-in-numba">Supported types in <em>numba</em></a><ul>
+<li><a class="reference internal" href="#integral-types">Integral types</a></li>
+<li><a class="reference internal" href="#floating-point-types">Floating point types</a></li>
+<li><a class="reference internal" href="#array-types">Array types</a></li>
+<li><a class="reference internal" href="#some-extra-types">Some extra types</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#notes-about-changes-in-this-tutorial">Notes about changes in this tutorial</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="tutorial_firststeps.html"
+                        title="previous chapter">First Steps with numba</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="interface_c.html"
+                        title="next chapter">Interfacing with C</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/tutorial_types.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox">
+  <h3>Quick search</h3>
+  <form class="search form-search" action="search.html" method="get">
+      <div class="input-append">
+        <input type="text" class="search-query" name="q">
+        <input type="submit" class="btn" value="Go" />
+      </div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+  </div>
+</div> 
+        
+
+        <div class="span9">
+          <div class="document">
+            <div class="documentwrapper">
+              <div class="bodywrapper">
+                <div class="body">
+                  
+  <div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
+<span class="kn">import</span> <span class="nn">numba</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">llvm</span>
+<span class="kn">import</span> <span class="nn">ctypes</span>
+<span class="k">print</span><span class="p">(</span><span class="s">&quot;numba version: </span><span class="si">%s</span><span class="s"> </span><span class="se">\n</span><span class="s">NumPy version: </span><span class="si">%s</span><span class="se">\n</span><span class="s">llvm version: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">numba</span><span class="o">.</span><span class="n">__version__</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">__version__</span><span class="p">,</span> <span class="n">llvm</span><span class="o">.</span><span class="n">__version__</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="highlight-python"><pre>numba version: 0.12.0
+NumPy version: 1.7.1
+llvm version: 0.12.1</pre>
+</div>
+<div class="section" id="numba-and-types">
+<h1>Numba and types<a class="headerlink" href="#numba-and-types" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<p><em>Numba</em> translates <em>Python</em> code into fast executing native code. In
+order to generate fast native code, many dynamic features of <em>Python</em>
+need to be translated into static equivalents. This includes dynamic
+typing as well as polymorphism. The approach taken in <em>numba</em> is using
+<em>type inference</em> to generate <em>type information</em> for the code, so that it
+is possible to translate into native code. If all the values in a
+<em>numba</em> compiled function can be translated into native types, the
+resulting code will be competitive with that generated with a low level
+language.</p>
+<p>The objective of <em>type inference</em> is assigning a <em>type</em> to every single
+value in the function. The <em>type</em> of a value can either be:</p>
+<ul class="simple">
+<li><em>Implicit</em>, in the case of providing an object that will provide its
+<em>type</em>. This happens, for example, in literals.</li>
+<li><em>Explicit</em>, in the case of the programmer explicitly writing the
+<em>type</em> of a given value. This happens, for example, when a signature
+is given to <em>numba.jit</em>. That signature explicitly <em>types</em> the
+arguments.</li>
+<li><em>Inferred</em>, when the <em>type</em> is deduced from an operation and the
+types of the its operands. For example, inferring that the type of <em>a
++ b</em>, when <em>a</em> and <em>b</em> are of type <em>int</em> is going to be an <em>int</em></li>
+</ul>
+<p><em>Type inference</em> is the process by which all the <em>types</em> that are
+neither <em>implicit</em> nor <em>explicit</em> are deduced.</p>
+</div>
+<div class="section" id="type-inference-by-example">
+<h2>Type inference by example<a class="headerlink" href="#type-inference-by-example" title="Permalink to this headline">¶</a></h2>
+<p>Let&#8217;s take a very simple sample function to illustrate these concepts:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">sample_func</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="n">tmp</span> <span class="o">=</span> <span class="n">n</span> <span class="o">+</span> <span class="mi">4</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">tmp</span> <span class="o">+</span> <span class="mi">3j</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>When translating to native code it is needed to provide <em>type
+information</em> for every value involved in the sample function. This will
+include:</p>
+<ul class="simple">
+<li>The <em>literals</em> <strong>4</strong> and <strong>3j</strong>. These two have an implicit type.</li>
+<li>The argument <strong>n</strong>. In the function, as is, it is yet untyped.</li>
+<li>Some intermediate values, like <strong>tmp</strong> and the <strong>return value</strong>.
+Their type is not known yet.</li>
+</ul>
+<div class="section" id="finding-out-the-types-of-values">
+<h3>Finding out the <em>types</em> of values<a class="headerlink" href="#finding-out-the-types-of-values" title="Permalink to this headline">¶</a></h3>
+<p>You can use the function <em>numba.typeof</em> to find out the <em>numba type</em>
+associated to a value.</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="k">print</span><span class="p">(</span><span class="n">numba</span><span class="o">.</span><span class="n">typeof</span><span class="o">.</span><span class="n">__doc__</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python"><pre>Get the type of a variable or value.
+
+Used outside of Numba code, infers the type for the object.</pre>
+</div>
+<p>Bear in mind that, when used from the <em>Python</em> interpreter,
+<em>numba.typeof</em> will return the <em>numba type</em> associated to the object
+passed as parameter. For example, let&#8217;s try using it on the <em>literals</em>
+found in our sample function:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">numba</span><span class="o">.</span><span class="n">typeof</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">int32</span>
+</pre></div>
+</div>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">numba</span><span class="o">.</span><span class="n">typeof</span><span class="p">(</span><span class="mi">3j</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">complex128</span>
+</pre></div>
+</div>
+<p>Also note that the types of the results are <em>numba types</em>:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="nb">type</span><span class="p">(</span><span class="n">numba</span><span class="o">.</span><span class="n">typeof</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">numba</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">Integer</span>
+</pre></div>
+</div>
+<p>As a note, when used inside <em>numba</em> compiled code, <em>numba.typeof</em> will
+return the type as inferred during <em>type inference</em>. This may be a more
+general <em>type</em> than the one which would be returned when evaluating
+using the <em>Python interpreter</em>.</p>
+</div>
+<div class="section" id="type-inference-in-numba-jit">
+<h3><em>Type inference</em> in <em>numba.jit</em><a class="headerlink" href="#type-inference-in-numba-jit" title="Permalink to this headline">¶</a></h3>
+<p>Let&#8217;s illustrate how type inference works with <em>numba.jit</em>. In order to
+illustrate this, we will use the <em>inspect_types</em> method of a compiled
+function and prints information about the types being used while
+compiling. This will be the different native types when the function has
+been compiled successfully in <em>nopython</em> mode. If object mode has been
+used we will get plenty of <em>pyobject</em>s.</p>
+<p>Note that <em>inspect_types</em> is new to <em>numba 0.12</em>. Note also that the
+behavior of object mode has changed quite a bit as well in this release.</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">jit_sample_1</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="n">tmp</span> <span class="o">=</span> <span class="n">n</span> <span class="o">+</span> <span class="mi">4</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">tmp</span> <span class="o">+</span> <span class="mi">3j</span><span class="p">;</span>
+</pre></div>
+</div>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">numba</span><span class="o">.</span><span class="n">jit</span><span class="p">(</span><span class="s">&#39;c16(f8)&#39;</span><span class="p">,</span> <span class="n">nopython</span><span class="o">=</span><span class="bp">True</span><span class="p">)(</span><span class="n">jit_sample_1</span><span class="p">)</span><span class="o">.</span><span class="n">inspect_types</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-python"><pre>jit_sample_1 (float64,) -&gt; complex128
+--------------------------------------------------------------------------------
+# --- LINE 1 ---
+
+def jit_sample_1(n):
+
+    # --- LINE 2 ---
+    # label 0
+    #   $0.1 = const(&lt;type 'int'&gt;, 4)  :: int32
+    #   $0.2 = n + $0.1  :: float64
+    #   tmp = $0.2  :: float64
+
+    tmp = n + 4;
+
+    # --- LINE 3 ---
+    #   $0.3 = const(&lt;type 'complex'&gt;, 3j)  :: complex128
+    #   $0.4 = tmp + $0.3  :: complex128
+    #   return $0.4
+
+    return tmp + 3j;
+
+
+================================================================================</pre>
+</div>
+<p>The source code of the original function should be shown with lines
+annotated with the values involved in that lines with its type annotated
+following a couple of double periods. The form will look like &#8220;<strong>value</strong>
+= <strong>expression</strong> :: <strong>type</strong>&#8221;.</p>
+<p>In this case, the resulting function will get a float64 argument and
+return a complex128. The literal 4 will be of type int32 ($0.1), while
+the result of adding the argument (n) to that literal will be a float64
+($0.2). The variable in the source code named tmp will be just float64
+(assigned from $0.2). In the same way we can trace the next expression
+and see how <strong>tmp+3j</strong> results in a complex128 value that will be used
+as return value. The values named _$0.*_ are intermmediate values for
+the expression, and do not have a named counterpart in the source code.</p>
+<p>If we were in <em>object</em> mode we would get something quite different. In
+order to illustrate, let&#8217;s add the <em>forceobj</em> keyword to <em>numba.jit</em>.
+This will force <em>numba</em> to use object mode when compiling. Usually you
+don&#8217;t want to use <em>forceobj</em> as <em>object</em> mode is slower than <em>nopython</em>
+mode:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">numba</span><span class="o">.</span><span class="n">jit</span><span class="p">(</span><span class="s">&#39;c16(f8)&#39;</span><span class="p">,</span> <span class="n">forceobj</span><span class="o">=</span><span class="bp">True</span><span class="p">)(</span><span class="n">jit_sample_1</span><span class="p">)</span><span class="o">.</span><span class="n">inspect_types</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-python"><pre>jit_sample_1 (pyobject,) -&gt; pyobject
+--------------------------------------------------------------------------------
+# --- LINE 1 ---
+
+def jit_sample_1(n):
+
+    # --- LINE 2 ---
+    # label 0
+    #   $0.1 = const(&lt;type 'int'&gt;, 4)  :: pyobject
+    #   tmp = n + $0.1  :: pyobject
+
+    tmp = n + 4;
+
+    # --- LINE 3 ---
+    #   $0.3 = const(&lt;type 'complex'&gt;, 3j)  :: pyobject
+    #   $0.4 = tmp + $0.3  :: pyobject
+    #   return $0.4
+
+    return tmp + 3j;
+
+
+================================================================================</pre>
+</div>
+<p>As can be seen, everything is now a <em>pyobject</em>. That means that the
+operations will be executed by the Python runtime in the generated code.</p>
+<p>Going back to the <em>nopython</em> mode, we can see how changing the input
+types will produced a different annotation for the code (and result in
+different code generation):</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">numba</span><span class="o">.</span><span class="n">jit</span><span class="p">(</span><span class="s">&#39;c16(i1)&#39;</span><span class="p">)(</span><span class="n">jit_sample_1</span><span class="p">)</span><span class="o">.</span><span class="n">inspect_types</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-python"><pre>jit_sample_1 (int8,) -&gt; complex128
+--------------------------------------------------------------------------------
+# --- LINE 1 ---
+
+def jit_sample_1(n):
+
+    # --- LINE 2 ---
+    # label 0
+    #   $0.1 = const(&lt;type 'int'&gt;, 4)  :: int32
+    #   $0.2 = n + $0.1  :: int64
+    #   tmp = $0.2  :: int64
+
+    tmp = n + 4;
+
+    # --- LINE 3 ---
+    #   $0.3 = const(&lt;type 'complex'&gt;, 3j)  :: complex128
+    #   $0.4 = tmp + $0.3  :: complex128
+    #   return $0.4
+
+    return tmp + 3j;
+
+
+================================================================================</pre>
+</div>
+<p>In this case, the input is an int8, but tmp ends being and int64 as it
+is added to an int32. Note that integer overflow of int64 is not handled
+by <em>numba</em>. In case of overflow the int64 will wrap around in the same
+way that it would happen in C.</p>
+</div>
+<div class="section" id="providing-hints-to-the-type-inferrer">
+<h3>Providing hints to the type inferrer<a class="headerlink" href="#providing-hints-to-the-type-inferrer" title="Permalink to this headline">¶</a></h3>
+<p>In most cases, the type inferrer will provide a type for your code.
+However, sometimes you may want a given intermediate value to use a
+specific type. This can be achieved by using the <em>locals</em> keyword in
+<em>numba.jit</em>. In <em>locals</em> a dictionary can be passed that maps the name
+of different local variables to a numba type. The compiler will assign
+that type to that variable.</p>
+<p>Let&#8217;s make a version of out function where we force <em>tmp</em> to be a
+<em>float</em>:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">numba</span><span class="o">.</span><span class="n">jit</span><span class="p">(</span><span class="s">&#39;c16(i1)&#39;</span><span class="p">,</span> <span class="nb">locals</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;tmp&#39;</span><span class="p">:</span> <span class="n">numba</span><span class="o">.</span><span class="n">float64</span><span class="p">})(</span><span class="n">jit_sample_1</span><span class="p">)</span><span class="o">.</span><span class="n">inspect_types</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-python"><pre>jit_sample_1 (int8,) -&gt; complex128
+--------------------------------------------------------------------------------
+# --- LINE 1 ---
+
+def jit_sample_1(n):
+
+    # --- LINE 2 ---
+    # label 0
+    #   $0.1 = const(&lt;type 'int'&gt;, 4)  :: int32
+    #   $0.2 = n + $0.1  :: int64
+    #   tmp = $0.2  :: float64
+
+    tmp = n + 4;
+
+    # --- LINE 3 ---
+    #   $0.3 = const(&lt;type 'complex'&gt;, 3j)  :: complex128
+    #   $0.4 = tmp + $0.3  :: complex128
+    #   return $0.4
+
+    return tmp + 3j;
+
+
+================================================================================</pre>
+</div>
+<p>Note that as of numba 0.12, any type inference or type hints are ignored
+if object mode ends being generated, as everything gets treated as an
+object using the python runtime. This behavior may change in future
+versions.</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">numba</span><span class="o">.</span><span class="n">jit</span><span class="p">(</span><span class="s">&#39;c16(i1)&#39;</span><span class="p">,</span> <span class="n">forceobj</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="nb">locals</span><span class="o">=</span><span class="p">{</span> <span class="s">&#39;tmp&#39;</span><span class="p">:</span> <span class="n">numba</span><span class="o">.</span><span class="n">float64</span> <span class="p">})(</span><span class="n">jit_sample_1</span><span class="p">)</span><span class="o">.</span><span class="n">inspect_types</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-python"><pre>jit_sample_1 (pyobject,) -&gt; pyobject
+--------------------------------------------------------------------------------
+# --- LINE 1 ---
+
+def jit_sample_1(n):
+
+    # --- LINE 2 ---
+    # label 0
+    #   $0.1 = const(&lt;type 'int'&gt;, 4)  :: pyobject
+    #   tmp = n + $0.1  :: pyobject
+
+    tmp = n + 4;
+
+    # --- LINE 3 ---
+    #   $0.3 = const(&lt;type 'complex'&gt;, 3j)  :: pyobject
+    #   $0.4 = tmp + $0.3  :: pyobject
+    #   return $0.4
+
+    return tmp + 3j;
+
+
+================================================================================</pre>
+</div>
+</div>
+<div class="section" id="importance-of-type-inference">
+<h3>Importance of type inference<a class="headerlink" href="#importance-of-type-inference" title="Permalink to this headline">¶</a></h3>
+<p>It must be emphasized how important it is type inference in <em>numba</em>. A
+function where type inference is unable to provide a specific type for a
+value (that is, any type other than the generic <em>pyobject</em>). Any
+function that has a value fallback to <em>pyobject</em> will force the numba
+compiler to use the object mode. Object mode is way less efficient thant
+the <em>nopython</em>.</p>
+<p>It is possible to know if a <em>numba</em> compiled function has fallen back to
+object mode by calling <em>inspect_types</em> on it. If there are values typed
+as <em>pyobject</em> that means that the object mode was used to compile it.</p>
+</div>
+</div>
+<div class="section" id="supported-types-in-numba">
+<h2>Supported types in <em>numba</em><a class="headerlink" href="#supported-types-in-numba" title="Permalink to this headline">¶</a></h2>
+<p>Numba supports many different types. It also supports some composite
+types as well as structures. Starting with numba 0.12 there is a
+namespace for types (numba.types). The numba namespace also imports
+these types.</p>
+<p>In this section you can find a set of basic types you can use in numba.
+Many of the types have a &#8220;short name&#8221; matching their equivalent NumPy
+dtype. The list is not exahustive.</p>
+<div class="section" id="integral-types">
+<h3>Integral types<a class="headerlink" href="#integral-types" title="Permalink to this headline">¶</a></h3>
+<table><tr><th><p>type</p>
+</th><th><p>numba type</p>
+</th><th><p>short name</p>
+</th><th><p>python equivalent</p>
+</th></tr>
+<tr><td><p>boolean</p>
+</td><td><p>numba.types.bool__</p>
+</td><td><p>b1</p>
+</td><td><p>bool</p>
+</td></tr>
+<tr><td><p>signed integer</p>
+</td><td><p>numba.types.int__</p>
+</td><td></td><td><p>int</p>
+</td></tr>
+<tr><td><p>signed integer (8 bit)</p>
+</td><td><p>numba.types.int8</p>
+</td><td><p>i1</p>
+</td><td></td></tr>
+<tr><td><p>signed integer (16 bit)</p>
+</td><td><p>numba.types.int16</p>
+</td><td><p>i2</p>
+</td><td></td></tr>
+<tr><td><p>signed integer (32 bit)</p>
+</td><td><p>numba.types.int32</p>
+</td><td><p>i4</p>
+</td><td></td></tr>
+<tr><td><p>signed integer (64 bit)</p>
+</td><td><p>numba.types.int64</p>
+</td><td><p>i8</p>
+</td><td></td></tr>
+<tr><td><p>unsigned integer</p>
+</td><td><p>numba.types.uint</p>
+</td><td></td><td></td></tr>
+<tr><td><p>unsigned integer (16 bit)</p>
+</td><td><p>numba.types.uint16</p>
+</td><td><p>u2</p>
+</td><td></td></tr>
+<tr><td><p>unsigned integer (32 bit)</p>
+</td><td><p>numba.types.uint32</p>
+</td><td><p>u4</p>
+</td><td></td></tr>
+<tr><td><p>unsigned integer (64 bit)</p>
+</td><td><p>numba.types.uint64</p>
+</td><td><p>u8</p>
+</td><td></td></tr>
+</table></div>
+<div class="section" id="floating-point-types">
+<h3>Floating point types<a class="headerlink" href="#floating-point-types" title="Permalink to this headline">¶</a></h3>
+<table><tr><th><p>type</p>
+</th><th><p>numba type</p>
+</th><th><p>short name</p>
+</th><th><p>python equivalent</p>
+</th></tr>
+<tr><td><p>single precision floating point (32 bit)</p>
+</td><td><p>numba.float32</p>
+</td><td><p>f4</p>
+</td><td></td></tr>
+<tr><td><p>double precision floating point (64 bit)</p>
+</td><td><p>numba.float64</p>
+</td><td><p>f8</p>
+</td><td><p>float</p>
+</td></tr>
+<tr><td><p>single precision complex (2 x 32 bit)</p>
+</td><td><p>numba.complex64</p>
+</td><td><p>c8</p>
+</td><td></td></tr>
+<tr><td><p>double precison complex (2 x 64 bit)</p>
+</td><td><p>numba.complex128</p>
+</td><td><p>c16</p>
+</td><td><p>complex</p>
+</td></tr>
+</table></div>
+<div class="section" id="array-types">
+<h3>Array types<a class="headerlink" href="#array-types" title="Permalink to this headline">¶</a></h3>
+<p>Array types are supported. An array type is built from a base type, a
+number of dimensions and potentially a layout specification. Some
+examples follow:</p>
+<p>A one-dimensional array of float32</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">numba</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">float32</span><span class="p">[:]</span>
+</pre></div>
+</div>
+<div class="highlight-python"><pre>array(float32, 1d, A)</pre>
+</div>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">numba</span><span class="o">.</span><span class="n">typeof</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">12</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)[:,</span><span class="mi">0</span><span class="p">])</span> <span class="c"># slicing out the inner dimension to avoid defaulting to C array order in the result</span>
+</pre></div>
+</div>
+<div class="highlight-python"><pre>array(float32, 1d, A)</pre>
+</div>
+<p>A two dimensional array of integers</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">numba</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">int_</span><span class="p">[:,:]</span>
+</pre></div>
+</div>
+<div class="highlight-python"><pre>array(uint32, 2d, A)</pre>
+</div>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">numba</span><span class="o">.</span><span class="n">typeof</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">12</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="s">&#39;i&#39;</span><span class="p">)[:,</span><span class="mi">0</span><span class="p">])</span> <span class="c"># slicing out the inner dimension to avoid defaulting to C array order in the result</span>
+</pre></div>
+</div>
+<div class="highlight-python"><pre>array(int32, 2d, A)</pre>
+</div>
+<p>A two dimensional array of type &#8216;c8&#8217; (complex64) in C array order</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">numba</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">c8</span><span class="p">[:,::</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="highlight-python"><pre>array(complex64, 2d, C)</pre>
+</div>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">numba</span><span class="o">.</span><span class="n">typeof</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">12</span><span class="p">,</span><span class="mi">12</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="s">&#39;c8&#39;</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="s">&#39;C&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="highlight-python"><pre>array(complex64, 2d, C)</pre>
+</div>
+<p>A two dimensional array of type uint16 in FORTRAN array order</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">numba</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">uint16</span><span class="p">[::</span><span class="mi">1</span><span class="p">,:]</span>
+</pre></div>
+</div>
+<div class="highlight-python"><pre>array(uint16, 2d, F)</pre>
+</div>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">numba</span><span class="o">.</span><span class="n">typeof</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">12</span><span class="p">,</span><span class="mi">12</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="s">&#39;u2&#39;</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="s">&#39;F&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="highlight-python"><pre>array(uint16, 2d, F)</pre>
+</div>
+<p>Notice that the arity of the dimensions is not part of the types, only
+the number of dimensions. In that sense, an array with a shape (4,4) has
+the same numba type as another array with a shape (10, 12)</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">numba</span><span class="o">.</span><span class="n">typeof</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">)))</span> <span class="o">==</span> <span class="n">numba</span><span class="o">.</span><span class="n">typeof</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">10</span><span class="p">,</span><span class="mi">12</span><span class="p">)))</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="bp">True</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="some-extra-types">
+<h3>Some extra types<a class="headerlink" href="#some-extra-types" title="Permalink to this headline">¶</a></h3>
+<p>A type signature for a function (also known as a <em>function prototype</em>)
+that returns a float64, taking a two dimensional float64 array as first
+argument and a float64 argument</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">numba</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">float64</span><span class="p">(</span><span class="n">numba</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">float64</span><span class="p">[:,:],</span> <span class="n">numba</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python"><pre>float64(array(float64, 2d, A), float64)</pre>
+</div>
+<p>As can be seen the signature is just a type specification. In many
+places that a <em>function signature</em> is expected a string can be used
+instead. That string is in fact evaluated inside the numba.types
+namespace in order to build the actual type. This allows specifying the
+types in a compact way (as there is no need to fully qualify the base
+types) without polluting the active namespace (as it would happen by
+adding a __from numba.types import *__.</p>
+<p>In <em>numba</em> 0.12 this is performed by the
+<em>numba.sigutils.parse_signature</em> function. Note that this function is
+likely to change or move in next versions, as it is just an
+implementation detail, but it can be used to show how the string version
+matches the other one, while keeping the syn</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">numba</span><span class="o">.</span><span class="n">sigutils</span><span class="o">.</span><span class="n">parse_signature</span><span class="p">(</span><span class="s">&#39;float64(float64[:,:], float64)&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python"><pre>float64(array(float64, 2d, A), float64)</pre>
+</div>
+<p>A generic Python object</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">numba</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">pyobject</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">pyobject</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="notes-about-changes-in-this-tutorial">
+<h2>Notes about changes in this tutorial<a class="headerlink" href="#notes-about-changes-in-this-tutorial" title="Permalink to this headline">¶</a></h2>
+<p>In <em>numba</em> 0.12 there have been internal changes that have made material
+previously found in this tutorial obsolete.</p>
+<ul class="simple">
+<li>Some of the types previously supported in the <em>numba</em> type system
+have been dropped to be handled as <em>pyobjects</em>.</li>
+<li>The numba command line tool is no longer supported, but its
+functionality to get insights on how type inference works is now
+present in the form of the <em>inspect_types</em> method in the generated
+jitted function. This method is used in this tutorials to illustrate
+type inference.</li>
+<li>In 0.12 the object mode of <em>numba</em> has been greatly modified. Before
+it was using a mix of Python run-time and native code. In 0.12 object
+mode forces all values into <em>pyobjects</em>. As conversion to a string
+forces <em>numba</em> into object mode, the approach used in the previous
+version of this tutorial to print from inside the compiled function
+is no longer useful, as it will not print the staticly inferred
+types.</li>
+</ul>
+<p>A sample of the this last point follows:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">old_style_sample</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">&#39;arg n: &#39;</span><span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">numba</span><span class="o">.</span><span class="n">typeof</span><span class="p">(</span><span class="n">n</span><span class="p">)))</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">&#39;literal 4: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">numba</span><span class="o">.</span><span class="n">typeof</span><span class="p">(</span><span class="mi">4</span><span class="p">)))</span>
+    <span class="n">tmp</span> <span class="o">=</span> <span class="n">n</span> <span class="o">+</span> <span class="mi">4</span><span class="p">;</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">&#39;tmp: &#39;</span><span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">numba</span><span class="o">.</span><span class="n">typeof</span><span class="p">(</span><span class="n">tmp</span><span class="p">)))</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">&#39;literal 3j:&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">numba</span><span class="o">.</span><span class="n">typeof</span><span class="p">(</span><span class="mi">3j</span><span class="p">)))</span>
+    <span class="k">return</span> <span class="n">tmp</span> <span class="o">+</span> <span class="mi">3j</span><span class="p">;</span>
+</pre></div>
+</div>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">old_style_sample_jit</span> <span class="o">=</span> <span class="n">numba</span><span class="o">.</span><span class="n">jit</span><span class="p">(</span><span class="s">&#39;void(i1)&#39;</span><span class="p">)(</span><span class="n">old_style_sample</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">numba</span><span class="o">.</span><span class="n">typeof</span><span class="p">(</span><span class="n">old_style_sample</span><span class="p">(</span><span class="mi">42</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="highlight-python"><pre>arg n: int32
+literal 4: int32
+tmp: int32
+literal 3j:complex128</pre>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">complex128</span>
+</pre></div>
+</div>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">numba</span><span class="o">.</span><span class="n">typeof</span><span class="p">(</span><span class="n">old_style_sample_jit</span><span class="p">(</span><span class="mi">42</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="highlight-python"><pre>arg n: int32
+literal 4: int32
+tmp: int32
+literal 3j:complex128</pre>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">complex128</span>
+</pre></div>
+</div>
+<p>As can be seen, in both cases, Python and numba.jit, the results are the
+same. This is because <em>numba.typeof</em> is being evaluated with using the
+Python run-time.</p>
+<p>If we use the inspect_types method on the jitted version, we will see
+that everything is in fact a <em>pyobject</em></p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">old_style_sample_jit</span><span class="o">.</span><span class="n">inspect_types</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-python"><pre>old_style_sample (pyobject,) -&gt; pyobject
+--------------------------------------------------------------------------------
+# --- LINE 1 ---
+
+def old_style_sample(n):
+
+    # --- LINE 2 ---
+    # label 0
+    #   $0.1 = global(print: &lt;built-in function print&gt;)  :: pyobject
+    #   $0.2 = const(&lt;type 'str'&gt;, arg n: )  :: pyobject
+    #   $0.3 = global(str: &lt;type 'str'&gt;)  :: pyobject
+    #   $0.4 = global(numba: &lt;module 'numba' from '/Users/jayvius/Projects/numba/numba/__init__.pyc'&gt;)  :: pyobject
+    #   $0.5 = getattr(attr=typeof, value=$0.4)  :: pyobject
+    #   $0.6 = call $0.5(n, )  :: pyobject
+    #   $0.7 = call $0.3($0.6, )  :: pyobject
+    #   $0.8 = $0.2 + $0.7  :: pyobject
+    #   $0.9 = call $0.1($0.8, )  :: pyobject
+
+    print('arg n: '+ str(numba.typeof(n)))
+
+    # --- LINE 3 ---
+    #   $0.10 = global(print: &lt;built-in function print&gt;)  :: pyobject
+    #   $0.11 = const(&lt;type 'str'&gt;, literal 4: )  :: pyobject
+    #   $0.12 = global(str: &lt;type 'str'&gt;)  :: pyobject
+    #   $0.13 = global(numba: &lt;module 'numba' from '/Users/jayvius/Projects/numba/numba/__init__.pyc'&gt;)  :: pyobject
+    #   $0.14 = getattr(attr=typeof, value=$0.13)  :: pyobject
+    #   $0.15 = const(&lt;type 'int'&gt;, 4)  :: pyobject
+    #   $0.16 = call $0.14($0.15, )  :: pyobject
+    #   $0.17 = call $0.12($0.16, )  :: pyobject
+    #   $0.18 = $0.11 + $0.17  :: pyobject
+    #   $0.19 = call $0.10($0.18, )  :: pyobject
+
+    print('literal 4: ' + str(numba.typeof(4)))
+
+    # --- LINE 4 ---
+    #   $0.20 = const(&lt;type 'int'&gt;, 4)  :: pyobject
+    #   tmp = n + $0.20  :: pyobject
+
+    tmp = n + 4;
+
+    # --- LINE 5 ---
+    #   $0.22 = global(print: &lt;built-in function print&gt;)  :: pyobject
+    #   $0.23 = const(&lt;type 'str'&gt;, tmp: )  :: pyobject
+    #   $0.24 = global(str: &lt;type 'str'&gt;)  :: pyobject
+    #   $0.25 = global(numba: &lt;module 'numba' from '/Users/jayvius/Projects/numba/numba/__init__.pyc'&gt;)  :: pyobject
+    #   $0.26 = getattr(attr=typeof, value=$0.25)  :: pyobject
+    #   $0.27 = call $0.26(tmp, )  :: pyobject
+    #   $0.28 = call $0.24($0.27, )  :: pyobject
+    #   $0.29 = $0.23 + $0.28  :: pyobject
+    #   $0.30 = call $0.22($0.29, )  :: pyobject
+
+    print('tmp: '+ str(numba.typeof(tmp)))
+
+    # --- LINE 6 ---
+    #   $0.31 = global(print: &lt;built-in function print&gt;)  :: pyobject
+    #   $0.32 = const(&lt;type 'str'&gt;, literal 3j:)  :: pyobject
+    #   $0.33 = global(str: &lt;type 'str'&gt;)  :: pyobject
+    #   $0.34 = global(numba: &lt;module 'numba' from '/Users/jayvius/Projects/numba/numba/__init__.pyc'&gt;)  :: pyobject
+    #   $0.35 = getattr(attr=typeof, value=$0.34)  :: pyobject
+    #   $0.36 = const(&lt;type 'complex'&gt;, 3j)  :: pyobject
+    #   $0.37 = call $0.35($0.36, )  :: pyobject
+    #   $0.38 = call $0.33($0.37, )  :: pyobject
+    #   $0.39 = $0.32 + $0.38  :: pyobject
+    #   $0.40 = call $0.31($0.39, )  :: pyobject
+
+    print('literal 3j:' + str(numba.typeof(3j)))
+
+    # --- LINE 7 ---
+    #   $0.41 = const(&lt;type 'complex'&gt;, 3j)  :: pyobject
+    #   $0.42 = tmp + $0.41  :: pyobject
+    #   return $0.42
+
+    return tmp + 3j;
+
+
+================================================================================</pre>
+</div>
+<p>Even more illustrating would be if <em>locals</em> was used to type an
+intermediate value:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">old_style_sample_jit_2</span> <span class="o">=</span> <span class="n">numba</span><span class="o">.</span><span class="n">jit</span><span class="p">(</span><span class="s">&#39;void(i1)&#39;</span><span class="p">,</span> <span class="nb">locals</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;tmp&#39;</span><span class="p">:</span> <span class="n">numba</span><span class="o">.</span><span class="n">float32</span><span class="p">})(</span><span class="n">old_style_sample</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">numba</span><span class="o">.</span><span class="n">typeof</span><span class="p">(</span><span class="n">old_style_sample_jit_2</span><span class="p">(</span><span class="mi">42</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="highlight-python"><pre>arg n: int32
+literal 4: int32
+tmp: int32
+literal 3j:complex128</pre>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">complex128</span>
+</pre></div>
+</div>
+<p>The result seems to imply that <em>tmp</em> appears as an int32, but in fact is
+a <em>pyobject</em> and the whole function is being evaluated using the python
+run-time. So it is actually showing evaluating <em>typeof</em> at the runtime
+on the run-time value of tmp, which happens to be a Python <em>int</em>,
+translated into an int32 by <em>numba.typeof</em>. This can also be seen in the
+dump caused by the call to inspect_types.</p>
+</div>
+</div>
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        
+      </div><!-- /row -->
+
+      <!-- row -->
+      <div class="row-fluid">
+<div class="related navbar ">
+  <div class="navbar-inner">
+    <ul class="nav pull-right">
+      
+        <li><a href="genindex.html" title="General Index" >index</a></li>
+        <li><a href="py-modindex.html" title="Python Module Index" >modules</a></li>
+        <li><a href="interface_c.html" title="Interfacing with C" >next</a></li>
+        <li><a href="tutorial_firststeps.html" title="First Steps with numba" >previous</a></li>
+        <li><a href="index.html">numba 0.13.0 documentation</a></li> 
+      
+    </ul>
+  </div>
+</div>
+      </div><!-- /row -->
+
+      <!-- footer -->
+      <footer>
+          &copy; Copyright 2012-2014, Continuum Analytics.
+        Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+      </footer>
+      <!-- /footer -->
+
+    </div>
+    <!-- /container -->
+
+  </body>
+</html>

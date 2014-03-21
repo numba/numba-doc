@@ -1,0 +1,285 @@
+
+<!DOCTYPE html>
+
+
+
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+    <title>Interfacing with C &mdash; numba 0.13.0 documentation</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    
+<link rel="stylesheet" href="_static/css/basicstrap-base.css" type="text/css" />
+<link rel="stylesheet" href="_static/css/bootstrap.min.css" type="text/css" />
+<link rel="stylesheet" href="_static/css/font-awesome.min.css">
+<!--[if IE 7]>
+<link rel="stylesheet" href="_static/css/font-awesome-ie7.min.css">
+<![endif]-->
+<style type="text/css">
+  body {
+    padding-top: 60px;
+    padding-bottom: 40px;
+  }
+}
+</style>
+<link rel="stylesheet" href="_static/basicstrap.css" type="text/css" />
+<link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+<link rel="stylesheet" href="_static/css/bootstrap-responsive.min.css" type="text/css" />
+    
+<script type="text/javascript">
+  var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:    '',
+            VERSION:     '0.13.0',
+            COLLAPSE_INDEX: false,
+            FILE_SUFFIX: '.html',
+            HAS_SOURCE:  true
+  };
+</script>
+<script type="text/javascript" src="_static/js/jquery.min.js"></script>
+<script type="text/javascript" src="_static/underscore.js"></script>
+<script type="text/javascript" src="_static/doctools.js"></script>
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/javascript" src="_static/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+  $(document).ready(function(){
+    $('.show-sidebar').click(function(e) {
+       e.preventDefault();
+       if ($(".show-sidebar").html() == "Open Table Of Contents") {
+          $('.for-mobile').removeClass('hidden-phone');
+          $(".show-sidebar").html("Close Table Of Contents");
+       } else {
+          $(".show-sidebar").html("Open Table Of Contents");
+       }
+    });
+  });
+</script>
+    <link rel="top" title="numba 0.13.0 documentation" href="index.html" />
+    <link rel="next" title="CUDA Programming Introduction" href="CUDAintro.html" />
+    <link rel="prev" title="Numba and types" href="tutorial_types.html" /> 
+  </head>
+  <body>
+    <div class="navbar navbar-fixed-top ">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="index.html">numba 0.13.0 documentation</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav pull-right">
+              
+                <li>
+                <a href="genindex.html" title="General Index" accesskey="I">index</a>
+                </li>
+                <li>
+                <a href="py-modindex.html" title="Python Module Index" >modules</a>
+                </li>
+                <li>
+                <a href="CUDAintro.html" title="CUDA Programming Introduction" accesskey="N">next</a>
+                </li>
+                <li>
+                <a href="tutorial_types.html" title="Numba and types" accesskey="P">previous</a>
+                </li>
+              
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <!-- container -->
+    <div class="container-fluid">
+
+
+      
+      <div class="row-fluid hidden-desktop hidden-tablet">
+      
+<div class="span3 ">
+  <a class="visible-phone btn btn-small show-sidebar" data-toggle="collapse" data-target=".for-mobile">Open Table Of Contents</a>
+  <div class="for-mobile sidebar hidden-phone">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Interfacing with C</a><ul>
+<li><a class="reference internal" href="#cffi">CFFI</a></li>
+<li><a class="reference internal" href="#ctypes">ctypes</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="tutorial_types.html"
+                        title="previous chapter">Numba and types</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="CUDAintro.html"
+                        title="next chapter">CUDA Programming Introduction</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/interface_c.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox">
+  <h3>Quick search</h3>
+  <form class="search form-search" action="search.html" method="get">
+      <div class="input-append">
+        <input type="text" class="search-query" name="q">
+        <input type="submit" class="btn" value="Go" />
+      </div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+  </div>
+</div>
+      </div>
+      
+
+      <!-- row -->
+      <div class="row-fluid">
+         
+<div class="span3 visible-desktop visible-tablet">
+  <div class=" sidebar hidden-phone">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Interfacing with C</a><ul>
+<li><a class="reference internal" href="#cffi">CFFI</a></li>
+<li><a class="reference internal" href="#ctypes">ctypes</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="tutorial_types.html"
+                        title="previous chapter">Numba and types</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="CUDAintro.html"
+                        title="next chapter">CUDA Programming Introduction</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/interface_c.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox">
+  <h3>Quick search</h3>
+  <form class="search form-search" action="search.html" method="get">
+      <div class="input-append">
+        <input type="text" class="search-query" name="q">
+        <input type="submit" class="btn" value="Go" />
+      </div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+  </div>
+</div> 
+        
+
+        <div class="span9">
+          <div class="document">
+            <div class="documentwrapper">
+              <div class="bodywrapper">
+                <div class="body">
+                  
+  <div class="section" id="interfacing-with-c">
+<h1>Interfacing with C<a class="headerlink" href="#interfacing-with-c" title="Permalink to this headline">¶</a></h1>
+<p>Numba supports calling C functions through CFFI and ctypes.</p>
+<div class="section" id="cffi">
+<h2>CFFI<a class="headerlink" href="#cffi" title="Permalink to this headline">¶</a></h2>
+<p>Numba supports calling C functions wrapped with CFFI:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">jit</span>
+<span class="kn">from</span> <span class="nn">cffi</span> <span class="kn">import</span> <span class="n">FFI</span>
+
+<span class="n">ffi</span> <span class="o">=</span> <span class="n">FFI</span><span class="p">()</span>
+<span class="n">ffi</span><span class="o">.</span><span class="n">cdef</span><span class="p">(</span><span class="s">&#39;double sin(double x);&#39;</span><span class="p">)</span>
+
+<span class="c"># loads the entire C namespace</span>
+<span class="n">C</span> <span class="o">=</span> <span class="n">ffi</span><span class="o">.</span><span class="n">dlopen</span><span class="p">(</span><span class="bp">None</span><span class="p">)</span>
+<span class="n">c_sin</span> <span class="o">=</span> <span class="n">C</span><span class="o">.</span><span class="n">sin</span>
+
+<span class="nd">@jit</span><span class="p">(</span><span class="n">nopython</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">cffi_sin_example</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">c_sin</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="ctypes">
+<h2>ctypes<a class="headerlink" href="#ctypes" title="Permalink to this headline">¶</a></h2>
+<p>Numba also supports calling C functions wrapped with ctypes:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># This example doesn&#39;t work on Windows platforms</span>
+<span class="kn">from</span> <span class="nn">ctypes</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">pi</span>
+<span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">jit</span><span class="p">,</span> <span class="n">double</span>
+
+<span class="n">proc</span> <span class="o">=</span> <span class="n">CDLL</span><span class="p">(</span><span class="bp">None</span><span class="p">)</span>
+
+<span class="n">c_sin</span> <span class="o">=</span> <span class="n">proc</span><span class="o">.</span><span class="n">sin</span>
+<span class="n">c_sin</span><span class="o">.</span><span class="n">argtypes</span> <span class="o">=</span> <span class="p">[</span><span class="n">c_double</span><span class="p">]</span>
+<span class="n">c_sin</span><span class="o">.</span><span class="n">restype</span> <span class="o">=</span> <span class="n">c_double</span>
+
+<span class="nd">@jit</span>
+<span class="k">def</span> <span class="nf">use_c_sin</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">c_sin</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+<span class="n">ctype_wrapping</span> <span class="o">=</span> <span class="n">CFUNCTYPE</span><span class="p">(</span><span class="n">c_double</span><span class="p">,</span> <span class="n">c_double</span><span class="p">)(</span><span class="n">use_c_sin</span><span class="p">)</span>
+
+<span class="nd">@jit</span>
+<span class="k">def</span> <span class="nf">use_ctype_wrapping</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">ctype_wrapping</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        
+      </div><!-- /row -->
+
+      <!-- row -->
+      <div class="row-fluid">
+<div class="related navbar ">
+  <div class="navbar-inner">
+    <ul class="nav pull-right">
+      
+        <li><a href="genindex.html" title="General Index" >index</a></li>
+        <li><a href="py-modindex.html" title="Python Module Index" >modules</a></li>
+        <li><a href="CUDAintro.html" title="CUDA Programming Introduction" >next</a></li>
+        <li><a href="tutorial_types.html" title="Numba and types" >previous</a></li>
+        <li><a href="index.html">numba 0.13.0 documentation</a></li> 
+      
+    </ul>
+  </div>
+</div>
+      </div><!-- /row -->
+
+      <!-- footer -->
+      <footer>
+          &copy; Copyright 2012-2014, Continuum Analytics.
+        Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+      </footer>
+      <!-- /footer -->
+
+    </div>
+    <!-- /container -->
+
+  </body>
+</html>

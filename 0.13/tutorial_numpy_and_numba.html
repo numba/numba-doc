@@ -1,0 +1,797 @@
+
+<!DOCTYPE html>
+
+
+
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+    <title>NumPy and numba &mdash; numba 0.13.0 documentation</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    
+<link rel="stylesheet" href="_static/css/basicstrap-base.css" type="text/css" />
+<link rel="stylesheet" href="_static/css/bootstrap.min.css" type="text/css" />
+<link rel="stylesheet" href="_static/css/font-awesome.min.css">
+<!--[if IE 7]>
+<link rel="stylesheet" href="_static/css/font-awesome-ie7.min.css">
+<![endif]-->
+<style type="text/css">
+  body {
+    padding-top: 60px;
+    padding-bottom: 40px;
+  }
+}
+</style>
+<link rel="stylesheet" href="_static/basicstrap.css" type="text/css" />
+<link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+<link rel="stylesheet" href="_static/css/bootstrap-responsive.min.css" type="text/css" />
+    
+<script type="text/javascript">
+  var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:    '',
+            VERSION:     '0.13.0',
+            COLLAPSE_INDEX: false,
+            FILE_SUFFIX: '.html',
+            HAS_SOURCE:  true
+  };
+</script>
+<script type="text/javascript" src="_static/js/jquery.min.js"></script>
+<script type="text/javascript" src="_static/underscore.js"></script>
+<script type="text/javascript" src="_static/doctools.js"></script>
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/javascript" src="_static/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+  $(document).ready(function(){
+    $('.show-sidebar').click(function(e) {
+       e.preventDefault();
+       if ($(".show-sidebar").html() == "Open Table Of Contents") {
+          $('.for-mobile').removeClass('hidden-phone');
+          $(".show-sidebar").html("Close Table Of Contents");
+       } else {
+          $(".show-sidebar").html("Open Table Of Contents");
+       }
+    });
+  });
+</script>
+    <link rel="top" title="numba 0.13.0 documentation" href="index.html" /> 
+  </head>
+  <body>
+    <div class="navbar navbar-fixed-top ">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="index.html">numba 0.13.0 documentation</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav pull-right">
+              
+                <li>
+                <a href="genindex.html" title="General Index" accesskey="I">index</a>
+                </li>
+                <li>
+                <a href="py-modindex.html" title="Python Module Index" >modules</a>
+                </li>
+              
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <!-- container -->
+    <div class="container-fluid">
+
+
+      
+      <div class="row-fluid hidden-desktop hidden-tablet">
+      
+<div class="span3 ">
+  <a class="visible-phone btn btn-small show-sidebar" data-toggle="collapse" data-target=".for-mobile">Open Table Of Contents</a>
+  <div class="for-mobile sidebar hidden-phone">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">NumPy and numba</a><ul>
+<li><a class="reference internal" href="#numba-understands-numpy-arrays"><em>Numba</em> understands <em>NumPy</em> arrays</a></li>
+<li><a class="reference internal" href="#specifying-an-array-type-in-numba">Specifying an array type in <em>numba</em></a></li>
+<li><a class="reference internal" href="#numpy-arrays-as-arguments">NumPy arrays as arguments</a></li>
+<li><a class="reference internal" href="#numba-knows-how-to-index-and-slice-a-numpy-array-natively"><em>Numba</em> knows how to index and slice a <em>Numpy</em> array natively</a><ul>
+<li><a class="reference internal" href="#numba-supports-generating-numpy-ufuncs-and-gufuncs"><em>Numba</em> supports generating <em>NumPy</em> <em>ufuncs</em> and <em>gufuncs</em></a><ul>
+<li><a class="reference internal" href="#the-vectorize-decorator">The <em>vectorize</em> decorator</a></li>
+<li><a class="reference internal" href="#the-guvectorize-decorator">The guvectorize decorator</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#caveats">Caveats</a><ul>
+<li><a class="reference internal" href="#no-range-checks-when-indexing-in-numba">No range checks when indexing in <em>numba</em></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/tutorial_numpy_and_numba.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox">
+  <h3>Quick search</h3>
+  <form class="search form-search" action="search.html" method="get">
+      <div class="input-append">
+        <input type="text" class="search-query" name="q">
+        <input type="submit" class="btn" value="Go" />
+      </div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+  </div>
+</div>
+      </div>
+      
+
+      <!-- row -->
+      <div class="row-fluid">
+         
+<div class="span3 visible-desktop visible-tablet">
+  <div class=" sidebar hidden-phone">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">NumPy and numba</a><ul>
+<li><a class="reference internal" href="#numba-understands-numpy-arrays"><em>Numba</em> understands <em>NumPy</em> arrays</a></li>
+<li><a class="reference internal" href="#specifying-an-array-type-in-numba">Specifying an array type in <em>numba</em></a></li>
+<li><a class="reference internal" href="#numpy-arrays-as-arguments">NumPy arrays as arguments</a></li>
+<li><a class="reference internal" href="#numba-knows-how-to-index-and-slice-a-numpy-array-natively"><em>Numba</em> knows how to index and slice a <em>Numpy</em> array natively</a><ul>
+<li><a class="reference internal" href="#numba-supports-generating-numpy-ufuncs-and-gufuncs"><em>Numba</em> supports generating <em>NumPy</em> <em>ufuncs</em> and <em>gufuncs</em></a><ul>
+<li><a class="reference internal" href="#the-vectorize-decorator">The <em>vectorize</em> decorator</a></li>
+<li><a class="reference internal" href="#the-guvectorize-decorator">The guvectorize decorator</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#caveats">Caveats</a><ul>
+<li><a class="reference internal" href="#no-range-checks-when-indexing-in-numba">No range checks when indexing in <em>numba</em></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/tutorial_numpy_and_numba.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox">
+  <h3>Quick search</h3>
+  <form class="search form-search" action="search.html" method="get">
+      <div class="input-append">
+        <input type="text" class="search-query" name="q">
+        <input type="submit" class="btn" value="Go" />
+      </div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+  </div>
+</div> 
+        
+
+        <div class="span9">
+          <div class="document">
+            <div class="documentwrapper">
+              <div class="bodywrapper">
+                <div class="body">
+                  
+  <div class="section" id="numpy-and-numba">
+<h1>NumPy and numba<a class="headerlink" href="#numpy-and-numba" title="Permalink to this headline">¶</a></h1>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
+<span class="kn">import</span> <span class="nn">numba</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">llvm</span>
+<span class="kn">import</span> <span class="nn">ctypes</span>
+<span class="k">print</span><span class="p">(</span><span class="s">&quot;numba version: </span><span class="si">%s</span><span class="s"> </span><span class="se">\n</span><span class="s">NumPy version: </span><span class="si">%s</span><span class="se">\n</span><span class="s">llvm version: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">numba</span><span class="o">.</span><span class="n">__version__</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">__version__</span><span class="p">,</span> <span class="n">llvm</span><span class="o">.</span><span class="n">__version__</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="highlight-python"><pre>numba version: 0.12.0
+NumPy version: 1.7.1
+llvm version: 0.12.0</pre>
+</div>
+<p><em>NumPy</em> provides a compact, typed container for homogenous arrays of
+data. This is ideal to store data homogeneous data in <em>Python</em> with
+little overhead. <em>NumPy</em> also provides a set of functions that allows
+manipulation of that data, as well as operating over it. There is a rich
+ecosystem around <em>Numpy</em> that results in fast manipulation of <em>Numpy
+arrays</em>, as long as this manipulation is done using pre-baked operations
+(that are typically vectorized). This operations are usually provided by
+extension modules and written in C, using the <em>Numpy C API</em>.</p>
+<p><em>numba</em> allows generating native code from Python functions just by
+adding decorators. This code is wrapped and directly callable from
+within Python.</p>
+<p>There are many cases where you want to apply code to your <em>NumPy</em> data,
+and need that code to execute fast. You may get lucky and have the
+functions you want already written in the extensive <em>NumPy</em> ecosystem.
+Otherwise you will end with some code that is not that fast, but that
+you can improve execution time by writing code the &#8220;NumPy way&#8221;. If it is
+not fast enough, you can write an extension module using the <em>Numpy C
+API</em>. Writing an extension module will take quite a bit of time, and
+forces you to a slow compile-install-test cycle.</p>
+<p>Wouldn&#8217;t it be great if you could just write code in <em>Python</em> that
+describes your function and execute it at speed similar to that of what
+you could achieve with the extension module, all without leaving the
+<em>Python interpreter</em>? <em>numba</em> allows that.</p>
+<p><em>Numba</em> is <em>NumPy</em> aware. This means:</p>
+<ul class="simple">
+<li>It natively understands <em>NumPy</em> arrays, shapes and dtypes. <em>NumPy</em>
+arrays are supported as native types.</li>
+<li>It knows how to index/slice a <em>NumPy</em> array without relying on
+<em>Python</em>.</li>
+<li>It provides supports for generating <em>ufuncs</em> and <em>gufuncs</em> from
+inside the <em>Python</em> interpreter.</li>
+</ul>
+<div class="section" id="numba-understands-numpy-arrays">
+<h2><em>Numba</em> understands <em>NumPy</em> arrays<a class="headerlink" href="#numba-understands-numpy-arrays" title="Permalink to this headline">¶</a></h2>
+<p>NumPy arrays are understood by numba. By using the <em>numba.typeof</em> we can
+see that numba not only knows about the arrays themshelves, but also
+about its shape and underlying dtypes:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">2000</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float_</span><span class="p">)</span>
+<span class="n">numba</span><span class="o">.</span><span class="n">typeof</span><span class="p">(</span><span class="n">array</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python"><pre>array(float64, 1d, C)</pre>
+</div>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">numba</span><span class="o">.</span><span class="n">typeof</span><span class="p">(</span><span class="n">array</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">100</span><span class="p">)))</span>
+</pre></div>
+</div>
+<div class="highlight-python"><pre>array(float64, 3d, C)</pre>
+</div>
+<p>From the point of view of <em>numba</em>, there are three factors that identify
+the array type:</p>
+<ul class="simple">
+<li>The base type (dtype)</li>
+<li>The number of dimensions (len(shape)). Note that for numba the arity
+of each dimension is not considered part of the type, only the
+dimension count.</li>
+<li>The arrangement of the array. &#8216;C&#8217; for C-like, &#8216;F&#8217; for FORTRAN-like,
+&#8216;A&#8217; for generic strided array.</li>
+</ul>
+<p>It is easy to illustrate how the arity of an array is not part of the
+dtype in <em>numba</em> with the following samples:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">numba</span><span class="o">.</span><span class="n">typeof</span><span class="p">(</span><span class="n">array</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">100</span><span class="p">)))</span> <span class="o">==</span> <span class="n">numba</span><span class="o">.</span><span class="n">typeof</span><span class="p">(</span><span class="n">array</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">4</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">50</span><span class="p">)))</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="bp">True</span>
+</pre></div>
+</div>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">numba</span><span class="o">.</span><span class="n">typeof</span><span class="p">(</span><span class="n">array</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">100</span><span class="p">)))</span> <span class="o">==</span> <span class="n">numba</span><span class="o">.</span><span class="n">typeof</span><span class="p">(</span><span class="n">array</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">40</span><span class="p">,</span><span class="mi">50</span><span class="p">)))</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="bp">False</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="specifying-an-array-type-in-numba">
+<h2>Specifying an array type in <em>numba</em><a class="headerlink" href="#specifying-an-array-type-in-numba" title="Permalink to this headline">¶</a></h2>
+<p>In <em>numba</em> you can build the type specification by basing it on the base
+type for the array.</p>
+<p>So if numba.float32 specifies a single precision floating point number:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">numba</span><span class="o">.</span><span class="n">float32</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">float32</span>
+</pre></div>
+</div>
+<p>numba.float32[:] specifies an single dimensional array of single
+precision floating point numbers:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">numba</span><span class="o">.</span><span class="n">float32</span><span class="p">[:]</span>
+</pre></div>
+</div>
+<div class="highlight-python"><pre>array(float32, 1d, A)</pre>
+</div>
+<p>Adding dimensions is just a matter of tweaking the slice description
+passed:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">numba</span><span class="o">.</span><span class="n">float32</span><span class="p">[:,:]</span>
+</pre></div>
+</div>
+<div class="highlight-python"><pre>array(float32, 2d, A)</pre>
+</div>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">numba</span><span class="o">.</span><span class="n">float32</span><span class="p">[:,:,:,:]</span>
+</pre></div>
+</div>
+<div class="highlight-python"><pre>array(float32, 4d, A)</pre>
+</div>
+<p>As you can see, all the specified arrays are &#8220;strided&#8221;. It is possible to specify that a given dimension is consecutive in memory by using ::1 in such dimension. This allows describing C-type arrays and F-type arrays.</p>
+<p>row-major arrays (C-type) have the elements in the last dimension packed together:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">numba</span><span class="o">.</span><span class="n">float32</span><span class="p">[:,::</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="highlight-python"><pre>array(float32, 2d, C)</pre>
+</div>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">numba</span><span class="o">.</span><span class="n">float32</span><span class="p">[:,:,::</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="highlight-python"><pre>array(float32, 3d, C)</pre>
+</div>
+<p>column-major arrays (F-type) have elements in the first dimension packed
+together:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">numba</span><span class="o">.</span><span class="n">float32</span><span class="p">[::</span><span class="mi">1</span><span class="p">,:]</span>
+</pre></div>
+</div>
+<div class="highlight-python"><pre>array(float32, 2d, F)</pre>
+</div>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">numba</span><span class="o">.</span><span class="n">float32</span><span class="p">[::</span><span class="mi">1</span><span class="p">,:,:]</span>
+</pre></div>
+</div>
+<div class="highlight-python"><pre>array(float32, 3d, F)</pre>
+</div>
+<p>The use of any other dimension as consecutive is handled as a strided
+array:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">numba</span><span class="o">.</span><span class="n">float32</span><span class="p">[:,::</span><span class="mi">1</span><span class="p">,:]</span>
+</pre></div>
+</div>
+<div class="highlight-python"><pre>array(float32, 3d, A)</pre>
+</div>
+<p>Note that the array arrangement does change the type, although numba
+will easily coerce a C or FORTRAN array into a strided one:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">numba</span><span class="o">.</span><span class="n">float32</span><span class="p">[::</span><span class="mi">1</span><span class="p">,:]</span> <span class="o">==</span> <span class="n">numba</span><span class="o">.</span><span class="n">float32</span><span class="p">[:,::</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="bp">False</span>
+</pre></div>
+</div>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">numba</span><span class="o">.</span><span class="n">float32</span><span class="p">[::</span><span class="mi">1</span><span class="p">,:]</span> <span class="o">==</span> <span class="n">numba</span><span class="o">.</span><span class="n">float32</span><span class="p">[:,:]</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="bp">False</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="numpy-arrays-as-arguments">
+<h2>NumPy arrays as arguments<a class="headerlink" href="#numpy-arrays-as-arguments" title="Permalink to this headline">¶</a></h2>
+<p>In all cases, NumPy arrays are passed to numba functions by reference.
+This means that any change performed on the argument in the function
+will modify the contents of the original matrix. This behavior maps the
+usual NumPy semantics. So the array values passed as arguments to a
+<em>numba</em> functions can be considered as input/output arguments.</p>
+</div>
+<div class="section" id="numba-knows-how-to-index-and-slice-a-numpy-array-natively">
+<h2><em>Numba</em> knows how to index and slice a <em>Numpy</em> array natively<a class="headerlink" href="#numba-knows-how-to-index-and-slice-a-numpy-array-natively" title="Permalink to this headline">¶</a></h2>
+<p>Indexing and slicing of <em>NumPy arrays</em> are handled natively by <em>numba</em>.
+This means that it is possible to <em>index</em> and <em>slice</em> a <em>Numpy array</em> in
+<em>numba</em> compiled code without relying on the <em>Python runtime</em>. In
+practice this means that <em>numba</em> code running on <em>NumPy arrays</em> will
+execute with a level of efficiency close to that of C.</p>
+<p>Let&#8217;s make a simple function that uses indexing. For example a really
+naive implementation of a sum:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">sum_all</span><span class="p">(</span><span class="n">A</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Naive sum of elements of an array... assumes one dimensional array of floats&quot;&quot;&quot;</span>
+    <span class="n">acc</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+        <span class="n">acc</span> <span class="o">+=</span> <span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">acc</span>
+</pre></div>
+</div>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">sample_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">10000.0</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The <em>pure Python</em> approach of this naive function is quite underwhelming
+speed-wise:</p>
+<div class="code python highlight-python"><pre>%timeit sum_all(sample_array)</pre>
+</div>
+<div class="highlight-python"><pre>100 loops, best of 3: 4.87 ms per loop</pre>
+</div>
+<p>If we relied on <em>NumPy</em> it would be much faster:</p>
+<div class="code python highlight-python"><pre>%timeit np.sum(sample_array)</pre>
+</div>
+<div class="highlight-python"><pre>100000 loops, best of 3: 17 µs per loop</pre>
+</div>
+<p>But with <em>numba</em> the speed of that <em>naive</em> code is quite good:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">sum_all_jit</span> <span class="o">=</span> <span class="n">numba</span><span class="o">.</span><span class="n">jit</span><span class="p">(</span><span class="s">&#39;float64(float64[:])&#39;</span><span class="p">)(</span><span class="n">sum_all</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="code python highlight-python"><pre>%timeit sum_all_jit(sample_array)</pre>
+</div>
+<div class="highlight-python"><pre>100000 loops, best of 3: 9.82 µs per loop</pre>
+</div>
+<p>This is in part possible because of the native support for indexing in
+<em>numba</em>. The function can be compiled in a nopython context, that makes
+it quite fast:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">sum_all_jit</span> <span class="o">=</span> <span class="n">numba</span><span class="o">.</span><span class="n">jit</span><span class="p">(</span><span class="s">&#39;float64(float64[:])&#39;</span><span class="p">,</span> <span class="n">nopython</span><span class="o">=</span><span class="bp">True</span><span class="p">)(</span><span class="n">sum_all</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="section" id="numba-supports-generating-numpy-ufuncs-and-gufuncs">
+<h3><em>Numba</em> supports generating <em>NumPy</em> <em>ufuncs</em> and <em>gufuncs</em><a class="headerlink" href="#numba-supports-generating-numpy-ufuncs-and-gufuncs" title="Permalink to this headline">¶</a></h3>
+<p>In <em>NumPy</em> there are universal
+functions(<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/ufuncs.html">*ufuncs*</a>)
+and generalized universal functions
+(<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/c-api.generalized-ufuncs.html">*gufuncs*</a>).</p>
+<ul class="simple">
+<li><em>ufuncs</em> are quite established and allows mapping of scalar
+operations over <em>NumPy</em> arrays. The resulting vectorized operation
+follow <em>Numpy</em>&#8216;s broadcasting rules.</li>
+<li><em>gufuncs</em> are a generalization of <em>ufuncs</em> that allow vectorization
+of <em>kernels</em> that work over the inner dimensions of the arrays. In
+this context a <em>ufunc</em> would just be a <em>gufunc</em> where all the
+operands of its kernels have 0 dimensions (i.e. are scalars).</li>
+</ul>
+<p><em>ufuncs</em> and <em>gufuncs</em> are typically built using <em>Numpy&#8217;s C API</em>.
+<em>Numba</em> offers the possibility to create <em>ufuncs</em> and <em>gufuncs</em> within
+the Python interpreter, using Python functions to describe the
+<em>kernels</em>. To access this functionality <em>numba</em> provides the <em>vectorize</em>
+decorator and the <em>GUVectorize</em> class.</p>
+<div class="section" id="the-vectorize-decorator">
+<h4>The <em>vectorize</em> decorator<a class="headerlink" href="#the-vectorize-decorator" title="Permalink to this headline">¶</a></h4>
+<p><em>vectorize</em> is the decorator to be used to build <em>ufuncs</em>. Note that as
+of this writing, it is not in the numba namespace, but in
+<em>numba.vectorize</em>.</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="k">print</span><span class="p">(</span><span class="n">numba</span><span class="o">.</span><span class="n">vectorize</span><span class="o">.</span><span class="n">__doc__</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python"><pre>vectorize(ftylist[, target='cpu', [**kws]])
+
+    A decorator to create numpy ufunc object from Numba compiled code.
+
+    Args
+    -----
+    ftylist: iterable
+        An iterable of type signatures, which are either
+        function type object or a string describing the
+        function type.
+
+    target: str
+            A string for code generation target.  Defaults to 'cpu'.
+
+    Returns
+    --------
+
+    A NumPy universal function
+
+    Example
+    -------
+        @vectorize(['float32(float32, float32)',
+                    'float64(float64, float64)'])
+        def sum(a, b):
+            return a + b</pre>
+</div>
+<p>Its usage is pretty simple, just write the scalar function you want for your _ufunc_. Then just decorate it with _vectorize_, passing as a parameter the signatures you want your code to be generated. The generated _ufunc_ will be handled as any other _NumPy_ _ufunc_. That means that type promotions and broadcasting rules follow those of _NumPy_.</p>
+<p>For example, let&#8217;s write a sample ufunc that performs a lineal
+interpolation between A and B. The &#8216;kernel&#8217; will look like this:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">lerp</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">B</span><span class="p">,</span><span class="n">factor</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;interpolates A and B by factor&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">factor</span><span class="p">)</span><span class="o">*</span><span class="n">A</span> <span class="o">+</span> <span class="n">factor</span><span class="o">*</span><span class="n">B</span>
+</pre></div>
+</div>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">lerp</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="mf">3.0</span>
+</pre></div>
+</div>
+<p>Now let&#8217;s do a <em>ufunc</em> for the floating point types. I will be using
+vectorize as a function, but remember that you could just add the
+decorator in the definition of the kernel itself.</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">lerp_ufunc</span> <span class="o">=</span> <span class="n">numba</span><span class="o">.</span><span class="n">vectorize</span><span class="p">([</span><span class="s">&#39;float32(float32, float32, float32)&#39;</span><span class="p">,</span> <span class="s">&#39;float64(float64, float64, float64)&#39;</span><span class="p">])(</span><span class="n">lerp</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Now we can run our lerp with all of <em>NumPy</em>&#8216;s niceties, like
+broadcasting of one operand (in this case the factor).</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">100000.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">)</span>
+<span class="n">B</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">100000.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">2.0</span><span class="p">)</span>
+<span class="n">F</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.5</span><span class="p">]</span> <span class="o">*</span> <span class="mi">50000</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">lerp_ufunc</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">B</span><span class="p">,</span><span class="mf">0.5</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">array</span><span class="p">([</span> <span class="mf">50000.</span><span class="p">,</span>  <span class="mf">50000.</span><span class="p">,</span>  <span class="mf">50000.</span><span class="p">,</span> <span class="o">...</span><span class="p">,</span>  <span class="mf">50000.</span><span class="p">,</span>  <span class="mf">50000.</span><span class="p">,</span>  <span class="mf">50000.</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>It is also quite fast:</p>
+<div class="code python highlight-python"><pre>%timeit lerp_ufunc(A, B, 0.5)</pre>
+</div>
+<div class="highlight-python"><pre>1000 loops, best of 3: 281 µs per loop</pre>
+</div>
+<div class="code python highlight-python"><pre>%timeit lerp(A, B, 0.5)</pre>
+</div>
+<div class="highlight-python"><pre>10000 loops, best of 3: 142 µs per loop</pre>
+</div>
+<p>Note that in this case the same original function can be used to
+generate the <em>ufunc</em> and to execute the equivalent <em>NumPy</em> vectorized
+version. When executing there will be differences in how the expression
+is evaluated.</p>
+<p>When using <em>NumPy</em> the expression is evaluated one operation at a time,
+over the entire vector. <em>Numba</em> generated code will evaluate the full
+expression in one go, for each element. The <em>numba</em> approach approach
+avoids having temporal intermmediate arrays built, as well as avoiding
+revisiting operands that are being used more than once in a expression.
+This is useful with big arrays of data where there will be savings in
+process memory usage as well as better cache usage.</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">sample_poly</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">-</span> <span class="n">x</span><span class="o">*</span><span class="n">x</span><span class="o">*</span><span class="n">x</span><span class="o">/</span><span class="mf">6.0</span> <span class="o">+</span> <span class="n">x</span><span class="o">*</span><span class="n">x</span><span class="o">*</span><span class="n">x</span><span class="o">*</span><span class="n">x</span><span class="o">*</span><span class="n">x</span><span class="o">/</span><span class="mf">120.0</span>
+</pre></div>
+</div>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">S</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">36000000</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">sample_poly_ufunc</span> <span class="o">=</span> <span class="n">numba</span><span class="o">.</span><span class="n">vectorize</span><span class="p">([</span><span class="s">&#39;float32(float32)&#39;</span><span class="p">,</span> <span class="s">&#39;float64(float64)&#39;</span><span class="p">])(</span><span class="n">sample_poly</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="code python highlight-python"><pre>%timeit sample_poly(S)</pre>
+</div>
+<div class="highlight-python"><pre>1 loops, best of 3: 1.98 s per loop</pre>
+</div>
+<div class="code python highlight-python"><pre>%timeit sample_poly_ufunc(S)</pre>
+</div>
+<div class="highlight-python"><pre>1 loops, best of 3: 465 ms per loop</pre>
+</div>
+<p>It is also worth noting that numba&#8217;s <em>vectorize</em> provides similar
+convenience to that of NumPy&#8217;s <em>vectorize</em>, but with performance similar
+to an <em>ufunc</em>.</p>
+<p>For example, let&#8217;s take the example in <a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.vectorize.html">NumPy&#8217;s vectorize
+documentation</a>:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">myfunc</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="s">&quot;Return a-b if a&gt;b, otherwise return a+b&quot;</span>
+    <span class="k">if</span> <span class="n">a</span> <span class="o">&gt;</span> <span class="n">b</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">a</span> <span class="o">-</span> <span class="n">b</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
+</pre></div>
+</div>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">myfunc_input</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">100000.0</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="code python highlight-python"><pre>numpy_vec_myfunc = np.vectorize(myfunc)
+%timeit numpy_vec_myfunc(myfunc_input, 50000)</pre>
+</div>
+<div class="highlight-python"><pre>10 loops, best of 3: 24.2 ms per loop</pre>
+</div>
+<div class="code python highlight-python"><pre>numba_vec_myfunc = numba.vectorize(['float64(float64, float64)'])(myfunc)
+%timeit numba_vec_myfunc(myfunc_input, 50000)</pre>
+</div>
+<div class="highlight-python"><pre>1000 loops, best of 3: 480 µs per loop</pre>
+</div>
+</div>
+<div class="section" id="the-guvectorize-decorator">
+<h4>The guvectorize decorator<a class="headerlink" href="#the-guvectorize-decorator" title="Permalink to this headline">¶</a></h4>
+<p>In the same way the <em>vectorize</em> allows building <em>NumPy</em>&#8216;s <em>ufuncs</em> from
+inside the Python interpreter just by writing the expression that forms
+the kernel; guvectorize allows building <em>Numpy</em>&#8216;s <em>gufuncs</em> without the
+need of writing a C extension module.</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="k">print</span><span class="p">(</span><span class="n">numba</span><span class="o">.</span><span class="n">guvectorize</span><span class="o">.</span><span class="n">__doc__</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python"><pre>guvectorize(ftylist, signature, [, target='cpu', [**kws]])
+
+    A decorator to create numpy generialized-ufunc object from Numba compiled
+    code.
+
+    Args
+    -----
+    ftylist: iterable
+        An iterable of type signatures, which are either
+        function type object or a string describing the
+        function type.
+
+
+    signature: str
+        A NumPy generialized-ufunc signature.
+        e.g. "(m, n), (n, p)-&gt;(m, p)"
+
+    target: str
+            A string for code generation target.  Defaults to "cpu".
+
+    Returns
+    --------
+
+    A NumPy generialized universal-function
+
+    Example
+    -------
+        @guvectorize(['void(int32[:,:], int32[:,:], int32[:,:])',
+                      'void(float32[:,:], float32[:,:], float32[:,:])'],
+                      '(x, y),(x, y)-&gt;(x, y)')
+        def add_2d_array(a, b):
+            for i in range(c.shape[0]):
+                for j in range(c.shape[1]):
+                    c[i, j] = a[i, j] + b[i, j]</pre>
+</div>
+<p><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/c-api.generalized-ufuncs.html">*Generalized universal
+functions*</a>
+require a <em>dimension signature</em> for the <em>kernel</em> they implement. We call
+this the <em>NumPy generalized-ufunc signature</em>. Do not confuse this
+<em>dimension signature</em> with the <em>type signature</em> that <em>numba</em> requires.</p>
+<p>The <em>dimension signature</em> describe the dimensions of the operands, as
+well as constraints to the values of those dimensions so that the
+function can work. For example, a matrix multiply gufunc will have a
+dimension signature like &#8216;(m,n), (n,p) -&gt; (m,p)&#8217;. This means:</p>
+<ul class="simple">
+<li>First operand has two dimensions (m,n).</li>
+<li>Second operand has two dimensions (n,p).</li>
+<li>Result has two dimensions (m,p).</li>
+</ul>
+<p>The names of the dimensions are symbolic, and dimensions having the same
+name must match in <em>arity</em> (number of elements). So in our matrix
+multiply example the following constraints have to be met:</p>
+<ul class="simple">
+<li>elements in a row of the first operand <em>must equal</em> the elements in a
+column of the second operand. Both are &#8216;n&#8217;.</li>
+</ul>
+<p>As you can see, the arity of the dimensions of the result can be infered
+from the source operands:</p>
+<ul class="simple">
+<li>Result will have as many rows as rows has the first operand. Both are
+&#8216;m&#8217;.</li>
+<li>Result will have as many columns as columns has the second operand.
+Both are &#8216;p&#8217;.</li>
+</ul>
+<p>You can find more information about <em>Numpy generalized-ufunc signature</em>
+in <a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/c-api.generalized-ufuncs.html#details-of-signature">NumPy&#8217;s
+documentation</a>.</p>
+<p>When building a <em>gufunc</em> you start by writing the kernel function. You
+have to bear in mind which is the dimension signature and write the code
+to handle a single element. The function will take both, <em>input
+arguments</em> and <em>results</em>, as parameters. The <em>result</em> will be the last
+argument of the function. There shouldn&#8217;t be any return value to the
+function, as the result should be placed directly in the last argument.
+The result of modifying an argument other than the result argument is
+undefined.</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">matmulcore</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">C</span><span class="p">):</span>
+    <span class="n">m</span><span class="p">,</span> <span class="n">n</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">n</span><span class="p">,</span> <span class="n">p</span> <span class="o">=</span> <span class="n">B</span><span class="o">.</span><span class="n">shape</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">m</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
+            <span class="n">C</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+                <span class="n">C</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">+=</span> <span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span> <span class="o">*</span> <span class="n">B</span><span class="p">[</span><span class="n">k</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Note how the m, n and p are extracted from the input arguments. The
+extraction of <em>n</em> is done twice to reinforce the notion that both are
+the same. That extraction is not really needed, as you could directly
+index inside the shape when defining the range.</p>
+<p>To build a <em>generalized-ufunc</em> from the function is just a matter of
+using the <em>guvectorize</em> decorator. The interface to <em>guvectorize</em> is
+akin that of <em>vectorize</em>, but also requires the <em>NumPy
+generalized-ufunc</em> signature.</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">gu_matmul</span> <span class="o">=</span> <span class="n">numba</span><span class="o">.</span><span class="n">guvectorize</span><span class="p">([</span><span class="s">&#39;float32[:,:], float32[:,:], float32[:,:]&#39;</span><span class="p">,</span> <span class="s">&#39;float64[:,:], float64[:,:], float64[:,:]&#39;</span> <span class="p">],</span>
+                              <span class="s">&#39;(m,n),(n,p)-&gt;(n,p)&#39;</span><span class="p">)(</span><span class="n">matmulcore</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The result is a <em>gufunc</em>, that can be used as any othe <em>gufunc</em> in
+<em>NumPy</em>. Broadcasting and type promotion rules are those on <em>NumPy</em>.</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">matrix_ct</span> <span class="o">=</span> <span class="mi">10000</span>
+<span class="n">gu_test_A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">matrix_ct</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="mi">4</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">matrix_ct</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="n">gu_test_B</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">matrix_ct</span> <span class="o">*</span> <span class="mi">4</span> <span class="o">*</span> <span class="mi">5</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">matrix_ct</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="code python highlight-python"><pre>%timeit gu_matmul(gu_test_A, gu_test_B)</pre>
+</div>
+<div class="highlight-python"><pre>100 loops, best of 3: 8.22 ms per loop</pre>
+</div>
+<p>Some recap on the difference between <em>vectorize</em> and <em>guvectorize</em>:</p>
+<ol class="arabic simple">
+<li><em>vectorize</em> generates <em>ufuncs</em>, <em>guvectorize</em> generates
+<em>generalized-ufuncs</em></li>
+<li>In both, <em>type signatures</em> for the arguments and return type are
+given in a list, but in <em>vectorize</em> function signatures are used to
+specify them, while on <em>guvectorize</em> a list of types is used instead,
+the resulting type being specified last.</li>
+<li>When using <em>guvectorize</em> the <em>NumPy generalized-ufunc</em> signature
+needs to be supplied. This signature must be coherent with the type
+signatures.</li>
+<li>Remember that with <em>guvectorize</em> the result is passed as the last
+argument to the <em>kernel</em>, while in <em>vectorize</em> the result is returned
+by the <em>kernel</em>.</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="section" id="caveats">
+<h2>Caveats<a class="headerlink" href="#caveats" title="Permalink to this headline">¶</a></h2>
+<p>There are some points to take into account when dealing with <em>NumPy</em>
+arrays inside <em>numba</em> compiled functions:</p>
+<div class="section" id="no-range-checks-when-indexing-in-numba">
+<h3>No range checks when indexing in <em>numba</em><a class="headerlink" href="#no-range-checks-when-indexing-in-numba" title="Permalink to this headline">¶</a></h3>
+<p>In <em>numba</em> generated code <strong>no range checking is performed when
+indexing</strong>. No range checking is performed as to allow generating code
+that performs better. So you need to be careful about the code as any
+indexing that goes out of range can cause a bad-access or a memory
+overwrite, potentially <em>crashing</em> the interpreter process.</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">16.0</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span><span class="mi">8</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">arr</span><span class="o">.</span><span class="n">strides</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python"><pre>[[  0.   1.   2.   3.   4.   5.   6.   7.]
+ [  8.   9.  10.  11.  12.  13.  14.  15.]]
+(64, 8)</pre>
+</div>
+<p>As indexing in Python is 0-based, the following line will cause an
+exception error, as arr.shape[1] is 8, and the range for the column
+number is (0..7):</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">arr</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="mf">42.0</span>
+</pre></div>
+</div>
+<div class="highlight-python"><pre>---------------------------------------------------------------------------
+IndexError                                Traceback (most recent call last)
+
+&lt;ipython-input-48-06c1e5ef06d0&gt; in &lt;module&gt;()
+----&gt; 1 arr[0, arr.shape[1]] = 42.0
+
+
+IndexError: index 8 is out of bounds for axis 1 with size 8</pre>
+</div>
+<p>However, as <em>numba</em> doesn&#8217;t have range checks, it will index anyways. As
+the index is out of bounds, and the array is in C order, the value will
+overflow into the next row. In this case, in the place reserved for
+element (1, 0).</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="nd">@numba.jit</span><span class="p">(</span><span class="s">&quot;void(f8[:,:])&quot;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">bad_access</span><span class="p">(</span><span class="n">array</span><span class="p">):</span>
+    <span class="n">array</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">array</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="mf">42.0</span>
+<span class="n">bad_access</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>In this sample case we where lucky, as the <em>out-of-bounds</em> access fell
+into the allocated range. Unchecked indexing can potentially cause
+illegal accesses and crash the process running the <em>Python interpreter</em>.
+However, it allows for code generation that produces faster code.</p>
+</div>
+</div>
+</div>
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        
+      </div><!-- /row -->
+
+      <!-- row -->
+      <div class="row-fluid">
+<div class="related navbar ">
+  <div class="navbar-inner">
+    <ul class="nav pull-right">
+      
+        <li><a href="genindex.html" title="General Index" >index</a></li>
+        <li><a href="py-modindex.html" title="Python Module Index" >modules</a></li>
+        <li><a href="index.html">numba 0.13.0 documentation</a></li> 
+      
+    </ul>
+  </div>
+</div>
+      </div><!-- /row -->
+
+      <!-- footer -->
+      <footer>
+          &copy; Copyright 2012-2014, Continuum Analytics.
+        Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+      </footer>
+      <!-- /footer -->
+
+    </div>
+    <!-- /container -->
+
+  </body>
+</html>
