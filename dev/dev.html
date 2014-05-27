@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     
-    <title>Development crash course &mdash; numba 0.12.1 documentation</title>
+    <title>Development crash course &mdash; numba 0.13.1-127-gcababd3 documentation</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
@@ -34,7 +34,7 @@
 <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
             URL_ROOT:    './',
-            VERSION:     '0.12.1',
+            VERSION:     '0.13.1-127-gcababd3',
             COLLAPSE_INDEX: false,
             FILE_SUFFIX: '.html',
             HAS_SOURCE:  true
@@ -58,7 +58,8 @@
     });
   });
 </script>
-    <link rel="top" title="numba 0.12.1 documentation" href="index.html" />
+    <link rel="top" title="numba 0.13.1-127-gcababd3 documentation" href="index.html" />
+    <link rel="next" title="Numba Module Reference" href="modules/modules.html" />
     <link rel="prev" title="Numba Roadmap" href="roadmap.html" /> 
   </head>
   <body>
@@ -70,12 +71,18 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="index.html">numba 0.12.1 documentation</a>
+          <a class="brand" href="index.html">numba 0.13.1-127-gcababd3 documentation</a>
           <div class="nav-collapse collapse">
             <ul class="nav pull-right">
               
                 <li>
                 <a href="genindex.html" title="General Index" accesskey="I">index</a>
+                </li>
+                <li>
+                <a href="py-modindex.html" title="Python Module Index" >modules</a>
+                </li>
+                <li>
+                <a href="modules/modules.html" title="Numba Module Reference" accesskey="N">next</a>
                 </li>
                 <li>
                 <a href="roadmap.html" title="Numba Roadmap" accesskey="P">previous</a>
@@ -137,6 +144,9 @@
   <h4>Previous topic</h4>
   <p class="topless"><a href="roadmap.html"
                         title="previous chapter">Numba Roadmap</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="modules/modules.html"
+                        title="next chapter">Numba Module Reference</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/dev.txt"
@@ -205,6 +215,9 @@
   <h4>Previous topic</h4>
   <p class="topless"><a href="roadmap.html"
                         title="previous chapter">Numba Roadmap</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="modules/modules.html"
+                        title="next chapter">Numba Module Reference</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/dev.txt"
@@ -567,7 +580,7 @@ the CFG for loops. For instance we may have the following code:</p>
 on it&#8217;s dynamic input type).</p>
 <p>We get the following type graph:</p>
 <p class="graphviz">
-<img src="_images/graphviz-d31f43050eeba7b8b1310d8bb012551d8e8f94d3.png" alt="digraph typegraph {
+digraph typegraph {
 x_0 -&gt; int
 
 x_1 -&gt; x_0
@@ -579,16 +592,16 @@ y_0 -&gt; x_1
 
 i_0 -&gt; range
 range -&gt; int
-}" />
+}
 </p>
 <p>Below we show the correspondence of the SSA variable definitions to their
 basic blocks:</p>
 <p class="graphviz">
-<img src="_images/graphviz-0d9527069f69872cfb4e428da17e5519bb5c0423.png" alt="digraph cfg {
+digraph cfg {
 &quot;entry: [ x_0, i_0 ]&quot; -&gt; &quot;condition: [ x_1 ]&quot; -&gt; &quot;body: [ x_2 ]&quot;
 &quot;body: [ x_2 ]&quot; -&gt; &quot;condition: [ x_1 ]&quot;
 &quot;condition: [ x_1 ]&quot; -&gt; &quot;exit: [ y_2 ]&quot;
-}" />
+}
 </p>
 <p>Our goal is to resolve this type graph in topological order, such that
 we know the type for each variable definition (<tt class="docutils literal"><span class="pre">x_0</span></tt>, <tt class="docutils literal"><span class="pre">x_1</span></tt>, etc).</p>
@@ -596,14 +609,14 @@ we know the type for each variable definition (<tt class="docutils literal"><spa
 by finding the strongly connected components and condensing them
 into single graph nodes. The resulting graph looks like this:</p>
 <p class="graphviz">
-<img src="_images/graphviz-bcba21ba0c2ac0644d3f762c6e4f4e385e768337.png" alt="digraph typegraph {
+digraph typegraph {
 x_0 -&gt; int
 SCC0 -&gt; x_0
 y_0 -&gt; SCC0
 
 i_0 -&gt; range
 range -&gt; int
-}" />
+}
 </p>
 <p>And <tt class="docutils literal"><span class="pre">SCC0</span></tt> contains the cycle in the type graph. We now have a
 well-defined preorder for which we can process each node in topological
@@ -986,12 +999,12 @@ expression:</p>
 <p>Where <tt class="docutils literal"><span class="pre">g(x)</span></tt> returns a scalar and is not part of the array expression.
 Our AST looks like this:</p>
 <p class="graphviz">
-<img src="_images/graphviz-4bed41405f7b5e6dd06d4fe5eb69dbc69d1c0389.png" alt="digraph expr {
+digraph expr {
 mul -&gt; add
 mul -&gt; &quot;g(x)&quot;
 add -&gt; a
 add -&gt; &quot;sin(b)&quot;
-}" />
+}
 </p>
 <p>We take this expression and build a function with <tt class="docutils literal"><span class="pre">g(x)</span></tt> as operand:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">kernel</span><span class="p">(</span><span class="n">op0</span><span class="p">,</span> <span class="n">op1</span><span class="p">,</span> <span class="n">op2</span><span class="p">):</span>
@@ -1174,8 +1187,10 @@ runtime environment or library (CPython, NumPy).</p>
     <ul class="nav pull-right">
       
         <li><a href="genindex.html" title="General Index" >index</a></li>
+        <li><a href="py-modindex.html" title="Python Module Index" >modules</a></li>
+        <li><a href="modules/modules.html" title="Numba Module Reference" >next</a></li>
         <li><a href="roadmap.html" title="Numba Roadmap" >previous</a></li>
-        <li><a href="index.html">numba 0.12.1 documentation</a></li> 
+        <li><a href="index.html">numba 0.13.1-127-gcababd3 documentation</a></li> 
       
     </ul>
   </div>
@@ -1184,8 +1199,8 @@ runtime environment or library (CPython, NumPy).</p>
 
       <!-- footer -->
       <footer>
-          &copy; Copyright 2012-2013, Continuum Analytics.
-        Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.1.
+          &copy; Copyright 2012-2014, Continuum Analytics.
+        Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.2.
       </footer>
       <!-- /footer -->
 
