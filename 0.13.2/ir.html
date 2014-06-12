@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+
+
+
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+    <title>Numba Intermediate Representation Specification &mdash; numba 0.13.2 documentation</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    
+<link rel="stylesheet" href="_static/css/basicstrap-base.css" type="text/css" />
+<link rel="stylesheet" href="_static/css/bootstrap.min.css" type="text/css" />
+<link rel="stylesheet" href="_static/css/font-awesome.min.css">
+<!--[if IE 7]>
+<link rel="stylesheet" href="_static/css/font-awesome-ie7.min.css">
+<![endif]-->
+<style type="text/css">
+  body {
+    padding-top: 60px;
+    padding-bottom: 40px;
+  }
+}
+</style>
+<link rel="stylesheet" href="_static/basicstrap.css" type="text/css" />
+<link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+<link rel="stylesheet" href="_static/css/bootstrap-responsive.min.css" type="text/css" />
+    
+<script type="text/javascript">
+  var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:    './',
+            VERSION:     '0.13.2',
+            COLLAPSE_INDEX: false,
+            FILE_SUFFIX: '.html',
+            HAS_SOURCE:  true
+  };
+</script>
+<script type="text/javascript" src="_static/js/jquery.min.js"></script>
+<script type="text/javascript" src="_static/underscore.js"></script>
+<script type="text/javascript" src="_static/doctools.js"></script>
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/javascript" src="_static/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+  $(document).ready(function(){
+    $('.show-sidebar').click(function(e) {
+       e.preventDefault();
+       if ($(".show-sidebar").html() == "Open Table Of Contents") {
+          $('.for-mobile').removeClass('hidden-phone');
+          $(".show-sidebar").html("Close Table Of Contents");
+       } else {
+          $(".show-sidebar").html("Open Table Of Contents");
+       }
+    });
+  });
+</script>
+    <link rel="top" title="numba 0.13.2 documentation" href="index.html" />
+    <link rel="next" title="Numba Roadmap" href="roadmap.html" />
+    <link rel="prev" title="Numba Language Specification" href="spec.html" /> 
+  </head>
+  <body>
+    <div class="navbar navbar-fixed-top ">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="index.html">numba 0.13.2 documentation</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav pull-right">
+              
+                <li>
+                <a href="genindex.html" title="General Index" accesskey="I">index</a>
+                </li>
+                <li>
+                <a href="roadmap.html" title="Numba Roadmap" accesskey="N">next</a>
+                </li>
+                <li>
+                <a href="spec.html" title="Numba Language Specification" accesskey="P">previous</a>
+                </li>
+              
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <!-- container -->
+    <div class="container-fluid">
+
+
+      
+      <div class="row-fluid hidden-desktop hidden-tablet">
+      
+<div class="span3 ">
+  <a class="visible-phone btn btn-small show-sidebar" data-toggle="collapse" data-target=".for-mobile">Open Table Of Contents</a>
+  <div class="for-mobile sidebar hidden-phone">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Numba Intermediate Representation Specification</a><ul>
+<li><a class="reference internal" href="#numba-ir-stages">Numba IR Stages</a></li>
+<li><a class="reference internal" href="#numba-intermediate-representations">Numba Intermediate Representations</a><ul>
+<li><a class="reference internal" href="#python-ast-ir">Python AST IR</a></li>
+<li><a class="reference internal" href="#normalized-ir">Normalized IR</a><ul>
+<li><a class="reference internal" href="#issue-desugaring-comparisons">Issue: Desugaring comparisons</a><ul>
+<li><a class="reference internal" href="#proposal">Proposal</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#untyped-ir-in-ssa-form">Untyped IR in SSA form</a></li>
+<li><a class="reference internal" href="#typed-ir-in-ssa-form">Typed IR in SSA form</a></li>
+<li><a class="reference internal" href="#low-level-portable-ir">Low-level Portable IR</a></li>
+<li><a class="reference internal" href="#final-llvm-ir">Final LLVM IR</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#appendicies">Appendicies</a><ul>
+<li><a class="reference internal" href="#appendix-design-notes">Appendix: Design Notes</a><ul>
+<li><a class="reference internal" href="#closures">Closures</a><ul>
+<li><a class="reference internal" href="#parent-frames">Parent frames</a></li>
+<li><a class="reference internal" href="#alternative-explicit-parameterization">Alternative: Explicit parameterization</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#default-variable-and-keyword-arguments">Default, variable, and keyword arguments</a></li>
+<li><a class="reference internal" href="#iterators">Iterators</a><ul>
+<li><a class="reference internal" href="#iterators-in-the-untyped-ir">Iterators in the untyped IR</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#generators">Generators</a></li>
+<li><a class="reference internal" href="#global-and-nonlocal-variables">Global and nonlocal variables</a></li>
+<li><a class="reference internal" href="#exceptions-and-exception-handling">Exceptions and exception handling</a></li>
+<li><a class="reference internal" href="#decorators">Decorators</a></li>
+<li><a class="reference internal" href="#classes-and-objects">Classes and objects</a></li>
+<li><a class="reference internal" href="#namespaces">Namespaces</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#appendix-language-cross-reference">Appendix: Language Cross Reference</a><ul>
+<li><a class="reference internal" href="#expressions">Expressions</a></li>
+<li><a class="reference internal" href="#simple-statements">Simple statements</a><ul>
+<li><a class="reference internal" href="#expression-statements">Expression statements</a></li>
+<li><a class="reference internal" href="#assignment-statements">Assignment statements</a></li>
+<li><a class="reference internal" href="#the-assert-statement">The assert statement</a></li>
+<li><a class="reference internal" href="#the-pass-statement">The pass statement</a></li>
+<li><a class="reference internal" href="#the-del-statement">The del statement</a></li>
+<li><a class="reference internal" href="#the-return-statement">The return statement</a></li>
+<li><a class="reference internal" href="#the-yield-statement">The yield statement</a></li>
+<li><a class="reference internal" href="#the-raise-statement">The raise statement</a></li>
+<li><a class="reference internal" href="#the-break-statement">The break statement</a></li>
+<li><a class="reference internal" href="#the-continue-statement">The continue statement</a></li>
+<li><a class="reference internal" href="#the-import-statement">The import statement</a></li>
+<li><a class="reference internal" href="#the-global-statement">The global statement</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#compound-statements">Compound statements</a><ul>
+<li><a class="reference internal" href="#the-if-statement">The if statement</a></li>
+<li><a class="reference internal" href="#the-while-statement">The while statement</a></li>
+<li><a class="reference internal" href="#the-for-statement">The for statement</a></li>
+<li><a class="reference internal" href="#the-try-statement">The try statement</a></li>
+<li><a class="reference internal" href="#the-with-statement">The with statement</a></li>
+<li><a class="reference internal" href="#function-definitions">Function definitions</a></li>
+<li><a class="reference internal" href="#class-definitions">Class definitions</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#top-level-components">Top-level components</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#appendix-other-design-notes">Appendix: Other Design Notes</a><ul>
+<li><a class="reference internal" href="#use-of-schemas">Use of Schemas</a><ul>
+<li><a class="reference internal" href="#executable-ir">Executable IR</a></li>
+<li><a class="reference internal" href="#building-a-call-graph">Building a Call Graph</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="spec.html"
+                        title="previous chapter">Numba Language Specification</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="roadmap.html"
+                        title="next chapter">Numba Roadmap</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/ir.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox">
+  <h3>Quick search</h3>
+  <form class="search form-search" action="search.html" method="get">
+      <div class="input-append">
+        <input type="text" class="search-query" name="q">
+        <input type="submit" class="btn" value="Go" />
+      </div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+  </div>
+</div>
+      </div>
+      
+
+      <!-- row -->
+      <div class="row-fluid">
+         
+<div class="span3 visible-desktop visible-tablet">
+  <div class=" sidebar hidden-phone">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Numba Intermediate Representation Specification</a><ul>
+<li><a class="reference internal" href="#numba-ir-stages">Numba IR Stages</a></li>
+<li><a class="reference internal" href="#numba-intermediate-representations">Numba Intermediate Representations</a><ul>
+<li><a class="reference internal" href="#python-ast-ir">Python AST IR</a></li>
+<li><a class="reference internal" href="#normalized-ir">Normalized IR</a><ul>
+<li><a class="reference internal" href="#issue-desugaring-comparisons">Issue: Desugaring comparisons</a><ul>
+<li><a class="reference internal" href="#proposal">Proposal</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#untyped-ir-in-ssa-form">Untyped IR in SSA form</a></li>
+<li><a class="reference internal" href="#typed-ir-in-ssa-form">Typed IR in SSA form</a></li>
+<li><a class="reference internal" href="#low-level-portable-ir">Low-level Portable IR</a></li>
+<li><a class="reference internal" href="#final-llvm-ir">Final LLVM IR</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#appendicies">Appendicies</a><ul>
+<li><a class="reference internal" href="#appendix-design-notes">Appendix: Design Notes</a><ul>
+<li><a class="reference internal" href="#closures">Closures</a><ul>
+<li><a class="reference internal" href="#parent-frames">Parent frames</a></li>
+<li><a class="reference internal" href="#alternative-explicit-parameterization">Alternative: Explicit parameterization</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#default-variable-and-keyword-arguments">Default, variable, and keyword arguments</a></li>
+<li><a class="reference internal" href="#iterators">Iterators</a><ul>
+<li><a class="reference internal" href="#iterators-in-the-untyped-ir">Iterators in the untyped IR</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#generators">Generators</a></li>
+<li><a class="reference internal" href="#global-and-nonlocal-variables">Global and nonlocal variables</a></li>
+<li><a class="reference internal" href="#exceptions-and-exception-handling">Exceptions and exception handling</a></li>
+<li><a class="reference internal" href="#decorators">Decorators</a></li>
+<li><a class="reference internal" href="#classes-and-objects">Classes and objects</a></li>
+<li><a class="reference internal" href="#namespaces">Namespaces</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#appendix-language-cross-reference">Appendix: Language Cross Reference</a><ul>
+<li><a class="reference internal" href="#expressions">Expressions</a></li>
+<li><a class="reference internal" href="#simple-statements">Simple statements</a><ul>
+<li><a class="reference internal" href="#expression-statements">Expression statements</a></li>
+<li><a class="reference internal" href="#assignment-statements">Assignment statements</a></li>
+<li><a class="reference internal" href="#the-assert-statement">The assert statement</a></li>
+<li><a class="reference internal" href="#the-pass-statement">The pass statement</a></li>
+<li><a class="reference internal" href="#the-del-statement">The del statement</a></li>
+<li><a class="reference internal" href="#the-return-statement">The return statement</a></li>
+<li><a class="reference internal" href="#the-yield-statement">The yield statement</a></li>
+<li><a class="reference internal" href="#the-raise-statement">The raise statement</a></li>
+<li><a class="reference internal" href="#the-break-statement">The break statement</a></li>
+<li><a class="reference internal" href="#the-continue-statement">The continue statement</a></li>
+<li><a class="reference internal" href="#the-import-statement">The import statement</a></li>
+<li><a class="reference internal" href="#the-global-statement">The global statement</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#compound-statements">Compound statements</a><ul>
+<li><a class="reference internal" href="#the-if-statement">The if statement</a></li>
+<li><a class="reference internal" href="#the-while-statement">The while statement</a></li>
+<li><a class="reference internal" href="#the-for-statement">The for statement</a></li>
+<li><a class="reference internal" href="#the-try-statement">The try statement</a></li>
+<li><a class="reference internal" href="#the-with-statement">The with statement</a></li>
+<li><a class="reference internal" href="#function-definitions">Function definitions</a></li>
+<li><a class="reference internal" href="#class-definitions">Class definitions</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#top-level-components">Top-level components</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#appendix-other-design-notes">Appendix: Other Design Notes</a><ul>
+<li><a class="reference internal" href="#use-of-schemas">Use of Schemas</a><ul>
+<li><a class="reference internal" href="#executable-ir">Executable IR</a></li>
+<li><a class="reference internal" href="#building-a-call-graph">Building a Call Graph</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="spec.html"
+                        title="previous chapter">Numba Language Specification</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="roadmap.html"
+                        title="next chapter">Numba Roadmap</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/ir.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox">
+  <h3>Quick search</h3>
+  <form class="search form-search" action="search.html" method="get">
+      <div class="input-append">
+        <input type="text" class="search-query" name="q">
+        <input type="submit" class="btn" value="Go" />
+      </div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+  </div>
+</div> 
+        
+
+        <div class="span9">
+          <div class="document">
+            <div class="documentwrapper">
+              <div class="bodywrapper">
+                <div class="body">
+                  
+  <div class="section" id="numba-intermediate-representation-specification">
+<h1>Numba Intermediate Representation Specification<a class="headerlink" href="#numba-intermediate-representation-specification" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="numba-ir-stages">
+<h2>Numba IR Stages<a class="headerlink" href="#numba-ir-stages" title="Permalink to this headline">¶</a></h2>
+<p>We provide different entry and exit points in the Numba architecture
+to facilitate reuse. These entry points also allow for further
+decoupling (modularity) of the Numba architecture. The Numba
+architecture is broken into several stages, or compilation passes.  At
+the boundaries between each compilation stage, we define a specific
+intermediate representation (IR).</p>
+<p>The Numba intermediate representations (IR&#8217;s) are, from high-level to
+low-level, as follows:</p>
+<blockquote>
+<div><ul>
+<li><p class="first">The <a class="reference internal" href="#python-ast-ir">Python AST IR</a> (input to a numba frontend)</p>
+</li>
+<li><p class="first"><a class="reference internal" href="#normalized-ir">Normalized IR</a></p>
+<blockquote>
+<div><ul class="simple">
+<li>Like a Python AST, but contains normalized structures
+(assignments, comparisons, list comprehensions, etc)</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first"><a class="reference internal" href="#untyped-ir-in-ssa-form">Untyped IR in SSA form</a></p>
+<blockquote>
+<div><ul class="simple">
+<li>Expanded control flow (with annotations)</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first"><a class="reference internal" href="#typed-ir-in-ssa-form">Typed IR in SSA form</a></p>
+</li>
+<li><p class="first"><a class="reference internal" href="#low-level-portable-ir">Low-level Portable IR</a></p>
+</li>
+<li><p class="first"><a class="reference internal" href="#final-llvm-ir">Final LLVM IR</a>, the final input for LLVM. This IR is not portable
+since the sizes of types are fixed.</p>
+</li>
+</ul>
+</div></blockquote>
+<p>All IRs except the last are portable across machine architectures.
+We get the following options for rewrites:</p>
+<p class="graphviz">
+<img src="_images/graphviz-6cd24634c65c4099c20a116b1cbc0ff053f71958.png" alt="digraph stages {
+&quot;Python AST&quot; -&gt; Normalized
+Normalized -&gt; &quot;Stage 1&quot;
+&quot;Stage 1&quot; -&gt; &quot;Untyped SSA&quot;
+&quot;Untyped SSA&quot; -&gt; &quot;Stage 2&quot;
+&quot;Stage 2&quot; -&gt; &quot;Typed SSA IR&quot;
+&quot;Typed SSA IR&quot; -&gt; &quot;Stage 3&quot;
+&quot;Stage 3&quot; -&gt; &quot;Low-level IR&quot;
+&quot;Low-level IR&quot; -&gt; &quot;Stage 4&quot;
+&quot;Stage 4&quot; -&gt; &quot;Final LLVM&quot;
+}" />
+</p>
+<p>Each stage specifies a point for a series of IR transformations that together
+define the input for the next stage. Each rewrite may target a different IR stage:</p>
+<blockquote>
+<div><ul>
+<li><p class="first">The input to <cite>Stage 1</cite> is an AST with all high-level syntactic constructs
+left intact. This allows high-level transformations that operate or
+expand most suitable at an abstract syntax level.</p>
+</li>
+<li><p class="first">The input to <cite>Stage 2</cite> is a Function with a sequence of basic blocks
+(expanded control flow), such that all control flow can be handled
+uniformly (and there may still be high-level annotations that signify
+where loops are (so that we don&#8217;t have to find them again from the
+dominator tree and CFG), where exceptions are raised and caught, etc).
+Def/use and variable merges are explicit.</p>
+<p>Expressions and statements are encoded in sequences of AST expression trees.
+Expressions result in implicit Values which can be referred to in subsequent
+expression trees without re-evaluation (we can replace the
+CloneNode/CloneableNode mechanisms that currently allow subtree sharing).</p>
+</li>
+<li><p class="first">The input to <cite>Stage 3</cite> is the same as to <cite>Stage 2</cite>, except that
+it additionally contains type information (and type promotions).</p>
+</li>
+<li><p class="first"><cite>Stage 4</cite> is a low-level three-address code representation that
+still has polymorphic operations, such as <tt class="docutils literal"><span class="pre">c</span> <span class="pre">=</span> <span class="pre">add(a,</span> <span class="pre">b)</span></tt>,
+where <tt class="docutils literal"><span class="pre">a</span></tt> and <tt class="docutils literal"><span class="pre">b</span></tt> can be operands of any scalar type. A final
+pass then lowers these constructs to specialized LLVM instructions.</p>
+</li>
+</ul>
+</div></blockquote>
+<p>IRs up to the low-level IR (input to <cite>Stage 4</cite>) should still contain explicit
+variable stores, so that passes can rewrite variable assignments to for instance
+assignments to struct or extension type instance members. Keeping stores and loads
+to and from these variables in the original order is important in the context
+of closures (or any function call which can modify a stack variable through a pointer).</p>
+<p>We must make sure to support preloads for variable definitions across basic
+blocks, e.g.:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">if</span> <span class="o">...</span><span class="p">:</span>
+    <span class="n">A</span> <span class="o">=</span> <span class="o">...</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">A</span> <span class="o">=</span> <span class="o">...</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="o">...</span><span class="p">):</span>
+    <span class="n">use</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>In this example we want to preload <tt class="docutils literal"><span class="pre">A.data</span></tt> (and <tt class="docutils literal"><span class="pre">a.strides[0]</span></tt>). This can
+probably work equally well if each expression value is an implicit definition
+and we have a way to find Values given a Phi. We then get:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">ValueC</span> <span class="o">=</span> <span class="n">BinOp</span><span class="p">(</span><span class="n">ValueA</span><span class="p">,</span> <span class="n">Add</span><span class="p">,</span> <span class="n">ValueB</span><span class="p">)</span>
+<span class="n">Store</span><span class="p">(</span><span class="n">Name</span><span class="p">(</span><span class="s">&#39;c&#39;</span><span class="p">),</span> <span class="n">ValueC</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Instead of:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">Assign</span><span class="p">(</span><span class="n">Name</span><span class="p">(</span><span class="s">&#39;c&#39;</span><span class="p">),</span> <span class="n">BinOp</span><span class="p">(</span><span class="n">Name</span><span class="p">(</span><span class="s">&#39;a&#39;</span><span class="p">),</span> <span class="n">Add</span><span class="p">,</span> <span class="n">Name</span><span class="p">(</span><span class="s">&#39;b&#39;</span><span class="p">)))</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="numba-intermediate-representations">
+<h2>Numba Intermediate Representations<a class="headerlink" href="#numba-intermediate-representations" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="python-ast-ir">
+<h3>Python AST IR<a class="headerlink" href="#python-ast-ir" title="Permalink to this headline">¶</a></h3>
+<p>Numba&#8217;s initial intermediate representation is Python abstract syntax
+as defined in Python&#8217;s <a class="reference external" href="http://docs.python.org/library/ast.html#abstract-grammar">ast</a> module documentation.  Note that this
+definition is specific to the version of Python being compiled.</p>
+<p>Numba must support <a class="reference external" href="http://docs.python.org/2/library/ast.html#abstract-grammar">Python 2 abstract syntax</a> (specifically versions
+2.6, and 2.7) for the foreseeable future.</p>
+</div>
+<div class="section" id="normalized-ir">
+<h3>Normalized IR<a class="headerlink" href="#normalized-ir" title="Permalink to this headline">¶</a></h3>
+<p>The normalized IR starts with the latest ASDL definition for <a class="reference external" href="http://docs.python.org/3/library/ast.html#abstract-grammar">Python
+3 abstract syntax</a>, but makes the following changes:</p>
+<blockquote>
+<div><ul>
+<li><p class="first">Python&#8217;s top-level module containers, defined in the <tt class="docutils literal"><span class="pre">mod</span></tt> sum
+type, are abandoned.  The Numba normalization stage will return
+one or more instances of the normalized <tt class="docutils literal"><span class="pre">stmt</span></tt> sum type.</p>
+</li>
+<li><p class="first">Constructs that modify the namespace may only reference a single
+name or syntactic name container.  These constructs include:</p>
+<blockquote>
+<div><ul class="simple">
+<li>global, nonlocal</li>
+<li>import, import from</li>
+<li>assignments</li>
+<li>del</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first">Expressions are un-flattened.  Operators on more than two
+sub-expressions are expanded into expression trees.  Comparison
+expressions on more than two sub-expressions will use temporaries
+and desugar into an expression tree.</p>
+</li>
+</ul>
+</div></blockquote>
+<p>Numba must translate Python 2 code into Python 3 constructs.
+Specifically, the following transformations should be made:</p>
+<blockquote>
+<div><ul class="simple">
+<li>Repr (backticks): Call(Name(&#8216;repr&#8217;), value)</li>
+<li>Print(...): Call(Name(&#8216;print&#8217;), ...)</li>
+<li>Exec(...): Call(Name(&#8216;exec&#8217;), ...)</li>
+<li>Subscript(..., slices, ...): Subscript(..., ExtSlice(slices), ...)</li>
+<li>Ellipsis (the slice): Ellipsis (the expression)</li>
+<li>With(...): ...</li>
+<li>Raise(...): ...</li>
+</ul>
+</div></blockquote>
+<p>The formal ASDL definition of the normalized IR is given here:
+<a class="reference external" href="https://github.com/numba/numba/blob/devel/numba/ir/Normalized.asdl">https://github.com/numba/numba/blob/devel/numba/ir/Normalized.asdl</a></p>
+<div class="section" id="issue-desugaring-comparisons">
+<h4>Issue: Desugaring comparisons<a class="headerlink" href="#issue-desugaring-comparisons" title="Permalink to this headline">¶</a></h4>
+<p>Do we introduce this as being a DAG already?  If not, we have a
+problem with desugarring comparisons.  We need assignment to bind
+temporaries, so we&#8217;re going to have a hard time handling the
+following:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">Compare</span><span class="p">(</span><span class="n">e0</span><span class="p">,</span> <span class="p">[</span><span class="n">Eq</span><span class="p">,</span> <span class="n">Lt</span><span class="p">],</span> <span class="p">[</span><span class="n">e1</span><span class="p">,</span> <span class="n">e2</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>We&#8217;d want &#8220;e1&#8221; to be the same sub-expression in the normalized IR:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">BoolOp</span><span class="p">(</span><span class="n">Compare</span><span class="p">(</span><span class="n">e0</span><span class="p">,</span> <span class="n">Eq</span><span class="p">,</span> <span class="n">e1</span><span class="p">),</span> <span class="n">And</span><span class="p">,</span> <span class="n">Compare</span><span class="p">(</span><span class="n">e1</span><span class="p">,</span> <span class="n">Lt</span><span class="p">,</span> <span class="n">e2</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>How do later stages detect this as being the same sub-expression, etc?</p>
+<div class="section" id="proposal">
+<h5>Proposal<a class="headerlink" href="#proposal" title="Permalink to this headline">¶</a></h5>
+<p>We should add the following constructor to expr:</p>
+<div class="highlight-python"><div class="highlight"><pre>expr |= Let(identifier name, expr def, expr user)
+</pre></div>
+</div>
+<p>Semantically, this is sugar for the following:</p>
+<div class="highlight-python"><div class="highlight"><pre>Call(Lambda(name, user), [def])
+</pre></div>
+</div>
+<p>Later stages of the compiler should not bother to do this desugaring.
+They should instead prefer to just create a SSA definition:</p>
+<div class="highlight-python"><div class="highlight"><pre>$name = [| def |]
+$0 = [| user |]
+</pre></div>
+</div>
+<p>In the case of a chained comparison, we can then make the following
+transformation:</p>
+<div class="highlight-python"><div class="highlight"><pre>Compare(e0, [cmp0, ...], [e1, ...])
+==&gt;
+Let(fresh0, e0,
+    Let(fresh1, e1,
+        BoolOp(Compare(fresh0, cmp0, fresh1), And,
+               Compare(fresh1, [...], [...]))
+</pre></div>
+</div>
+<p>Where <tt class="docutils literal"><span class="pre">fresh0</span></tt> and <tt class="docutils literal"><span class="pre">fresh1</span></tt> are fresh variable names.  The
+normalization transformer should recursively apply this rewrite until
+it reaches a case where the comparison is binary.</p>
+</div>
+</div>
+</div>
+<div class="section" id="untyped-ir-in-ssa-form">
+<h3>Untyped IR in SSA form<a class="headerlink" href="#untyped-ir-in-ssa-form" title="Permalink to this headline">¶</a></h3>
+<p>Given a normalized AST, we preserve the <tt class="docutils literal"><span class="pre">expr</span></tt> sum type, but perform
+control-flow analysis, data-flow analysis for phi-node injection,
+closure conversion, and lambda lifting.  These transformations result
+in the following intermediate representation:</p>
+<div class="highlight-python"><div class="highlight"><pre>mod = Module(unit* units)
+
+unit = CodeObject(..., block* blocks)
+     | DataObject(identifier label, expr init)
+
+block = Block(identifier id, defn* defns, tail tail_expr)
+
+tail = Jump(identifier target)
+     | If(expr test, identifier true_target, identifier false_target)
+     | Raise(expr exn)
+     | Return(expr result)
+
+defn = (identifier? def_id, expr value)
+
+expr |= Phi(phi_source* incomming)
+
+phi_source = (identifier in_block, expr in_val)
+</pre></div>
+</div>
+</div>
+<div class="section" id="typed-ir-in-ssa-form">
+<h3>Typed IR in SSA form<a class="headerlink" href="#typed-ir-in-ssa-form" title="Permalink to this headline">¶</a></h3>
+<p>The typed IR is similar to the untyped IR, except that every (sub-)expression
+is annotated with a type.</p>
+<p>Furthermore, the AST is augmented with
+<tt class="docutils literal"><span class="pre">Promotion</span></tt> terms, which promote a variable for a merge in a subsequent
+CFG block. E.g.:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># y_0</span>
+<span class="k">if</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">10</span><span class="p">:</span>
+    <span class="c"># block_if</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="mi">2</span>           <span class="c"># y_1</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="c"># block_else</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="mf">3.0</span>         <span class="c"># y_2</span>
+</pre></div>
+</div>
+<p>In the example above, <tt class="docutils literal"><span class="pre">block_if</span></tt> will contain a <tt class="docutils literal"><span class="pre">Promotion</span></tt> with a use
+of <tt class="docutils literal"><span class="pre">y_1</span></tt>, replacing all uses of <tt class="docutils literal"><span class="pre">y_1</span></tt> with the promotion value (which
+can only ever be a single phi node).</p>
+<p>I.e. we rewrite <tt class="docutils literal"><span class="pre">y_1</span> <span class="pre">=</span> <span class="pre">2</span></tt> to <tt class="docutils literal"><span class="pre">[</span> <span class="pre">y_1</span> <span class="pre">=</span> <span class="pre">2</span> <span class="pre">;</span> <span class="pre">%0</span> <span class="pre">=</span> <span class="pre">Promote(y_1,</span> <span class="pre">float)</span> <span class="pre">]</span></tt> and
+<tt class="docutils literal"><span class="pre">PhiNode(NameRef(y_1),</span> <span class="pre">NameRef(y_2))</span></tt> to <tt class="docutils literal"><span class="pre">PhiNode(%0,</span> <span class="pre">NameRef(y_2))</span></tt>.</p>
+<p>All types adhere themselves to a schema, e.g.:</p>
+<div class="highlight-python"><div class="highlight"><pre>type
+  = Array(type dtype, int ndim)
+  | Pointer(type base_type, int? size)
+  | ...
+</pre></div>
+</div>
+<p>Since the schema specifies the interfaces of the different nodes, users
+can supply their own node implementation (something we can do with the
+type system). Hence user-written classes can be automatically
+instantiated instead of generated ones. The code generator can still
+emit code for serialization.</p>
+</div>
+<div class="section" id="low-level-portable-ir">
+<h3>Low-level Portable IR<a class="headerlink" href="#low-level-portable-ir" title="Permalink to this headline">¶</a></h3>
+<p>The low-level portable IR is a low-level, platform agnostic, IR that:</p>
+<blockquote>
+<div><ul class="simple">
+<li>The IR contains only low-level, native types such as <tt class="docutils literal"><span class="pre">int_</span></tt>,
+<tt class="docutils literal"><span class="pre">long_</span></tt>, pointers, structs, etc. The notion of high-level
+concepts such as arrays or objects is gone.</li>
+</ul>
+</div></blockquote>
+<p>This portable IR could be <a class="reference external" href="http://llvm.org/docs/LangRef.html">LLVM IR</a> , which may still contain
+abstract or opaque types, and make calls to the Numba runtime
+library abstraction layer.</p>
+</div>
+<div class="section" id="final-llvm-ir">
+<h3>Final LLVM IR<a class="headerlink" href="#final-llvm-ir" title="Permalink to this headline">¶</a></h3>
+<p>The final LLVM IR is <a class="reference external" href="http://llvm.org/docs/LangRef.html">LLVM assembly code</a>, with no opaque types, and
+specialized to a specific machine target.</p>
+</div>
+</div>
+<div class="section" id="appendicies">
+<h2>Appendicies<a class="headerlink" href="#appendicies" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="appendix-design-notes">
+<h3>Appendix: Design Notes<a class="headerlink" href="#appendix-design-notes" title="Permalink to this headline">¶</a></h3>
+<p>This appendix looks at various features and discusses various options
+for representing these constructs across the compiler.</p>
+<div class="section" id="closures">
+<h4>Closures<a class="headerlink" href="#closures" title="Permalink to this headline">¶</a></h4>
+<p>A key step in the transition from the normalized AST IR to the untyped
+SSA IR is closure conversion.  For example, given the following code:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">closure_test</span><span class="p">(</span><span class="n">foo</span><span class="p">):</span>
+    <span class="n">foo</span> <span class="o">+=</span> <span class="mi">3</span>
+    <span class="k">def</span> <span class="nf">bar</span><span class="p">(</span><span class="n">baz</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">foo</span> <span class="o">+</span> <span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">-</span> <span class="n">global_z</span> <span class="o">*</span> <span class="n">foo</span><span class="p">)(</span><span class="n">baz</span><span class="p">)</span>
+    <span class="n">foo</span> <span class="o">+=</span> <span class="mi">2</span>
+    <span class="k">return</span> <span class="n">bar</span>
+</pre></div>
+</div>
+<p>Numba should generate SSA code equivalent to the following:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">__anonymous</span><span class="p">(</span><span class="n">af</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">-</span> <span class="n">global_z</span> <span class="o">*</span> <span class="n">af</span><span class="o">.</span><span class="n">foo</span>
+
+<span class="k">def</span> <span class="nf">__bar</span><span class="p">(</span><span class="n">af</span><span class="p">,</span> <span class="n">baz</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">af</span><span class="o">.</span><span class="n">foo</span> <span class="o">+</span> <span class="n">make_closure</span><span class="p">(</span><span class="n">__anonymous</span><span class="p">,</span>
+                                 <span class="n">make_activation_frame</span><span class="p">(</span><span class="n">af</span><span class="p">,</span> <span class="p">[]))(</span><span class="n">baz</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">closure_test</span><span class="p">(</span><span class="n">foo</span><span class="p">):</span>
+    <span class="n">af</span> <span class="o">=</span> <span class="n">make_activation_frame</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="p">[</span><span class="s">&#39;foo&#39;</span><span class="p">])</span>
+    <span class="n">af</span><span class="o">.</span><span class="n">foo</span> <span class="o">=</span> <span class="n">foo</span>
+    <span class="n">af</span><span class="o">.</span><span class="n">foo</span> <span class="o">+=</span> <span class="mi">3</span>
+    <span class="n">bar</span> <span class="o">=</span> <span class="n">make_closure</span><span class="p">(</span><span class="n">__bar</span><span class="p">,</span> <span class="n">af</span><span class="p">)</span>
+    <span class="n">af</span><span class="o">.</span><span class="n">foo</span> <span class="o">+=</span> <span class="mi">2</span>
+    <span class="k">return</span> <span class="n">bar</span>
+</pre></div>
+</div>
+<div class="section" id="parent-frames">
+<h5>Parent frames<a class="headerlink" href="#parent-frames" title="Permalink to this headline">¶</a></h5>
+<p>The above convention implies the following ASDL definition of the
+<tt class="docutils literal"><span class="pre">MakeFrame</span></tt> constructor (XXX cross reference discussion of IR expr
+language):</p>
+<div class="highlight-python"><div class="highlight"><pre>MakeFrame(expr parent, identifier* ids)
+</pre></div>
+</div>
+<p>The parent frame provides a name space for identifiers unresolved in
+the current frame.  If we employ this constructor, we diverge slightly
+from CPython.  CPython manages each unbound variable within a cell,
+and these cells are copied into a new frame object (which is a tuple
+in CPython) for every child closure constructed.</p>
+</div>
+<div class="section" id="alternative-explicit-parameterization">
+<h5>Alternative: Explicit parameterization<a class="headerlink" href="#alternative-explicit-parameterization" title="Permalink to this headline">¶</a></h5>
+<p>Another method for doing closure conversion involves parameterizing
+over all free variables, and is closer to CPython&#8217;s approach:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">__anonymous</span><span class="p">(</span><span class="n">foo</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">-</span> <span class="n">global_z</span> <span class="o">*</span> <span class="n">foo</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">__bar</span><span class="p">(</span><span class="n">foo</span><span class="p">,</span> <span class="n">baz</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">foo</span><span class="o">.</span><span class="n">load</span><span class="p">()</span> <span class="o">+</span> <span class="n">partial</span><span class="p">(</span><span class="n">__anonymous</span><span class="p">,</span> <span class="p">[</span><span class="n">foo</span><span class="p">])(</span><span class="n">baz</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">closure_test</span><span class="p">(</span><span class="n">foo</span><span class="p">):</span>
+    <span class="n">foo</span> <span class="o">=</span> <span class="n">make_cell</span><span class="p">(</span><span class="n">foo</span><span class="p">)</span>
+    <span class="n">foo</span> <span class="o">+=</span> <span class="mi">3</span>
+    <span class="n">bar</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">__bar</span><span class="p">,</span> <span class="p">[</span><span class="n">foo</span><span class="p">])</span>
+    <span class="n">foo</span> <span class="o">+=</span> <span class="mi">2</span>
+    <span class="k">return</span> <span class="n">bar</span>
+</pre></div>
+</div>
+<p>This approach uses partial function application to build closures.
+The resulting representation affords opportunities for optimizations
+such as rewriting <tt class="docutils literal"><span class="pre">partial(fn,</span> <span class="pre">[x])(y)</span></tt> to <tt class="docutils literal"><span class="pre">fn(x,</span> <span class="pre">y)</span></tt>.</p>
+</div>
+</div>
+<div class="section" id="default-variable-and-keyword-arguments">
+<h4>Default, variable, and keyword arguments<a class="headerlink" href="#default-variable-and-keyword-arguments" title="Permalink to this headline">¶</a></h4>
+<p>XXX Do we need a MakeFunction() expression constructor for supplying
+default arguments?  This follows from discussion of closures, above.</p>
+</div>
+<div class="section" id="iterators">
+<h4>Iterators<a class="headerlink" href="#iterators" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="iterators-in-the-untyped-ir">
+<h5>Iterators in the untyped IR<a class="headerlink" href="#iterators-in-the-untyped-ir" title="Permalink to this headline">¶</a></h5>
+<p>We considered three options for implementing iterators.  The first was
+to use exception handling constructs.  Given the following code:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">i</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">x</span> <span class="o">==</span> <span class="n">thingy</span><span class="p">:</span> <span class="k">break</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">bar</span><span class="p">()</span>
+<span class="n">baz</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Translation to the untyped IR could result in something like the
+following:</p>
+<div class="highlight-python"><div class="highlight"><pre>bb0: ...
+     $0 = Call(Constant(numba.ct.iter), [Name(&quot;i&quot;, Load())])
+     Try(bb1, [ExceptHandler(Constant(StopIteration), None, bb2)],
+         None, None)
+
+bb1: $1 = Call(Constant(numba.ct.next), [$0])
+     If(Compare($1, Eq(), Name(&quot;thingy&quot;, Load())), bb3, bb1)
+
+bb2: Call(Name(&quot;bar&quot;, Load()), [])
+     Jump(bb3)
+
+bb3: Call(name(&quot;baz&quot;, Load()), [])
+     ...
+</pre></div>
+</div>
+<p>The second option was defining a <tt class="docutils literal"><span class="pre">Next()</span></tt> terminator.  <tt class="docutils literal"><span class="pre">Next()</span></tt>
+could provide sugar for the special case where we are specifically
+waiting for a <tt class="docutils literal"><span class="pre">StopIteration</span></tt> exception:</p>
+<div class="highlight-python"><div class="highlight"><pre>bb0: ...
+     $0 = Call(Constant(numba.ct.iter), [Name(&quot;i&quot;, Load())])
+     Jump(bb1)
+
+bb1: Next(Name(&quot;x&quot;, Store()), $0, bb2, bb3)
+
+bb2: If(Compare(Name(&quot;x&quot;, Load()), Eq, Name(&quot;thingy&quot;, Load())), bb4, bb1)
+
+bb3: Call(Name(&quot;bar&quot;, Load()), [])
+     Jump(bb4)
+
+bb4: Call(Name(&quot;baz&quot;, Load()), [])
+     ...
+</pre></div>
+</div>
+<p>We loose SSA information, but provide opportunity for more readily
+recognizing for loops.</p>
+<p>The third option was to follow the CPython VM semantics of
+<tt class="docutils literal"><span class="pre">FOR_ITER</span></tt>, where we define <tt class="docutils literal"><span class="pre">Next()</span></tt> as an expression constructor
+which can either return a result or some sentinel (specific to
+CPython, this is the <tt class="docutils literal"><span class="pre">NULL</span></tt> pointer):</p>
+<div class="highlight-python"><div class="highlight"><pre>bb0: ...
+     $0 = Iter(Name(&quot;i&quot;, Load()))
+     Jump(bb1)
+
+bb1: $1 = Next($0)
+     If(Compare($1, Neq(), Constant(numba.ct.NULL)), bb2, bb3)
+
+bb2: If(Compare($1, Eq(), Name(&quot;thingy&quot;, Load())), bb3, bb1)
+
+bb3: Call(Name(&quot;bar&quot;, Load()), [])
+     Jump(bb4)
+
+bb4: Call(name(&quot;baz&quot;, Load()), [])
+     ...
+</pre></div>
+</div>
+<p>This final output looks very similar to the output of the second
+option, but prevents us from having to use the <tt class="docutils literal"><span class="pre">Name()</span></tt> expression
+for anything other than global and parameter variables.</p>
+</div>
+</div>
+<div class="section" id="generators">
+<h4>Generators<a class="headerlink" href="#generators" title="Permalink to this headline">¶</a></h4>
+<p>The Numba Google group&#8217;s <a class="reference external" href="https://groups.google.com/a/continuum.io/forum/#!topic/numba-users/gaVgArRrXqw">generator discussion</a> identified two
+methods for implementing generators in Numba.  These can roughly be
+summarized as &#8220;enclosing everything in a big C-like switch statement&#8221;,
+and &#8220;use goroutines&#8221;.  The following web pages elaborate on these
+techniques:</p>
+<ul class="simple">
+<li><a class="reference external" href="http://www.chiark.greenend.org.uk/~sgtatham/coroutines.html">http://www.chiark.greenend.org.uk/~sgtatham/coroutines.html</a></li>
+<li><a class="reference external" href="https://code.google.com/p/try-catch-finally/wiki/GoInternals">https://code.google.com/p/try-catch-finally/wiki/GoInternals</a></li>
+</ul>
+</div>
+<div class="section" id="global-and-nonlocal-variables">
+<h4>Global and nonlocal variables<a class="headerlink" href="#global-and-nonlocal-variables" title="Permalink to this headline">¶</a></h4>
+<p>Given:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">z</span> <span class="o">=</span> <span class="mi">42</span>
+<span class="k">def</span> <span class="nf">foo</span><span class="p">():</span>
+    <span class="k">global</span> <span class="n">z</span>
+    <span class="n">bar</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="mi">99</span>
+</pre></div>
+</div>
+<p>We could generate the following in untyped IR:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">[</span>
+  <span class="n">DataObject</span><span class="p">(</span><span class="s">&quot;z&quot;</span><span class="p">,</span> <span class="n">Constant</span><span class="p">(</span><span class="mi">42</span><span class="p">)),</span>
+  <span class="n">CodeObject</span><span class="p">(</span><span class="s">&quot;foo&quot;</span><span class="p">,</span> <span class="p">([],</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="o">...</span><span class="p">),</span> <span class="p">[</span>
+    <span class="n">Block</span><span class="p">(</span><span class="s">&quot;entry&quot;</span><span class="p">,</span> <span class="p">[</span>
+        <span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="n">Call</span><span class="p">(</span><span class="n">Name</span><span class="p">(</span><span class="s">&quot;bar&quot;</span><span class="p">,</span> <span class="n">Load</span><span class="p">()),</span> <span class="p">[</span><span class="n">LoadGlobal</span><span class="p">(</span><span class="s">&quot;z&quot;</span><span class="p">)])),</span>
+        <span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="n">StoreGlobal</span><span class="p">(</span><span class="s">&quot;z&quot;</span><span class="p">,</span> <span class="n">Constant</span><span class="p">(</span><span class="mi">99</span><span class="p">)))</span>
+      <span class="p">],</span> <span class="n">Return</span><span class="p">(</span><span class="n">Constant</span><span class="p">(</span><span class="bp">None</span><span class="p">)))])</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="exceptions-and-exception-handling">
+<h4>Exceptions and exception handling<a class="headerlink" href="#exceptions-and-exception-handling" title="Permalink to this headline">¶</a></h4>
+<p>Both the raise and try-except-finally language constructs map into the
+untyped SSA IR as basic-block terminators:</p>
+<div class="highlight-python"><div class="highlight"><pre>tail = ...
+     | Raise(expr exn)
+     | Try(identifier body,
+           excepthandler* handlers,
+           identifier? orelse,
+           identifier? finalbody)
+
+...
+
+excepthandler = ExceptHandler(expr *types,
+                              identifier? name,
+                              identifier body)
+                attributes (int lineno, int col_offset)
+</pre></div>
+</div>
+<p>In the low-level IR, these constructs lower into Numba run-time calls:</p>
+<div class="highlight-python"><div class="highlight"><pre>bb0:  ...
+      Try(&#39;bb1&#39;, [ExceptHandler([ty0,...], &#39;name0&#39;, &#39;bb2&#39;),
+                  ...
+                  ExceptHandler([tyn,...], &#39;namen&#39;, &#39;bbn0&#39;)],
+          &#39;bbn1&#39;, &#39;bbn2&#39;)
+bb1:  ...
+      Jump(&#39;bbn2&#39;)
+bb2:  ...
+      Jump(&#39;bbn2&#39;)
+...
+bbn0: ...
+      Jump(&#39;bbn2&#39;)
+bbn1: ...
+      Jump(&#39;bbn2&#39;)
+bbn2: ...
+</pre></div>
+</div>
+<p>Goes to:</p>
+<div class="highlight-python"><div class="highlight"><pre>bb0:  ...
+      $0 = SetupTry()
+      If($0, &#39;bb1&#39;, &#39;bb2&#39;)
+bb1:  ...
+      Jump(&#39;bbn2&#39;)
+bb2:  $1 = TestExn([ty0, ...])
+      If($1, &#39;bbx2&#39;, &#39;bb3&#39;)
+bbx2: $name0 = GetExn()
+      ...
+      Jump(&#39;bbn2&#39;)
+...
+bbn0: $2 = TestExn([tyn, ...])
+      If($2, &#39;bbxn&#39;, &#39;bbn1&#39;)
+bbxn: $namen = GetExn()
+      ...
+      Jump(&#39;bbn2&#39;)
+bbn1: GetExn()
+      ...
+      Jump(&#39;bbn2&#39;)
+bbn2: ...
+</pre></div>
+</div>
+</div>
+<div class="section" id="decorators">
+<h4>Decorators<a class="headerlink" href="#decorators" title="Permalink to this headline">¶</a></h4>
+</div>
+<div class="section" id="classes-and-objects">
+<h4>Classes and objects<a class="headerlink" href="#classes-and-objects" title="Permalink to this headline">¶</a></h4>
+</div>
+<div class="section" id="namespaces">
+<h4>Namespaces<a class="headerlink" href="#namespaces" title="Permalink to this headline">¶</a></h4>
+</div>
+</div>
+<div class="section" id="appendix-language-cross-reference">
+<h3>Appendix: Language Cross Reference<a class="headerlink" href="#appendix-language-cross-reference" title="Permalink to this headline">¶</a></h3>
+<p>The following sections follow the <a class="reference external" href="http://docs.python.org/3/reference/index.html">Python Language Reference</a>, and
+provide notes as on how the various Numba intermediate representations
+support the Python language.</p>
+<div class="section" id="expressions">
+<h4>Expressions<a class="headerlink" href="#expressions" title="Permalink to this headline">¶</a></h4>
+</div>
+<div class="section" id="simple-statements">
+<h4>Simple statements<a class="headerlink" href="#simple-statements" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="expression-statements">
+<h5>Expression statements<a class="headerlink" href="#expression-statements" title="Permalink to this headline">¶</a></h5>
+</div>
+<div class="section" id="assignment-statements">
+<h5>Assignment statements<a class="headerlink" href="#assignment-statements" title="Permalink to this headline">¶</a></h5>
+</div>
+<div class="section" id="the-assert-statement">
+<h5>The assert statement<a class="headerlink" href="#the-assert-statement" title="Permalink to this headline">¶</a></h5>
+</div>
+<div class="section" id="the-pass-statement">
+<h5>The pass statement<a class="headerlink" href="#the-pass-statement" title="Permalink to this headline">¶</a></h5>
+</div>
+<div class="section" id="the-del-statement">
+<h5>The del statement<a class="headerlink" href="#the-del-statement" title="Permalink to this headline">¶</a></h5>
+</div>
+<div class="section" id="the-return-statement">
+<h5>The return statement<a class="headerlink" href="#the-return-statement" title="Permalink to this headline">¶</a></h5>
+</div>
+<div class="section" id="the-yield-statement">
+<h5>The yield statement<a class="headerlink" href="#the-yield-statement" title="Permalink to this headline">¶</a></h5>
+</div>
+<div class="section" id="the-raise-statement">
+<h5>The raise statement<a class="headerlink" href="#the-raise-statement" title="Permalink to this headline">¶</a></h5>
+</div>
+<div class="section" id="the-break-statement">
+<h5>The break statement<a class="headerlink" href="#the-break-statement" title="Permalink to this headline">¶</a></h5>
+</div>
+<div class="section" id="the-continue-statement">
+<h5>The continue statement<a class="headerlink" href="#the-continue-statement" title="Permalink to this headline">¶</a></h5>
+</div>
+<div class="section" id="the-import-statement">
+<h5>The import statement<a class="headerlink" href="#the-import-statement" title="Permalink to this headline">¶</a></h5>
+</div>
+<div class="section" id="the-global-statement">
+<h5>The global statement<a class="headerlink" href="#the-global-statement" title="Permalink to this headline">¶</a></h5>
+</div>
+</div>
+<div class="section" id="compound-statements">
+<h4>Compound statements<a class="headerlink" href="#compound-statements" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="the-if-statement">
+<h5>The if statement<a class="headerlink" href="#the-if-statement" title="Permalink to this headline">¶</a></h5>
+</div>
+<div class="section" id="the-while-statement">
+<h5>The while statement<a class="headerlink" href="#the-while-statement" title="Permalink to this headline">¶</a></h5>
+</div>
+<div class="section" id="the-for-statement">
+<h5>The for statement<a class="headerlink" href="#the-for-statement" title="Permalink to this headline">¶</a></h5>
+</div>
+<div class="section" id="the-try-statement">
+<h5>The try statement<a class="headerlink" href="#the-try-statement" title="Permalink to this headline">¶</a></h5>
+</div>
+<div class="section" id="the-with-statement">
+<h5>The with statement<a class="headerlink" href="#the-with-statement" title="Permalink to this headline">¶</a></h5>
+</div>
+<div class="section" id="function-definitions">
+<h5>Function definitions<a class="headerlink" href="#function-definitions" title="Permalink to this headline">¶</a></h5>
+</div>
+<div class="section" id="class-definitions">
+<h5>Class definitions<a class="headerlink" href="#class-definitions" title="Permalink to this headline">¶</a></h5>
+</div>
+</div>
+<div class="section" id="top-level-components">
+<h4>Top-level components<a class="headerlink" href="#top-level-components" title="Permalink to this headline">¶</a></h4>
+</div>
+</div>
+<div class="section" id="appendix-other-design-notes">
+<h3>Appendix: Other Design Notes<a class="headerlink" href="#appendix-other-design-notes" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="use-of-schemas">
+<h4>Use of Schemas<a class="headerlink" href="#use-of-schemas" title="Permalink to this headline">¶</a></h4>
+<p>We can use our schemas to:</p>
+<blockquote>
+<div><ul>
+<li><p class="first">Validate IR instances</p>
+</li>
+<li><p class="first">Generate Python AST classes with typed properties and fast
+visitor dispatching</p>
+</li>
+<li><p class="first">Generate Higher- or Lower-level LLVM IR</p>
+</li>
+<li><p class="first">Generate conversion code to and from an ATerm representation</p>
+</li>
+<li><p class="first">Generate a flat representation. E.g. a form of Three Address Code</p>
+</li>
+<li><p class="first">Generate an implementation in other languages that can load a
+serialized representation and construct an AST in that langauge</p>
+</li>
+<li><p class="first">Generate type definitions and serialization routines in
+other languages.</p>
+<blockquote>
+<div><div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This can help other languages target Numba as
+a backend compiler more easily, since they can
+build up the IR using in-memory data structures for
+the IR most suitable to their needs.</p>
+</div>
+</div></blockquote>
+</li>
+<li><p class="first">Generate definitions for use in Attribute Grammars</p>
+</li>
+<li><p class="first">Executable IR (<a class="reference internal" href="#executable"><em>Executable IR</em></a>)</p>
+</li>
+</ul>
+</div></blockquote>
+<div class="section" id="executable-ir">
+<span id="executable"></span><h5>Executable IR<a class="headerlink" href="#executable-ir" title="Permalink to this headline">¶</a></h5>
+<p>There are two ideas:</p>
+<blockquote>
+<div><ul class="simple">
+<li>Write a simple interpreter</li>
+<li>Generate source code containing calls to a runtime library</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="building-a-call-graph">
+<h5>Building a Call Graph<a class="headerlink" href="#building-a-call-graph" title="Permalink to this headline">¶</a></h5>
+<p>This will be useful to use LLVM for in order to:</p>
+<blockquote>
+<div><ul class="simple">
+<li>Efficiently infer types of direct or indirect uses of recursion for autojit
+functions or methods</li>
+<li>Detect such recusion by letting LLVM find the SCCs in the call graph, and
+resolving in an analogous and cooperative manner to how we resolve the type graph</li>
+</ul>
+</div></blockquote>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        
+      </div><!-- /row -->
+
+      <!-- row -->
+      <div class="row-fluid">
+<div class="related navbar ">
+  <div class="navbar-inner">
+    <ul class="nav pull-right">
+      
+        <li><a href="genindex.html" title="General Index" >index</a></li>
+        <li><a href="roadmap.html" title="Numba Roadmap" >next</a></li>
+        <li><a href="spec.html" title="Numba Language Specification" >previous</a></li>
+        <li><a href="index.html">numba 0.13.2 documentation</a></li> 
+      
+    </ul>
+  </div>
+</div>
+      </div><!-- /row -->
+
+      <!-- footer -->
+      <footer>
+          &copy; Copyright 2012-2014, Continuum Analytics.
+        Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.2.
+      </footer>
+      <!-- /footer -->
+
+    </div>
+    <!-- /container -->
+
+  </body>
+</html>

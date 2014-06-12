@@ -1,0 +1,1929 @@
+<!DOCTYPE html>
+
+
+
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+    <title>numba.targets package &mdash; numba 0.13.2 documentation</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    
+<link rel="stylesheet" href="../_static/css/basicstrap-base.css" type="text/css" />
+<link rel="stylesheet" href="../_static/css/bootstrap.min.css" type="text/css" />
+<link rel="stylesheet" href="../_static/css/font-awesome.min.css">
+<!--[if IE 7]>
+<link rel="stylesheet" href="../_static/css/font-awesome-ie7.min.css">
+<![endif]-->
+<style type="text/css">
+  body {
+    padding-top: 60px;
+    padding-bottom: 40px;
+  }
+}
+</style>
+<link rel="stylesheet" href="../_static/basicstrap.css" type="text/css" />
+<link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+<link rel="stylesheet" href="../_static/css/bootstrap-responsive.min.css" type="text/css" />
+    
+<script type="text/javascript">
+  var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:    '../',
+            VERSION:     '0.13.2',
+            COLLAPSE_INDEX: false,
+            FILE_SUFFIX: '.html',
+            HAS_SOURCE:  true
+  };
+</script>
+<script type="text/javascript" src="../_static/js/jquery.min.js"></script>
+<script type="text/javascript" src="../_static/underscore.js"></script>
+<script type="text/javascript" src="../_static/doctools.js"></script>
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/javascript" src="../_static/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+  $(document).ready(function(){
+    $('.show-sidebar').click(function(e) {
+       e.preventDefault();
+       if ($(".show-sidebar").html() == "Open Table Of Contents") {
+          $('.for-mobile').removeClass('hidden-phone');
+          $(".show-sidebar").html("Close Table Of Contents");
+       } else {
+          $(".show-sidebar").html("Open Table Of Contents");
+       }
+    });
+  });
+</script>
+    <link rel="top" title="numba 0.13.2 documentation" href="../index.html" />
+    <link rel="up" title="Numba Module Reference" href="modules.html" />
+    <link rel="next" title="numba.typeconv package" href="numba.typeconv.html" />
+    <link rel="prev" title="numba.servicelib package" href="numba.servicelib.html" /> 
+  </head>
+  <body>
+    <div class="navbar navbar-fixed-top ">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="../index.html">numba 0.13.2 documentation</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav pull-right">
+              
+                <li>
+                <a href="../genindex.html" title="General Index" accesskey="I">index</a>
+                </li>
+                <li>
+                <a href="../py-modindex.html" title="Python Module Index" >modules</a>
+                </li>
+                <li>
+                <a href="numba.typeconv.html" title="numba.typeconv package" accesskey="N">next</a>
+                </li>
+                <li>
+                <a href="numba.servicelib.html" title="numba.servicelib package" accesskey="P">previous</a>
+                </li>
+                <li>
+                <a href="modules.html" accesskey="U">Numba Module Reference</a>
+                </li>
+              
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <!-- container -->
+    <div class="container-fluid">
+
+
+      
+      <div class="row-fluid hidden-desktop hidden-tablet">
+      
+<div class="span3 ">
+  <a class="visible-phone btn btn-small show-sidebar" data-toggle="collapse" data-target=".for-mobile">Open Table Of Contents</a>
+  <div class="for-mobile sidebar hidden-phone">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">numba.targets package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-numba.targets.base">numba.targets.base module</a></li>
+<li><a class="reference internal" href="#module-numba.targets.builtins">numba.targets.builtins module</a></li>
+<li><a class="reference internal" href="#module-numba.targets.cpu">numba.targets.cpu module</a></li>
+<li><a class="reference internal" href="#module-numba.targets.descriptors">numba.targets.descriptors module</a></li>
+<li><a class="reference internal" href="#module-numba.targets.imputils">numba.targets.imputils module</a></li>
+<li><a class="reference internal" href="#module-numba.targets.intrinsics">numba.targets.intrinsics module</a></li>
+<li><a class="reference internal" href="#module-numba.targets.mathimpl">numba.targets.mathimpl module</a></li>
+<li><a class="reference internal" href="#module-numba.targets.npyimpl">numba.targets.npyimpl module</a></li>
+<li><a class="reference internal" href="#module-numba.targets.operatorimpl">numba.targets.operatorimpl module</a></li>
+<li><a class="reference internal" href="#module-numba.targets.options">numba.targets.options module</a></li>
+<li><a class="reference internal" href="#module-numba.targets.printimpl">numba.targets.printimpl module</a></li>
+<li><a class="reference internal" href="#module-numba.targets.registry">numba.targets.registry module</a></li>
+<li><a class="reference internal" href="#module-numba.targets">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="numba.servicelib.html"
+                        title="previous chapter">numba.servicelib package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="numba.typeconv.html"
+                        title="next chapter">numba.typeconv package</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/modules/numba.targets.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox">
+  <h3>Quick search</h3>
+  <form class="search form-search" action="../search.html" method="get">
+      <div class="input-append">
+        <input type="text" class="search-query" name="q">
+        <input type="submit" class="btn" value="Go" />
+      </div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+  </div>
+</div>
+      </div>
+      
+
+      <!-- row -->
+      <div class="row-fluid">
+         
+<div class="span3 visible-desktop visible-tablet">
+  <div class=" sidebar hidden-phone">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">numba.targets package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-numba.targets.base">numba.targets.base module</a></li>
+<li><a class="reference internal" href="#module-numba.targets.builtins">numba.targets.builtins module</a></li>
+<li><a class="reference internal" href="#module-numba.targets.cpu">numba.targets.cpu module</a></li>
+<li><a class="reference internal" href="#module-numba.targets.descriptors">numba.targets.descriptors module</a></li>
+<li><a class="reference internal" href="#module-numba.targets.imputils">numba.targets.imputils module</a></li>
+<li><a class="reference internal" href="#module-numba.targets.intrinsics">numba.targets.intrinsics module</a></li>
+<li><a class="reference internal" href="#module-numba.targets.mathimpl">numba.targets.mathimpl module</a></li>
+<li><a class="reference internal" href="#module-numba.targets.npyimpl">numba.targets.npyimpl module</a></li>
+<li><a class="reference internal" href="#module-numba.targets.operatorimpl">numba.targets.operatorimpl module</a></li>
+<li><a class="reference internal" href="#module-numba.targets.options">numba.targets.options module</a></li>
+<li><a class="reference internal" href="#module-numba.targets.printimpl">numba.targets.printimpl module</a></li>
+<li><a class="reference internal" href="#module-numba.targets.registry">numba.targets.registry module</a></li>
+<li><a class="reference internal" href="#module-numba.targets">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="numba.servicelib.html"
+                        title="previous chapter">numba.servicelib package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="numba.typeconv.html"
+                        title="next chapter">numba.typeconv package</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/modules/numba.targets.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox">
+  <h3>Quick search</h3>
+  <form class="search form-search" action="../search.html" method="get">
+      <div class="input-append">
+        <input type="text" class="search-query" name="q">
+        <input type="submit" class="btn" value="Go" />
+      </div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+  </div>
+</div> 
+        
+
+        <div class="span9">
+          <div class="document">
+            <div class="documentwrapper">
+              <div class="bodywrapper">
+                <div class="body">
+                  
+  <div class="section" id="numba-targets-package">
+<h1>numba.targets package<a class="headerlink" href="#numba-targets-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-numba.targets.base">
+<span id="numba-targets-base-module"></span><h2>numba.targets.base module<a class="headerlink" href="#module-numba.targets.base" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="numba.targets.base.BaseContext">
+<em class="property">class </em><tt class="descclassname">numba.targets.base.</tt><tt class="descname">BaseContext</tt><big>(</big><em>typing_context</em><big>)</big><a class="headerlink" href="#numba.targets.base.BaseContext" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Most objects are lowered as plain-old-data structure in the generated
+llvm.  They are passed around by reference (a pointer to the structure).
+Only POD structure can life across function boundaries by copying the
+data.</p>
+<dl class="method">
+<dt id="numba.targets.base.BaseContext.add_exception">
+<tt class="descname">add_exception</tt><big>(</big><em>exc</em><big>)</big><a class="headerlink" href="#numba.targets.base.BaseContext.add_exception" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.targets.base.BaseContext.add_libs">
+<tt class="descname">add_libs</tt><big>(</big><em>libs</em><big>)</big><a class="headerlink" href="#numba.targets.base.BaseContext.add_libs" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.targets.base.BaseContext.call_class_method">
+<tt class="descname">call_class_method</tt><big>(</big><em>builder</em>, <em>func</em>, <em>signature</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.base.BaseContext.call_class_method" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.targets.base.BaseContext.call_external_function">
+<tt class="descname">call_external_function</tt><big>(</big><em>builder</em>, <em>callee</em>, <em>argtys</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.base.BaseContext.call_external_function" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.targets.base.BaseContext.call_function">
+<tt class="descname">call_function</tt><big>(</big><em>builder</em>, <em>callee</em>, <em>resty</em>, <em>argtys</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.base.BaseContext.call_function" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.targets.base.BaseContext.call_function_pointer">
+<tt class="descname">call_function_pointer</tt><big>(</big><em>builder</em>, <em>funcptr</em>, <em>signature</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.base.BaseContext.call_function_pointer" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.targets.base.BaseContext.cast">
+<tt class="descname">cast</tt><big>(</big><em>builder</em>, <em>val</em>, <em>fromty</em>, <em>toty</em><big>)</big><a class="headerlink" href="#numba.targets.base.BaseContext.cast" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.targets.base.BaseContext.debug_print">
+<tt class="descname">debug_print</tt><big>(</big><em>builder</em>, <em>text</em><big>)</big><a class="headerlink" href="#numba.targets.base.BaseContext.debug_print" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.targets.base.BaseContext.declare_external_function">
+<tt class="descname">declare_external_function</tt><big>(</big><em>module</em>, <em>fndesc</em><big>)</big><a class="headerlink" href="#numba.targets.base.BaseContext.declare_external_function" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.targets.base.BaseContext.declare_function">
+<tt class="descname">declare_function</tt><big>(</big><em>module</em>, <em>fndesc</em><big>)</big><a class="headerlink" href="#numba.targets.base.BaseContext.declare_function" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.targets.base.BaseContext.get_abi_sizeof">
+<tt class="descname">get_abi_sizeof</tt><big>(</big><em>lty</em><big>)</big><a class="headerlink" href="#numba.targets.base.BaseContext.get_abi_sizeof" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.targets.base.BaseContext.get_argument_type">
+<tt class="descname">get_argument_type</tt><big>(</big><em>ty</em><big>)</big><a class="headerlink" href="#numba.targets.base.BaseContext.get_argument_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.targets.base.BaseContext.get_argument_value">
+<tt class="descname">get_argument_value</tt><big>(</big><em>builder</em>, <em>ty</em>, <em>val</em><big>)</big><a class="headerlink" href="#numba.targets.base.BaseContext.get_argument_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Argument representation to local value representation</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.targets.base.BaseContext.get_arguments">
+<tt class="descname">get_arguments</tt><big>(</big><em>func</em><big>)</big><a class="headerlink" href="#numba.targets.base.BaseContext.get_arguments" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.targets.base.BaseContext.get_attribute">
+<tt class="descname">get_attribute</tt><big>(</big><em>val</em>, <em>typ</em>, <em>attr</em><big>)</big><a class="headerlink" href="#numba.targets.base.BaseContext.get_attribute" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.targets.base.BaseContext.get_constant">
+<tt class="descname">get_constant</tt><big>(</big><em>ty</em>, <em>val</em><big>)</big><a class="headerlink" href="#numba.targets.base.BaseContext.get_constant" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.targets.base.BaseContext.get_constant_null">
+<tt class="descname">get_constant_null</tt><big>(</big><em>ty</em><big>)</big><a class="headerlink" href="#numba.targets.base.BaseContext.get_constant_null" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.targets.base.BaseContext.get_constant_struct">
+<tt class="descname">get_constant_struct</tt><big>(</big><em>builder</em>, <em>ty</em>, <em>val</em><big>)</big><a class="headerlink" href="#numba.targets.base.BaseContext.get_constant_struct" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.targets.base.BaseContext.get_constant_undef">
+<tt class="descname">get_constant_undef</tt><big>(</big><em>ty</em><big>)</big><a class="headerlink" href="#numba.targets.base.BaseContext.get_constant_undef" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.targets.base.BaseContext.get_data_type">
+<tt class="descname">get_data_type</tt><big>(</big><em>ty</em><big>)</big><a class="headerlink" href="#numba.targets.base.BaseContext.get_data_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a data representation of the type</p>
+<p>Returns None if it is an opaque pointer</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.targets.base.BaseContext.get_dummy_type">
+<tt class="descname">get_dummy_type</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.targets.base.BaseContext.get_dummy_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.targets.base.BaseContext.get_dummy_value">
+<tt class="descname">get_dummy_value</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.targets.base.BaseContext.get_dummy_value" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.targets.base.BaseContext.get_executable">
+<tt class="descname">get_executable</tt><big>(</big><em>func</em>, <em>fndesc</em><big>)</big><a class="headerlink" href="#numba.targets.base.BaseContext.get_executable" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.targets.base.BaseContext.get_external_function_type">
+<tt class="descname">get_external_function_type</tt><big>(</big><em>fndesc</em><big>)</big><a class="headerlink" href="#numba.targets.base.BaseContext.get_external_function_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.targets.base.BaseContext.get_function">
+<tt class="descname">get_function</tt><big>(</big><em>fn</em>, <em>sig</em><big>)</big><a class="headerlink" href="#numba.targets.base.BaseContext.get_function" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.targets.base.BaseContext.get_function_type">
+<tt class="descname">get_function_type</tt><big>(</big><em>fndesc</em><big>)</big><a class="headerlink" href="#numba.targets.base.BaseContext.get_function_type" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>Returns: -2 for return none in native function;</dt>
+<dd><dl class="first docutils">
+<dt>-1 for failure with python exception set;</dt>
+<dd>0 for success;</dd>
+</dl>
+<p class="last">&gt;0 for user error code.</p>
+</dd>
+</dl>
+<p>Return value is passed by reference as the first argument.
+It MUST NOT be used if the function is in nopython mode.
+Actual arguments starts at the 2nd argument position.
+Caller is responsible to allocate space for return value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.targets.base.BaseContext.get_python_api">
+<tt class="descname">get_python_api</tt><big>(</big><em>builder</em><big>)</big><a class="headerlink" href="#numba.targets.base.BaseContext.get_python_api" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.targets.base.BaseContext.get_return_status">
+<tt class="descname">get_return_status</tt><big>(</big><em>builder</em>, <em>code</em><big>)</big><a class="headerlink" href="#numba.targets.base.BaseContext.get_return_status" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.targets.base.BaseContext.get_return_type">
+<tt class="descname">get_return_type</tt><big>(</big><em>ty</em><big>)</big><a class="headerlink" href="#numba.targets.base.BaseContext.get_return_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.targets.base.BaseContext.get_return_value">
+<tt class="descname">get_return_value</tt><big>(</big><em>builder</em>, <em>ty</em>, <em>val</em><big>)</big><a class="headerlink" href="#numba.targets.base.BaseContext.get_return_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Local value representation to return type representation</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.targets.base.BaseContext.get_setattr">
+<tt class="descname">get_setattr</tt><big>(</big><em>attr</em>, <em>sig</em><big>)</big><a class="headerlink" href="#numba.targets.base.BaseContext.get_setattr" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.targets.base.BaseContext.get_struct_type">
+<tt class="descname">get_struct_type</tt><big>(</big><em>struct</em><big>)</big><a class="headerlink" href="#numba.targets.base.BaseContext.get_struct_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.targets.base.BaseContext.get_user_function">
+<tt class="descname">get_user_function</tt><big>(</big><em>func</em><big>)</big><a class="headerlink" href="#numba.targets.base.BaseContext.get_user_function" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.targets.base.BaseContext.get_value_as_argument">
+<tt class="descname">get_value_as_argument</tt><big>(</big><em>builder</em>, <em>ty</em>, <em>val</em><big>)</big><a class="headerlink" href="#numba.targets.base.BaseContext.get_value_as_argument" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prepare local value representation as argument type representation</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.targets.base.BaseContext.get_value_type">
+<tt class="descname">get_value_type</tt><big>(</big><em>ty</em><big>)</big><a class="headerlink" href="#numba.targets.base.BaseContext.get_value_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="numba.targets.base.BaseContext.implement_pow_as_math_call">
+<tt class="descname">implement_pow_as_math_call</tt><em class="property"> = False</em><a class="headerlink" href="#numba.targets.base.BaseContext.implement_pow_as_math_call" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="numba.targets.base.BaseContext.implement_powi_as_math_call">
+<tt class="descname">implement_powi_as_math_call</tt><em class="property"> = False</em><a class="headerlink" href="#numba.targets.base.BaseContext.implement_powi_as_math_call" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.targets.base.BaseContext.init">
+<tt class="descname">init</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.targets.base.BaseContext.init" title="Permalink to this definition">¶</a></dt>
+<dd><p>For subclasses to add initializer</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.targets.base.BaseContext.insert_attr_defn">
+<tt class="descname">insert_attr_defn</tt><big>(</big><em>defns</em><big>)</big><a class="headerlink" href="#numba.targets.base.BaseContext.insert_attr_defn" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.targets.base.BaseContext.insert_class">
+<tt class="descname">insert_class</tt><big>(</big><em>cls</em>, <em>attrs</em><big>)</big><a class="headerlink" href="#numba.targets.base.BaseContext.insert_class" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.targets.base.BaseContext.insert_const_string">
+<tt class="descname">insert_const_string</tt><big>(</big><em>mod</em>, <em>string</em><big>)</big><a class="headerlink" href="#numba.targets.base.BaseContext.insert_const_string" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.targets.base.BaseContext.insert_func_defn">
+<tt class="descname">insert_func_defn</tt><big>(</big><em>defns</em><big>)</big><a class="headerlink" href="#numba.targets.base.BaseContext.insert_func_defn" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.targets.base.BaseContext.insert_user_function">
+<tt class="descname">insert_user_function</tt><big>(</big><em>func</em>, <em>fndesc</em>, <em>libs=()</em><big>)</big><a class="headerlink" href="#numba.targets.base.BaseContext.insert_user_function" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.targets.base.BaseContext.is_struct_type">
+<tt class="descname">is_struct_type</tt><big>(</big><em>ty</em><big>)</big><a class="headerlink" href="#numba.targets.base.BaseContext.is_struct_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.targets.base.BaseContext.is_true">
+<tt class="descname">is_true</tt><big>(</big><em>builder</em>, <em>typ</em>, <em>val</em><big>)</big><a class="headerlink" href="#numba.targets.base.BaseContext.is_true" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.targets.base.BaseContext.localized">
+<tt class="descname">localized</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.targets.base.BaseContext.localized" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a localized context that contains extra environment information</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.targets.base.BaseContext.make_array">
+<tt class="descname">make_array</tt><big>(</big><em>typ</em><big>)</big><a class="headerlink" href="#numba.targets.base.BaseContext.make_array" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.targets.base.BaseContext.make_complex">
+<tt class="descname">make_complex</tt><big>(</big><em>typ</em><big>)</big><a class="headerlink" href="#numba.targets.base.BaseContext.make_complex" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.targets.base.BaseContext.make_constant_array">
+<tt class="descname">make_constant_array</tt><big>(</big><em>builder</em>, <em>typ</em>, <em>ary</em><big>)</big><a class="headerlink" href="#numba.targets.base.BaseContext.make_constant_array" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.targets.base.BaseContext.make_unituple_iter">
+<tt class="descname">make_unituple_iter</tt><big>(</big><em>typ</em><big>)</big><a class="headerlink" href="#numba.targets.base.BaseContext.make_unituple_iter" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="numba.targets.base.BaseContext.mangler">
+<tt class="descname">mangler</tt><em class="property"> = None</em><a class="headerlink" href="#numba.targets.base.BaseContext.mangler" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.targets.base.BaseContext.optimize">
+<tt class="descname">optimize</tt><big>(</big><em>module</em><big>)</big><a class="headerlink" href="#numba.targets.base.BaseContext.optimize" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.targets.base.BaseContext.pack_value">
+<tt class="descname">pack_value</tt><big>(</big><em>builder</em>, <em>ty</em>, <em>value</em>, <em>ptr</em><big>)</big><a class="headerlink" href="#numba.targets.base.BaseContext.pack_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pack data for array storage</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.targets.base.BaseContext.print_string">
+<tt class="descname">print_string</tt><big>(</big><em>builder</em>, <em>text</em><big>)</big><a class="headerlink" href="#numba.targets.base.BaseContext.print_string" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.targets.base.BaseContext.return_errcode">
+<tt class="descname">return_errcode</tt><big>(</big><em>builder</em>, <em>code</em><big>)</big><a class="headerlink" href="#numba.targets.base.BaseContext.return_errcode" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.targets.base.BaseContext.return_errcode_propagate">
+<tt class="descname">return_errcode_propagate</tt><big>(</big><em>builder</em>, <em>code</em><big>)</big><a class="headerlink" href="#numba.targets.base.BaseContext.return_errcode_propagate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.targets.base.BaseContext.return_exc">
+<tt class="descname">return_exc</tt><big>(</big><em>builder</em><big>)</big><a class="headerlink" href="#numba.targets.base.BaseContext.return_exc" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.targets.base.BaseContext.return_native_none">
+<tt class="descname">return_native_none</tt><big>(</big><em>builder</em><big>)</big><a class="headerlink" href="#numba.targets.base.BaseContext.return_native_none" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.targets.base.BaseContext.return_user_exc">
+<tt class="descname">return_user_exc</tt><big>(</big><em>builder</em>, <em>code</em><big>)</big><a class="headerlink" href="#numba.targets.base.BaseContext.return_user_exc" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.targets.base.BaseContext.return_value">
+<tt class="descname">return_value</tt><big>(</big><em>builder</em>, <em>retval</em><big>)</big><a class="headerlink" href="#numba.targets.base.BaseContext.return_value" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.targets.base.BaseContext.unpack_value">
+<tt class="descname">unpack_value</tt><big>(</big><em>builder</em>, <em>ty</em>, <em>ptr</em><big>)</big><a class="headerlink" href="#numba.targets.base.BaseContext.unpack_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unpack data from array storage</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.targets.base.Overloads">
+<em class="property">class </em><tt class="descclassname">numba.targets.base.</tt><tt class="descname">Overloads</tt><a class="headerlink" href="#numba.targets.base.Overloads" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<dl class="method">
+<dt id="numba.targets.base.Overloads.append">
+<tt class="descname">append</tt><big>(</big><em>impl</em><big>)</big><a class="headerlink" href="#numba.targets.base.Overloads.append" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.targets.base.Overloads.find">
+<tt class="descname">find</tt><big>(</big><em>sig</em><big>)</big><a class="headerlink" href="#numba.targets.base.Overloads.find" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.targets.base.Status">
+<em class="property">class </em><tt class="descclassname">numba.targets.base.</tt><tt class="descname">Status</tt><a class="headerlink" href="#numba.targets.base.Status" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">tuple</span></tt></p>
+<p>Status(code, ok, err, exc, none)</p>
+<dl class="attribute">
+<dt id="numba.targets.base.Status.code">
+<tt class="descname">code</tt><a class="headerlink" href="#numba.targets.base.Status.code" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="numba.targets.base.Status.err">
+<tt class="descname">err</tt><a class="headerlink" href="#numba.targets.base.Status.err" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 2</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="numba.targets.base.Status.exc">
+<tt class="descname">exc</tt><a class="headerlink" href="#numba.targets.base.Status.exc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 3</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="numba.targets.base.Status.none">
+<tt class="descname">none</tt><a class="headerlink" href="#numba.targets.base.Status.none" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 4</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="numba.targets.base.Status.ok">
+<tt class="descname">ok</tt><a class="headerlink" href="#numba.targets.base.Status.ok" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-numba.targets.builtins">
+<span id="numba-targets-builtins-module"></span><h2>numba.targets.builtins module<a class="headerlink" href="#module-numba.targets.builtins" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="numba.targets.builtins.Complex128">
+<em class="property">class </em><tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">Complex128</tt><big>(</big><em>context</em>, <em>builder</em>, <em>value=None</em>, <em>ref=None</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.Complex128" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="numba.html#numba.cgutils.Structure" title="numba.cgutils.Structure"><tt class="xref py py-class docutils literal"><span class="pre">numba.cgutils.Structure</span></tt></a></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.targets.builtins.Complex64">
+<em class="property">class </em><tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">Complex64</tt><big>(</big><em>context</em>, <em>builder</em>, <em>value=None</em>, <em>ref=None</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.Complex64" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="numba.html#numba.cgutils.Structure" title="numba.cgutils.Structure"><tt class="xref py py-class docutils literal"><span class="pre">numba.cgutils.Structure</span></tt></a></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.targets.builtins.RangeIter32">
+<em class="property">class </em><tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">RangeIter32</tt><big>(</big><em>context</em>, <em>builder</em>, <em>value=None</em>, <em>ref=None</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.RangeIter32" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="numba.html#numba.cgutils.Structure" title="numba.cgutils.Structure"><tt class="xref py py-class docutils literal"><span class="pre">numba.cgutils.Structure</span></tt></a></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.targets.builtins.RangeIter64">
+<em class="property">class </em><tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">RangeIter64</tt><big>(</big><em>context</em>, <em>builder</em>, <em>value=None</em>, <em>ref=None</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.RangeIter64" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="numba.html#numba.cgutils.Structure" title="numba.cgutils.Structure"><tt class="xref py py-class docutils literal"><span class="pre">numba.cgutils.Structure</span></tt></a></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.targets.builtins.RangeState32">
+<em class="property">class </em><tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">RangeState32</tt><big>(</big><em>context</em>, <em>builder</em>, <em>value=None</em>, <em>ref=None</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.RangeState32" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="numba.html#numba.cgutils.Structure" title="numba.cgutils.Structure"><tt class="xref py py-class docutils literal"><span class="pre">numba.cgutils.Structure</span></tt></a></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.targets.builtins.RangeState64">
+<em class="property">class </em><tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">RangeState64</tt><big>(</big><em>context</em>, <em>builder</em>, <em>value=None</em>, <em>ref=None</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.RangeState64" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="numba.html#numba.cgutils.Structure" title="numba.cgutils.Structure"><tt class="xref py py-class docutils literal"><span class="pre">numba.cgutils.Structure</span></tt></a></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.targets.builtins.Slice">
+<em class="property">class </em><tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">Slice</tt><big>(</big><em>context</em>, <em>builder</em>, <em>value=None</em>, <em>ref=None</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.Slice" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="numba.html#numba.cgutils.Structure" title="numba.cgutils.Structure"><tt class="xref py py-class docutils literal"><span class="pre">numba.cgutils.Structure</span></tt></a></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.array_len">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">array_len</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.array_len" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.array_ndim">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">array_ndim</tt><big>(</big><em>context</em>, <em>builder</em>, <em>typ</em>, <em>value</em>, <em>attr</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.array_ndim" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.array_record_getattr">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">array_record_getattr</tt><big>(</big><em>context</em>, <em>builder</em>, <em>typ</em>, <em>value</em>, <em>attr</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.array_record_getattr" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.array_shape">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">array_shape</tt><big>(</big><em>context</em>, <em>builder</em>, <em>typ</em>, <em>value</em>, <em>attr</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.array_shape" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.array_size">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">array_size</tt><big>(</big><em>context</em>, <em>builder</em>, <em>typ</em>, <em>value</em>, <em>attr</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.array_size" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.array_strides">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">array_strides</tt><big>(</big><em>context</em>, <em>builder</em>, <em>typ</em>, <em>value</em>, <em>attr</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.array_strides" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.caster">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">caster</tt><big>(</big><em>restype</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.caster" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="numba.targets.builtins.cls">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">cls</tt><a class="headerlink" href="#numba.targets.builtins.cls" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#numba.targets.builtins.Complex128" title="numba.targets.builtins.Complex128"><tt class="xref py py-class docutils literal"><span class="pre">Complex128</span></tt></a></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.complex128_imag_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">complex128_imag_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>typ</em>, <em>value</em>, <em>attr</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.complex128_imag_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.complex128_power_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">complex128_power_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.complex128_power_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.complex128_real_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">complex128_real_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>typ</em>, <em>value</em>, <em>attr</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.complex128_real_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.complex64_imag_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">complex64_imag_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>typ</em>, <em>value</em>, <em>attr</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.complex64_imag_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.complex64_real_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">complex64_real_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>typ</em>, <em>value</em>, <em>attr</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.complex64_real_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.complex_add_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">complex_add_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.complex_add_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.complex_div_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">complex_div_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.complex_div_impl" title="Permalink to this definition">¶</a></dt>
+<dd><p>z = c^2 + d^2
+(a+bi)/(c+di) = (ac + bd) / z, (bc - ad) / z</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.complex_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">complex_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.complex_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.complex_mult_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">complex_mult_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.complex_mult_impl" title="Permalink to this definition">¶</a></dt>
+<dd><p>(a+bi)(c+di)=(ac-bd)+i(ad+bc)</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.complex_negate_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">complex_negate_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.complex_negate_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.complex_positive_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">complex_positive_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.complex_positive_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.complex_sub_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">complex_sub_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.complex_sub_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.float_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">float_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.float_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.get_complex_info">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">get_complex_info</tt><big>(</big><em>ty</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.get_complex_info" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.getitem_array1d_intp">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">getitem_array1d_intp</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.getitem_array1d_intp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.getitem_array1d_slice">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">getitem_array1d_slice</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.getitem_array1d_slice" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.getitem_array_tuple">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">getitem_array_tuple</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.getitem_array_tuple" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.getitem_array_unituple">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">getitem_array_unituple</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.getitem_array_unituple" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.getitem_unituple">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">getitem_unituple</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.getitem_unituple" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.getiter_range32_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">getiter_range32_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.getiter_range32_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.getiter_range64_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">getiter_range64_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.getiter_range64_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.getiter_range_generic">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">getiter_range_generic</tt><big>(</big><em>context</em>, <em>builder</em>, <em>iterobj</em>, <em>start</em>, <em>stop</em>, <em>step</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.getiter_range_generic" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.getiter_unituple">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">getiter_unituple</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.getiter_unituple" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.int_abs_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">int_abs_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.int_abs_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.int_add_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">int_add_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.int_add_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.int_and_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">int_and_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.int_and_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.int_ashr_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">int_ashr_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.int_ashr_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.int_divmod">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">int_divmod</tt><big>(</big><em>context</em>, <em>builder</em>, <em>x</em>, <em>y</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.int_divmod" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reference Objects/intobject.c
+xdivy = x / y;
+xmody = (long)(x - (unsigned long)xdivy * y);
+/* If the signs of x and y differ, and the remainder is non-0,</p>
+<blockquote>
+<div><ul class="simple">
+<li>C89 doesn&#8217;t define whether xdivy is now the floor or the</li>
+<li>ceiling of the infinitely precise quotient.  We want the floor,</li>
+<li>and we have it iff the remainder&#8217;s sign matches y&#8217;s.</li>
+</ul>
+<p><a href="#id1"><span class="problematic" id="id2">*</span></a>/</p>
+</div></blockquote>
+<dl class="docutils">
+<dt>if (xmody &amp;&amp; ((y ^ xmody) &lt; 0) /* i.e. and signs differ <a href="#id3"><span class="problematic" id="id4">*</span></a>/) {</dt>
+<dd>xmody += y;
+&#8211;xdivy;
+assert(xmody &amp;&amp; ((y ^ xmody) &gt;= 0));</dd>
+</dl>
+<p>}
+<a href="#id5"><span class="problematic" id="id6">*</span></a>p_xdivy = xdivy;
+<a href="#id7"><span class="problematic" id="id8">*</span></a>p_xmody = xmody;</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.int_eq_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">int_eq_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.int_eq_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.int_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">int_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.int_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.int_invert_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">int_invert_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.int_invert_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.int_lshr_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">int_lshr_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.int_lshr_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.int_mul_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">int_mul_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.int_mul_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.int_ne_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">int_ne_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.int_ne_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.int_negate_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">int_negate_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.int_negate_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.int_or_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">int_or_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.int_or_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.int_positive_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">int_positive_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.int_positive_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.int_power_func_body">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">int_power_func_body</tt><big>(</big><em>context</em>, <em>builder</em>, <em>x</em>, <em>y</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.int_power_func_body" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.int_sdiv_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">int_sdiv_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.int_sdiv_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.int_sfloordiv_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">int_sfloordiv_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.int_sfloordiv_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.int_sge_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">int_sge_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.int_sge_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.int_sgt_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">int_sgt_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.int_sgt_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.int_shl_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">int_shl_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.int_shl_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.int_sign_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">int_sign_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.int_sign_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.int_sle_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">int_sle_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.int_sle_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.int_slt_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">int_slt_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.int_slt_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.int_spower_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">int_spower_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.int_spower_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.int_srem_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">int_srem_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.int_srem_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.int_struediv_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">int_struediv_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.int_struediv_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.int_sub_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">int_sub_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.int_sub_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.int_udiv_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">int_udiv_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.int_udiv_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.int_ufloordiv_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">int_ufloordiv_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.int_ufloordiv_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.int_uge_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">int_uge_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.int_uge_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.int_ugt_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">int_ugt_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.int_ugt_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.int_ule_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">int_ule_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.int_ule_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.int_ult_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">int_ult_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.int_ult_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.int_upower_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">int_upower_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.int_upower_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.int_urem_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">int_urem_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.int_urem_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.int_utruediv_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">int_utruediv_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.int_utruediv_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.int_xor_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">int_xor_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.int_xor_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.iternext_range32_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">iternext_range32_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.iternext_range32_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.iternext_range64_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">iternext_range64_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.iternext_range64_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.iternextsafe_unituple">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">iternextsafe_unituple</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.iternextsafe_unituple" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.itervalid_range32_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">itervalid_range32_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.itervalid_range32_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.itervalid_range64_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">itervalid_range64_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.itervalid_range64_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.make_array">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">make_array</tt><big>(</big><em>ty</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.make_array" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.make_unituple_iter">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">make_unituple_iter</tt><big>(</big><em>tupiter</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.make_unituple_iter" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.math_e_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">math_e_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>typ</em>, <em>value</em>, <em>attr</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.math_e_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.math_pi_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">math_pi_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>typ</em>, <em>value</em>, <em>attr</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.math_pi_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.max_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">max_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.max_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.min_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">min_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.min_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.number_as_bool_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">number_as_bool_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.number_as_bool_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.number_not_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">number_not_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.number_not_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.range1_32_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">range1_32_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.range1_32_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.range1_64_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">range1_64_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.range1_64_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.range2_32_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">range2_32_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.range2_32_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.range2_64_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">range2_64_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.range2_64_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.range3_32_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">range3_32_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.range3_32_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.range3_64_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">range3_64_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.range3_64_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.real_abs_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">real_abs_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.real_abs_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.real_add_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">real_add_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.real_add_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.real_div_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">real_div_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.real_div_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.real_divmod">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">real_divmod</tt><big>(</big><em>context</em>, <em>builder</em>, <em>x</em>, <em>y</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.real_divmod" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.real_divmod_func_body">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">real_divmod_func_body</tt><big>(</big><em>context</em>, <em>builder</em>, <em>vx</em>, <em>wx</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.real_divmod_func_body" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.real_eq_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">real_eq_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.real_eq_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.real_ge_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">real_ge_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.real_ge_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.real_gt_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">real_gt_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.real_gt_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.real_le_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">real_le_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.real_le_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.real_lt_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">real_lt_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.real_lt_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.real_mod_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">real_mod_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.real_mod_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.real_mul_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">real_mul_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.real_mul_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.real_ne_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">real_ne_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.real_ne_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.real_negate_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">real_negate_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.real_negate_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.real_positive_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">real_positive_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.real_positive_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.real_power_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">real_power_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.real_power_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.real_sign_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">real_sign_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.real_sign_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.real_sub_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">real_sub_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.real_sub_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.round_impl_f32">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">round_impl_f32</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.round_impl_f32" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.round_impl_f64">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">round_impl_f64</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.round_impl_f64" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.setitem_array1d">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">setitem_array1d</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.setitem_array1d" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.setitem_array_tuple">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">setitem_array_tuple</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.setitem_array_tuple" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.setitem_array_unituple">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">setitem_array_unituple</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.setitem_array_unituple" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.slice0_empty_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">slice0_empty_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.slice0_empty_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.slice0_none_none_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">slice0_none_none_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.slice0_none_none_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.slice1_start_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">slice1_start_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.slice1_start_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.slice1_stop_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">slice1_stop_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.slice1_stop_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.slice2_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">slice2_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.slice2_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.slice3_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">slice3_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.slice3_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.builtins.uint_abs_impl">
+<tt class="descclassname">numba.targets.builtins.</tt><tt class="descname">uint_abs_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.builtins.uint_abs_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-numba.targets.cpu">
+<span id="numba-targets-cpu-module"></span><h2>numba.targets.cpu module<a class="headerlink" href="#module-numba.targets.cpu" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="numba.targets.cpu.CPUContext">
+<em class="property">class </em><tt class="descclassname">numba.targets.cpu.</tt><tt class="descname">CPUContext</tt><big>(</big><em>typing_context</em><big>)</big><a class="headerlink" href="#numba.targets.cpu.CPUContext" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.targets.base.BaseContext" title="numba.targets.base.BaseContext"><tt class="xref py py-class docutils literal"><span class="pre">numba.targets.base.BaseContext</span></tt></a></p>
+<dl class="method">
+<dt id="numba.targets.cpu.CPUContext.build_pass_manager">
+<tt class="descname">build_pass_manager</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.targets.cpu.CPUContext.build_pass_manager" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.targets.cpu.CPUContext.dynamic_map_function">
+<tt class="descname">dynamic_map_function</tt><big>(</big><em>func</em><big>)</big><a class="headerlink" href="#numba.targets.cpu.CPUContext.dynamic_map_function" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.targets.cpu.CPUContext.get_abi_sizeof">
+<tt class="descname">get_abi_sizeof</tt><big>(</big><em>lty</em><big>)</big><a class="headerlink" href="#numba.targets.cpu.CPUContext.get_abi_sizeof" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.targets.cpu.CPUContext.get_executable">
+<tt class="descname">get_executable</tt><big>(</big><em>func</em>, <em>fndesc</em><big>)</big><a class="headerlink" href="#numba.targets.cpu.CPUContext.get_executable" title="Permalink to this definition">¶</a></dt>
+<dd><p>(cfunc, fnptr)</p>
+<ul>
+<li><dl class="first docutils">
+<dt>cfunc</dt>
+<dd><p class="first last">callable function (Can be None)</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>fnptr</dt>
+<dd><p class="first last">callable function address</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.targets.cpu.CPUContext.init">
+<tt class="descname">init</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.targets.cpu.CPUContext.init" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.targets.cpu.CPUContext.map_math_functions">
+<tt class="descname">map_math_functions</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.targets.cpu.CPUContext.map_math_functions" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.targets.cpu.CPUContext.map_numpy_math_functions">
+<tt class="descname">map_numpy_math_functions</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.targets.cpu.CPUContext.map_numpy_math_functions" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.targets.cpu.CPUContext.optimize">
+<tt class="descname">optimize</tt><big>(</big><em>module</em><big>)</big><a class="headerlink" href="#numba.targets.cpu.CPUContext.optimize" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.targets.cpu.CPUContext.optimize_pythonapi">
+<tt class="descname">optimize_pythonapi</tt><big>(</big><em>func</em><big>)</big><a class="headerlink" href="#numba.targets.cpu.CPUContext.optimize_pythonapi" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.targets.cpu.CPUContext.prepare_for_call">
+<tt class="descname">prepare_for_call</tt><big>(</big><em>func</em>, <em>fndesc</em><big>)</big><a class="headerlink" href="#numba.targets.cpu.CPUContext.prepare_for_call" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.targets.cpu.CPUTargetOptions">
+<em class="property">class </em><tt class="descclassname">numba.targets.cpu.</tt><tt class="descname">CPUTargetOptions</tt><a class="headerlink" href="#numba.targets.cpu.CPUTargetOptions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.targets.options.TargetOptions" title="numba.targets.options.TargetOptions"><tt class="xref py py-class docutils literal"><span class="pre">numba.targets.options.TargetOptions</span></tt></a></p>
+<dl class="attribute">
+<dt id="numba.targets.cpu.CPUTargetOptions.OPTIONS">
+<tt class="descname">OPTIONS</tt><em class="property"> = {'forceobj': &lt;type 'bool'&gt;, 'boundcheck': &lt;type 'bool'&gt;, 'nopython': &lt;type 'bool'&gt;, 'looplift': &lt;type 'bool'&gt;, 'wraparound': &lt;type 'bool'&gt;}</em><a class="headerlink" href="#numba.targets.cpu.CPUTargetOptions.OPTIONS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.cpu.remove_null_refct_call">
+<tt class="descclassname">numba.targets.cpu.</tt><tt class="descname">remove_null_refct_call</tt><big>(</big><em>bb</em><big>)</big><a class="headerlink" href="#numba.targets.cpu.remove_null_refct_call" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove refct api calls to NULL pointer</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.cpu.remove_refct_calls">
+<tt class="descclassname">numba.targets.cpu.</tt><tt class="descname">remove_refct_calls</tt><big>(</big><em>func</em><big>)</big><a class="headerlink" href="#numba.targets.cpu.remove_refct_calls" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove redundant incref/decref within on a per block basis</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.cpu.remove_refct_pairs">
+<tt class="descclassname">numba.targets.cpu.</tt><tt class="descname">remove_refct_pairs</tt><big>(</big><em>bb</em><big>)</big><a class="headerlink" href="#numba.targets.cpu.remove_refct_pairs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove incref decref pairs on the same variable</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-numba.targets.descriptors">
+<span id="numba-targets-descriptors-module"></span><h2>numba.targets.descriptors module<a class="headerlink" href="#module-numba.targets.descriptors" title="Permalink to this headline">¶</a></h2>
+<p>Target Descriptors</p>
+<dl class="class">
+<dt id="numba.targets.descriptors.TargetDescriptor">
+<em class="property">class </em><tt class="descclassname">numba.targets.descriptors.</tt><tt class="descname">TargetDescriptor</tt><a class="headerlink" href="#numba.targets.descriptors.TargetDescriptor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-numba.targets.imputils">
+<span id="numba-targets-imputils-module"></span><h2>numba.targets.imputils module<a class="headerlink" href="#module-numba.targets.imputils" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="numba.targets.imputils.Registry">
+<em class="property">class </em><tt class="descclassname">numba.targets.imputils.</tt><tt class="descname">Registry</tt><a class="headerlink" href="#numba.targets.imputils.Registry" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<dl class="method">
+<dt id="numba.targets.imputils.Registry.register">
+<tt class="descname">register</tt><big>(</big><em>item</em><big>)</big><a class="headerlink" href="#numba.targets.imputils.Registry.register" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.targets.imputils.Registry.register_attr">
+<tt class="descname">register_attr</tt><big>(</big><em>item</em><big>)</big><a class="headerlink" href="#numba.targets.imputils.Registry.register_attr" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.imputils.impl_attribute">
+<tt class="descclassname">numba.targets.imputils.</tt><tt class="descname">impl_attribute</tt><big>(</big><em>ty</em>, <em>attr</em>, <em>rtype</em><big>)</big><a class="headerlink" href="#numba.targets.imputils.impl_attribute" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.imputils.impl_attribute_generic">
+<tt class="descclassname">numba.targets.imputils.</tt><tt class="descname">impl_attribute_generic</tt><big>(</big><em>ty</em><big>)</big><a class="headerlink" href="#numba.targets.imputils.impl_attribute_generic" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.imputils.implement">
+<tt class="descclassname">numba.targets.imputils.</tt><tt class="descname">implement</tt><big>(</big><em>func</em>, <em>*argtys</em><big>)</big><a class="headerlink" href="#numba.targets.imputils.implement" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.imputils.python_attr_impl">
+<tt class="descclassname">numba.targets.imputils.</tt><tt class="descname">python_attr_impl</tt><big>(</big><em>cls</em>, <em>attr</em>, <em>atyp</em><big>)</big><a class="headerlink" href="#numba.targets.imputils.python_attr_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.imputils.user_function">
+<tt class="descclassname">numba.targets.imputils.</tt><tt class="descname">user_function</tt><big>(</big><em>func</em>, <em>fndesc</em>, <em>libs</em><big>)</big><a class="headerlink" href="#numba.targets.imputils.user_function" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-numba.targets.intrinsics">
+<span id="numba-targets-intrinsics-module"></span><h2>numba.targets.intrinsics module<a class="headerlink" href="#module-numba.targets.intrinsics" title="Permalink to this headline">¶</a></h2>
+<p>LLVM pass that converts intrinsic into other math calls</p>
+<dl class="class">
+<dt id="numba.targets.intrinsics.DivmodFixer">
+<em class="property">class </em><tt class="descclassname">numba.targets.intrinsics.</tt><tt class="descname">DivmodFixer</tt><a class="headerlink" href="#numba.targets.intrinsics.DivmodFixer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Fix 64-bit div/mod on 32-bit machines</p>
+<dl class="attribute">
+<dt id="numba.targets.intrinsics.DivmodFixer.I64">
+<tt class="descname">I64</tt><em class="property"> = &lt;llvm.core.IntegerType object at 0x1081b1390&gt;</em><a class="headerlink" href="#numba.targets.intrinsics.DivmodFixer.I64" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="numba.targets.intrinsics.DivmodFixer.NAMES">
+<tt class="descname">NAMES</tt><em class="property"> = ('sdiv', 'udiv', 'srem', 'urem')</em><a class="headerlink" href="#numba.targets.intrinsics.DivmodFixer.NAMES" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.targets.intrinsics.DivmodFixer.declare">
+<tt class="descname">declare</tt><big>(</big><em>module</em>, <em>fname</em><big>)</big><a class="headerlink" href="#numba.targets.intrinsics.DivmodFixer.declare" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.targets.intrinsics.DivmodFixer.run">
+<tt class="descname">run</tt><big>(</big><em>module</em><big>)</big><a class="headerlink" href="#numba.targets.intrinsics.DivmodFixer.run" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.targets.intrinsics.DivmodFixer.run_on_func">
+<tt class="descname">run_on_func</tt><big>(</big><em>func</em><big>)</big><a class="headerlink" href="#numba.targets.intrinsics.DivmodFixer.run_on_func" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.targets.intrinsics.IntrinsicMapping">
+<em class="property">class </em><tt class="descclassname">numba.targets.intrinsics.</tt><tt class="descname">IntrinsicMapping</tt><big>(</big><em>context</em>, <em>mapping=None</em>, <em>availintr=None</em><big>)</big><a class="headerlink" href="#numba.targets.intrinsics.IntrinsicMapping" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<dl class="method">
+<dt id="numba.targets.intrinsics.IntrinsicMapping.apply_mapping">
+<tt class="descname">apply_mapping</tt><big>(</big><em>module</em><big>)</big><a class="headerlink" href="#numba.targets.intrinsics.IntrinsicMapping.apply_mapping" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.targets.intrinsics.IntrinsicMapping.run">
+<tt class="descname">run</tt><big>(</big><em>module</em><big>)</big><a class="headerlink" href="#numba.targets.intrinsics.IntrinsicMapping.run" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.targets.intrinsics.IntrinsicMapping.translate_intrinsic_to_cmath">
+<tt class="descname">translate_intrinsic_to_cmath</tt><big>(</big><em>module</em><big>)</big><a class="headerlink" href="#numba.targets.intrinsics.IntrinsicMapping.translate_intrinsic_to_cmath" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.intrinsics.powi_as_pow">
+<tt class="descclassname">numba.targets.intrinsics.</tt><tt class="descname">powi_as_pow</tt><big>(</big><em>context</em>, <em>fn</em><big>)</big><a class="headerlink" href="#numba.targets.intrinsics.powi_as_pow" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-numba.targets.mathimpl">
+<span id="numba-targets-mathimpl-module"></span><h2>numba.targets.mathimpl module<a class="headerlink" href="#module-numba.targets.mathimpl" title="Permalink to this headline">¶</a></h2>
+<p>Provide math calls that uses intrinsics or libc math functions.</p>
+<dl class="function">
+<dt id="numba.targets.mathimpl.atan2_f32_impl">
+<tt class="descclassname">numba.targets.mathimpl.</tt><tt class="descname">atan2_f32_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.mathimpl.atan2_f32_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.mathimpl.atan2_f64_impl">
+<tt class="descclassname">numba.targets.mathimpl.</tt><tt class="descname">atan2_f64_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.mathimpl.atan2_f64_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.mathimpl.atan2_s64_impl">
+<tt class="descclassname">numba.targets.mathimpl.</tt><tt class="descname">atan2_s64_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.mathimpl.atan2_s64_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.mathimpl.atan2_u64_impl">
+<tt class="descclassname">numba.targets.mathimpl.</tt><tt class="descname">atan2_u64_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.mathimpl.atan2_u64_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.mathimpl.degrees_f32_impl">
+<tt class="descclassname">numba.targets.mathimpl.</tt><tt class="descname">degrees_f32_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.mathimpl.degrees_f32_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.mathimpl.degrees_f64_impl">
+<tt class="descclassname">numba.targets.mathimpl.</tt><tt class="descname">degrees_f64_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.mathimpl.degrees_f64_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.mathimpl.hypot_f32_impl">
+<tt class="descclassname">numba.targets.mathimpl.</tt><tt class="descname">hypot_f32_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.mathimpl.hypot_f32_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.mathimpl.hypot_f64_impl">
+<tt class="descclassname">numba.targets.mathimpl.</tt><tt class="descname">hypot_f64_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.mathimpl.hypot_f64_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.mathimpl.hypot_s64_impl">
+<tt class="descclassname">numba.targets.mathimpl.</tt><tt class="descname">hypot_s64_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.mathimpl.hypot_s64_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.mathimpl.hypot_u64_impl">
+<tt class="descclassname">numba.targets.mathimpl.</tt><tt class="descname">hypot_u64_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.mathimpl.hypot_u64_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.mathimpl.isinf_f32_impl">
+<tt class="descclassname">numba.targets.mathimpl.</tt><tt class="descname">isinf_f32_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.mathimpl.isinf_f32_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.mathimpl.isinf_f64_impl">
+<tt class="descclassname">numba.targets.mathimpl.</tt><tt class="descname">isinf_f64_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.mathimpl.isinf_f64_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.mathimpl.isinf_s64_impl">
+<tt class="descclassname">numba.targets.mathimpl.</tt><tt class="descname">isinf_s64_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.mathimpl.isinf_s64_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.mathimpl.isinf_u64_impl">
+<tt class="descclassname">numba.targets.mathimpl.</tt><tt class="descname">isinf_u64_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.mathimpl.isinf_u64_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.mathimpl.isnan_f32_impl">
+<tt class="descclassname">numba.targets.mathimpl.</tt><tt class="descname">isnan_f32_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.mathimpl.isnan_f32_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.mathimpl.isnan_f64_impl">
+<tt class="descclassname">numba.targets.mathimpl.</tt><tt class="descname">isnan_f64_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.mathimpl.isnan_f64_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.mathimpl.isnan_s64_impl">
+<tt class="descclassname">numba.targets.mathimpl.</tt><tt class="descname">isnan_s64_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.mathimpl.isnan_s64_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.mathimpl.isnan_u64_impl">
+<tt class="descclassname">numba.targets.mathimpl.</tt><tt class="descname">isnan_u64_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.mathimpl.isnan_u64_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.mathimpl.radians_f32_impl">
+<tt class="descclassname">numba.targets.mathimpl.</tt><tt class="descname">radians_f32_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.mathimpl.radians_f32_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.mathimpl.radians_f64_impl">
+<tt class="descclassname">numba.targets.mathimpl.</tt><tt class="descname">radians_f64_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.mathimpl.radians_f64_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.mathimpl.unary_math_extern">
+<tt class="descclassname">numba.targets.mathimpl.</tt><tt class="descname">unary_math_extern</tt><big>(</big><em>fn</em>, <em>f32extern</em>, <em>f64extern</em><big>)</big><a class="headerlink" href="#numba.targets.mathimpl.unary_math_extern" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.mathimpl.unary_math_int_impl">
+<tt class="descclassname">numba.targets.mathimpl.</tt><tt class="descname">unary_math_int_impl</tt><big>(</big><em>fn</em>, <em>f64impl</em><big>)</big><a class="headerlink" href="#numba.targets.mathimpl.unary_math_int_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.mathimpl.unary_math_intr">
+<tt class="descclassname">numba.targets.mathimpl.</tt><tt class="descname">unary_math_intr</tt><big>(</big><em>fn</em>, <em>intrcode</em><big>)</big><a class="headerlink" href="#numba.targets.mathimpl.unary_math_intr" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-numba.targets.npyimpl">
+<span id="numba-targets-npyimpl-module"></span><h2>numba.targets.npyimpl module<a class="headerlink" href="#module-numba.targets.npyimpl" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="numba.targets.npyimpl.npy">
+<em class="property">class </em><tt class="descclassname">numba.targets.npyimpl.</tt><tt class="descname">npy</tt><a class="headerlink" href="#numba.targets.npyimpl.npy" title="Permalink to this definition">¶</a></dt>
+<dd><p>This will be used as an index of the npy_* functions</p>
+<dl class="attribute">
+<dt id="numba.targets.npyimpl.npy.acos">
+<tt class="descname">acos</tt><em class="property"> = 'acos'</em><a class="headerlink" href="#numba.targets.npyimpl.npy.acos" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="numba.targets.npyimpl.npy.acosh">
+<tt class="descname">acosh</tt><em class="property"> = 'acosh'</em><a class="headerlink" href="#numba.targets.npyimpl.npy.acosh" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="numba.targets.npyimpl.npy.asin">
+<tt class="descname">asin</tt><em class="property"> = 'asin'</em><a class="headerlink" href="#numba.targets.npyimpl.npy.asin" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="numba.targets.npyimpl.npy.asinh">
+<tt class="descname">asinh</tt><em class="property"> = 'asinh'</em><a class="headerlink" href="#numba.targets.npyimpl.npy.asinh" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="numba.targets.npyimpl.npy.atan">
+<tt class="descname">atan</tt><em class="property"> = 'atan'</em><a class="headerlink" href="#numba.targets.npyimpl.npy.atan" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="numba.targets.npyimpl.npy.atanh">
+<tt class="descname">atanh</tt><em class="property"> = 'atanh'</em><a class="headerlink" href="#numba.targets.npyimpl.npy.atanh" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="numba.targets.npyimpl.npy.ceil">
+<tt class="descname">ceil</tt><em class="property"> = 'ceil'</em><a class="headerlink" href="#numba.targets.npyimpl.npy.ceil" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="numba.targets.npyimpl.npy.cos">
+<tt class="descname">cos</tt><em class="property"> = 'cos'</em><a class="headerlink" href="#numba.targets.npyimpl.npy.cos" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="numba.targets.npyimpl.npy.cosh">
+<tt class="descname">cosh</tt><em class="property"> = 'cosh'</em><a class="headerlink" href="#numba.targets.npyimpl.npy.cosh" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="numba.targets.npyimpl.npy.deg2rad">
+<tt class="descname">deg2rad</tt><em class="property"> = 'deg2rad'</em><a class="headerlink" href="#numba.targets.npyimpl.npy.deg2rad" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="numba.targets.npyimpl.npy.exp">
+<tt class="descname">exp</tt><em class="property"> = 'exp'</em><a class="headerlink" href="#numba.targets.npyimpl.npy.exp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="numba.targets.npyimpl.npy.exp2">
+<tt class="descname">exp2</tt><em class="property"> = 'exp2'</em><a class="headerlink" href="#numba.targets.npyimpl.npy.exp2" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="numba.targets.npyimpl.npy.expm1">
+<tt class="descname">expm1</tt><em class="property"> = 'expm1'</em><a class="headerlink" href="#numba.targets.npyimpl.npy.expm1" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="numba.targets.npyimpl.npy.floor">
+<tt class="descname">floor</tt><em class="property"> = 'floor'</em><a class="headerlink" href="#numba.targets.npyimpl.npy.floor" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="numba.targets.npyimpl.npy.log">
+<tt class="descname">log</tt><em class="property"> = 'log'</em><a class="headerlink" href="#numba.targets.npyimpl.npy.log" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="numba.targets.npyimpl.npy.log10">
+<tt class="descname">log10</tt><em class="property"> = 'log10'</em><a class="headerlink" href="#numba.targets.npyimpl.npy.log10" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="numba.targets.npyimpl.npy.log1p">
+<tt class="descname">log1p</tt><em class="property"> = 'log1p'</em><a class="headerlink" href="#numba.targets.npyimpl.npy.log1p" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="numba.targets.npyimpl.npy.log2">
+<tt class="descname">log2</tt><em class="property"> = 'log2'</em><a class="headerlink" href="#numba.targets.npyimpl.npy.log2" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="numba.targets.npyimpl.npy.rad2deg">
+<tt class="descname">rad2deg</tt><em class="property"> = 'rad2deg'</em><a class="headerlink" href="#numba.targets.npyimpl.npy.rad2deg" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="numba.targets.npyimpl.npy.sin">
+<tt class="descname">sin</tt><em class="property"> = 'sin'</em><a class="headerlink" href="#numba.targets.npyimpl.npy.sin" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="numba.targets.npyimpl.npy.sinh">
+<tt class="descname">sinh</tt><em class="property"> = 'sinh'</em><a class="headerlink" href="#numba.targets.npyimpl.npy.sinh" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="numba.targets.npyimpl.npy.sqrt">
+<tt class="descname">sqrt</tt><em class="property"> = 'sqrt'</em><a class="headerlink" href="#numba.targets.npyimpl.npy.sqrt" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="numba.targets.npyimpl.npy.tan">
+<tt class="descname">tan</tt><em class="property"> = 'tan'</em><a class="headerlink" href="#numba.targets.npyimpl.npy.tan" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="numba.targets.npyimpl.npy.tanh">
+<tt class="descname">tanh</tt><em class="property"> = 'tanh'</em><a class="headerlink" href="#numba.targets.npyimpl.npy.tanh" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="numba.targets.npyimpl.npy.trunc">
+<tt class="descname">trunc</tt><em class="property"> = 'trunc'</em><a class="headerlink" href="#numba.targets.npyimpl.npy.trunc" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.npyimpl.numpy_binary_ufunc">
+<tt class="descclassname">numba.targets.npyimpl.</tt><tt class="descname">numpy_binary_ufunc</tt><big>(</big><em>funckey</em>, <em>divbyzero=False</em>, <em>scalar_inputs=False</em>, <em>asfloat=False</em><big>)</big><a class="headerlink" href="#numba.targets.npyimpl.numpy_binary_ufunc" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.npyimpl.numpy_scalar_unary_ufunc">
+<tt class="descclassname">numba.targets.npyimpl.</tt><tt class="descname">numpy_scalar_unary_ufunc</tt><big>(</big><em>funckey</em>, <em>asfloat=True</em><big>)</big><a class="headerlink" href="#numba.targets.npyimpl.numpy_scalar_unary_ufunc" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.npyimpl.numpy_unary_ufunc">
+<tt class="descclassname">numba.targets.npyimpl.</tt><tt class="descname">numpy_unary_ufunc</tt><big>(</big><em>funckey</em>, <em>asfloat=False</em>, <em>scalar_input=False</em><big>)</big><a class="headerlink" href="#numba.targets.npyimpl.numpy_unary_ufunc" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.npyimpl.register_binary_ufunc">
+<tt class="descclassname">numba.targets.npyimpl.</tt><tt class="descname">register_binary_ufunc</tt><big>(</big><em>ufunc</em>, <em>operator</em>, <em>asfloat=False</em>, <em>divbyzero=False</em><big>)</big><a class="headerlink" href="#numba.targets.npyimpl.register_binary_ufunc" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.npyimpl.register_unary_ufunc">
+<tt class="descclassname">numba.targets.npyimpl.</tt><tt class="descname">register_unary_ufunc</tt><big>(</big><em>ufunc</em>, <em>operator</em>, <em>asfloat=False</em><big>)</big><a class="headerlink" href="#numba.targets.npyimpl.register_unary_ufunc" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.npyimpl.unary_npy_math_extern">
+<tt class="descclassname">numba.targets.npyimpl.</tt><tt class="descname">unary_npy_math_extern</tt><big>(</big><em>fn</em><big>)</big><a class="headerlink" href="#numba.targets.npyimpl.unary_npy_math_extern" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-numba.targets.operatorimpl">
+<span id="numba-targets-operatorimpl-module"></span><h2>numba.targets.operatorimpl module<a class="headerlink" href="#module-numba.targets.operatorimpl" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-numba.targets.options">
+<span id="numba-targets-options-module"></span><h2>numba.targets.options module<a class="headerlink" href="#module-numba.targets.options" title="Permalink to this headline">¶</a></h2>
+<p>Target Options</p>
+<dl class="class">
+<dt id="numba.targets.options.TargetOptions">
+<em class="property">class </em><tt class="descclassname">numba.targets.options.</tt><tt class="descname">TargetOptions</tt><a class="headerlink" href="#numba.targets.options.TargetOptions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<dl class="attribute">
+<dt id="numba.targets.options.TargetOptions.OPTIONS">
+<tt class="descname">OPTIONS</tt><em class="property"> = {}</em><a class="headerlink" href="#numba.targets.options.TargetOptions.OPTIONS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.targets.options.TargetOptions.from_dict">
+<tt class="descname">from_dict</tt><big>(</big><em>dic</em><big>)</big><a class="headerlink" href="#numba.targets.options.TargetOptions.from_dict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="numba.targets.options.TargetOptions.parse_as_flags">
+<em class="property">classmethod </em><tt class="descname">parse_as_flags</tt><big>(</big><em>flags</em>, <em>options</em><big>)</big><a class="headerlink" href="#numba.targets.options.TargetOptions.parse_as_flags" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.targets.options.TargetOptions.set_flags">
+<tt class="descname">set_flags</tt><big>(</big><em>flags</em><big>)</big><a class="headerlink" href="#numba.targets.options.TargetOptions.set_flags" title="Permalink to this definition">¶</a></dt>
+<dd><p>Provide default flags setting logic.
+Subclass can override.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-numba.targets.printimpl">
+<span id="numba-targets-printimpl-module"></span><h2>numba.targets.printimpl module<a class="headerlink" href="#module-numba.targets.printimpl" title="Permalink to this headline">¶</a></h2>
+<p>This file implements print functionality for the CPU.</p>
+<dl class="function">
+<dt id="numba.targets.printimpl.int_print_impl">
+<tt class="descclassname">numba.targets.printimpl.</tt><tt class="descname">int_print_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.printimpl.int_print_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.printimpl.print_charseq">
+<tt class="descclassname">numba.targets.printimpl.</tt><tt class="descname">print_charseq</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.printimpl.print_charseq" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.printimpl.print_varargs">
+<tt class="descclassname">numba.targets.printimpl.</tt><tt class="descname">print_varargs</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.printimpl.print_varargs" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.printimpl.real_print_impl">
+<tt class="descclassname">numba.targets.printimpl.</tt><tt class="descname">real_print_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.printimpl.real_print_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-numba.targets.registry">
+<span id="numba-targets-registry-module"></span><h2>numba.targets.registry module<a class="headerlink" href="#module-numba.targets.registry" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="numba.targets.registry.CPUOverloaded">
+<em class="property">class </em><tt class="descclassname">numba.targets.registry.</tt><tt class="descname">CPUOverloaded</tt><big>(</big><em>py_func</em>, <em>locals={}</em>, <em>targetoptions={}</em><big>)</big><a class="headerlink" href="#numba.targets.registry.CPUOverloaded" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="numba.html#numba.dispatcher.Overloaded" title="numba.dispatcher.Overloaded"><tt class="xref py py-class docutils literal"><span class="pre">numba.dispatcher.Overloaded</span></tt></a></p>
+<dl class="attribute">
+<dt id="numba.targets.registry.CPUOverloaded.targetdescr">
+<tt class="descname">targetdescr</tt><em class="property"> = &lt;numba.targets.registry.CPUTarget object at 0x1085ac710&gt;</em><a class="headerlink" href="#numba.targets.registry.CPUOverloaded.targetdescr" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.targets.registry.CPUTarget">
+<em class="property">class </em><tt class="descclassname">numba.targets.registry.</tt><tt class="descname">CPUTarget</tt><a class="headerlink" href="#numba.targets.registry.CPUTarget" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.targets.descriptors.TargetDescriptor" title="numba.targets.descriptors.TargetDescriptor"><tt class="xref py py-class docutils literal"><span class="pre">numba.targets.descriptors.TargetDescriptor</span></tt></a></p>
+<dl class="attribute">
+<dt id="numba.targets.registry.CPUTarget.options">
+<tt class="descname">options</tt><a class="headerlink" href="#numba.targets.registry.CPUTarget.options" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <tt class="xref py py-class docutils literal"><span class="pre">CPUTargetOptions</span></tt></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="numba.targets.registry.CPUTarget.target_context">
+<tt class="descname">target_context</tt><em class="property"> = &lt;numba.targets.cpu.CPUContext object at 0x1085a7b50&gt;</em><a class="headerlink" href="#numba.targets.registry.CPUTarget.target_context" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="numba.targets.registry.CPUTarget.typing_context">
+<tt class="descname">typing_context</tt><em class="property"> = &lt;numba.typing.context.Context object at 0x10850ce90&gt;</em><a class="headerlink" href="#numba.targets.registry.CPUTarget.typing_context" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.targets.registry.TargetRegistry">
+<em class="property">class </em><tt class="descclassname">numba.targets.registry.</tt><tt class="descname">TargetRegistry</tt><big>(</big><em>*args</em>, <em>**kws</em><big>)</big><a class="headerlink" href="#numba.targets.registry.TargetRegistry" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="numba.html#numba.utils.UniqueDict" title="numba.utils.UniqueDict"><tt class="xref py py-class docutils literal"><span class="pre">numba.utils.UniqueDict</span></tt></a></p>
+<p>ondemand:</p>
+<blockquote>
+<div>A dictionary of target-name -&gt; function, where function is executed
+the first time a target is used.  It is used for deferred
+initialization for some targets (e.g. gpu).</div></blockquote>
+</dd></dl>
+
+</div>
+<div class="section" id="module-numba.targets">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-numba.targets" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        
+      </div><!-- /row -->
+
+      <!-- row -->
+      <div class="row-fluid">
+<div class="related navbar ">
+  <div class="navbar-inner">
+    <ul class="nav pull-right">
+      
+        <li><a href="../genindex.html" title="General Index" >index</a></li>
+        <li><a href="../py-modindex.html" title="Python Module Index" >modules</a></li>
+        <li><a href="numba.typeconv.html" title="numba.typeconv package" >next</a></li>
+        <li><a href="numba.servicelib.html" title="numba.servicelib package" >previous</a></li>
+        <li><a href="../index.html">numba 0.13.2 documentation</a></li>
+        <li><a href="modules.html" >Numba Module Reference</a></li> 
+      
+    </ul>
+  </div>
+</div>
+      </div><!-- /row -->
+
+      <!-- footer -->
+      <footer>
+          &copy; Copyright 2012-2014, Continuum Analytics.
+        Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.2.
+      </footer>
+      <!-- /footer -->
+
+    </div>
+    <!-- /container -->
+
+  </body>
+</html>
