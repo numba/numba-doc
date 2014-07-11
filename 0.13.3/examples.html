@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+
+
+
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+    <title>Examples &mdash; numba 0.13.3 documentation</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    
+<link rel="stylesheet" href="_static/css/basicstrap-base.css" type="text/css" />
+<link rel="stylesheet" href="_static/css/bootstrap.min.css" type="text/css" />
+<link rel="stylesheet" href="_static/css/font-awesome.min.css">
+<!--[if IE 7]>
+<link rel="stylesheet" href="_static/css/font-awesome-ie7.min.css">
+<![endif]-->
+<style type="text/css">
+  body {
+    padding-top: 60px;
+    padding-bottom: 40px;
+  }
+}
+</style>
+<link rel="stylesheet" href="_static/basicstrap.css" type="text/css" />
+<link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+<link rel="stylesheet" href="_static/css/bootstrap-responsive.min.css" type="text/css" />
+    
+<script type="text/javascript">
+  var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:    './',
+            VERSION:     '0.13.3',
+            COLLAPSE_INDEX: false,
+            FILE_SUFFIX: '.html',
+            HAS_SOURCE:  true
+  };
+</script>
+<script type="text/javascript" src="_static/js/jquery.min.js"></script>
+<script type="text/javascript" src="_static/underscore.js"></script>
+<script type="text/javascript" src="_static/doctools.js"></script>
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/javascript" src="_static/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+  $(document).ready(function(){
+    $('.show-sidebar').click(function(e) {
+       e.preventDefault();
+       if ($(".show-sidebar").html() == "Open Table Of Contents") {
+          $('.for-mobile').removeClass('hidden-phone');
+          $(".show-sidebar").html("Close Table Of Contents");
+       } else {
+          $(".show-sidebar").html("Open Table Of Contents");
+       }
+    });
+  });
+</script>
+    <link rel="top" title="numba 0.13.3 documentation" href="index.html" />
+    <link rel="next" title="First Steps with numba" href="tutorial_firststeps.html" />
+    <link rel="prev" title="UFuncs" href="ufuncs.html" /> 
+  </head>
+  <body>
+    <div class="navbar navbar-fixed-top ">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="index.html">numba 0.13.3 documentation</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav pull-right">
+              
+                <li>
+                <a href="genindex.html" title="General Index" accesskey="I">index</a>
+                </li>
+                <li>
+                <a href="py-modindex.html" title="Python Module Index" >modules</a>
+                </li>
+                <li>
+                <a href="tutorial_firststeps.html" title="First Steps with numba" accesskey="N">next</a>
+                </li>
+                <li>
+                <a href="ufuncs.html" title="UFuncs" accesskey="P">previous</a>
+                </li>
+              
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <!-- container -->
+    <div class="container-fluid">
+
+
+      
+      <div class="row-fluid hidden-desktop hidden-tablet">
+      
+<div class="span3 ">
+  <a class="visible-phone btn btn-small show-sidebar" data-toggle="collapse" data-target=".for-mobile">Open Table Of Contents</a>
+  <div class="for-mobile sidebar hidden-phone">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Examples</a><ul>
+<li><a class="reference internal" href="#a-simple-function">A Simple Function</a></li>
+<li><a class="reference internal" href="#objects">Objects</a></li>
+<li><a class="reference internal" href="#ufuncs">UFuncs</a></li>
+<li><a class="reference internal" href="#mandelbrot">Mandelbrot</a></li>
+<li><a class="reference internal" href="#filterbank-correlation">Filterbank Correlation</a></li>
+<li><a class="reference internal" href="#multi-threading">Multi threading</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="ufuncs.html"
+                        title="previous chapter">UFuncs</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="tutorial_firststeps.html"
+                        title="next chapter">First Steps with numba</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/examples.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox">
+  <h3>Quick search</h3>
+  <form class="search form-search" action="search.html" method="get">
+      <div class="input-append">
+        <input type="text" class="search-query" name="q">
+        <input type="submit" class="btn" value="Go" />
+      </div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+  </div>
+</div>
+      </div>
+      
+
+      <!-- row -->
+      <div class="row-fluid">
+         
+<div class="span3 visible-desktop visible-tablet">
+  <div class=" sidebar hidden-phone">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Examples</a><ul>
+<li><a class="reference internal" href="#a-simple-function">A Simple Function</a></li>
+<li><a class="reference internal" href="#objects">Objects</a></li>
+<li><a class="reference internal" href="#ufuncs">UFuncs</a></li>
+<li><a class="reference internal" href="#mandelbrot">Mandelbrot</a></li>
+<li><a class="reference internal" href="#filterbank-correlation">Filterbank Correlation</a></li>
+<li><a class="reference internal" href="#multi-threading">Multi threading</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="ufuncs.html"
+                        title="previous chapter">UFuncs</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="tutorial_firststeps.html"
+                        title="next chapter">First Steps with numba</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/examples.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox">
+  <h3>Quick search</h3>
+  <form class="search form-search" action="search.html" method="get">
+      <div class="input-append">
+        <input type="text" class="search-query" name="q">
+        <input type="submit" class="btn" value="Go" />
+      </div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+  </div>
+</div> 
+        
+
+        <div class="span9">
+          <div class="document">
+            <div class="documentwrapper">
+              <div class="bodywrapper">
+                <div class="body">
+                  
+  <div class="section" id="examples">
+<h1>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="a-simple-function">
+<span id="id1"></span><h2>A Simple Function<a class="headerlink" href="#a-simple-function" title="Permalink to this headline">¶</a></h2>
+<p>Suppose we want to write an image-processing function in Python.  Here&#8217;s how it might look.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">numpy</span>
+
+<span class="k">def</span> <span class="nf">filter2d</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">filt</span><span class="p">):</span>
+    <span class="n">M</span><span class="p">,</span> <span class="n">N</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">Mf</span><span class="p">,</span> <span class="n">Nf</span> <span class="o">=</span> <span class="n">filt</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">Mf2</span> <span class="o">=</span> <span class="n">Mf</span> <span class="o">//</span> <span class="mi">2</span>
+    <span class="n">Nf2</span> <span class="o">=</span> <span class="n">Nf</span> <span class="o">//</span> <span class="mi">2</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Mf2</span><span class="p">,</span> <span class="n">M</span> <span class="o">-</span> <span class="n">Mf2</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Nf2</span><span class="p">,</span> <span class="n">N</span> <span class="o">-</span> <span class="n">Nf2</span><span class="p">):</span>
+            <span class="n">num</span> <span class="o">=</span> <span class="mf">0.0</span>
+            <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Mf</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">jj</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Nf</span><span class="p">):</span>
+                    <span class="n">num</span> <span class="o">+=</span> <span class="p">(</span><span class="n">filt</span><span class="p">[</span><span class="n">Mf</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">ii</span><span class="p">,</span> <span class="n">Nf</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">jj</span><span class="p">]</span> <span class="o">*</span> <span class="n">image</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="n">Mf2</span><span class="o">+</span><span class="n">ii</span><span class="p">,</span> <span class="n">j</span><span class="o">-</span><span class="n">Nf2</span><span class="o">+</span><span class="n">jj</span><span class="p">])</span>
+            <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">num</span>
+    <span class="k">return</span> <span class="n">result</span>
+
+<span class="c"># This kind of quadruply-nested for-loop is going to be quite slow.</span>
+<span class="c"># Using Numba we can compile this code to LLVM which then gets</span>
+<span class="c"># compiled to machine code:</span>
+
+<span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">double</span><span class="p">,</span> <span class="n">jit</span>
+
+<span class="n">fastfilter_2d</span> <span class="o">=</span> <span class="n">jit</span><span class="p">(</span><span class="n">double</span><span class="p">[:,:](</span><span class="n">double</span><span class="p">[:,:],</span> <span class="n">double</span><span class="p">[:,:]))(</span><span class="n">filter2d</span><span class="p">)</span>
+
+<span class="c"># Now fastfilter_2d runs at speeds as if you had first translated</span>
+<span class="c"># it to C, compiled the code and wrapped it with Python</span>
+<span class="n">image</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">((</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">))</span>
+<span class="n">filt</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">((</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">fastfilter_2d</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">filt</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Numba actually produces two functions.   The first function is the
+low-level compiled version of filter2d.  The second function is the
+Python wrapper to that low-level function so that the function can be
+called from Python.   The first function can be called from other
+numba functions to eliminate all python overhead in function calling.</p>
+</div>
+<div class="section" id="objects">
+<h2>Objects<a class="headerlink" href="#objects" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># -*- coding: utf-8 -*-</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">absolute_import</span>
+<span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">jit</span>
+
+<span class="k">class</span> <span class="nc">MyClass</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">mymethod</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">arg</span> <span class="o">*</span> <span class="mi">2</span>
+
+<span class="nd">@jit</span>
+<span class="k">def</span> <span class="nf">call_method</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">mymethod</span><span class="p">(</span><span class="s">&quot;hello&quot;</span><span class="p">))</span>  <span class="c"># object result</span>
+    <span class="n">mydouble</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">mymethod</span><span class="p">(</span><span class="mf">10.2</span><span class="p">)</span> <span class="c"># native double</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">mydouble</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span>           <span class="c"># native multiplication</span>
+    
+<span class="n">call_method</span><span class="p">(</span><span class="n">MyClass</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="ufuncs">
+<h2>UFuncs<a class="headerlink" href="#ufuncs" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">vectorize</span>
+<span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">autojit</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">jit</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+<span class="nd">@vectorize</span><span class="p">([</span><span class="s">&#39;f8(f8)&#39;</span><span class="p">,</span><span class="s">&#39;f4(f4)&#39;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">sinc</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">x</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mf">1.0</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">x</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+
+<span class="nd">@vectorize</span><span class="p">([</span><span class="s">&#39;int8(int8,int8)&#39;</span><span class="p">,</span>
+            <span class="s">&#39;int16(int16,int16)&#39;</span><span class="p">,</span>
+            <span class="s">&#39;int32(int32,int32)&#39;</span><span class="p">,</span>
+            <span class="s">&#39;int64(int64,int64)&#39;</span><span class="p">,</span>
+            <span class="s">&#39;f4(f4,f4)&#39;</span><span class="p">,</span>
+            <span class="s">&#39;f8(f8,f8)&#39;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
+
+<span class="nd">@vectorize</span><span class="p">([</span><span class="s">&#39;f8(f8)&#39;</span><span class="p">,</span><span class="s">&#39;f4(f4)&#39;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">logit</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">x</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">x</span><span class="p">))</span>
+
+<span class="nd">@vectorize</span><span class="p">([</span><span class="s">&#39;f8(f8)&#39;</span><span class="p">,</span><span class="s">&#39;f4(f4)&#39;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">expit</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">x</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">x</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">math</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">x</span><span class="p">))</span>
+
+<span class="nd">@jit</span><span class="p">(</span><span class="s">&#39;f8(f8,f8[:])&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">polevl</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">coef</span><span class="p">):</span>
+    <span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">coef</span><span class="p">)</span>
+    <span class="n">ans</span> <span class="o">=</span> <span class="n">coef</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">while</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">:</span>
+        <span class="n">ans</span> <span class="o">=</span> <span class="n">ans</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="n">coef</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">ans</span>
+
+<span class="nd">@jit</span><span class="p">(</span><span class="s">&#39;f8(f8,f8[:])&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">p1evl</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">coef</span><span class="p">):</span>
+    <span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">coef</span><span class="p">)</span>
+    <span class="n">ans</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">coef</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">while</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">:</span>
+        <span class="n">ans</span> <span class="o">=</span> <span class="n">ans</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="n">coef</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">ans</span>    
+
+
+<span class="n">PP</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+  <span class="mf">7.96936729297347051624E-4</span><span class="p">,</span>
+  <span class="mf">8.28352392107440799803E-2</span><span class="p">,</span>
+  <span class="mf">1.23953371646414299388E0</span><span class="p">,</span>
+  <span class="mf">5.44725003058768775090E0</span><span class="p">,</span>
+  <span class="mf">8.74716500199817011941E0</span><span class="p">,</span>
+  <span class="mf">5.30324038235394892183E0</span><span class="p">,</span>
+  <span class="mf">9.99999999999999997821E-1</span><span class="p">],</span> <span class="s">&#39;d&#39;</span><span class="p">)</span>
+
+<span class="n">PQ</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+  <span class="mf">9.24408810558863637013E-4</span><span class="p">,</span>
+  <span class="mf">8.56288474354474431428E-2</span><span class="p">,</span>
+  <span class="mf">1.25352743901058953537E0</span><span class="p">,</span>
+  <span class="mf">5.47097740330417105182E0</span><span class="p">,</span>
+  <span class="mf">8.76190883237069594232E0</span><span class="p">,</span>
+  <span class="mf">5.30605288235394617618E0</span><span class="p">,</span>
+  <span class="mf">1.00000000000000000218E0</span><span class="p">],</span> <span class="s">&#39;d&#39;</span><span class="p">)</span>
+  
+<span class="n">DR1</span> <span class="o">=</span> <span class="mf">5.783185962946784521175995758455807035071</span>
+<span class="n">DR2</span> <span class="o">=</span> <span class="mf">30.47126234366208639907816317502275584842</span>
+
+<span class="n">RP</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+<span class="o">-</span><span class="mf">4.79443220978201773821E9</span><span class="p">,</span>
+ <span class="mf">1.95617491946556577543E12</span><span class="p">,</span>
+<span class="o">-</span><span class="mf">2.49248344360967716204E14</span><span class="p">,</span>
+ <span class="mf">9.70862251047306323952E15</span><span class="p">],</span> <span class="s">&#39;d&#39;</span><span class="p">)</span>
+
+<span class="n">RQ</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+    <span class="c"># 1.00000000000000000000E0,</span>
+ <span class="mf">4.99563147152651017219E2</span><span class="p">,</span>
+ <span class="mf">1.73785401676374683123E5</span><span class="p">,</span>
+ <span class="mf">4.84409658339962045305E7</span><span class="p">,</span>
+ <span class="mf">1.11855537045356834862E10</span><span class="p">,</span>
+ <span class="mf">2.11277520115489217587E12</span><span class="p">,</span>
+ <span class="mf">3.10518229857422583814E14</span><span class="p">,</span>
+ <span class="mf">3.18121955943204943306E16</span><span class="p">,</span>
+ <span class="mf">1.71086294081043136091E18</span><span class="p">],</span> <span class="s">&#39;d&#39;</span><span class="p">)</span>
+
+<span class="n">QP</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+<span class="o">-</span><span class="mf">1.13663838898469149931E-2</span><span class="p">,</span>
+<span class="o">-</span><span class="mf">1.28252718670509318512E0</span><span class="p">,</span>
+<span class="o">-</span><span class="mf">1.95539544257735972385E1</span><span class="p">,</span>
+<span class="o">-</span><span class="mf">9.32060152123768231369E1</span><span class="p">,</span>
+<span class="o">-</span><span class="mf">1.77681167980488050595E2</span><span class="p">,</span>
+<span class="o">-</span><span class="mf">1.47077505154951170175E2</span><span class="p">,</span>
+<span class="o">-</span><span class="mf">5.14105326766599330220E1</span><span class="p">,</span>
+<span class="o">-</span><span class="mf">6.05014350600728481186E0</span><span class="p">],</span> <span class="s">&#39;d&#39;</span><span class="p">)</span>
+
+<span class="n">QQ</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+    <span class="c"># 1.00000000000000000000E0,</span>
+  <span class="mf">6.43178256118178023184E1</span><span class="p">,</span>
+  <span class="mf">8.56430025976980587198E2</span><span class="p">,</span>
+  <span class="mf">3.88240183605401609683E3</span><span class="p">,</span>
+  <span class="mf">7.24046774195652478189E3</span><span class="p">,</span>
+  <span class="mf">5.93072701187316984827E3</span><span class="p">,</span>
+  <span class="mf">2.06209331660327847417E3</span><span class="p">,</span>
+  <span class="mf">2.42005740240291393179E2</span><span class="p">],</span> <span class="s">&#39;d&#39;</span><span class="p">)</span>
+
+<span class="n">NPY_PI_4</span> <span class="o">=</span> <span class="o">.</span><span class="mi">78539816339744830962</span>
+<span class="n">SQ2OPI</span>  <span class="o">=</span> <span class="o">.</span><span class="mi">79788456080286535587989</span>
+
+<span class="nd">@jit</span><span class="p">(</span><span class="s">&#39;f8(f8)&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">j0</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">x</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="o">-</span><span class="n">x</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">x</span> <span class="o">&lt;=</span> <span class="mf">5.0</span><span class="p">):</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="n">x</span> <span class="o">*</span> <span class="n">x</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">x</span> <span class="o">&lt;</span> <span class="mf">1.0e-5</span><span class="p">):</span>
+            <span class="k">return</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">z</span> <span class="o">/</span> <span class="mf">4.0</span><span class="p">)</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="p">(</span><span class="n">z</span><span class="o">-</span><span class="n">DR1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">z</span><span class="o">-</span><span class="n">DR2</span><span class="p">)</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">p</span> <span class="o">*</span> <span class="n">polevl</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">RP</span><span class="p">)</span> <span class="o">/</span> <span class="n">polevl</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">RQ</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">p</span>
+    
+    <span class="n">w</span> <span class="o">=</span> <span class="mf">5.0</span> <span class="o">/</span> <span class="n">x</span>
+    <span class="n">q</span> <span class="o">=</span> <span class="mf">25.0</span> <span class="o">/</span> <span class="p">(</span><span class="n">x</span><span class="o">*</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">polevl</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">PP</span><span class="p">)</span> <span class="o">/</span> <span class="n">polevl</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">PQ</span><span class="p">)</span>
+    <span class="n">q</span> <span class="o">=</span> <span class="n">polevl</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">QP</span><span class="p">)</span> <span class="o">/</span> <span class="n">p1evl</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">QQ</span><span class="p">)</span>
+    <span class="n">xn</span> <span class="o">=</span> <span class="n">x</span> <span class="o">-</span> <span class="n">NPY_PI_4</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">p</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">xn</span><span class="p">)</span> <span class="o">-</span> <span class="n">w</span> <span class="o">*</span> <span class="n">q</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">xn</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">p</span> <span class="o">*</span> <span class="n">SQ2OPI</span> <span class="o">/</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10000</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s">&#39;i8&#39;</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10000</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s">&#39;i8&#39;</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="mandelbrot">
+<h2>Mandelbrot<a class="headerlink" href="#mandelbrot" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># -*- coding: utf-8 -*-</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">absolute_import</span>
+<span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">jit</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">pylab</span> <span class="kn">import</span> <span class="n">imshow</span><span class="p">,</span> <span class="n">jet</span><span class="p">,</span> <span class="n">show</span><span class="p">,</span> <span class="n">ion</span>
+
+<span class="nd">@jit</span>
+<span class="k">def</span> <span class="nf">mandel</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">max_iters</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Given the real and imaginary parts of a complex number,</span>
+<span class="sd">    determine if it is a candidate for membership in the Mandelbrot</span>
+<span class="sd">    set given a fixed number of iterations.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="nb">complex</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="mf">0.0j</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_iters</span><span class="p">):</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="n">z</span><span class="o">*</span><span class="n">z</span> <span class="o">+</span> <span class="n">c</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">z</span><span class="o">.</span><span class="n">real</span><span class="o">*</span><span class="n">z</span><span class="o">.</span><span class="n">real</span> <span class="o">+</span> <span class="n">z</span><span class="o">.</span><span class="n">imag</span><span class="o">*</span><span class="n">z</span><span class="o">.</span><span class="n">imag</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">4</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">i</span>
+
+    <span class="k">return</span> <span class="mi">255</span>
+
+<span class="nd">@jit</span>
+<span class="k">def</span> <span class="nf">create_fractal</span><span class="p">(</span><span class="n">min_x</span><span class="p">,</span> <span class="n">max_x</span><span class="p">,</span> <span class="n">min_y</span><span class="p">,</span> <span class="n">max_y</span><span class="p">,</span> <span class="n">image</span><span class="p">,</span> <span class="n">iters</span><span class="p">):</span>
+    <span class="n">height</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">width</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="n">pixel_size_x</span> <span class="o">=</span> <span class="p">(</span><span class="n">max_x</span> <span class="o">-</span> <span class="n">min_x</span><span class="p">)</span> <span class="o">/</span> <span class="n">width</span>
+    <span class="n">pixel_size_y</span> <span class="o">=</span> <span class="p">(</span><span class="n">max_y</span> <span class="o">-</span> <span class="n">min_y</span><span class="p">)</span> <span class="o">/</span> <span class="n">height</span>
+    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">width</span><span class="p">):</span>
+        <span class="n">real</span> <span class="o">=</span> <span class="n">min_x</span> <span class="o">+</span> <span class="n">x</span> <span class="o">*</span> <span class="n">pixel_size_x</span>
+        <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">height</span><span class="p">):</span>
+            <span class="n">imag</span> <span class="o">=</span> <span class="n">min_y</span> <span class="o">+</span> <span class="n">y</span> <span class="o">*</span> <span class="n">pixel_size_y</span>
+            <span class="n">color</span> <span class="o">=</span> <span class="n">mandel</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">iters</span><span class="p">)</span>
+            <span class="n">image</span><span class="p">[</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">]</span> <span class="o">=</span> <span class="n">color</span>
+
+    <span class="k">return</span> <span class="n">image</span>
+
+<span class="n">image</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">500</span><span class="p">,</span> <span class="mi">750</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
+<span class="n">imshow</span><span class="p">(</span><span class="n">create_fractal</span><span class="p">(</span><span class="o">-</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">image</span><span class="p">,</span> <span class="mi">20</span><span class="p">))</span>
+<span class="n">jet</span><span class="p">()</span>
+<span class="n">ion</span><span class="p">()</span>
+<span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="filterbank-correlation">
+<h2>Filterbank Correlation<a class="headerlink" href="#filterbank-correlation" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># -*- coding: utf-8 -*-</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This file demonstrates a filterbank correlation loop.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">absolute_import</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">numba</span>
+<span class="kn">from</span> <span class="nn">numba.utils</span> <span class="kn">import</span> <span class="n">IS_PY3</span>
+<span class="kn">from</span> <span class="nn">numba.decorators</span> <span class="kn">import</span> <span class="n">jit</span>
+<span class="n">nd4type</span> <span class="o">=</span> <span class="n">numba</span><span class="o">.</span><span class="n">double</span><span class="p">[:,:,:,:]</span>
+
+<span class="k">if</span> <span class="n">IS_PY3</span><span class="p">:</span>
+    <span class="nb">xrange</span> <span class="o">=</span> <span class="nb">range</span>
+
+<span class="nd">@jit</span><span class="p">(</span><span class="n">argtypes</span><span class="o">=</span><span class="p">(</span><span class="n">nd4type</span><span class="p">,</span> <span class="n">nd4type</span><span class="p">,</span> <span class="n">nd4type</span><span class="p">))</span>
+<span class="k">def</span> <span class="nf">fbcorr</span><span class="p">(</span><span class="n">imgs</span><span class="p">,</span> <span class="n">filters</span><span class="p">,</span> <span class="n">output</span><span class="p">):</span>
+    <span class="n">n_imgs</span><span class="p">,</span> <span class="n">n_rows</span><span class="p">,</span> <span class="n">n_cols</span><span class="p">,</span> <span class="n">n_channels</span> <span class="o">=</span> <span class="n">imgs</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">n_filters</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">n_ch2</span> <span class="o">=</span> <span class="n">filters</span><span class="o">.</span><span class="n">shape</span>
+
+    <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_imgs</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">rr</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_rows</span> <span class="o">-</span> <span class="n">height</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">cc</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_cols</span> <span class="o">-</span> <span class="n">width</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">hh</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="n">height</span><span class="p">):</span>
+                    <span class="k">for</span> <span class="n">ww</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="n">width</span><span class="p">):</span>
+                        <span class="k">for</span> <span class="n">jj</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_channels</span><span class="p">):</span>
+                            <span class="k">for</span> <span class="n">ff</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_filters</span><span class="p">):</span>
+                                <span class="n">imgval</span> <span class="o">=</span> <span class="n">imgs</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span> <span class="n">rr</span> <span class="o">+</span> <span class="n">hh</span><span class="p">,</span> <span class="n">cc</span> <span class="o">+</span> <span class="n">ww</span><span class="p">,</span> <span class="n">jj</span><span class="p">]</span>
+                                <span class="n">filterval</span> <span class="o">=</span> <span class="n">filters</span><span class="p">[</span><span class="n">ff</span><span class="p">,</span> <span class="n">hh</span><span class="p">,</span> <span class="n">ww</span><span class="p">,</span> <span class="n">jj</span><span class="p">]</span>
+                                <span class="n">output</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span> <span class="n">ff</span><span class="p">,</span> <span class="n">rr</span><span class="p">,</span> <span class="n">cc</span><span class="p">]</span> <span class="o">+=</span> <span class="n">imgval</span> <span class="o">*</span> <span class="n">filterval</span>
+
+<span class="k">def</span> <span class="nf">main</span> <span class="p">():</span>
+    <span class="n">imgs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">filt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">10</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+
+    <span class="kn">import</span> <span class="nn">time</span>
+    <span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="n">fbcorr</span><span class="p">(</span><span class="n">imgs</span><span class="p">,</span> <span class="n">filt</span><span class="p">,</span> <span class="n">output</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t0</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="multi-threading">
+<h2>Multi threading<a class="headerlink" href="#multi-threading" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># -*- coding: utf-8 -*-</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Example of multithreading by releasing the GIL through ctypes.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">absolute_import</span>
+
+<span class="kn">from</span> <span class="nn">timeit</span> <span class="kn">import</span> <span class="n">repeat</span>
+<span class="kn">import</span> <span class="nn">threading</span>
+<span class="kn">from</span> <span class="nn">ctypes</span> <span class="kn">import</span> <span class="n">pythonapi</span><span class="p">,</span> <span class="n">c_void_p</span>
+<span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">exp</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">jit</span><span class="p">,</span> <span class="n">void</span><span class="p">,</span> <span class="n">double</span>
+
+<span class="n">nthreads</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">size</span> <span class="o">=</span> <span class="mf">1e6</span>
+
+<span class="k">def</span> <span class="nf">timefunc</span><span class="p">(</span><span class="n">correct</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="mi">20</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="s">&quot; &quot;</span><span class="p">)</span>
+    <span class="c"># Make sure the function is compiled before we start the benchmark</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">correct</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">correct</span><span class="p">)</span>
+    <span class="c"># time it</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">&#39;{:&gt;5.0f} ms&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">repeat</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">),</span>
+                                          <span class="n">number</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">res</span>
+
+<span class="k">def</span> <span class="nf">make_singlethread</span><span class="p">(</span><span class="n">inner_func</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
+        <span class="n">length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">length</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+        <span class="n">inner_func</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span>
+    <span class="k">return</span> <span class="n">func</span>
+
+<span class="k">def</span> <span class="nf">make_multithread</span><span class="p">(</span><span class="n">inner_func</span><span class="p">,</span> <span class="n">numthreads</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">func_mt</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
+        <span class="n">length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">length</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="p">(</span><span class="n">result</span><span class="p">,)</span> <span class="o">+</span> <span class="n">args</span>        
+        <span class="n">chunklen</span> <span class="o">=</span> <span class="p">(</span><span class="n">length</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">//</span> <span class="n">numthreads</span>
+        <span class="n">chunks</span> <span class="o">=</span> <span class="p">[[</span><span class="n">arg</span><span class="p">[</span><span class="n">i</span> <span class="o">*</span> <span class="n">chunklen</span><span class="p">:(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">chunklen</span><span class="p">]</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">]</span>
+                  <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">numthreads</span><span class="p">)]</span>
+
+        <span class="c"># You should make sure inner_func is compiled at this point, because</span>
+        <span class="c"># the compilation must happen on the main thread. This is the case</span>
+        <span class="c"># in this example because we use jit().</span>
+        <span class="n">threads</span> <span class="o">=</span> <span class="p">[</span><span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">inner_func</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="n">chunk</span><span class="p">)</span>
+                   <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">chunks</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
+        <span class="k">for</span> <span class="n">thread</span> <span class="ow">in</span> <span class="n">threads</span><span class="p">:</span>
+            <span class="n">thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+        <span class="c"># the main thread handles the last chunk</span>
+        <span class="n">inner_func</span><span class="p">(</span><span class="o">*</span><span class="n">chunks</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+
+        <span class="k">for</span> <span class="n">thread</span> <span class="ow">in</span> <span class="n">threads</span><span class="p">:</span>
+            <span class="n">thread</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">result</span>
+    <span class="k">return</span> <span class="n">func_mt</span>
+  
+<span class="n">savethread</span> <span class="o">=</span> <span class="n">pythonapi</span><span class="o">.</span><span class="n">PyEval_SaveThread</span>
+<span class="n">savethread</span><span class="o">.</span><span class="n">argtypes</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">savethread</span><span class="o">.</span><span class="n">restype</span> <span class="o">=</span> <span class="n">c_void_p</span>
+
+<span class="n">restorethread</span> <span class="o">=</span> <span class="n">pythonapi</span><span class="o">.</span><span class="n">PyEval_RestoreThread</span>
+<span class="n">restorethread</span><span class="o">.</span><span class="n">argtypes</span> <span class="o">=</span> <span class="p">[</span><span class="n">c_void_p</span><span class="p">]</span>
+<span class="n">restorethread</span><span class="o">.</span><span class="n">restype</span> <span class="o">=</span> <span class="bp">None</span>
+
+<span class="k">def</span> <span class="nf">inner_func</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="n">threadstate</span> <span class="o">=</span> <span class="n">savethread</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">)):</span>
+        <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">exp</span><span class="p">(</span><span class="mf">2.1</span> <span class="o">*</span> <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="mf">3.2</span> <span class="o">*</span> <span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    <span class="n">restorethread</span><span class="p">(</span><span class="n">threadstate</span><span class="p">)</span>
+
+<span class="n">signature</span> <span class="o">=</span> <span class="n">void</span><span class="p">(</span><span class="n">double</span><span class="p">[:],</span> <span class="n">double</span><span class="p">[:],</span> <span class="n">double</span><span class="p">[:])</span>
+<span class="n">inner_func_nb</span> <span class="o">=</span> <span class="n">jit</span><span class="p">(</span><span class="n">signature</span><span class="p">,</span> <span class="n">nopython</span><span class="o">=</span><span class="bp">True</span><span class="p">)(</span><span class="n">inner_func</span><span class="p">)</span>
+<span class="n">func_nb</span> <span class="o">=</span> <span class="n">make_singlethread</span><span class="p">(</span><span class="n">inner_func_nb</span><span class="p">)</span>
+<span class="n">func_nb_mt</span> <span class="o">=</span> <span class="n">make_multithread</span><span class="p">(</span><span class="n">inner_func_nb</span><span class="p">,</span> <span class="n">nthreads</span><span class="p">)</span>
+            
+<span class="k">def</span> <span class="nf">func_np</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mf">2.1</span> <span class="o">*</span> <span class="n">a</span> <span class="o">+</span> <span class="mf">3.2</span> <span class="o">*</span> <span class="n">b</span><span class="p">)</span>
+
+<span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">size</span><span class="p">)</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">size</span><span class="p">)</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">size</span><span class="p">)</span>
+
+<span class="n">correct</span> <span class="o">=</span> <span class="n">timefunc</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="s">&quot;numpy (1 thread)&quot;</span><span class="p">,</span> <span class="n">func_np</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+<span class="n">timefunc</span><span class="p">(</span><span class="n">correct</span><span class="p">,</span> <span class="s">&quot;numba (1 thread)&quot;</span><span class="p">,</span> <span class="n">func_nb</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+<span class="n">timefunc</span><span class="p">(</span><span class="n">correct</span><span class="p">,</span> <span class="s">&quot;numba (</span><span class="si">%d</span><span class="s"> threads)&quot;</span> <span class="o">%</span> <span class="n">nthreads</span><span class="p">,</span> <span class="n">func_nb_mt</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        
+      </div><!-- /row -->
+
+      <!-- row -->
+      <div class="row-fluid">
+<div class="related navbar ">
+  <div class="navbar-inner">
+    <ul class="nav pull-right">
+      
+        <li><a href="genindex.html" title="General Index" >index</a></li>
+        <li><a href="py-modindex.html" title="Python Module Index" >modules</a></li>
+        <li><a href="tutorial_firststeps.html" title="First Steps with numba" >next</a></li>
+        <li><a href="ufuncs.html" title="UFuncs" >previous</a></li>
+        <li><a href="index.html">numba 0.13.3 documentation</a></li> 
+      
+    </ul>
+  </div>
+</div>
+      </div><!-- /row -->
+
+      <!-- footer -->
+      <footer>
+          &copy; Copyright 2012-2014, Continuum Analytics.
+        Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.2.
+      </footer>
+      <!-- /footer -->
+
+    </div>
+    <!-- /container -->
+
+  </body>
+</html>

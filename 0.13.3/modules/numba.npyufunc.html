@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+
+
+
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+    <title>numba.npyufunc package &mdash; numba 0.13.3 documentation</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    
+<link rel="stylesheet" href="../_static/css/basicstrap-base.css" type="text/css" />
+<link rel="stylesheet" href="../_static/css/bootstrap.min.css" type="text/css" />
+<link rel="stylesheet" href="../_static/css/font-awesome.min.css">
+<!--[if IE 7]>
+<link rel="stylesheet" href="../_static/css/font-awesome-ie7.min.css">
+<![endif]-->
+<style type="text/css">
+  body {
+    padding-top: 60px;
+    padding-bottom: 40px;
+  }
+}
+</style>
+<link rel="stylesheet" href="../_static/basicstrap.css" type="text/css" />
+<link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+<link rel="stylesheet" href="../_static/css/bootstrap-responsive.min.css" type="text/css" />
+    
+<script type="text/javascript">
+  var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:    '../',
+            VERSION:     '0.13.3',
+            COLLAPSE_INDEX: false,
+            FILE_SUFFIX: '.html',
+            HAS_SOURCE:  true
+  };
+</script>
+<script type="text/javascript" src="../_static/js/jquery.min.js"></script>
+<script type="text/javascript" src="../_static/underscore.js"></script>
+<script type="text/javascript" src="../_static/doctools.js"></script>
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/javascript" src="../_static/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+  $(document).ready(function(){
+    $('.show-sidebar').click(function(e) {
+       e.preventDefault();
+       if ($(".show-sidebar").html() == "Open Table Of Contents") {
+          $('.for-mobile').removeClass('hidden-phone');
+          $(".show-sidebar").html("Close Table Of Contents");
+       } else {
+          $(".show-sidebar").html("Open Table Of Contents");
+       }
+    });
+  });
+</script>
+    <link rel="top" title="numba 0.13.3 documentation" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="navbar navbar-fixed-top ">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="../index.html">numba 0.13.3 documentation</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav pull-right">
+              
+                <li>
+                <a href="../genindex.html" title="General Index" accesskey="I">index</a>
+                </li>
+                <li>
+                <a href="../py-modindex.html" title="Python Module Index" >modules</a>
+                </li>
+              
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <!-- container -->
+    <div class="container-fluid">
+
+
+      
+      <div class="row-fluid hidden-desktop hidden-tablet">
+      
+<div class="span3 ">
+  <a class="visible-phone btn btn-small show-sidebar" data-toggle="collapse" data-target=".for-mobile">Open Table Of Contents</a>
+  <div class="for-mobile sidebar hidden-phone">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">numba.npyufunc package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-numba.npyufunc.decorators">numba.npyufunc.decorators module</a></li>
+<li><a class="reference internal" href="#numba-npyufunc-gufunc-module">numba.npyufunc.gufunc module</a></li>
+<li><a class="reference internal" href="#module-numba.npyufunc.sigparse">numba.npyufunc.sigparse module</a></li>
+<li><a class="reference internal" href="#module-numba.npyufunc.ufuncbuilder">numba.npyufunc.ufuncbuilder module</a></li>
+<li><a class="reference internal" href="#module-numba.npyufunc.wrappers">numba.npyufunc.wrappers module</a></li>
+<li><a class="reference internal" href="#module-numba.npyufunc">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/modules/numba.npyufunc.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox">
+  <h3>Quick search</h3>
+  <form class="search form-search" action="../search.html" method="get">
+      <div class="input-append">
+        <input type="text" class="search-query" name="q">
+        <input type="submit" class="btn" value="Go" />
+      </div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+  </div>
+</div>
+      </div>
+      
+
+      <!-- row -->
+      <div class="row-fluid">
+         
+<div class="span3 visible-desktop visible-tablet">
+  <div class=" sidebar hidden-phone">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">numba.npyufunc package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-numba.npyufunc.decorators">numba.npyufunc.decorators module</a></li>
+<li><a class="reference internal" href="#numba-npyufunc-gufunc-module">numba.npyufunc.gufunc module</a></li>
+<li><a class="reference internal" href="#module-numba.npyufunc.sigparse">numba.npyufunc.sigparse module</a></li>
+<li><a class="reference internal" href="#module-numba.npyufunc.ufuncbuilder">numba.npyufunc.ufuncbuilder module</a></li>
+<li><a class="reference internal" href="#module-numba.npyufunc.wrappers">numba.npyufunc.wrappers module</a></li>
+<li><a class="reference internal" href="#module-numba.npyufunc">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/modules/numba.npyufunc.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox">
+  <h3>Quick search</h3>
+  <form class="search form-search" action="../search.html" method="get">
+      <div class="input-append">
+        <input type="text" class="search-query" name="q">
+        <input type="submit" class="btn" value="Go" />
+      </div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+  </div>
+</div> 
+        
+
+        <div class="span9">
+          <div class="document">
+            <div class="documentwrapper">
+              <div class="bodywrapper">
+                <div class="body">
+                  
+  <div class="section" id="numba-npyufunc-package">
+<h1>numba.npyufunc package<a class="headerlink" href="#numba-npyufunc-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-numba.npyufunc.decorators">
+<span id="numba-npyufunc-decorators-module"></span><h2>numba.npyufunc.decorators module<a class="headerlink" href="#module-numba.npyufunc.decorators" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="numba.npyufunc.decorators.GUVectorize">
+<em class="property">class </em><tt class="descclassname">numba.npyufunc.decorators.</tt><tt class="descname">GUVectorize</tt><a class="headerlink" href="#numba.npyufunc.decorators.GUVectorize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<dl class="attribute">
+<dt id="numba.npyufunc.decorators.GUVectorize.target_registry">
+<tt class="descname">target_registry</tt><em class="property"> = {'cpu': &lt;class 'numba.npyufunc.ufuncbuilder.GUFuncBuilder'&gt;}</em><a class="headerlink" href="#numba.npyufunc.decorators.GUVectorize.target_registry" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.npyufunc.decorators.Vectorize">
+<em class="property">class </em><tt class="descclassname">numba.npyufunc.decorators.</tt><tt class="descname">Vectorize</tt><a class="headerlink" href="#numba.npyufunc.decorators.Vectorize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<dl class="attribute">
+<dt id="numba.npyufunc.decorators.Vectorize.target_registry">
+<tt class="descname">target_registry</tt><em class="property"> = {'cpu': &lt;class 'numba.npyufunc.ufuncbuilder.UFuncBuilder'&gt;}</em><a class="headerlink" href="#numba.npyufunc.decorators.Vectorize.target_registry" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.npyufunc.decorators.guvectorize">
+<tt class="descclassname">numba.npyufunc.decorators.</tt><tt class="descname">guvectorize</tt><big>(</big><em>ftylist</em>, <em>signature</em><span class="optional">[</span>, <em>target='cpu'</em><span class="optional">[</span>, <em>**kws</em><span class="optional">]</span><span class="optional">]</span><big>)</big><a class="headerlink" href="#numba.npyufunc.decorators.guvectorize" title="Permalink to this definition">¶</a></dt>
+<dd><p>A decorator to create numpy generialized-ufunc object from Numba compiled
+code.</p>
+<dl class="docutils">
+<dt>ftylist: iterable</dt>
+<dd>An iterable of type signatures, which are either
+function type object or a string describing the
+function type.</dd>
+<dt>signature: str</dt>
+<dd>A NumPy generialized-ufunc signature.
+e.g. &#8220;(m, n), (n, p)-&gt;(m, p)&#8221;</dd>
+<dt>target: str</dt>
+<dd>A string for code generation target.  Defaults to &#8220;cpu&#8221;.</dd>
+</dl>
+<p>A NumPy generialized universal-function</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>&#64;guvectorize([&#8216;void(int32[:,:], int32[:,:], int32[:,:])&#8217;,</dt>
+<dd>&#8216;void(float32[:,:], float32[:,:], float32[:,:])&#8217;],
+&#8216;(x, y),(x, y)-&gt;(x, y)&#8217;)</dd>
+<dt>def add_2d_array(a, b):</dt>
+<dd><dl class="first last docutils">
+<dt>for i in range(c.shape[0]):</dt>
+<dd><dl class="first last docutils">
+<dt>for j in range(c.shape[1]):</dt>
+<dd>c[i, j] = a[i, j] + b[i, j]</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.npyufunc.decorators.vectorize">
+<tt class="descclassname">numba.npyufunc.decorators.</tt><tt class="descname">vectorize</tt><big>(</big><em>ftylist</em><span class="optional">[</span>, <em>target='cpu'</em><span class="optional">[</span>, <em>**kws</em><span class="optional">]</span><span class="optional">]</span><big>)</big><a class="headerlink" href="#numba.npyufunc.decorators.vectorize" title="Permalink to this definition">¶</a></dt>
+<dd><p>A decorator to create numpy ufunc object from Numba compiled code.</p>
+<dl class="docutils">
+<dt>ftylist: iterable</dt>
+<dd>An iterable of type signatures, which are either
+function type object or a string describing the
+function type.</dd>
+<dt>target: str</dt>
+<dd>A string for code generation target.  Default to &#8220;cpu&#8221;.</dd>
+</dl>
+<p>A NumPy universal function</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>&#64;vectorize([&#8216;float32(float32, float32)&#8217;,</dt>
+<dd>&#8216;float64(float64, float64)&#8217;])</dd>
+<dt>def sum(a, b):</dt>
+<dd>return a + b</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+</div>
+<div class="section" id="numba-npyufunc-gufunc-module">
+<h2>numba.npyufunc.gufunc module<a class="headerlink" href="#numba-npyufunc-gufunc-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-numba.npyufunc.sigparse">
+<span id="numba-npyufunc-sigparse-module"></span><h2>numba.npyufunc.sigparse module<a class="headerlink" href="#module-numba.npyufunc.sigparse" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="numba.npyufunc.sigparse.parse_signature">
+<tt class="descclassname">numba.npyufunc.sigparse.</tt><tt class="descname">parse_signature</tt><big>(</big><em>sig</em><big>)</big><a class="headerlink" href="#numba.npyufunc.sigparse.parse_signature" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse generalized ufunc signature.</p>
+<dl class="docutils">
+<dt>NOTE: &#8216;,&#8217; (COMMA) is a delimiter; not separator.</dt>
+<dd>This means trailing comma is legal.</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-numba.npyufunc.ufuncbuilder">
+<span id="numba-npyufunc-ufuncbuilder-module"></span><h2>numba.npyufunc.ufuncbuilder module<a class="headerlink" href="#module-numba.npyufunc.ufuncbuilder" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="numba.npyufunc.ufuncbuilder.GUFuncBuilder">
+<em class="property">class </em><tt class="descclassname">numba.npyufunc.ufuncbuilder.</tt><tt class="descname">GUFuncBuilder</tt><big>(</big><em>py_func</em>, <em>signature</em>, <em>targetoptions={}</em><big>)</big><a class="headerlink" href="#numba.npyufunc.ufuncbuilder.GUFuncBuilder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<dl class="method">
+<dt id="numba.npyufunc.ufuncbuilder.GUFuncBuilder.add">
+<tt class="descname">add</tt><big>(</big><em>sig=None</em>, <em>argtypes=None</em>, <em>restype=None</em><big>)</big><a class="headerlink" href="#numba.npyufunc.ufuncbuilder.GUFuncBuilder.add" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.npyufunc.ufuncbuilder.GUFuncBuilder.build">
+<tt class="descname">build</tt><big>(</big><em>cres</em><big>)</big><a class="headerlink" href="#numba.npyufunc.ufuncbuilder.GUFuncBuilder.build" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.npyufunc.ufuncbuilder.GUFuncBuilder.build_ufunc">
+<tt class="descname">build_ufunc</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.npyufunc.ufuncbuilder.GUFuncBuilder.build_ufunc" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.npyufunc.ufuncbuilder.UFuncBuilder">
+<em class="property">class </em><tt class="descclassname">numba.npyufunc.ufuncbuilder.</tt><tt class="descname">UFuncBuilder</tt><big>(</big><em>py_func</em>, <em>targetoptions={}</em><big>)</big><a class="headerlink" href="#numba.npyufunc.ufuncbuilder.UFuncBuilder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<dl class="method">
+<dt id="numba.npyufunc.ufuncbuilder.UFuncBuilder.add">
+<tt class="descname">add</tt><big>(</big><em>sig=None</em>, <em>argtypes=None</em>, <em>restype=None</em><big>)</big><a class="headerlink" href="#numba.npyufunc.ufuncbuilder.UFuncBuilder.add" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.npyufunc.ufuncbuilder.UFuncBuilder.build">
+<tt class="descname">build</tt><big>(</big><em>cres</em><big>)</big><a class="headerlink" href="#numba.npyufunc.ufuncbuilder.UFuncBuilder.build" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.npyufunc.ufuncbuilder.UFuncBuilder.build_ufunc">
+<tt class="descname">build_ufunc</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.npyufunc.ufuncbuilder.UFuncBuilder.build_ufunc" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.npyufunc.ufuncbuilder.UFuncDispatcher">
+<em class="property">class </em><tt class="descclassname">numba.npyufunc.ufuncbuilder.</tt><tt class="descname">UFuncDispatcher</tt><big>(</big><em>py_func</em>, <em>locals={}</em>, <em>targetoptions={}</em><big>)</big><a class="headerlink" href="#numba.npyufunc.ufuncbuilder.UFuncDispatcher" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<dl class="method">
+<dt id="numba.npyufunc.ufuncbuilder.UFuncDispatcher.compile">
+<tt class="descname">compile</tt><big>(</big><em>sig</em>, <em>locals={}</em>, <em>**targetoptions</em><big>)</big><a class="headerlink" href="#numba.npyufunc.ufuncbuilder.UFuncDispatcher.compile" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="numba.npyufunc.ufuncbuilder.UFuncDispatcher.targetdescr">
+<tt class="descname">targetdescr</tt><em class="property"> = &lt;numba.npyufunc.ufuncbuilder.UFuncTarget object at 0x10aa1a150&gt;</em><a class="headerlink" href="#numba.npyufunc.ufuncbuilder.UFuncDispatcher.targetdescr" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.npyufunc.ufuncbuilder.UFuncTarget">
+<em class="property">class </em><tt class="descclassname">numba.npyufunc.ufuncbuilder.</tt><tt class="descname">UFuncTarget</tt><a class="headerlink" href="#numba.npyufunc.ufuncbuilder.UFuncTarget" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="numba.targets.html#numba.targets.registry.CPUTarget" title="numba.targets.registry.CPUTarget"><tt class="xref py py-class docutils literal"><span class="pre">numba.targets.registry.CPUTarget</span></tt></a></p>
+<dl class="attribute">
+<dt id="numba.npyufunc.ufuncbuilder.UFuncTarget.options">
+<tt class="descname">options</tt><a class="headerlink" href="#numba.npyufunc.ufuncbuilder.UFuncTarget.options" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#numba.npyufunc.ufuncbuilder.UFuncTargetOptions" title="numba.npyufunc.ufuncbuilder.UFuncTargetOptions"><tt class="xref py py-class docutils literal"><span class="pre">UFuncTargetOptions</span></tt></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.npyufunc.ufuncbuilder.UFuncTargetOptions">
+<em class="property">class </em><tt class="descclassname">numba.npyufunc.ufuncbuilder.</tt><tt class="descname">UFuncTargetOptions</tt><a class="headerlink" href="#numba.npyufunc.ufuncbuilder.UFuncTargetOptions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="numba.targets.html#numba.targets.options.TargetOptions" title="numba.targets.options.TargetOptions"><tt class="xref py py-class docutils literal"><span class="pre">numba.targets.options.TargetOptions</span></tt></a></p>
+<dl class="attribute">
+<dt id="numba.npyufunc.ufuncbuilder.UFuncTargetOptions.OPTIONS">
+<tt class="descname">OPTIONS</tt><em class="property"> = {'nopython': &lt;type 'bool'&gt;}</em><a class="headerlink" href="#numba.npyufunc.ufuncbuilder.UFuncTargetOptions.OPTIONS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-numba.npyufunc.wrappers">
+<span id="numba-npyufunc-wrappers-module"></span><h2>numba.npyufunc.wrappers module<a class="headerlink" href="#module-numba.npyufunc.wrappers" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="numba.npyufunc.wrappers.GUArrayArg">
+<em class="property">class </em><tt class="descclassname">numba.npyufunc.wrappers.</tt><tt class="descname">GUArrayArg</tt><big>(</big><em>context</em>, <em>builder</em>, <em>args</em>, <em>dims</em>, <em>steps</em>, <em>i</em>, <em>step_offset</em>, <em>typ</em>, <em>syms</em>, <em>sym_dim</em><big>)</big><a class="headerlink" href="#numba.npyufunc.wrappers.GUArrayArg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<dl class="method">
+<dt id="numba.npyufunc.wrappers.GUArrayArg.next">
+<tt class="descname">next</tt><big>(</big><em>i</em><big>)</big><a class="headerlink" href="#numba.npyufunc.wrappers.GUArrayArg.next" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.npyufunc.wrappers.UArrayArg">
+<em class="property">class </em><tt class="descclassname">numba.npyufunc.wrappers.</tt><tt class="descname">UArrayArg</tt><big>(</big><em>context</em>, <em>builder</em>, <em>args</em>, <em>steps</em>, <em>i</em>, <em>argtype</em><big>)</big><a class="headerlink" href="#numba.npyufunc.wrappers.UArrayArg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<dl class="method">
+<dt id="numba.npyufunc.wrappers.UArrayArg.load">
+<tt class="descname">load</tt><big>(</big><em>ind</em><big>)</big><a class="headerlink" href="#numba.npyufunc.wrappers.UArrayArg.load" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.npyufunc.wrappers.UArrayArg.load_aligned">
+<tt class="descname">load_aligned</tt><big>(</big><em>ind</em><big>)</big><a class="headerlink" href="#numba.npyufunc.wrappers.UArrayArg.load_aligned" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.npyufunc.wrappers.UArrayArg.load_direct">
+<tt class="descname">load_direct</tt><big>(</big><em>offset</em><big>)</big><a class="headerlink" href="#numba.npyufunc.wrappers.UArrayArg.load_direct" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.npyufunc.wrappers.UArrayArg.store">
+<tt class="descname">store</tt><big>(</big><em>value</em>, <em>ind</em><big>)</big><a class="headerlink" href="#numba.npyufunc.wrappers.UArrayArg.store" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.npyufunc.wrappers.UArrayArg.store_aligned">
+<tt class="descname">store_aligned</tt><big>(</big><em>value</em>, <em>ind</em><big>)</big><a class="headerlink" href="#numba.npyufunc.wrappers.UArrayArg.store_aligned" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.npyufunc.wrappers.UArrayArg.store_direct">
+<tt class="descname">store_direct</tt><big>(</big><em>value</em>, <em>offset</em><big>)</big><a class="headerlink" href="#numba.npyufunc.wrappers.UArrayArg.store_direct" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.npyufunc.wrappers.build_fast_loop_body">
+<tt class="descclassname">numba.npyufunc.wrappers.</tt><tt class="descname">build_fast_loop_body</tt><big>(</big><em>context</em>, <em>func</em>, <em>builder</em>, <em>arrays</em>, <em>out</em>, <em>offsets</em>, <em>store_offset</em>, <em>signature</em>, <em>ind</em><big>)</big><a class="headerlink" href="#numba.npyufunc.wrappers.build_fast_loop_body" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.npyufunc.wrappers.build_gufunc_wrapper">
+<tt class="descclassname">numba.npyufunc.wrappers.</tt><tt class="descname">build_gufunc_wrapper</tt><big>(</big><em>context</em>, <em>func</em>, <em>signature</em>, <em>sin</em>, <em>sout</em><big>)</big><a class="headerlink" href="#numba.npyufunc.wrappers.build_gufunc_wrapper" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.npyufunc.wrappers.build_slow_loop_body">
+<tt class="descclassname">numba.npyufunc.wrappers.</tt><tt class="descname">build_slow_loop_body</tt><big>(</big><em>context</em>, <em>func</em>, <em>builder</em>, <em>arrays</em>, <em>out</em>, <em>offsets</em>, <em>store_offset</em>, <em>signature</em><big>)</big><a class="headerlink" href="#numba.npyufunc.wrappers.build_slow_loop_body" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.npyufunc.wrappers.build_ufunc_wrapper">
+<tt class="descclassname">numba.npyufunc.wrappers.</tt><tt class="descname">build_ufunc_wrapper</tt><big>(</big><em>context</em>, <em>func</em>, <em>signature</em><big>)</big><a class="headerlink" href="#numba.npyufunc.wrappers.build_ufunc_wrapper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wrap the scalar function with a loop that iterates over the arguments</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-numba.npyufunc">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-numba.npyufunc" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        
+      </div><!-- /row -->
+
+      <!-- row -->
+      <div class="row-fluid">
+<div class="related navbar ">
+  <div class="navbar-inner">
+    <ul class="nav pull-right">
+      
+        <li><a href="../genindex.html" title="General Index" >index</a></li>
+        <li><a href="../py-modindex.html" title="Python Module Index" >modules</a></li>
+        <li><a href="../index.html">numba 0.13.3 documentation</a></li> 
+      
+    </ul>
+  </div>
+</div>
+      </div><!-- /row -->
+
+      <!-- footer -->
+      <footer>
+          &copy; Copyright 2012-2014, Continuum Analytics.
+        Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.2.
+      </footer>
+      <!-- /footer -->
+
+    </div>
+    <!-- /container -->
+
+  </body>
+</html>
