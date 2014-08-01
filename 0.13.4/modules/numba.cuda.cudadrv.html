@@ -1,0 +1,1393 @@
+<!DOCTYPE html>
+
+
+
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+    <title>numba.cuda.cudadrv package &mdash; numba 0.13.4 documentation</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    
+<link rel="stylesheet" href="../_static/css/basicstrap-base.css" type="text/css" />
+<link rel="stylesheet" href="../_static/css/bootstrap.min.css" type="text/css" />
+<link rel="stylesheet" href="../_static/css/font-awesome.min.css">
+<!--[if IE 7]>
+<link rel="stylesheet" href="../_static/css/font-awesome-ie7.min.css">
+<![endif]-->
+<style type="text/css">
+  body {
+    padding-top: 60px;
+    padding-bottom: 40px;
+  }
+}
+</style>
+<link rel="stylesheet" href="../_static/basicstrap.css" type="text/css" />
+<link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+<link rel="stylesheet" href="../_static/css/bootstrap-responsive.min.css" type="text/css" />
+    
+<script type="text/javascript">
+  var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:    '../',
+            VERSION:     '0.13.4',
+            COLLAPSE_INDEX: false,
+            FILE_SUFFIX: '.html',
+            HAS_SOURCE:  true
+  };
+</script>
+<script type="text/javascript" src="../_static/js/jquery.min.js"></script>
+<script type="text/javascript" src="../_static/underscore.js"></script>
+<script type="text/javascript" src="../_static/doctools.js"></script>
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/javascript" src="../_static/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+  $(document).ready(function(){
+    $('.show-sidebar').click(function(e) {
+       e.preventDefault();
+       if ($(".show-sidebar").html() == "Open Table Of Contents") {
+          $('.for-mobile').removeClass('hidden-phone');
+          $(".show-sidebar").html("Close Table Of Contents");
+       } else {
+          $(".show-sidebar").html("Open Table Of Contents");
+       }
+    });
+  });
+</script>
+    <link rel="top" title="numba 0.13.4 documentation" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="navbar navbar-fixed-top ">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="../index.html">numba 0.13.4 documentation</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav pull-right">
+              
+                <li>
+                <a href="../genindex.html" title="General Index" accesskey="I">index</a>
+                </li>
+                <li>
+                <a href="../py-modindex.html" title="Python Module Index" >modules</a>
+                </li>
+              
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <!-- container -->
+    <div class="container-fluid">
+
+
+      
+      <div class="row-fluid hidden-desktop hidden-tablet">
+      
+<div class="span3 ">
+  <a class="visible-phone btn btn-small show-sidebar" data-toggle="collapse" data-target=".for-mobile">Open Table Of Contents</a>
+  <div class="for-mobile sidebar hidden-phone">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">numba.cuda.cudadrv package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-numba.cuda.cudadrv.devicearray">numba.cuda.cudadrv.devicearray module</a></li>
+<li><a class="reference internal" href="#module-numba.cuda.cudadrv.devices">numba.cuda.cudadrv.devices module</a></li>
+<li><a class="reference internal" href="#module-numba.cuda.cudadrv.driver">numba.cuda.cudadrv.driver module</a></li>
+<li><a class="reference internal" href="#module-numba.cuda.cudadrv.drvapi">numba.cuda.cudadrv.drvapi module</a></li>
+<li><a class="reference internal" href="#module-numba.cuda.cudadrv.enums">numba.cuda.cudadrv.enums module</a></li>
+<li><a class="reference internal" href="#module-numba.cuda.cudadrv.error">numba.cuda.cudadrv.error module</a></li>
+<li><a class="reference internal" href="#module-numba.cuda.cudadrv.libs">numba.cuda.cudadrv.libs module</a></li>
+<li><a class="reference internal" href="#module-numba.cuda.cudadrv.ndarray">numba.cuda.cudadrv.ndarray module</a></li>
+<li><a class="reference internal" href="#module-numba.cuda.cudadrv.nvvm">numba.cuda.cudadrv.nvvm module</a></li>
+<li><a class="reference internal" href="#module-numba.cuda.cudadrv">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/modules/numba.cuda.cudadrv.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox">
+  <h3>Quick search</h3>
+  <form class="search form-search" action="../search.html" method="get">
+      <div class="input-append">
+        <input type="text" class="search-query" name="q">
+        <input type="submit" class="btn" value="Go" />
+      </div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+  </div>
+</div>
+      </div>
+      
+
+      <!-- row -->
+      <div class="row-fluid">
+         
+<div class="span3 visible-desktop visible-tablet">
+  <div class=" sidebar hidden-phone">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">numba.cuda.cudadrv package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-numba.cuda.cudadrv.devicearray">numba.cuda.cudadrv.devicearray module</a></li>
+<li><a class="reference internal" href="#module-numba.cuda.cudadrv.devices">numba.cuda.cudadrv.devices module</a></li>
+<li><a class="reference internal" href="#module-numba.cuda.cudadrv.driver">numba.cuda.cudadrv.driver module</a></li>
+<li><a class="reference internal" href="#module-numba.cuda.cudadrv.drvapi">numba.cuda.cudadrv.drvapi module</a></li>
+<li><a class="reference internal" href="#module-numba.cuda.cudadrv.enums">numba.cuda.cudadrv.enums module</a></li>
+<li><a class="reference internal" href="#module-numba.cuda.cudadrv.error">numba.cuda.cudadrv.error module</a></li>
+<li><a class="reference internal" href="#module-numba.cuda.cudadrv.libs">numba.cuda.cudadrv.libs module</a></li>
+<li><a class="reference internal" href="#module-numba.cuda.cudadrv.ndarray">numba.cuda.cudadrv.ndarray module</a></li>
+<li><a class="reference internal" href="#module-numba.cuda.cudadrv.nvvm">numba.cuda.cudadrv.nvvm module</a></li>
+<li><a class="reference internal" href="#module-numba.cuda.cudadrv">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/modules/numba.cuda.cudadrv.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox">
+  <h3>Quick search</h3>
+  <form class="search form-search" action="../search.html" method="get">
+      <div class="input-append">
+        <input type="text" class="search-query" name="q">
+        <input type="submit" class="btn" value="Go" />
+      </div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+  </div>
+</div> 
+        
+
+        <div class="span9">
+          <div class="document">
+            <div class="documentwrapper">
+              <div class="bodywrapper">
+                <div class="body">
+                  
+  <div class="section" id="numba-cuda-cudadrv-package">
+<h1>numba.cuda.cudadrv package<a class="headerlink" href="#numba-cuda-cudadrv-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-numba.cuda.cudadrv.devicearray">
+<span id="numba-cuda-cudadrv-devicearray-module"></span><h2>numba.cuda.cudadrv.devicearray module<a class="headerlink" href="#module-numba.cuda.cudadrv.devicearray" title="Permalink to this headline">¶</a></h2>
+<p>A CUDA ND Array is recognized by checking the __cuda_memory__ attribute
+on the object.  If it exists and evaluate to True, it must define shape,
+strides, dtype and size attributes similar to a NumPy ndarray.</p>
+<dl class="class">
+<dt id="numba.cuda.cudadrv.devicearray.DeviceNDArray">
+<em class="property">class </em><tt class="descclassname">numba.cuda.cudadrv.devicearray.</tt><tt class="descname">DeviceNDArray</tt><big>(</big><em>shape</em>, <em>strides</em>, <em>dtype</em>, <em>stream=0</em>, <em>writeback=None</em>, <em>gpu_head=None</em>, <em>gpu_data=None</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.devicearray.DeviceNDArray" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.cuda.cudadrv.devicearray.DeviceNDArrayBase" title="numba.cuda.cudadrv.devicearray.DeviceNDArrayBase"><tt class="xref py py-class docutils literal"><span class="pre">numba.cuda.cudadrv.devicearray.DeviceNDArrayBase</span></tt></a></p>
+<dl class="method">
+<dt id="numba.cuda.cudadrv.devicearray.DeviceNDArray.is_c_contiguous">
+<tt class="descname">is_c_contiguous</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.devicearray.DeviceNDArray.is_c_contiguous" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadrv.devicearray.DeviceNDArray.is_f_contiguous">
+<tt class="descname">is_f_contiguous</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.devicearray.DeviceNDArray.is_f_contiguous" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadrv.devicearray.DeviceNDArray.ravel">
+<tt class="descname">ravel</tt><big>(</big><em>order='C'</em>, <em>stream=0</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.devicearray.DeviceNDArray.ravel" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadrv.devicearray.DeviceNDArray.reshape">
+<tt class="descname">reshape</tt><big>(</big><em>*newshape</em>, <em>**kws</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.devicearray.DeviceNDArray.reshape" title="Permalink to this definition">¶</a></dt>
+<dd><p>reshape(self, <a href="#id1"><span class="problematic" id="id2">*</span></a>newshape, order=&#8217;C&#8217;):</p>
+<p>Reshape the array and keeping the original data</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.cudadrv.devicearray.DeviceNDArrayBase">
+<em class="property">class </em><tt class="descclassname">numba.cuda.cudadrv.devicearray.</tt><tt class="descname">DeviceNDArrayBase</tt><big>(</big><em>shape</em>, <em>strides</em>, <em>dtype</em>, <em>stream=0</em>, <em>writeback=None</em>, <em>gpu_head=None</em>, <em>gpu_data=None</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.devicearray.DeviceNDArrayBase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>A on GPU NDArray representation</p>
+<dl class="method">
+<dt id="numba.cuda.cudadrv.devicearray.DeviceNDArrayBase.as_cuda_arg">
+<tt class="descname">as_cuda_arg</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.devicearray.DeviceNDArrayBase.as_cuda_arg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a device memory object that is used as the argument.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadrv.devicearray.DeviceNDArrayBase.copy_to_device">
+<tt class="descname">copy_to_device</tt><big>(</big><em>ary</em>, <em>stream=0</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.devicearray.DeviceNDArrayBase.copy_to_device" title="Permalink to this definition">¶</a></dt>
+<dd><p>Copy <cite>ary</cite> to <cite>self</cite>.</p>
+<p>If <cite>ary</cite> is a CUDA memory, perform a device-to-device transfer.
+Otherwise, perform a a host-to-device transfer.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadrv.devicearray.DeviceNDArrayBase.copy_to_host">
+<tt class="descname">copy_to_host</tt><big>(</big><em>ary=None</em>, <em>stream=0</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.devicearray.DeviceNDArrayBase.copy_to_host" title="Permalink to this definition">¶</a></dt>
+<dd><p>Copy <tt class="docutils literal"><span class="pre">self</span></tt> to <tt class="docutils literal"><span class="pre">ary</span></tt> or create a new numpy ndarray
+if <tt class="docutils literal"><span class="pre">ary</span></tt> is <tt class="docutils literal"><span class="pre">None</span></tt>.</p>
+<p>Always returns the host array.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="numba.cuda.cudadrv.devicearray.DeviceNDArrayBase.device_ctypes_pointer">
+<tt class="descname">device_ctypes_pointer</tt><a class="headerlink" href="#numba.cuda.cudadrv.devicearray.DeviceNDArrayBase.device_ctypes_pointer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the ctypes pointer to the GPU data buffer</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadrv.devicearray.DeviceNDArrayBase.split">
+<tt class="descname">split</tt><big>(</big><em>section</em>, <em>stream=0</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.devicearray.DeviceNDArrayBase.split" title="Permalink to this definition">¶</a></dt>
+<dd><p>Split the array into equal partition of the <cite>section</cite> size.
+If the array cannot be equally divided, the last section will be
+smaller.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadrv.devicearray.DeviceNDArrayBase.to_host">
+<tt class="descname">to_host</tt><big>(</big><em>stream=0</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.devicearray.DeviceNDArrayBase.to_host" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.cudadrv.devicearray.MappedNDArray">
+<em class="property">class </em><tt class="descclassname">numba.cuda.cudadrv.devicearray.</tt><tt class="descname">MappedNDArray</tt><big>(</big><em>shape</em>, <em>strides</em>, <em>dtype</em>, <em>stream=0</em>, <em>writeback=None</em>, <em>gpu_head=None</em>, <em>gpu_data=None</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.devicearray.MappedNDArray" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.cuda.cudadrv.devicearray.DeviceNDArrayBase" title="numba.cuda.cudadrv.devicearray.DeviceNDArrayBase"><tt class="xref py py-class docutils literal"><span class="pre">numba.cuda.cudadrv.devicearray.DeviceNDArrayBase</span></tt></a>, <tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></p>
+<p>A host array that uses CUDA mapped memory.</p>
+<dl class="method">
+<dt id="numba.cuda.cudadrv.devicearray.MappedNDArray.device_setup">
+<tt class="descname">device_setup</tt><big>(</big><em>gpu_data</em>, <em>stream=0</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.devicearray.MappedNDArray.device_setup" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.cudadrv.devicearray.auto_device">
+<tt class="descclassname">numba.cuda.cudadrv.devicearray.</tt><tt class="descname">auto_device</tt><big>(</big><em>ary</em>, <em>stream=0</em>, <em>copy=True</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.devicearray.auto_device" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.cudadrv.devicearray.from_array_like">
+<tt class="descclassname">numba.cuda.cudadrv.devicearray.</tt><tt class="descname">from_array_like</tt><big>(</big><em>ary</em>, <em>stream=0</em>, <em>gpu_head=None</em>, <em>gpu_data=None</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.devicearray.from_array_like" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a DeviceNDArray object that is like ary.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.cudadrv.devicearray.is_cuda_ndarray">
+<tt class="descclassname">numba.cuda.cudadrv.devicearray.</tt><tt class="descname">is_cuda_ndarray</tt><big>(</big><em>obj</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.devicearray.is_cuda_ndarray" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if an object is a CUDA ndarray</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.cudadrv.devicearray.require_cuda_ndarray">
+<tt class="descclassname">numba.cuda.cudadrv.devicearray.</tt><tt class="descname">require_cuda_ndarray</tt><big>(</big><em>obj</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.devicearray.require_cuda_ndarray" title="Permalink to this definition">¶</a></dt>
+<dd><p>Raises ValueError is is_cuda_ndarray(obj) evaluates False</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.cudadrv.devicearray.sentry_contiguous">
+<tt class="descclassname">numba.cuda.cudadrv.devicearray.</tt><tt class="descname">sentry_contiguous</tt><big>(</big><em>ary</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.devicearray.sentry_contiguous" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.cudadrv.devicearray.verify_cuda_ndarray_interface">
+<tt class="descclassname">numba.cuda.cudadrv.devicearray.</tt><tt class="descname">verify_cuda_ndarray_interface</tt><big>(</big><em>obj</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.devicearray.verify_cuda_ndarray_interface" title="Permalink to this definition">¶</a></dt>
+<dd><p>Verify the CUDA ndarray interface for an obj</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-numba.cuda.cudadrv.devices">
+<span id="numba-cuda-cudadrv-devices-module"></span><h2>numba.cuda.cudadrv.devices module<a class="headerlink" href="#module-numba.cuda.cudadrv.devices" title="Permalink to this headline">¶</a></h2>
+<p>Expose each GPU devices directly</p>
+<dl class="class">
+<dt id="numba.cuda.cudadrv.devices.GPU">
+<em class="property">class </em><tt class="descclassname">numba.cuda.cudadrv.devices.</tt><tt class="descname">GPU</tt><big>(</big><em>gpu</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.devices.GPU" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Proxy into driver.Device</p>
+<dl class="attribute">
+<dt id="numba.cuda.cudadrv.devices.GPU.context">
+<tt class="descname">context</tt><a class="headerlink" href="#numba.cuda.cudadrv.devices.GPU.context" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadrv.devices.GPU.pop">
+<tt class="descname">pop</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.devices.GPU.pop" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadrv.devices.GPU.push">
+<tt class="descname">push</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.devices.GPU.push" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadrv.devices.GPU.reset">
+<tt class="descname">reset</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.devices.GPU.reset" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.cudadrv.devices.get_context">
+<tt class="descclassname">numba.cuda.cudadrv.devices.</tt><tt class="descname">get_context</tt><big>(</big><em>devnum=0</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.devices.get_context" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.cudadrv.devices.get_gpu">
+<tt class="descclassname">numba.cuda.cudadrv.devices.</tt><tt class="descname">get_gpu</tt><big>(</big><em>i</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.devices.get_gpu" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.cudadrv.devices.init_gpus">
+<tt class="descclassname">numba.cuda.cudadrv.devices.</tt><tt class="descname">init_gpus</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.devices.init_gpus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Populates global &#8220;gpus&#8221; as a list of GPU objects</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.cudadrv.devices.require_context">
+<tt class="descclassname">numba.cuda.cudadrv.devices.</tt><tt class="descname">require_context</tt><big>(</big><em>fn</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.devices.require_context" title="Permalink to this definition">¶</a></dt>
+<dd><p>A decorator to ensure a context for the CUDA subsystem</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.cudadrv.devices.reset">
+<tt class="descclassname">numba.cuda.cudadrv.devices.</tt><tt class="descname">reset</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.devices.reset" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-numba.cuda.cudadrv.driver">
+<span id="numba-cuda-cudadrv-driver-module"></span><h2>numba.cuda.cudadrv.driver module<a class="headerlink" href="#module-numba.cuda.cudadrv.driver" title="Permalink to this headline">¶</a></h2>
+<p>CUDA driver bridge implementation</p>
+<p>NOTE:
+The new driver implementation uses a &#8220;trashing service&#8221; that help prevents a
+crashing the system (particularly OSX) when the CUDA context is corrupted at
+resource deallocation.  The old approach ties resource management directly
+into the object destructor; thus, at corruption of the CUDA context,
+subsequent deallocation could further corrupt the CUDA context and causes the
+system to freeze in some cases.</p>
+<dl class="class">
+<dt id="numba.cuda.cudadrv.driver.Context">
+<em class="property">class </em><tt class="descclassname">numba.cuda.cudadrv.driver.</tt><tt class="descname">Context</tt><big>(</big><em>device</em>, <em>handle</em>, <em>finalizer=None</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.Context" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>This object is tied to the lifetime of the actual context resource.</p>
+<p>This object is usually wrapped in a weakref proxy for user.  User seldom
+owns this object.</p>
+<dl class="method">
+<dt id="numba.cuda.cudadrv.driver.Context.create_event">
+<tt class="descname">create_event</tt><big>(</big><em>timing=True</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.Context.create_event" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadrv.driver.Context.create_module_image">
+<tt class="descname">create_module_image</tt><big>(</big><em>image</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.Context.create_module_image" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadrv.driver.Context.create_module_ptx">
+<tt class="descname">create_module_ptx</tt><big>(</big><em>ptx</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.Context.create_module_ptx" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadrv.driver.Context.create_stream">
+<tt class="descname">create_stream</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.Context.create_stream" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadrv.driver.Context.get_memory_info">
+<tt class="descname">get_memory_info</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.Context.get_memory_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns (free, total) memory in bytes in the context.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadrv.driver.Context.memalloc">
+<tt class="descname">memalloc</tt><big>(</big><em>bytesize</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.Context.memalloc" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadrv.driver.Context.memfree">
+<tt class="descname">memfree</tt><big>(</big><em>pointer</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.Context.memfree" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadrv.driver.Context.memhostalloc">
+<tt class="descname">memhostalloc</tt><big>(</big><em>bytesize</em>, <em>mapped=False</em>, <em>portable=False</em>, <em>wc=False</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.Context.memhostalloc" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadrv.driver.Context.mempin">
+<tt class="descname">mempin</tt><big>(</big><em>owner</em>, <em>pointer</em>, <em>size</em>, <em>mapped=False</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.Context.mempin" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadrv.driver.Context.memunpin">
+<tt class="descname">memunpin</tt><big>(</big><em>pointer</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.Context.memunpin" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadrv.driver.Context.pop">
+<tt class="descname">pop</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.Context.pop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pop context</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadrv.driver.Context.push">
+<tt class="descname">push</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.Context.push" title="Permalink to this definition">¶</a></dt>
+<dd><p>Push context</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadrv.driver.Context.reset">
+<tt class="descname">reset</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.Context.reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clean up all owned resources in this context</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadrv.driver.Context.synchronize">
+<tt class="descname">synchronize</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.Context.synchronize" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadrv.driver.Context.unload_module">
+<tt class="descname">unload_module</tt><big>(</big><em>module</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.Context.unload_module" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="exception">
+<dt id="numba.cuda.cudadrv.driver.CudaAPIError">
+<em class="property">exception </em><tt class="descclassname">numba.cuda.cudadrv.driver.</tt><tt class="descname">CudaAPIError</tt><big>(</big><em>code</em>, <em>msg</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.CudaAPIError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.cuda.cudadrv.error.CudaDriverError" title="numba.cuda.cudadrv.error.CudaDriverError"><tt class="xref py py-class docutils literal"><span class="pre">numba.cuda.cudadrv.error.CudaDriverError</span></tt></a></p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="numba.cuda.cudadrv.driver.DeadMemoryError">
+<em class="property">exception </em><tt class="descclassname">numba.cuda.cudadrv.driver.</tt><tt class="descname">DeadMemoryError</tt><a class="headerlink" href="#numba.cuda.cudadrv.driver.DeadMemoryError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">exceptions.RuntimeError</span></tt></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.cudadrv.driver.Device">
+<em class="property">class </em><tt class="descclassname">numba.cuda.cudadrv.driver.</tt><tt class="descname">Device</tt><big>(</big><em>devnum</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.Device" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>The device object owns the CUDA contexts.  This is owned by the driver
+object.  User should not construct devices directly.</p>
+<dl class="attribute">
+<dt id="numba.cuda.cudadrv.driver.Device.COMPUTE_CAPABILITY">
+<tt class="descname">COMPUTE_CAPABILITY</tt><a class="headerlink" href="#numba.cuda.cudadrv.driver.Device.COMPUTE_CAPABILITY" title="Permalink to this definition">¶</a></dt>
+<dd><p>For backward compatibility</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadrv.driver.Device.close_all_context">
+<tt class="descname">close_all_context</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.Device.close_all_context" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadrv.driver.Device.create_context">
+<tt class="descname">create_context</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.Device.create_context" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadrv.driver.Device.get_context">
+<tt class="descname">get_context</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.Device.get_context" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadrv.driver.Device.get_or_create_context">
+<tt class="descname">get_or_create_context</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.Device.get_or_create_context" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadrv.driver.Device.reset">
+<tt class="descname">reset</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.Device.reset" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.cudadrv.driver.Driver">
+<em class="property">class </em><tt class="descclassname">numba.cuda.cudadrv.driver.</tt><tt class="descname">Driver</tt><a class="headerlink" href="#numba.cuda.cudadrv.driver.Driver" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Driver API functions are lazily bound.</p>
+<dl class="method">
+<dt id="numba.cuda.cudadrv.driver.Driver.get_device">
+<tt class="descname">get_device</tt><big>(</big><em>devnum=0</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.Driver.get_device" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadrv.driver.Driver.get_device_count">
+<tt class="descname">get_device_count</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.Driver.get_device_count" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadrv.driver.Driver.initialize">
+<tt class="descname">initialize</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.Driver.initialize" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="numba.cuda.cudadrv.driver.Driver.is_available">
+<tt class="descname">is_available</tt><a class="headerlink" href="#numba.cuda.cudadrv.driver.Driver.is_available" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadrv.driver.Driver.list_devices">
+<tt class="descname">list_devices</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.Driver.list_devices" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of active devices</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadrv.driver.Driver.reset">
+<tt class="descname">reset</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.Driver.reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reset all devices</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.cudadrv.driver.Event">
+<em class="property">class </em><tt class="descclassname">numba.cuda.cudadrv.driver.</tt><tt class="descname">Event</tt><big>(</big><em>context</em>, <em>handle</em>, <em>finalizer=None</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.Event" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<dl class="method">
+<dt id="numba.cuda.cudadrv.driver.Event.elapsed_time">
+<tt class="descname">elapsed_time</tt><big>(</big><em>evtend</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.Event.elapsed_time" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadrv.driver.Event.query">
+<tt class="descname">query</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.Event.query" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns True if all work before the most recent record has completed;
+otherwise, returns False.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadrv.driver.Event.record">
+<tt class="descname">record</tt><big>(</big><em>stream=0</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.Event.record" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the record state of the event at the stream.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadrv.driver.Event.synchronize">
+<tt class="descname">synchronize</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.Event.synchronize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Synchronize the host thread for the completion of the event.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadrv.driver.Event.wait">
+<tt class="descname">wait</tt><big>(</big><em>stream=0</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.Event.wait" title="Permalink to this definition">¶</a></dt>
+<dd><p>All future works submitted to stream will wait util the event
+completes.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.cudadrv.driver.FuncAttr">
+<em class="property">class </em><tt class="descclassname">numba.cuda.cudadrv.driver.</tt><tt class="descname">FuncAttr</tt><a class="headerlink" href="#numba.cuda.cudadrv.driver.FuncAttr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">tuple</span></tt></p>
+<p>FuncAttr(regs, shared, local, const, maxthreads)</p>
+<dl class="attribute">
+<dt id="numba.cuda.cudadrv.driver.FuncAttr.const">
+<tt class="descname">const</tt><a class="headerlink" href="#numba.cuda.cudadrv.driver.FuncAttr.const" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 3</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="numba.cuda.cudadrv.driver.FuncAttr.local">
+<tt class="descname">local</tt><a class="headerlink" href="#numba.cuda.cudadrv.driver.FuncAttr.local" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 2</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="numba.cuda.cudadrv.driver.FuncAttr.maxthreads">
+<tt class="descname">maxthreads</tt><a class="headerlink" href="#numba.cuda.cudadrv.driver.FuncAttr.maxthreads" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 4</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="numba.cuda.cudadrv.driver.FuncAttr.regs">
+<tt class="descname">regs</tt><a class="headerlink" href="#numba.cuda.cudadrv.driver.FuncAttr.regs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="numba.cuda.cudadrv.driver.FuncAttr.shared">
+<tt class="descname">shared</tt><a class="headerlink" href="#numba.cuda.cudadrv.driver.FuncAttr.shared" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.cudadrv.driver.Function">
+<em class="property">class </em><tt class="descclassname">numba.cuda.cudadrv.driver.</tt><tt class="descname">Function</tt><big>(</big><em>module</em>, <em>handle</em>, <em>name</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.Function" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<dl class="attribute">
+<dt id="numba.cuda.cudadrv.driver.Function.blockdim">
+<tt class="descname">blockdim</tt><em class="property"> = (1, 1, 1)</em><a class="headerlink" href="#numba.cuda.cudadrv.driver.Function.blockdim" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadrv.driver.Function.cache_config">
+<tt class="descname">cache_config</tt><big>(</big><em>prefer_equal=False</em>, <em>prefer_cache=False</em>, <em>prefer_shared=False</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.Function.cache_config" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadrv.driver.Function.configure">
+<tt class="descname">configure</tt><big>(</big><em>griddim</em>, <em>blockdim</em>, <em>sharedmem=0</em>, <em>stream=0</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.Function.configure" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="numba.cuda.cudadrv.driver.Function.device">
+<tt class="descname">device</tt><a class="headerlink" href="#numba.cuda.cudadrv.driver.Function.device" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="numba.cuda.cudadrv.driver.Function.griddim">
+<tt class="descname">griddim</tt><em class="property"> = (1, 1, 1)</em><a class="headerlink" href="#numba.cuda.cudadrv.driver.Function.griddim" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="numba.cuda.cudadrv.driver.Function.sharedmem">
+<tt class="descname">sharedmem</tt><em class="property"> = 0</em><a class="headerlink" href="#numba.cuda.cudadrv.driver.Function.sharedmem" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="numba.cuda.cudadrv.driver.Function.stream">
+<tt class="descname">stream</tt><em class="property"> = 0</em><a class="headerlink" href="#numba.cuda.cudadrv.driver.Function.stream" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.cudadrv.driver.Linker">
+<em class="property">class </em><tt class="descclassname">numba.cuda.cudadrv.driver.</tt><tt class="descname">Linker</tt><a class="headerlink" href="#numba.cuda.cudadrv.driver.Linker" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<dl class="method">
+<dt id="numba.cuda.cudadrv.driver.Linker.add_file">
+<tt class="descname">add_file</tt><big>(</big><em>path</em>, <em>kind</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.Linker.add_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadrv.driver.Linker.add_file_guess_ext">
+<tt class="descname">add_file_guess_ext</tt><big>(</big><em>path</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.Linker.add_file_guess_ext" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadrv.driver.Linker.add_ptx">
+<tt class="descname">add_ptx</tt><big>(</big><em>ptx</em>, <em>name='&lt;cudapy-ptx&gt;'</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.Linker.add_ptx" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadrv.driver.Linker.complete">
+<tt class="descname">complete</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.Linker.complete" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>Returns (cubin, size)</dt>
+<dd>cubin is a pointer to a internal buffer of cubin owned
+by the linker; thus, it should be loaded before the linker
+is destroyed.</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="numba.cuda.cudadrv.driver.Linker.error_log">
+<tt class="descname">error_log</tt><a class="headerlink" href="#numba.cuda.cudadrv.driver.Linker.error_log" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="numba.cuda.cudadrv.driver.Linker.info_log">
+<tt class="descname">info_log</tt><a class="headerlink" href="#numba.cuda.cudadrv.driver.Linker.info_log" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="exception">
+<dt id="numba.cuda.cudadrv.driver.LinkerError">
+<em class="property">exception </em><tt class="descclassname">numba.cuda.cudadrv.driver.</tt><tt class="descname">LinkerError</tt><a class="headerlink" href="#numba.cuda.cudadrv.driver.LinkerError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">exceptions.RuntimeError</span></tt></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.cudadrv.driver.MappedMemory">
+<em class="property">class </em><tt class="descclassname">numba.cuda.cudadrv.driver.</tt><tt class="descname">MappedMemory</tt><big>(</big><em>context</em>, <em>owner</em>, <em>hostpointer</em>, <em>size</em>, <em>finalizer=None</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.MappedMemory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.cuda.cudadrv.driver.MemoryPointer" title="numba.cuda.cudadrv.driver.MemoryPointer"><tt class="xref py py-class docutils literal"><span class="pre">numba.cuda.cudadrv.driver.MemoryPointer</span></tt></a></p>
+<dl class="method">
+<dt id="numba.cuda.cudadrv.driver.MappedMemory.own">
+<tt class="descname">own</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.MappedMemory.own" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.cudadrv.driver.MappedOwnedPointer">
+<em class="property">class </em><tt class="descclassname">numba.cuda.cudadrv.driver.</tt><tt class="descname">MappedOwnedPointer</tt><big>(</big><em>memptr</em>, <em>view=None</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.MappedOwnedPointer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.cuda.cudadrv.driver.OwnedPointer" title="numba.cuda.cudadrv.driver.OwnedPointer"><tt class="xref py py-class docutils literal"><span class="pre">numba.cuda.cudadrv.driver.OwnedPointer</span></tt></a>, <tt class="xref py py-class docutils literal"><span class="pre">mviewbuf.MemAlloc</span></tt></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.cudadrv.driver.MemoryPointer">
+<em class="property">class </em><tt class="descclassname">numba.cuda.cudadrv.driver.</tt><tt class="descname">MemoryPointer</tt><big>(</big><em>context</em>, <em>pointer</em>, <em>size</em>, <em>finalizer=None</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.MemoryPointer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<dl class="attribute">
+<dt id="numba.cuda.cudadrv.driver.MemoryPointer.device_ctypes_pointer">
+<tt class="descname">device_ctypes_pointer</tt><a class="headerlink" href="#numba.cuda.cudadrv.driver.MemoryPointer.device_ctypes_pointer" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadrv.driver.MemoryPointer.free">
+<tt class="descname">free</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.MemoryPointer.free" title="Permalink to this definition">¶</a></dt>
+<dd><p>Forces the device memory to the trash.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadrv.driver.MemoryPointer.memset">
+<tt class="descname">memset</tt><big>(</big><em>byte</em>, <em>count=None</em>, <em>stream=0</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.MemoryPointer.memset" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadrv.driver.MemoryPointer.own">
+<tt class="descname">own</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.MemoryPointer.own" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadrv.driver.MemoryPointer.view">
+<tt class="descname">view</tt><big>(</big><em>start</em>, <em>stop=None</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.MemoryPointer.view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.cudadrv.driver.Module">
+<em class="property">class </em><tt class="descclassname">numba.cuda.cudadrv.driver.</tt><tt class="descname">Module</tt><big>(</big><em>context</em>, <em>handle</em>, <em>info_log</em>, <em>finalizer=None</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.Module" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<dl class="method">
+<dt id="numba.cuda.cudadrv.driver.Module.get_function">
+<tt class="descname">get_function</tt><big>(</big><em>name</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.Module.get_function" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadrv.driver.Module.get_global_symbol">
+<tt class="descname">get_global_symbol</tt><big>(</big><em>name</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.Module.get_global_symbol" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadrv.driver.Module.unload">
+<tt class="descname">unload</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.Module.unload" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.cudadrv.driver.OwnedPointer">
+<em class="property">class </em><tt class="descclassname">numba.cuda.cudadrv.driver.</tt><tt class="descname">OwnedPointer</tt><big>(</big><em>memptr</em>, <em>view=None</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.OwnedPointer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.cudadrv.driver.PinnedMemory">
+<em class="property">class </em><tt class="descclassname">numba.cuda.cudadrv.driver.</tt><tt class="descname">PinnedMemory</tt><big>(</big><em>context</em>, <em>owner</em>, <em>pointer</em>, <em>size</em>, <em>finalizer=None</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.PinnedMemory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">mviewbuf.MemAlloc</span></tt></p>
+<dl class="method">
+<dt id="numba.cuda.cudadrv.driver.PinnedMemory.own">
+<tt class="descname">own</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.PinnedMemory.own" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadrv.driver.PinnedMemory.unpin">
+<tt class="descname">unpin</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.PinnedMemory.unpin" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.cudadrv.driver.Stream">
+<em class="property">class </em><tt class="descclassname">numba.cuda.cudadrv.driver.</tt><tt class="descname">Stream</tt><big>(</big><em>context</em>, <em>handle</em>, <em>finalizer</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.Stream" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<dl class="method">
+<dt id="numba.cuda.cudadrv.driver.Stream.auto_synchronize">
+<tt class="descname">auto_synchronize</tt><big>(</big><em>*args</em>, <em>**kwds</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.Stream.auto_synchronize" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadrv.driver.Stream.synchronize">
+<tt class="descname">synchronize</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.Stream.synchronize" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.cudadrv.driver.TrashService">
+<em class="property">class </em><tt class="descclassname">numba.cuda.cudadrv.driver.</tt><tt class="descname">TrashService</tt><big>(</big><em>name='unnamed'</em>, <em>arg=None</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.TrashService" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="numba.servicelib.html#numba.servicelib.service.Service" title="numba.servicelib.service.Service"><tt class="xref py py-class docutils literal"><span class="pre">numba.servicelib.service.Service</span></tt></a></p>
+<p>We need this to enqueue things to be removed.  There are times when you
+want to disable deallocation because that would break asynchronous work
+queues.</p>
+<dl class="attribute">
+<dt id="numba.cuda.cudadrv.driver.TrashService.CLEAN_LIMIT">
+<tt class="descname">CLEAN_LIMIT</tt><em class="property"> = 20</em><a class="headerlink" href="#numba.cuda.cudadrv.driver.TrashService.CLEAN_LIMIT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadrv.driver.TrashService.add_trash">
+<tt class="descname">add_trash</tt><big>(</big><em>item</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.TrashService.add_trash" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadrv.driver.TrashService.clear">
+<tt class="descname">clear</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.TrashService.clear" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadrv.driver.TrashService.defer_cleanup">
+<tt class="descname">defer_cleanup</tt><big>(</big><em>*args</em>, <em>**kwds</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.TrashService.defer_cleanup" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadrv.driver.TrashService.process">
+<tt class="descname">process</tt><big>(</big><em>_arg</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.TrashService.process" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.cudadrv.driver.device_ctypes_pointer">
+<tt class="descclassname">numba.cuda.cudadrv.driver.</tt><tt class="descname">device_ctypes_pointer</tt><big>(</big><em>obj</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.device_ctypes_pointer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the ctypes object for the device pointer</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.cudadrv.driver.device_extents">
+<tt class="descclassname">numba.cuda.cudadrv.driver.</tt><tt class="descname">device_extents</tt><big>(</big><em>devmem</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.device_extents" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the extents (half open begin and end pointer) of the underlying
+device memory allocation.</p>
+<p>NOTE: it always returns the extents of the allocation but the extents
+of the device memory view that can be a subsection of the entire allocation.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.cudadrv.driver.device_memory_depends">
+<tt class="descclassname">numba.cuda.cudadrv.driver.</tt><tt class="descname">device_memory_depends</tt><big>(</big><em>devmem</em>, <em>*objs</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.device_memory_depends" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add dependencies to the device memory.</p>
+<p>Mainly used for creating structures that points to other device memory,
+so that the referees are not GC and released.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.cudadrv.driver.device_memory_size">
+<tt class="descclassname">numba.cuda.cudadrv.driver.</tt><tt class="descname">device_memory_size</tt><big>(</big><em>devmem</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.device_memory_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check the memory size of the device memory.
+The result is cached in the device memory object.
+It may query the driver for the memory size of the device memory allocation.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.cudadrv.driver.device_memset">
+<tt class="descclassname">numba.cuda.cudadrv.driver.</tt><tt class="descname">device_memset</tt><big>(</big><em>dst</em>, <em>val</em>, <em>size</em>, <em>stream=0</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.device_memset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Memset on the device.
+If stream is not zero, asynchronous mode is used.</p>
+<p>dst: device memory
+val: byte value to be written
+size: number of byte to be written
+stream: a CUDA stream</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.cudadrv.driver.device_pointer">
+<tt class="descclassname">numba.cuda.cudadrv.driver.</tt><tt class="descname">device_pointer</tt><big>(</big><em>obj</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.device_pointer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the device pointer as an integer</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.cudadrv.driver.device_pointer_type">
+<tt class="descclassname">numba.cuda.cudadrv.driver.</tt><tt class="descname">device_pointer_type</tt><big>(</big><em>devmem</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.device_pointer_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Query the device pointer type: host, device, array, unified?</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.cudadrv.driver.device_to_device">
+<tt class="descclassname">numba.cuda.cudadrv.driver.</tt><tt class="descname">device_to_device</tt><big>(</big><em>dst</em>, <em>src</em>, <em>size</em>, <em>stream=0</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.device_to_device" title="Permalink to this definition">¶</a></dt>
+<dd><p>NOTE: The underlying data pointer from the host data buffer is used and
+it should not be changed until the operation which can be asynchronous
+completes.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.cudadrv.driver.device_to_host">
+<tt class="descclassname">numba.cuda.cudadrv.driver.</tt><tt class="descname">device_to_host</tt><big>(</big><em>dst</em>, <em>src</em>, <em>size</em>, <em>stream=0</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.device_to_host" title="Permalink to this definition">¶</a></dt>
+<dd><p>NOTE: The underlying data pointer from the host data buffer is used and
+it should not be changed until the operation which can be asynchronous
+completes.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.cudadrv.driver.event_elapsed_time">
+<tt class="descclassname">numba.cuda.cudadrv.driver.</tt><tt class="descname">event_elapsed_time</tt><big>(</big><em>evtstart</em>, <em>evtend</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.event_elapsed_time" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.cudadrv.driver.find_driver">
+<tt class="descclassname">numba.cuda.cudadrv.driver.</tt><tt class="descname">find_driver</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.find_driver" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.cudadrv.driver.host_memory_extents">
+<tt class="descclassname">numba.cuda.cudadrv.driver.</tt><tt class="descname">host_memory_extents</tt><big>(</big><em>obj</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.host_memory_extents" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns (start, end) the start and end pointer of the array (half open).</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.cudadrv.driver.host_memory_size">
+<tt class="descclassname">numba.cuda.cudadrv.driver.</tt><tt class="descname">host_memory_size</tt><big>(</big><em>obj</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.host_memory_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the size of the memory</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.cudadrv.driver.host_pointer">
+<tt class="descclassname">numba.cuda.cudadrv.driver.</tt><tt class="descname">host_pointer</tt><big>(</big><em>obj</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.host_pointer" title="Permalink to this definition">¶</a></dt>
+<dd><p>NOTE: The underlying data pointer from the host data buffer is used and
+it should not be changed until the operation which can be asynchronous
+completes.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.cudadrv.driver.host_to_device">
+<tt class="descclassname">numba.cuda.cudadrv.driver.</tt><tt class="descname">host_to_device</tt><big>(</big><em>dst</em>, <em>src</em>, <em>size</em>, <em>stream=0</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.host_to_device" title="Permalink to this definition">¶</a></dt>
+<dd><p>NOTE: The underlying data pointer from the host data buffer is used and
+it should not be changed until the operation which can be asynchronous
+completes.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.cudadrv.driver.is_device_memory">
+<tt class="descclassname">numba.cuda.cudadrv.driver.</tt><tt class="descname">is_device_memory</tt><big>(</big><em>obj</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.is_device_memory" title="Permalink to this definition">¶</a></dt>
+<dd><p>All CUDA memory object is recognized as an instance with the attribute
+&#8220;__cuda_memory__&#8221; defined and its value evaluated to True.</p>
+<p>All CUDA memory object should also define an attribute named
+&#8220;device_pointer&#8221; which value is an int(or long) object carrying the pointer
+value of the device memory address.  This is not tested in this method.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.cudadrv.driver.launch_kernel">
+<tt class="descclassname">numba.cuda.cudadrv.driver.</tt><tt class="descname">launch_kernel</tt><big>(</big><em>cufunc_handle</em>, <em>griddim</em>, <em>blockdim</em>, <em>sharedmem</em>, <em>hstream</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.launch_kernel" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.cudadrv.driver.load_module_image">
+<tt class="descclassname">numba.cuda.cudadrv.driver.</tt><tt class="descname">load_module_image</tt><big>(</big><em>context</em>, <em>image</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.load_module_image" title="Permalink to this definition">¶</a></dt>
+<dd><p>image must be a pointer</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.cudadrv.driver.memory_size_from_info">
+<tt class="descclassname">numba.cuda.cudadrv.driver.</tt><tt class="descname">memory_size_from_info</tt><big>(</big><em>shape</em>, <em>strides</em>, <em>itemsize</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.memory_size_from_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>et the byte size of a contiguous memory buffer given the shape, strides
+and itemsize.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.cudadrv.driver.met_requirement_for_device">
+<tt class="descclassname">numba.cuda.cudadrv.driver.</tt><tt class="descname">met_requirement_for_device</tt><big>(</big><em>device</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.met_requirement_for_device" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.cudadrv.driver.profile_start">
+<tt class="descclassname">numba.cuda.cudadrv.driver.</tt><tt class="descname">profile_start</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.profile_start" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.cudadrv.driver.profile_stop">
+<tt class="descclassname">numba.cuda.cudadrv.driver.</tt><tt class="descname">profile_stop</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.profile_stop" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.cudadrv.driver.profiling">
+<tt class="descclassname">numba.cuda.cudadrv.driver.</tt><tt class="descname">profiling</tt><big>(</big><em>*args</em>, <em>**kwds</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.profiling" title="Permalink to this definition">¶</a></dt>
+<dd><p>Experimental profiling context.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.cudadrv.driver.require_device_memory">
+<tt class="descclassname">numba.cuda.cudadrv.driver.</tt><tt class="descname">require_device_memory</tt><big>(</big><em>obj</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.require_device_memory" title="Permalink to this definition">¶</a></dt>
+<dd><p>A sentry for methods that accept CUDA memory object.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-numba.cuda.cudadrv.drvapi">
+<span id="numba-cuda-cudadrv-drvapi-module"></span><h2>numba.cuda.cudadrv.drvapi module<a class="headerlink" href="#module-numba.cuda.cudadrv.drvapi" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-numba.cuda.cudadrv.enums">
+<span id="numba-cuda-cudadrv-enums-module"></span><h2>numba.cuda.cudadrv.enums module<a class="headerlink" href="#module-numba.cuda.cudadrv.enums" title="Permalink to this headline">¶</a></h2>
+<p>Enum values for CUDA driver</p>
+</div>
+<div class="section" id="module-numba.cuda.cudadrv.error">
+<span id="numba-cuda-cudadrv-error-module"></span><h2>numba.cuda.cudadrv.error module<a class="headerlink" href="#module-numba.cuda.cudadrv.error" title="Permalink to this headline">¶</a></h2>
+<dl class="exception">
+<dt id="numba.cuda.cudadrv.error.CudaDriverError">
+<em class="property">exception </em><tt class="descclassname">numba.cuda.cudadrv.error.</tt><tt class="descname">CudaDriverError</tt><a class="headerlink" href="#numba.cuda.cudadrv.error.CudaDriverError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></tt></p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="numba.cuda.cudadrv.error.CudaSupportError">
+<em class="property">exception </em><tt class="descclassname">numba.cuda.cudadrv.error.</tt><tt class="descname">CudaSupportError</tt><a class="headerlink" href="#numba.cuda.cudadrv.error.CudaSupportError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">exceptions.ImportError</span></tt></p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="numba.cuda.cudadrv.error.NvvmError">
+<em class="property">exception </em><tt class="descclassname">numba.cuda.cudadrv.error.</tt><tt class="descname">NvvmError</tt><a class="headerlink" href="#numba.cuda.cudadrv.error.NvvmError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></tt></p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="numba.cuda.cudadrv.error.NvvmSupportError">
+<em class="property">exception </em><tt class="descclassname">numba.cuda.cudadrv.error.</tt><tt class="descname">NvvmSupportError</tt><a class="headerlink" href="#numba.cuda.cudadrv.error.NvvmSupportError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">exceptions.ImportError</span></tt></p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-numba.cuda.cudadrv.libs">
+<span id="numba-cuda-cudadrv-libs-module"></span><h2>numba.cuda.cudadrv.libs module<a class="headerlink" href="#module-numba.cuda.cudadrv.libs" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="numba.cuda.cudadrv.libs.get_cudalib">
+<tt class="descclassname">numba.cuda.cudadrv.libs.</tt><tt class="descname">get_cudalib</tt><big>(</big><em>lib</em>, <em>platform=None</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.libs.get_cudalib" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.cudadrv.libs.get_libdevice">
+<tt class="descclassname">numba.cuda.cudadrv.libs.</tt><tt class="descname">get_libdevice</tt><big>(</big><em>arch</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.libs.get_libdevice" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.cudadrv.libs.open_cudalib">
+<tt class="descclassname">numba.cuda.cudadrv.libs.</tt><tt class="descname">open_cudalib</tt><big>(</big><em>lib</em>, <em>ccc=False</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.libs.open_cudalib" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.cudadrv.libs.open_libdevice">
+<tt class="descclassname">numba.cuda.cudadrv.libs.</tt><tt class="descname">open_libdevice</tt><big>(</big><em>arch</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.libs.open_libdevice" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.cudadrv.libs.test">
+<tt class="descclassname">numba.cuda.cudadrv.libs.</tt><tt class="descname">test</tt><big>(</big><em>_platform=None</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.libs.test" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-numba.cuda.cudadrv.ndarray">
+<span id="numba-cuda-cudadrv-ndarray-module"></span><h2>numba.cuda.cudadrv.ndarray module<a class="headerlink" href="#module-numba.cuda.cudadrv.ndarray" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="numba.cuda.cudadrv.ndarray.ArrayHeaderManager">
+<em class="property">class </em><tt class="descclassname">numba.cuda.cudadrv.ndarray.</tt><tt class="descname">ArrayHeaderManager</tt><a class="headerlink" href="#numba.cuda.cudadrv.ndarray.ArrayHeaderManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Manages array header memory for reusing the allocation.</p>
+<p>It allocates one big chunk of memory and partition it for fix sized array
+header.  It currently stores up to 4D array header in 64-bit mode or 8D
+array header in 32-bit mode.</p>
+<p>This allows the small array header allocation to be reused to avoid
+breaking asynchronous streams and avoid fragmentation of memory.</p>
+<p>When run out of preallocated space, it automatically fallback to regular
+allocation.</p>
+<dl class="method">
+<dt id="numba.cuda.cudadrv.ndarray.ArrayHeaderManager.allocate">
+<tt class="descname">allocate</tt><big>(</big><em>nd</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.ndarray.ArrayHeaderManager.allocate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="numba.cuda.cudadrv.ndarray.ArrayHeaderManager.context_map">
+<tt class="descname">context_map</tt><em class="property"> = {}</em><a class="headerlink" href="#numba.cuda.cudadrv.ndarray.ArrayHeaderManager.context_map" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="numba.cuda.cudadrv.ndarray.ArrayHeaderManager.elemsize">
+<tt class="descname">elemsize</tt><em class="property"> = 72</em><a class="headerlink" href="#numba.cuda.cudadrv.ndarray.ArrayHeaderManager.elemsize" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadrv.ndarray.ArrayHeaderManager.free">
+<tt class="descname">free</tt><big>(</big><em>mem</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.ndarray.ArrayHeaderManager.free" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadrv.ndarray.ArrayHeaderManager.init">
+<tt class="descname">init</tt><big>(</big><em>context</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.ndarray.ArrayHeaderManager.init" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="numba.cuda.cudadrv.ndarray.ArrayHeaderManager.maxsize">
+<tt class="descname">maxsize</tt><em class="property"> = 1024</em><a class="headerlink" href="#numba.cuda.cudadrv.ndarray.ArrayHeaderManager.maxsize" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.cudadrv.ndarray.make_array_ctype">
+<tt class="descclassname">numba.cuda.cudadrv.ndarray.</tt><tt class="descname">make_array_ctype</tt><big>(</big><em>ndim</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.ndarray.make_array_ctype" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a array header type for a given dimension.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.cudadrv.ndarray.ndarray_device_allocate_data">
+<tt class="descclassname">numba.cuda.cudadrv.ndarray.</tt><tt class="descname">ndarray_device_allocate_data</tt><big>(</big><em>ary</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.ndarray.ndarray_device_allocate_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allocate gpu data buffer</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.cudadrv.ndarray.ndarray_populate_head">
+<tt class="descclassname">numba.cuda.cudadrv.ndarray.</tt><tt class="descname">ndarray_populate_head</tt><big>(</big><em>gpu_head</em>, <em>gpu_data</em>, <em>shape</em>, <em>strides</em>, <em>stream=0</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.ndarray.ndarray_populate_head" title="Permalink to this definition">¶</a></dt>
+<dd><p>Populate the array header</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-numba.cuda.cudadrv.nvvm">
+<span id="numba-cuda-cudadrv-nvvm-module"></span><h2>numba.cuda.cudadrv.nvvm module<a class="headerlink" href="#module-numba.cuda.cudadrv.nvvm" title="Permalink to this headline">¶</a></h2>
+<p>This is a direct translation of nvvm.h</p>
+<dl class="class">
+<dt id="numba.cuda.cudadrv.nvvm.CompilationUnit">
+<em class="property">class </em><tt class="descclassname">numba.cuda.cudadrv.nvvm.</tt><tt class="descname">CompilationUnit</tt><a class="headerlink" href="#numba.cuda.cudadrv.nvvm.CompilationUnit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<dl class="method">
+<dt id="numba.cuda.cudadrv.nvvm.CompilationUnit.add_module">
+<tt class="descname">add_module</tt><big>(</big><em>buffer</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.nvvm.CompilationUnit.add_module" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a module level NVVM IR to a compilation unit.
+- The buffer should contain an NVVM module IR either in the bitcode</p>
+<blockquote>
+<div>representation (LLVM3.0) or in the text representation.</div></blockquote>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadrv.nvvm.CompilationUnit.compile">
+<tt class="descname">compile</tt><big>(</big><em>**options</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.nvvm.CompilationUnit.compile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform Compliation</p>
+<p>The valid compiler options are</p>
+<blockquote>
+<div><ul class="simple">
+<li><ul class="first">
+<li>-g (enable generation of debugging information)</li>
+</ul>
+</li>
+<li><ul class="first">
+<li>-opt=</li>
+</ul>
+</li>
+<li><ul class="first">
+<li>0 (disable optimizations)</li>
+</ul>
+</li>
+<li><ul class="first">
+<li>3 (default, enable optimizations)</li>
+</ul>
+</li>
+<li><ul class="first">
+<li>-arch=</li>
+</ul>
+</li>
+<li><ul class="first">
+<li>compute_20 (default)</li>
+</ul>
+</li>
+<li><ul class="first">
+<li>compute_30</li>
+</ul>
+</li>
+<li><ul class="first">
+<li>compute_35</li>
+</ul>
+</li>
+<li><ul class="first">
+<li>-ftz=</li>
+</ul>
+</li>
+<li><ul class="first">
+<li>0 (default, preserve denormal values, when performing</li>
+</ul>
+</li>
+<li>single-precision floating-point operations)</li>
+<li><ul class="first">
+<li>1 (flush denormal values to zero, when performing</li>
+</ul>
+</li>
+<li>single-precision floating-point operations)</li>
+<li><ul class="first">
+<li>-prec-sqrt=</li>
+</ul>
+</li>
+<li><ul class="first">
+<li>0 (use a faster approximation for single-precision</li>
+</ul>
+</li>
+<li>floating-point square root)</li>
+<li><ul class="first">
+<li>1 (default, use IEEE round-to-nearest mode for</li>
+</ul>
+</li>
+<li>single-precision floating-point square root)</li>
+<li><ul class="first">
+<li>-prec-div=</li>
+</ul>
+</li>
+<li><ul class="first">
+<li>0 (use a faster approximation for single-precision</li>
+</ul>
+</li>
+<li>floating-point division and reciprocals)</li>
+<li><ul class="first">
+<li>1 (default, use IEEE round-to-nearest mode for</li>
+</ul>
+</li>
+<li>single-precision floating-point division and reciprocals)</li>
+<li><ul class="first">
+<li>-fma=</li>
+</ul>
+</li>
+<li><ul class="first">
+<li>0 (disable FMA contraction)</li>
+</ul>
+</li>
+<li><ul class="first">
+<li>1 (default, enable FMA contraction)</li>
+</ul>
+</li>
+<li></li>
+</ul>
+</div></blockquote>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadrv.nvvm.CompilationUnit.get_log">
+<tt class="descname">get_log</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.nvvm.CompilationUnit.get_log" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.cudadrv.nvvm.LibDevice">
+<em class="property">class </em><tt class="descclassname">numba.cuda.cudadrv.nvvm.</tt><tt class="descname">LibDevice</tt><big>(</big><em>arch</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.nvvm.LibDevice" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<dl class="method">
+<dt id="numba.cuda.cudadrv.nvvm.LibDevice.get">
+<tt class="descname">get</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.nvvm.LibDevice.get" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.cudadrv.nvvm.NVVM">
+<em class="property">class </em><tt class="descclassname">numba.cuda.cudadrv.nvvm.</tt><tt class="descname">NVVM</tt><a class="headerlink" href="#numba.cuda.cudadrv.nvvm.NVVM" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Process-wide singleton.</p>
+<dl class="method">
+<dt id="numba.cuda.cudadrv.nvvm.NVVM.check_error">
+<tt class="descname">check_error</tt><big>(</big><em>error</em>, <em>msg</em>, <em>exit=False</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.nvvm.NVVM.check_error" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadrv.nvvm.NVVM.get_version">
+<tt class="descname">get_version</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.nvvm.NVVM.get_version" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.cudadrv.nvvm.fix_data_layout">
+<tt class="descclassname">numba.cuda.cudadrv.nvvm.</tt><tt class="descname">fix_data_layout</tt><big>(</big><em>module</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.nvvm.fix_data_layout" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.cudadrv.nvvm.get_arch_option">
+<tt class="descclassname">numba.cuda.cudadrv.nvvm.</tt><tt class="descname">get_arch_option</tt><big>(</big><em>major</em>, <em>minor</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.nvvm.get_arch_option" title="Permalink to this definition">¶</a></dt>
+<dd><p>Matches with the closest architecture option</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.cudadrv.nvvm.llvm33_to_32_ir">
+<tt class="descclassname">numba.cuda.cudadrv.nvvm.</tt><tt class="descname">llvm33_to_32_ir</tt><big>(</big><em>ir</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.nvvm.llvm33_to_32_ir" title="Permalink to this definition">¶</a></dt>
+<dd><p>rewrite function attributes in the IR</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.cudadrv.nvvm.llvm_to_ptx">
+<tt class="descclassname">numba.cuda.cudadrv.nvvm.</tt><tt class="descname">llvm_to_ptx</tt><big>(</big><em>llvmir</em>, <em>**opts</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.nvvm.llvm_to_ptx" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.cudadrv.nvvm.set_cuda_kernel">
+<tt class="descclassname">numba.cuda.cudadrv.nvvm.</tt><tt class="descname">set_cuda_kernel</tt><big>(</big><em>lfunc</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.nvvm.set_cuda_kernel" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-numba.cuda.cudadrv">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-numba.cuda.cudadrv" title="Permalink to this headline">¶</a></h2>
+<p>CUDA Driver</p>
+<ul class="simple">
+<li>Driver API binding</li>
+<li>NVVM API binding</li>
+<li>Device array implementation</li>
+</ul>
+</div>
+</div>
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        
+      </div><!-- /row -->
+
+      <!-- row -->
+      <div class="row-fluid">
+<div class="related navbar ">
+  <div class="navbar-inner">
+    <ul class="nav pull-right">
+      
+        <li><a href="../genindex.html" title="General Index" >index</a></li>
+        <li><a href="../py-modindex.html" title="Python Module Index" >modules</a></li>
+        <li><a href="../index.html">numba 0.13.4 documentation</a></li> 
+      
+    </ul>
+  </div>
+</div>
+      </div><!-- /row -->
+
+      <!-- footer -->
+      <footer>
+          &copy; Copyright 2012-2014, Continuum Analytics.
+        Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.2.
+      </footer>
+      <!-- /footer -->
+
+    </div>
+    <!-- /container -->
+
+  </body>
+</html>

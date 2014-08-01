@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+
+
+
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+    <title>Writing CUDA-Python &mdash; numba 0.13.4 documentation</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    
+<link rel="stylesheet" href="_static/css/basicstrap-base.css" type="text/css" />
+<link rel="stylesheet" href="_static/css/bootstrap.min.css" type="text/css" />
+<link rel="stylesheet" href="_static/css/font-awesome.min.css">
+<!--[if IE 7]>
+<link rel="stylesheet" href="_static/css/font-awesome-ie7.min.css">
+<![endif]-->
+<style type="text/css">
+  body {
+    padding-top: 60px;
+    padding-bottom: 40px;
+  }
+}
+</style>
+<link rel="stylesheet" href="_static/basicstrap.css" type="text/css" />
+<link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+<link rel="stylesheet" href="_static/css/bootstrap-responsive.min.css" type="text/css" />
+    
+<script type="text/javascript">
+  var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:    './',
+            VERSION:     '0.13.4',
+            COLLAPSE_INDEX: false,
+            FILE_SUFFIX: '.html',
+            HAS_SOURCE:  true
+  };
+</script>
+<script type="text/javascript" src="_static/js/jquery.min.js"></script>
+<script type="text/javascript" src="_static/underscore.js"></script>
+<script type="text/javascript" src="_static/doctools.js"></script>
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/javascript" src="_static/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+  $(document).ready(function(){
+    $('.show-sidebar').click(function(e) {
+       e.preventDefault();
+       if ($(".show-sidebar").html() == "Open Table Of Contents") {
+          $('.for-mobile').removeClass('hidden-phone');
+          $(".show-sidebar").html("Close Table Of Contents");
+       } else {
+          $(".show-sidebar").html("Open Table Of Contents");
+       }
+    });
+  });
+</script>
+    <link rel="top" title="numba 0.13.4 documentation" href="index.html" />
+    <link rel="next" title="CUDA Device Management" href="CUDADevice.html" />
+    <link rel="prev" title="CUDA Programming Introduction" href="CUDAintro.html" /> 
+  </head>
+  <body>
+    <div class="navbar navbar-fixed-top ">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="index.html">numba 0.13.4 documentation</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav pull-right">
+              
+                <li>
+                <a href="genindex.html" title="General Index" accesskey="I">index</a>
+                </li>
+                <li>
+                <a href="py-modindex.html" title="Python Module Index" >modules</a>
+                </li>
+                <li>
+                <a href="CUDADevice.html" title="CUDA Device Management" accesskey="N">next</a>
+                </li>
+                <li>
+                <a href="CUDAintro.html" title="CUDA Programming Introduction" accesskey="P">previous</a>
+                </li>
+              
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <!-- container -->
+    <div class="container-fluid">
+
+
+      
+      <div class="row-fluid hidden-desktop hidden-tablet">
+      
+<div class="span3 ">
+  <a class="visible-phone btn btn-small show-sidebar" data-toggle="collapse" data-target=".for-mobile">Open Table Of Contents</a>
+  <div class="for-mobile sidebar hidden-phone">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Writing CUDA-Python</a><ul>
+<li><a class="reference internal" href="#imports">Imports</a></li>
+<li><a class="reference internal" href="#compiling">Compiling</a></li>
+<li><a class="reference internal" href="#thread-identity-by-cuda-intrinsics">Thread Identity by CUDA Intrinsics</a></li>
+<li><a class="reference internal" href="#memory-transfer">Memory Transfer</a></li>
+<li><a class="reference internal" href="#memory-lifetime">Memory Lifetime</a></li>
+<li><a class="reference internal" href="#cuda-stream">CUDA Stream</a></li>
+<li><a class="reference internal" href="#shared-memory">Shared Memory</a></li>
+<li><a class="reference internal" href="#synchronization-primitives">Synchronization Primitives</a></li>
+<li><a class="reference internal" href="#atomic-operations">Atomic Operations</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="CUDAintro.html"
+                        title="previous chapter">CUDA Programming Introduction</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="CUDADevice.html"
+                        title="next chapter">CUDA Device Management</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/CUDAJit.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox">
+  <h3>Quick search</h3>
+  <form class="search form-search" action="search.html" method="get">
+      <div class="input-append">
+        <input type="text" class="search-query" name="q">
+        <input type="submit" class="btn" value="Go" />
+      </div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+  </div>
+</div>
+      </div>
+      
+
+      <!-- row -->
+      <div class="row-fluid">
+         
+<div class="span3 visible-desktop visible-tablet">
+  <div class=" sidebar hidden-phone">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Writing CUDA-Python</a><ul>
+<li><a class="reference internal" href="#imports">Imports</a></li>
+<li><a class="reference internal" href="#compiling">Compiling</a></li>
+<li><a class="reference internal" href="#thread-identity-by-cuda-intrinsics">Thread Identity by CUDA Intrinsics</a></li>
+<li><a class="reference internal" href="#memory-transfer">Memory Transfer</a></li>
+<li><a class="reference internal" href="#memory-lifetime">Memory Lifetime</a></li>
+<li><a class="reference internal" href="#cuda-stream">CUDA Stream</a></li>
+<li><a class="reference internal" href="#shared-memory">Shared Memory</a></li>
+<li><a class="reference internal" href="#synchronization-primitives">Synchronization Primitives</a></li>
+<li><a class="reference internal" href="#atomic-operations">Atomic Operations</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="CUDAintro.html"
+                        title="previous chapter">CUDA Programming Introduction</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="CUDADevice.html"
+                        title="next chapter">CUDA Device Management</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/CUDAJit.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox">
+  <h3>Quick search</h3>
+  <form class="search form-search" action="search.html" method="get">
+      <div class="input-append">
+        <input type="text" class="search-query" name="q">
+        <input type="submit" class="btn" value="Go" />
+      </div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+  </div>
+</div> 
+        
+
+        <div class="span9">
+          <div class="document">
+            <div class="documentwrapper">
+              <div class="bodywrapper">
+                <div class="body">
+                  
+  <div class="section" id="writing-cuda-python">
+<h1>Writing CUDA-Python<a class="headerlink" href="#writing-cuda-python" title="Permalink to this headline">¶</a></h1>
+<p>The CUDA JIT is a low-level entry point to the CUDA features in Numba.
+It translates Python functions into <a class="reference external" href="http://en.wikipedia.org/wiki/Parallel_Thread_Execution">PTX</a> code which execute on
+the CUDA hardware.  The <cite>jit</cite> decorator is applied to Python functions written
+in our <a class="reference external" href="CUDAPySpec.html">Python dialect for CUDA</a>.
+Numba interacts with the <a class="reference external" href="http://docs.nvidia.com/cuda/cuda-driver-api/index.html">CUDA Driver API</a> to load the PTX onto
+the CUDA device and execute.</p>
+<div class="section" id="imports">
+<h2>Imports<a class="headerlink" href="#imports" title="Permalink to this headline">¶</a></h2>
+<p>Most of the CUDA public API for CUDA features are exposed in the
+<tt class="docutils literal"><span class="pre">numba.cuda</span></tt> module:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">cuda</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="compiling">
+<h2>Compiling<a class="headerlink" href="#compiling" title="Permalink to this headline">¶</a></h2>
+<p>CUDA kernels and device functions are compiled by decorating a Python
+function with the jit or <cite>autojit</cite> decorators.</p>
+<dl class="function">
+<dt id="numba.cuda.jit">
+<tt class="descclassname">numba.cuda.</tt><tt class="descname">jit</tt><big>(</big><em>restype=None</em>, <em>argtypes=None</em>, <em>device=False</em>, <em>inline=False</em>, <em>bind=True</em>, <em>link=</em>, <span class="optional">[</span><span class="optional">]</span><em>debug=False</em>, <em>**kws</em><big>)</big><a class="headerlink" href="#numba.cuda.jit" title="Permalink to this definition">¶</a></dt>
+<dd><p>JIT compile a python function conforming to
+the CUDA-Python specification.</p>
+<p>To define a CUDA kernel that takes two int 1D-arrays:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@cuda.jit</span><span class="p">(</span><span class="s">&#39;void(int32[:], int32[:])&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">aryA</span><span class="p">,</span> <span class="n">aryB</span><span class="p">):</span>
+    <span class="o">...</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">A kernel cannot have any return value.</p>
+</div>
+<p>To launch the cuda kernel:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">griddim</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span>
+<span class="n">blockdim</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span>
+<span class="n">foo</span><span class="p">[</span><span class="n">griddim</span><span class="p">,</span> <span class="n">blockdim</span><span class="p">](</span><span class="n">aryA</span><span class="p">,</span> <span class="n">aryB</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><tt class="docutils literal"><span class="pre">griddim</span></tt> is the number of thread-block per grid.
+It can be:</p>
+<ul class="simple">
+<li>an int;</li>
+<li>tuple-1 of ints;</li>
+<li>tuple-2 of ints.</li>
+</ul>
+<p><tt class="docutils literal"><span class="pre">blockdim</span></tt> is the number of threads per block.
+It can be:</p>
+<ul class="simple">
+<li>an int;</li>
+<li>tuple-1 of ints;</li>
+<li>tuple-2 of ints;</li>
+<li>tuple-3 of ints.</li>
+</ul>
+<p>The above code is equaivalent to the following CUDA-C.</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">dim3</span> <span class="nf">griddim</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
+<span class="n">dim3</span> <span class="nf">blockdim</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">);</span>
+<span class="n">foo</span><span class="o">&lt;&lt;&lt;</span><span class="n">griddim</span><span class="p">,</span> <span class="n">blockdim</span><span class="o">&gt;&gt;&gt;</span><span class="p">(</span><span class="n">aryA</span><span class="p">,</span> <span class="n">aryB</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>To access the compiled PTX code:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">print</span> <span class="n">foo</span><span class="o">.</span><span class="n">ptx</span>
+</pre></div>
+</div>
+<p>To define a CUDA device function that takes two ints and returns a int:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@cuda.jit</span><span class="p">(</span><span class="s">&#39;int32(int32, int32)&#39;</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">bar</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="o">...</span>
+</pre></div>
+</div>
+<p>To force inline the device function:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@cuda.jit</span><span class="p">(</span><span class="s">&#39;int32(int32, int32)&#39;</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">inline</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">bar_forced_inline</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="o">...</span>
+</pre></div>
+</div>
+<p>A device function can only be used inside another kernel.
+It cannot be called from the host.</p>
+<p>Using <tt class="docutils literal"><span class="pre">bar</span></tt> in a CUDA kernel:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@cuda.jit</span><span class="p">(</span><span class="s">&#39;void(int32[:], int32[:], int32[:])&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">use_bar</span><span class="p">(</span><span class="n">aryA</span><span class="p">,</span> <span class="n">aryB</span><span class="p">,</span> <span class="n">aryOut</span><span class="p">):</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="c"># global position of the thread for a 1D grid.</span>
+    <span class="n">aryOut</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">bar</span><span class="p">(</span><span class="n">aryA</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">aryB</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.autojit">
+<tt class="descclassname">numba.cuda.</tt><tt class="descname">autojit</tt><big>(</big><em>func</em>, <em>**kws</em><big>)</big><a class="headerlink" href="#numba.cuda.autojit" title="Permalink to this definition">¶</a></dt>
+<dd><p>JIT at callsite.  Function signature is not needed as this
+will capture the type at call time.  Each signature of the kernel
+is cached for future use.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Can only compile CUDA kernel.</p>
+</div>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">numpy</span>
+
+<span class="nd">@cuda.autojit</span>
+<span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">aryA</span><span class="p">,</span> <span class="n">aryB</span><span class="p">):</span>
+    <span class="o">...</span>
+
+<span class="n">aryA</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+<span class="n">aryB</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+<span class="n">foo</span><span class="p">[</span><span class="n">griddim</span><span class="p">,</span> <span class="n">blockdim</span><span class="p">](</span><span class="n">aryA</span><span class="p">,</span> <span class="n">aryB</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>In the above code, a version of foo with the signature
+&#8220;void(int32[:], float32[:])&#8221; is compiled.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="thread-identity-by-cuda-intrinsics">
+<h2>Thread Identity by CUDA Intrinsics<a class="headerlink" href="#thread-identity-by-cuda-intrinsics" title="Permalink to this headline">¶</a></h2>
+<p>A set of CUDA intrinsics is used to identify the current execution thread.
+These intrinsics are meaningful inside a CUDA kernel or device function only.
+A common pattern to assign the computation of each element in the output array
+to a thread.</p>
+<p>For a 1D grid:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">tx</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">threadIdx</span><span class="o">.</span><span class="n">x</span>
+<span class="n">bx</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">blockIdx</span><span class="o">.</span><span class="n">x</span>
+<span class="n">bw</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">blockDim</span><span class="o">.</span><span class="n">x</span>
+<span class="n">i</span> <span class="o">=</span> <span class="n">tx</span> <span class="o">+</span> <span class="n">bx</span> <span class="o">*</span> <span class="n">bw</span>
+<span class="n">array</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">something</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>For a 2D grid:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">tx</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">threadIdx</span><span class="o">.</span><span class="n">x</span>
+<span class="n">ty</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">threadIdx</span><span class="o">.</span><span class="n">y</span>
+<span class="n">bx</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">blockIdx</span><span class="o">.</span><span class="n">x</span>
+<span class="n">by</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">blockIdx</span><span class="o">.</span><span class="n">y</span>
+<span class="n">bw</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">blockDim</span><span class="o">.</span><span class="n">x</span>
+<span class="n">bh</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">blockDim</span><span class="o">.</span><span class="n">y</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">tx</span> <span class="o">+</span> <span class="n">bx</span> <span class="o">*</span> <span class="n">bw</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">ty</span> <span class="o">+</span> <span class="n">by</span> <span class="o">*</span> <span class="n">bh</span>
+<span class="n">array</span><span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">]</span> <span class="o">=</span> <span class="n">something</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Since these patterns are so common, there is a shorthand function to produce
+the same result.</p>
+<p>For a 1D grid:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">i</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">array</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">something</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>For a 2D grid:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">array</span><span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">]</span> <span class="o">=</span> <span class="n">something</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Similarly, the total size of the grid in each dimension is frequently used
+as the stride when looping in a kernel, so there is also a shorthand function
+for that calculation.</p>
+<p>For a 1D grid:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">xstride</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">gridsize</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>  <span class="c"># = cuda.blockDim.x * cuda.gridDim.x</span>
+</pre></div>
+</div>
+<p>For a 2D grid:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">xstride</span><span class="p">,</span> <span class="n">ystride</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">gridsize</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>  <span class="c"># = cuda.blockDim.x * cuda.gridDim.x, cuda.blockDim.y * cuda.gridDim.y</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="memory-transfer">
+<h2>Memory Transfer<a class="headerlink" href="#memory-transfer" title="Permalink to this headline">¶</a></h2>
+<p>By default, any NumPy arrays used as argument of a CUDA kernel is transferred
+automatically to and from the device.  However, to achieve maximum performance
+and minimizing redundant memory transfer,
+user should manage the memory transfer explicitly.</p>
+<p>Host-&gt;device transfers are asynchronous to the host.
+Device-&gt;host transfers are synchronous to the host.
+If a non-zero <a class="reference internal" href="#cuda-stream">CUDA stream</a> is provided, the transfer becomes asynchronous.</p>
+<dl class="function">
+<dt id="numba.cuda.to_device">
+<tt class="descclassname">numba.cuda.</tt><tt class="descname">to_device</tt><big>(</big><em>ary</em>, <em>stream=0</em>, <em>copy=True</em>, <em>to=None</em><big>)</big><a class="headerlink" href="#numba.cuda.to_device" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allocate and transfer a numpy ndarray to the device.</p>
+<p>To copy host-&gt;device a numpy array:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">ary</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">d_ary</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">to_device</span><span class="p">(</span><span class="n">ary</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>To enqueue the transfer to a stream:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">stream</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">stream</span><span class="p">()</span>
+<span class="n">d_ary</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">to_device</span><span class="p">(</span><span class="n">ary</span><span class="p">,</span> <span class="n">stream</span><span class="o">=</span><span class="n">stream</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The resulting <tt class="docutils literal"><span class="pre">d_ary</span></tt> is a <tt class="docutils literal"><span class="pre">DeviceNDArray</span></tt>.</p>
+<p>To copy device-&gt;host:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">hary</span> <span class="o">=</span> <span class="n">d_ary</span><span class="o">.</span><span class="n">copy_to_host</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>To copy device-&gt;host to an existing array:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">ary</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="n">d_ary</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">d_ary</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+<span class="n">d_ary</span><span class="o">.</span><span class="n">copy_to_host</span><span class="p">(</span><span class="n">ary</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>To enqueue the transfer to a stream:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">hary</span> <span class="o">=</span> <span class="n">d_ary</span><span class="o">.</span><span class="n">copy_to_host</span><span class="p">(</span><span class="n">stream</span><span class="o">=</span><span class="n">stream</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadrv.devicearray.DeviceNDArray.copy_to_host">
+<tt class="descclassname">DeviceNDArray.</tt><tt class="descname">copy_to_host</tt><big>(</big><em>ary=None</em>, <em>stream=0</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.devicearray.DeviceNDArray.copy_to_host" title="Permalink to this definition">¶</a></dt>
+<dd><p>Copy <tt class="docutils literal"><span class="pre">self</span></tt> to <tt class="docutils literal"><span class="pre">ary</span></tt> or create a new numpy ndarray
+if <tt class="docutils literal"><span class="pre">ary</span></tt> is <tt class="docutils literal"><span class="pre">None</span></tt>.</p>
+<p>Always returns the host array.</p>
+</dd></dl>
+
+<p>The following are special DeviceNDArray factories:</p>
+<dl class="function">
+<dt id="numba.cuda.device_array">
+<tt class="descclassname">numba.cuda.</tt><tt class="descname">device_array</tt><big>(</big><em>shape</em>, <em>dtype=np.float</em>, <em>strides=None</em>, <em>order='C'</em>, <em>stream=0</em><big>)</big><a class="headerlink" href="#numba.cuda.device_array" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allocate an empty device ndarray. Similar to numpy.empty()</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.pinned_array">
+<tt class="descclassname">numba.cuda.</tt><tt class="descname">pinned_array</tt><big>(</big><em>shape</em>, <em>dtype=np.float</em>, <em>strides=None</em>, <em>order='C'</em><big>)</big><a class="headerlink" href="#numba.cuda.pinned_array" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allocate a numpy.ndarray with a buffer that is pinned (pagelocked).
+Similar to numpy.empty().</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.mapped_array">
+<tt class="descclassname">numba.cuda.</tt><tt class="descname">mapped_array</tt><big>(</big><em>shape</em>, <em>dtype=np.float</em>, <em>strides=None</em>, <em>order='C'</em>, <em>stream=0</em>, <em>portable=False</em>, <em>wc=False</em><big>)</big><a class="headerlink" href="#numba.cuda.mapped_array" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allocate a mapped ndarray with a buffer that is pinned and mapped on
+to the device. Similar to numpy.empty()</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>portable</strong> &#8211; a boolean flag to allow the allocated device memory to be
+usable in multiple devices.</li>
+<li><strong>wc</strong> &#8211; a boolean flag to enable writecombined allocation which is faster
+to write by the host and to read by the device, but slower to
+write by the host and slower to write by the device.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="memory-lifetime">
+<h2>Memory Lifetime<a class="headerlink" href="#memory-lifetime" title="Permalink to this headline">¶</a></h2>
+<p>The live time of a device array is bound to the lifetime of the
+<cite>DeviceNDArray</cite> instance.</p>
+</div>
+<div class="section" id="cuda-stream">
+<h2>CUDA Stream<a class="headerlink" href="#cuda-stream" title="Permalink to this headline">¶</a></h2>
+<p>A CUDA stream is a command queue for the CUDA device.  By specifying a stream,
+the CUDA API calls become asynchronous, meaning that the call may return before
+the command has been completed.  Memory transfer instructions and kernel
+invocation can use CUDA stream:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">stream</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">stream</span><span class="p">()</span>
+<span class="n">devary</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">to_device</span><span class="p">(</span><span class="n">an_array</span><span class="p">,</span> <span class="n">stream</span><span class="o">=</span><span class="n">stream</span><span class="p">)</span>
+<span class="n">a_cuda_kernel</span><span class="p">[</span><span class="n">griddim</span><span class="p">,</span> <span class="n">blockdim</span><span class="p">,</span> <span class="n">stream</span><span class="p">](</span><span class="n">devary</span><span class="p">)</span>
+<span class="n">devary</span><span class="o">.</span><span class="n">copy_to_host</span><span class="p">(</span><span class="n">an_array</span><span class="p">,</span> <span class="n">stream</span><span class="o">=</span><span class="n">stream</span><span class="p">)</span>
+<span class="c"># data may not be available in an_array</span>
+<span class="n">stream</span><span class="o">.</span><span class="n">synchronize</span><span class="p">()</span>
+<span class="c"># data available in an_array</span>
+</pre></div>
+</div>
+<dl class="function">
+<dt id="numba.cuda.stream">
+<tt class="descclassname">numba.cuda.</tt><tt class="descname">stream</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.stream" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a CUDA stream that represents a command queue for the device.</p>
+</dd></dl>
+
+<p>An alternative syntax is available for use with a python context:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">stream</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">stream</span><span class="p">()</span>
+<span class="k">with</span> <span class="n">stream</span><span class="o">.</span><span class="n">auto_synchronize</span><span class="p">():</span>
+    <span class="n">devary</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">to_device</span><span class="p">(</span><span class="n">an_array</span><span class="p">,</span> <span class="n">stream</span><span class="o">=</span><span class="n">stream</span><span class="p">)</span>
+    <span class="n">a_cuda_kernel</span><span class="p">[</span><span class="n">griddim</span><span class="p">,</span> <span class="n">blockdim</span><span class="p">,</span> <span class="n">stream</span><span class="p">](</span><span class="n">devary</span><span class="p">)</span>
+    <span class="n">devary</span><span class="o">.</span><span class="n">copy_to_host</span><span class="p">(</span><span class="n">an_array</span><span class="p">,</span> <span class="n">stream</span><span class="o">=</span><span class="n">stream</span><span class="p">)</span>
+<span class="c"># data available in an_array</span>
+</pre></div>
+</div>
+<p>When the python <tt class="docutils literal"><span class="pre">with</span></tt> context exits, the stream is automatically synchronized.</p>
+</div>
+<div class="section" id="shared-memory">
+<h2>Shared Memory<a class="headerlink" href="#shared-memory" title="Permalink to this headline">¶</a></h2>
+<p>For maximum performance, a CUDA kernel needs to use shared memory for manual caching of data.  CUDA JIT supports the use of <tt class="docutils literal"><span class="pre">cuda.shared.array(shape,</span> <span class="pre">dtype)</span></tt> for specifying an NumPy-array-like object inside a kernel.</p>
+<p>For example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">bpg</span> <span class="o">=</span> <span class="mi">50</span>
+<span class="n">tpb</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="n">n</span> <span class="o">=</span> <span class="n">bpg</span> <span class="o">*</span> <span class="n">tpb</span>
+
+<span class="nd">@jit</span><span class="p">(</span><span class="n">argtypes</span><span class="o">=</span><span class="p">[</span><span class="n">float32</span><span class="p">[:,:],</span> <span class="n">float32</span><span class="p">[:,:],</span> <span class="n">float32</span><span class="p">[:,:]],</span> <span class="n">target</span><span class="o">=</span><span class="s">&#39;gpu&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">cu_square_matrix_mul</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">C</span><span class="p">):</span>
+    <span class="n">sA</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">shared</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">tpb</span><span class="p">,</span> <span class="n">tpb</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">float32</span><span class="p">)</span>
+    <span class="n">sB</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">shared</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">tpb</span><span class="p">,</span> <span class="n">tpb</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">float32</span><span class="p">)</span>
+
+    <span class="n">tx</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">threadIdx</span><span class="o">.</span><span class="n">x</span>
+    <span class="n">ty</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">threadIdx</span><span class="o">.</span><span class="n">y</span>
+    <span class="n">bx</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">blockIdx</span><span class="o">.</span><span class="n">x</span>
+    <span class="n">by</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">blockIdx</span><span class="o">.</span><span class="n">y</span>
+    <span class="n">bw</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">blockDim</span><span class="o">.</span><span class="n">x</span>
+    <span class="n">bh</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">blockDim</span><span class="o">.</span><span class="n">y</span>
+
+    <span class="n">x</span> <span class="o">=</span> <span class="n">tx</span> <span class="o">+</span> <span class="n">bx</span> <span class="o">*</span> <span class="n">bw</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">ty</span> <span class="o">+</span> <span class="n">by</span> <span class="o">*</span> <span class="n">bh</span>
+
+    <span class="n">acc</span> <span class="o">=</span> <span class="mf">0.</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">bpg</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">n</span> <span class="ow">and</span> <span class="n">y</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">:</span>
+            <span class="n">sA</span><span class="p">[</span><span class="n">ty</span><span class="p">,</span> <span class="n">tx</span><span class="p">]</span> <span class="o">=</span> <span class="n">A</span><span class="p">[</span><span class="n">y</span><span class="p">,</span> <span class="n">tx</span> <span class="o">+</span> <span class="n">i</span> <span class="o">*</span> <span class="n">tpb</span><span class="p">]</span>
+            <span class="n">sB</span><span class="p">[</span><span class="n">ty</span><span class="p">,</span> <span class="n">tx</span><span class="p">]</span> <span class="o">=</span> <span class="n">B</span><span class="p">[</span><span class="n">ty</span> <span class="o">+</span> <span class="n">i</span> <span class="o">*</span> <span class="n">tpb</span><span class="p">,</span> <span class="n">x</span><span class="p">]</span>
+
+        <span class="n">cuda</span><span class="o">.</span><span class="n">syncthreads</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">n</span> <span class="ow">and</span> <span class="n">y</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">tpb</span><span class="p">):</span>
+                <span class="n">acc</span> <span class="o">+=</span> <span class="n">sA</span><span class="p">[</span><span class="n">ty</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">sB</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">tx</span><span class="p">]</span>
+
+        <span class="n">cuda</span><span class="o">.</span><span class="n">syncthreads</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">n</span> <span class="ow">and</span> <span class="n">y</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">:</span>
+        <span class="n">C</span><span class="p">[</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">]</span> <span class="o">=</span> <span class="n">acc</span>
+</pre></div>
+</div>
+<p>The equivalent code in CUDA-C would be:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="cp">#define pos2d(Y, X, W) ((Y) * (W) + (X))</span>
+
+<span class="k">const</span> <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">BPG</span> <span class="o">=</span> <span class="mi">50</span><span class="p">;</span>
+<span class="k">const</span> <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">TPB</span> <span class="o">=</span> <span class="mi">32</span><span class="p">;</span>
+<span class="k">const</span> <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">N</span> <span class="o">=</span> <span class="n">BPG</span> <span class="o">*</span> <span class="n">TPB</span><span class="p">;</span>
+
+<span class="n">__global__</span>
+<span class="kt">void</span> <span class="nf">cuMatrixMul</span><span class="p">(</span><span class="k">const</span> <span class="kt">float</span> <span class="n">A</span><span class="p">[],</span> <span class="k">const</span> <span class="kt">float</span> <span class="n">B</span><span class="p">[],</span> <span class="kt">float</span> <span class="n">C</span><span class="p">[]){</span>
+    <span class="n">__shared__</span> <span class="kt">float</span> <span class="n">sA</span><span class="p">[</span><span class="n">TPB</span> <span class="o">*</span> <span class="n">TPB</span><span class="p">];</span>
+    <span class="n">__shared__</span> <span class="kt">float</span> <span class="n">sB</span><span class="p">[</span><span class="n">TPB</span> <span class="o">*</span> <span class="n">TPB</span><span class="p">];</span>
+
+    <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">tx</span> <span class="o">=</span> <span class="n">threadIdx</span><span class="p">.</span><span class="n">x</span><span class="p">;</span>
+    <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">ty</span> <span class="o">=</span> <span class="n">threadIdx</span><span class="p">.</span><span class="n">y</span><span class="p">;</span>
+    <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">bx</span> <span class="o">=</span> <span class="n">blockIdx</span><span class="p">.</span><span class="n">x</span><span class="p">;</span>
+    <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">by</span> <span class="o">=</span> <span class="n">blockIdx</span><span class="p">.</span><span class="n">y</span><span class="p">;</span>
+    <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">bw</span> <span class="o">=</span> <span class="n">blockDim</span><span class="p">.</span><span class="n">x</span><span class="p">;</span>
+    <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">bh</span> <span class="o">=</span> <span class="n">blockDim</span><span class="p">.</span><span class="n">y</span><span class="p">;</span>
+
+    <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="n">tx</span> <span class="o">+</span> <span class="n">bx</span> <span class="o">*</span> <span class="n">bw</span><span class="p">;</span>
+    <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">y</span> <span class="o">=</span> <span class="n">ty</span> <span class="o">+</span> <span class="n">by</span> <span class="o">*</span> <span class="n">bh</span><span class="p">;</span>
+
+    <span class="kt">float</span> <span class="n">acc</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">;</span>
+
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">BPG</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">x</span> <span class="o">&lt;</span> <span class="n">N</span> <span class="n">and</span> <span class="n">y</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">sA</span><span class="p">[</span><span class="n">pos2d</span><span class="p">(</span><span class="n">ty</span><span class="p">,</span> <span class="n">tx</span><span class="p">,</span> <span class="n">TPB</span><span class="p">)]</span> <span class="o">=</span> <span class="n">A</span><span class="p">[</span><span class="n">pos2d</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">tx</span> <span class="o">+</span> <span class="n">i</span> <span class="o">*</span> <span class="n">TPB</span><span class="p">,</span> <span class="n">N</span><span class="p">)];</span>
+            <span class="n">sB</span><span class="p">[</span><span class="n">pos2d</span><span class="p">(</span><span class="n">ty</span><span class="p">,</span> <span class="n">tx</span><span class="p">,</span> <span class="n">TPB</span><span class="p">)]</span> <span class="o">=</span> <span class="n">B</span><span class="p">[</span><span class="n">pos2d</span><span class="p">(</span><span class="n">ty</span> <span class="o">+</span> <span class="n">i</span> <span class="o">*</span> <span class="n">TPB</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">N</span><span class="p">)];</span>
+        <span class="p">}</span>
+        <span class="n">__syncthreads</span><span class="p">();</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">x</span> <span class="o">&lt;</span> <span class="n">N</span> <span class="n">and</span> <span class="n">y</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">TPB</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">acc</span> <span class="o">+=</span> <span class="n">sA</span><span class="p">[</span><span class="n">pos2d</span><span class="p">(</span><span class="n">ty</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">TPB</span><span class="p">)]</span> <span class="o">*</span> <span class="n">sB</span><span class="p">[</span><span class="n">pos2d</span><span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="n">tx</span><span class="p">,</span> <span class="n">TPB</span><span class="p">)];</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="n">__syncthreads</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">x</span> <span class="o">&lt;</span> <span class="n">N</span> <span class="n">and</span> <span class="n">y</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">C</span><span class="p">[</span><span class="n">pos2d</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">N</span><span class="p">)]</span> <span class="o">=</span> <span class="n">acc</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The return value of <tt class="docutils literal"><span class="pre">cuda.shared.array</span></tt> is a NumPy-array-like object.  The <tt class="docutils literal"><span class="pre">shape</span></tt> argument  is similar as in NumPy API, with the requirement that it must contain a constant expression.  The <cite>dtype</cite> argument takes Numba types.</p>
+</div>
+<div class="section" id="synchronization-primitives">
+<h2>Synchronization Primitives<a class="headerlink" href="#synchronization-primitives" title="Permalink to this headline">¶</a></h2>
+<p>We currently support <tt class="docutils literal"><span class="pre">cuda.syncthreads()</span></tt> only.  It is the same as <tt class="docutils literal"><span class="pre">__syncthreads()</span></tt> in CUDA-C.</p>
+</div>
+<div class="section" id="atomic-operations">
+<h2>Atomic Operations<a class="headerlink" href="#atomic-operations" title="Permalink to this headline">¶</a></h2>
+<p>Numba supports atomic addition on <tt class="docutils literal"><span class="pre">uint32</span></tt> and <tt class="docutils literal"><span class="pre">float32</span></tt> arrays in shared
+or global memory.  These are accessed via the
+<tt class="docutils literal"><span class="pre">cuda.atomic.add(array,</span> <span class="pre">index,</span> <span class="pre">value)</span></tt> function:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@cuda.jit</span><span class="p">(</span><span class="s">&#39;void(uint32[:], uint32[:])&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">fill_bins</span><span class="p">(</span><span class="n">indices</span><span class="p">,</span> <span class="n">bin_counts</span><span class="p">):</span>
+    <span class="n">offset</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">stride</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">gridDim</span><span class="o">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">cuda</span><span class="o">.</span><span class="n">blockDim</span><span class="o">.</span><span class="n">x</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">offset</span><span class="p">,</span> <span class="n">indices</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">stride</span><span class="p">):</span>
+        <span class="n">cuda</span><span class="o">.</span><span class="n">atomic</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">bin_counts</span><span class="p">,</span> <span class="n">indices</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>A tuple can be used for the index argument if the array is multidimensional.</p>
+</div>
+</div>
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        
+      </div><!-- /row -->
+
+      <!-- row -->
+      <div class="row-fluid">
+<div class="related navbar ">
+  <div class="navbar-inner">
+    <ul class="nav pull-right">
+      
+        <li><a href="genindex.html" title="General Index" >index</a></li>
+        <li><a href="py-modindex.html" title="Python Module Index" >modules</a></li>
+        <li><a href="CUDADevice.html" title="CUDA Device Management" >next</a></li>
+        <li><a href="CUDAintro.html" title="CUDA Programming Introduction" >previous</a></li>
+        <li><a href="index.html">numba 0.13.4 documentation</a></li> 
+      
+    </ul>
+  </div>
+</div>
+      </div><!-- /row -->
+
+      <!-- footer -->
+      <footer>
+          &copy; Copyright 2012-2014, Continuum Analytics.
+        Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.2.
+      </footer>
+      <!-- /footer -->
+
+    </div>
+    <!-- /container -->
+
+  </body>
+</html>
