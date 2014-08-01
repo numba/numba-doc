@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     
-    <title>First Steps with numba &mdash; numba 0.13.1-127-gcababd3 documentation</title>
+    <title>First Steps with numba &mdash; numba 0.13.4 documentation</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
@@ -34,7 +34,7 @@
 <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
             URL_ROOT:    './',
-            VERSION:     '0.13.1-127-gcababd3',
+            VERSION:     '0.13.4',
             COLLAPSE_INDEX: false,
             FILE_SUFFIX: '.html',
             HAS_SOURCE:  true
@@ -58,7 +58,7 @@
     });
   });
 </script>
-    <link rel="top" title="numba 0.13.1-127-gcababd3 documentation" href="index.html" />
+    <link rel="top" title="numba 0.13.4 documentation" href="index.html" />
     <link rel="next" title="Numba and types" href="tutorial_types.html" />
     <link rel="prev" title="Examples" href="examples.html" /> 
   </head>
@@ -71,7 +71,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="index.html">numba 0.13.1-127-gcababd3 documentation</a>
+          <a class="brand" href="index.html">numba 0.13.4 documentation</a>
           <div class="nav-collapse collapse">
             <ul class="nav pull-right">
               
@@ -203,12 +203,7 @@
                   
   <div class="section" id="first-steps-with-numba">
 <h1>First Steps with numba<a class="headerlink" href="#first-steps-with-numba" title="Permalink to this headline">¶</a></h1>
-<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">numba</span>
-<span class="k">print</span><span class="p">(</span><span class="n">numba</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
-</pre></div>
-</div>
-<div class="highlight-python"><div class="highlight"><pre>0.12.0
-</pre></div>
+<div class="highlight-python"><pre>0.12.0</pre>
 </div>
 <div class="section" id="introduction-to-numba">
 <h2>Introduction to numba<a class="headerlink" href="#introduction-to-numba" title="Permalink to this headline">¶</a></h2>
@@ -226,42 +221,13 @@ directly from Python. This compilation is done on-the-fly and in-memory.</p>
 <p>Let&#8217;s start with a simple, yet time consuming function: a Python
 implementation of bubblesort. This bubblesort implementation works on a
 NumPy array.</p>
-<div class="code python highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">bubblesort</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
-    <span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">end</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">end</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
-            <span class="n">cur</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-            <span class="k">if</span> <span class="n">cur</span> <span class="o">&gt;</span> <span class="n">X</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]:</span>
-                <span class="n">tmp</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-                <span class="n">X</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
-                <span class="n">X</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmp</span>
-</pre></div>
-</div>
 <p>Now, let&#8217;s try the function, this way we check that it works. First
 we&#8217;ll create an array of sorted values and randomly shuffle them:</p>
-<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
-
-<span class="n">original</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s">&#39;f4&#39;</span><span class="p">)</span>
-<span class="n">shuffled</span> <span class="o">=</span> <span class="n">original</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">shuffled</span><span class="p">)</span>
-</pre></div>
-</div>
 <p>Now we&#8217;ll create a copy and do our bubble sort on the copy:</p>
-<div class="code python highlight-python"><div class="highlight"><pre><span class="nb">sorted</span> <span class="o">=</span> <span class="n">shuffled</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-<span class="n">bubblesort</span><span class="p">(</span><span class="nb">sorted</span><span class="p">)</span>
-<span class="k">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span><span class="nb">sorted</span><span class="p">,</span> <span class="n">original</span><span class="p">))</span>
-</pre></div>
-</div>
-<div class="highlight-python"><div class="highlight"><pre><span class="bp">True</span>
-</pre></div>
+<div class="highlight-python"><pre>True</pre>
 </div>
 <p>Let&#8217;s see how it behaves in execution time:</p>
-<div class="code python highlight-python"><div class="highlight"><pre>sorted[:] = shuffled[:]
-%timeit sorted[:] = shuffled[:]; bubblesort(sorted)
-</pre></div>
-</div>
-<div class="highlight-python"><div class="highlight"><pre>1 loops, best of 3: 328 ms per loop
-</pre></div>
+<div class="highlight-python"><pre>1 loops, best of 3: 328 ms per loop</pre>
 </div>
 <p>Note that as execution time may depend on its input and the function
 itself is destructive, I make sure to use the same input in all the
@@ -272,11 +238,7 @@ first iteration. As bubblesort works better on vectors that are already
 sorted, the next runs would be selected and we will get the time when
 running bubblesort in an already sorted array. In our case the copy time
 is minimal, though:</p>
-<div class="code python highlight-python"><div class="highlight"><pre>%timeit sorted[:] = shuffled[:]
-</pre></div>
-</div>
-<div class="highlight-python"><div class="highlight"><pre>1000000 loops, best of 3: 1.17 µs per loop
-</pre></div>
+<div class="highlight-python"><pre>1000000 loops, best of 3: 1.17 µs per loop</pre>
 </div>
 </div>
 <div class="section" id="compiling-a-function-with-numba-jit-using-an-explicit-function-signature">
@@ -288,15 +250,12 @@ a <em>signature</em> by letting <em>numba</em> figure out the <em>signatures</em
 However, it is useful to know what the signature is, and what role it
 has in <em>numba</em>.</p>
 <p>First, let&#8217;s start by peeking at the numba.jit string-doc:</p>
-<div class="code python highlight-python"><div class="highlight"><pre><span class="k">print</span><span class="p">(</span><span class="n">numba</span><span class="o">.</span><span class="n">jit</span><span class="o">.</span><span class="n">__doc__</span><span class="p">)</span>
-</pre></div>
-</div>
-<div class="highlight-python"><div class="highlight"><pre>jit([signature_or_function, [locals={}, [target=&#39;cpu&#39;,
+<div class="highlight-python"><pre>jit([signature_or_function, [locals={}, [target='cpu',
             [**targetoptions]]]])
 
     The function can be used as the following versions:
 
-    1) jit(signature, [target=&#39;cpu&#39;, [**targetoptions]]) -&gt; jit(function)
+    1) jit(signature, [target='cpu', [**targetoptions]]) -&gt; jit(function)
 
         Equivalent to:
 
@@ -308,7 +267,7 @@ has in <em>numba</em>.</p>
 
         Example:
 
-            @jit(&quot;void(int32, float32)&quot;)
+            @jit("void(int32, float32)")
             def foo(x, y):
                 return x + y
 
@@ -323,7 +282,7 @@ has in <em>numba</em>.</p>
             def foo(x, y):
                 return x + y
 
-    3) jit([target=&#39;cpu&#39;, [**targetoptions]]) -&gt; configured_jit(function)
+    3) jit([target='cpu', [**targetoptions]]) -&gt; configured_jit(function)
 
         Same as old autojit and 2).  But configure with target and default
         target-options.
@@ -331,7 +290,7 @@ has in <em>numba</em>.</p>
 
         Example:
 
-            @jit(target=&#39;cpu&#39;, nopython=True)
+            @jit(target='cpu', nopython=True)
             def foo(x, y):
                 return x + y
 
@@ -348,58 +307,28 @@ has in <em>numba</em>.</p>
         - forceobj: [bool]
 
             Set to True to force the use of PyObjects for every value.  Default
-            value is False.
-</pre></div>
+            value is False.</pre>
 </div>
 <p>So let&#8217;s make a compiled version of our bubblesort:</p>
-<div class="code python highlight-python"><div class="highlight"><pre><span class="n">bubblesort_jit</span> <span class="o">=</span> <span class="n">numba</span><span class="o">.</span><span class="n">jit</span><span class="p">(</span><span class="s">&quot;void(f4[:])&quot;</span><span class="p">)(</span><span class="n">bubblesort</span><span class="p">)</span>
-</pre></div>
-</div>
 <p>At this point, <strong>bubblesort_jit</strong> contains the compiled function
 -wrapped so that is directly callable from Python- generated from the
 original bubblesort function. Note that there is a fancy parameter
 <em>&#8220;void(f4[:])&#8221;</em> that is passed. That parameter describes the <em>signature</em>
 of the function to generate (more on this later).</p>
 <p>Let&#8217;s check that it works:</p>
-<div class="code python highlight-python"><div class="highlight"><pre><span class="nb">sorted</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">shuffled</span><span class="p">[:]</span> <span class="c"># reset to shuffled before sorting</span>
-<span class="n">bubblesort_jit</span><span class="p">(</span><span class="nb">sorted</span><span class="p">)</span>
-<span class="k">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span><span class="nb">sorted</span><span class="p">,</span> <span class="n">original</span><span class="p">))</span>
-</pre></div>
-</div>
-<div class="highlight-python"><div class="highlight"><pre><span class="bp">True</span>
-</pre></div>
+<div class="highlight-python"><pre>True</pre>
 </div>
 <p>Now let&#8217;s compare the time it takes to execute the compiled function
 compared to the original</p>
-<div class="code python highlight-python"><div class="highlight"><pre>%timeit sorted[:] = shuffled[:]; bubblesort_jit(sorted)
-</pre></div>
+<div class="highlight-python"><pre>1000 loops, best of 3: 1.25 ms per loop</pre>
 </div>
-<div class="highlight-python"><div class="highlight"><pre>1000 loops, best of 3: 1.25 ms per loop
-</pre></div>
-</div>
-<div class="code python highlight-python"><div class="highlight"><pre>%timeit sorted[:] = shuffled[:]; bubblesort(sorted)
-</pre></div>
-</div>
-<div class="highlight-python"><div class="highlight"><pre>1 loops, best of 3: 323 ms per loop
-</pre></div>
+<div class="highlight-python"><pre>1 loops, best of 3: 323 ms per loop</pre>
 </div>
 <p>Bear in mind that numba.jit is a decorator, although for practical
 reasons in this tutorial we will be calling it like a function to have
 access to both, the original function and the jitted one. In many
 practical uses, the decorator syntax may be more appropriate. With the
 decorator syntax our sample will look like this:</p>
-<div class="code python highlight-python"><div class="highlight"><pre><span class="nd">@numba.jit</span><span class="p">(</span><span class="s">&quot;void(f4[:])&quot;</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">bubblesort_jit</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
-    <span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">end</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">end</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
-            <span class="n">cur</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-            <span class="k">if</span> <span class="n">cur</span> <span class="o">&gt;</span> <span class="n">X</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]:</span>
-                <span class="n">tmp</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-                <span class="n">X</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
-                <span class="n">X</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmp</span>
-</pre></div>
-</div>
 </div>
 <div class="section" id="signature">
 <h2>Signature<a class="headerlink" href="#signature" title="Permalink to this headline">¶</a></h2>
@@ -478,14 +407,7 @@ generated and the right version will be chosen based on the argument
 types.</p>
 <p>For most uses, using jit without a signature will be the simplest
 option.</p>
-<div class="code python highlight-python"><div class="highlight"><pre><span class="n">bubblesort_autojit</span> <span class="o">=</span> <span class="n">numba</span><span class="o">.</span><span class="n">jit</span><span class="p">(</span><span class="n">bubblesort</span><span class="p">)</span>
-</pre></div>
-</div>
-<div class="code python highlight-python"><div class="highlight"><pre>%timeit sorted[:] = shuffled[:]; bubblesort_autojit(sorted)
-</pre></div>
-</div>
-<div class="highlight-python"><div class="highlight"><pre>1000 loops, best of 3: 1.25 ms per loop
-</pre></div>
+<div class="highlight-python"><pre>1000 loops, best of 3: 1.25 ms per loop</pre>
 </div>
 </div>
 <div class="section" id="some-extra-remarks">
@@ -521,55 +443,21 @@ native function.</li>
 mode. If this fails, it tries again in object mode.</p>
 <p>This example shows how falling back to Python objects may cause a
 slowdown in the generated code:</p>
-<div class="code python highlight-python"><div class="highlight"><pre><span class="nd">@numba.jit</span><span class="p">(</span><span class="s">&quot;void(i1[:])&quot;</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)):</span>
-        <span class="n">value</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">100</span>
-
-<span class="kn">from</span> <span class="nn">decimal</span> <span class="kn">import</span> <span class="n">Decimal</span>
-<span class="nd">@numba.jit</span><span class="p">(</span><span class="s">&quot;void(i1[:])&quot;</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">test2</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)):</span>
-        <span class="n">value</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span> <span class="o">%</span> <span class="n">Decimal</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
-
-<span class="n">res</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">10000</span><span class="p">,),</span> <span class="n">dtype</span><span class="o">=</span><span class="s">&quot;i1&quot;</span><span class="p">)</span>
-</pre></div>
+<div class="highlight-python"><pre>10000 loops, best of 3: 31.9 µs per loop</pre>
 </div>
-<div class="code python highlight-python"><div class="highlight"><pre>%timeit test(res)
-</pre></div>
-</div>
-<div class="highlight-python"><div class="highlight"><pre>10000 loops, best of 3: 31.9 µs per loop
-</pre></div>
-</div>
-<div class="code python highlight-python"><div class="highlight"><pre>%timeit test2(res)
-</pre></div>
-</div>
-<div class="highlight-python"><div class="highlight"><pre>1 loops, best of 3: 283 ms per loop
-</pre></div>
+<div class="highlight-python"><pre>1 loops, best of 3: 283 ms per loop</pre>
 </div>
 <p>It is possible to force a failure if the <em>nopython</em> code generation
 fails. This allows getting some feedback about whether it is possible to
 generate code for a given function that doesn&#8217;t rely on the Python
 run-time. This can help when trying to write fast code, as object mode
 can have a huge performance penalty.</p>
-<div class="code python highlight-python"><div class="highlight"><pre><span class="nd">@numba.jit</span><span class="p">(</span><span class="s">&quot;void(i1[:])&quot;</span><span class="p">,</span> <span class="n">nopython</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)):</span>
-        <span class="n">value</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">100</span>
-</pre></div>
-</div>
 <p>On the other hand, <em>test2</em> fails if we pass the <em>nopython</em> keyword:</p>
-<div class="code python highlight-python"><div class="highlight"><pre><span class="nd">@numba.jit</span><span class="p">(</span><span class="s">&quot;void(i1[:])&quot;</span><span class="p">,</span> <span class="n">nopython</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">test2</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)):</span>
-        <span class="n">value</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span> <span class="o">%</span> <span class="n">Decimal</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
-</pre></div>
-</div>
-<div class="highlight-python"><div class="highlight"><pre>---------------------------------------------------------------------------
+<div class="highlight-python"><pre>---------------------------------------------------------------------------
 TypingError                               Traceback (most recent call last)
 
 &lt;ipython-input-19-6038b783c49c&gt; in &lt;module&gt;()
-----&gt; 1 @numba.jit(&quot;void(i1[:])&quot;, nopython=True)
+----&gt; 1 @numba.jit("void(i1[:])", nopython=True)
       2 def test2(value):
       3     for i in xrange(len(value)):
       4         value[i] = i % Decimal(100)
@@ -633,15 +521,14 @@ TypingError                               Traceback (most recent call last)
 
 /Users/jayvius/Projects/numba/numba/typeinfer.pyc in typeof_global(self, inst, target, gvar)
     470             except KeyError:
-    471                 raise TypingError(&quot;Untyped global name &#39;%s&#39;&quot; % gvar.name,
+    471                 raise TypingError("Untyped global name '%s'" % gvar.name,
 --&gt; 472                                   loc=inst.loc)
     473             self.assumed_immutables.add(inst)
     474             self.typevars[target.name].lock(gvty)
 
 
-TypingError: Untyped global name &#39;Decimal&#39;
-File &quot;&lt;ipython-input-19-6038b783c49c&gt;&quot;, line 4
-</pre></div>
+TypingError: Untyped global name 'Decimal'
+File "&lt;ipython-input-19-6038b783c49c&gt;", line 4</pre>
 </div>
 </div>
 </div>
@@ -666,7 +553,7 @@ File &quot;&lt;ipython-input-19-6038b783c49c&gt;&quot;, line 4
         <li><a href="py-modindex.html" title="Python Module Index" >modules</a></li>
         <li><a href="tutorial_types.html" title="Numba and types" >next</a></li>
         <li><a href="examples.html" title="Examples" >previous</a></li>
-        <li><a href="index.html">numba 0.13.1-127-gcababd3 documentation</a></li> 
+        <li><a href="index.html">numba 0.13.4 documentation</a></li> 
       
     </ul>
   </div>

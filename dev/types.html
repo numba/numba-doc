@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     
-    <title>Types &mdash; numba 0.13.1-127-gcababd3 documentation</title>
+    <title>Types &mdash; numba 0.13.4 documentation</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
@@ -34,7 +34,7 @@
 <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
             URL_ROOT:    './',
-            VERSION:     '0.13.1-127-gcababd3',
+            VERSION:     '0.13.4',
             COLLAPSE_INDEX: false,
             FILE_SUFFIX: '.html',
             HAS_SOURCE:  true
@@ -58,7 +58,7 @@
     });
   });
 </script>
-    <link rel="top" title="numba 0.13.1-127-gcababd3 documentation" href="index.html" />
+    <link rel="top" title="numba 0.13.4 documentation" href="index.html" />
     <link rel="next" title="Arrays" href="arrays.html" />
     <link rel="prev" title="Quick Start" href="quickstart.html" /> 
   </head>
@@ -71,7 +71,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="index.html">numba 0.13.1-127-gcababd3 documentation</a>
+          <a class="brand" href="index.html">numba 0.13.4 documentation</a>
           <div class="nav-collapse collapse">
             <ul class="nav pull-right">
               
@@ -286,20 +286,18 @@
 </tbody>
 </table>
 <p>Types can be used to specify the signature of a function:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="nd">@jit</span><span class="p">(</span><span class="s">&#39;f8(f8[:])&#39;</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">sum1d</span><span class="p">(</span><span class="n">array</span><span class="p">):</span>
-    <span class="nb">sum</span> <span class="o">=</span> <span class="mf">0.0</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">array</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
-        <span class="nb">sum</span> <span class="o">+=</span> <span class="n">array</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-    <span class="k">return</span> <span class="nb">sum</span>
-</pre></div>
+<div class="highlight-python"><pre>@jit('f8(f8[:])')
+def sum1d(array):
+    sum = 0.0
+    for i in range(array.shape[0]):
+        sum += array[i]
+    return sum</pre>
 </div>
 <p>Types can also be used in Numba to declare local variables in a function:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="nd">@jit</span><span class="p">(</span><span class="nb">locals</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">array</span><span class="o">=</span><span class="n">double</span><span class="p">[:,</span> <span class="p">:],</span> <span class="n">scalar1</span><span class="o">=</span><span class="n">double</span><span class="p">))</span>
-<span class="k">def</span> <span class="nf">func</span><span class="p">(</span><span class="n">array</span><span class="p">):</span>
-    <span class="n">scalar1</span> <span class="o">=</span> <span class="n">array</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="c"># scalar is declared double</span>
-    <span class="n">scalar2</span> <span class="o">=</span> <span class="n">double</span><span class="p">(</span><span class="n">array</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
-</pre></div>
+<div class="highlight-python"><pre>@jit(locals=dict(array=double[:, :], scalar1=double))
+def func(array):
+    scalar1 = array[0, 0] # scalar is declared double
+    scalar2 = double(array[0, 0])</pre>
 </div>
 <p>Of course, declaring types in this example is unnecessary since the type
 inferencer knows the input type of <tt class="docutils literal"><span class="pre">array</span></tt>, and hence knows the type
@@ -314,61 +312,57 @@ point precision).</p>
 <p>Variables declared in the <tt class="docutils literal"><span class="pre">locals</span></tt> dict have a single type throughout
 the entire function. However, any variable not declared in locals can
 assume different types, just like in Python:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="nd">@jit</span>
-<span class="k">def</span> <span class="nf">variable_ressign</span><span class="p">(</span><span class="n">arg</span><span class="p">):</span>
-    <span class="n">arg</span> <span class="o">=</span> <span class="mf">1.0</span>
-    <span class="n">arg</span> <span class="o">=</span> <span class="s">&quot;hello&quot;</span>
-    <span class="n">arg</span> <span class="o">=</span> <span class="nb">object</span><span class="p">()</span>
-    <span class="n">var</span> <span class="o">=</span> <span class="n">arg</span>
-    <span class="n">var</span> <span class="o">=</span> <span class="s">&quot;world&quot;</span>
-</pre></div>
+<div class="highlight-python"><pre>@jit
+def variable_ressign(arg):
+    arg = 1.0
+    arg = "hello"
+    arg = object()
+    var = arg
+    var = "world"</pre>
 </div>
 <p>However, there are some restrictions, namely that variables must have
 a unifyable type at control flow merge points. For example, the following
 code will not compile:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="nd">@jit</span>
-<span class="k">def</span> <span class="nf">incompatible_types</span><span class="p">(</span><span class="n">arg</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">arg</span> <span class="o">&gt;</span> <span class="mi">10</span><span class="p">:</span>
-        <span class="n">x</span> <span class="o">=</span> <span class="mi">1</span><span class="o">+</span><span class="mi">2j</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">x</span> <span class="o">=</span> <span class="mf">3.3</span>
+<div class="highlight-python"><pre>@jit
+def incompatible_types(arg):
+    if arg &gt; 10:
+        x = "hello"
+    else:
+        x = 1
 
-    <span class="k">return</span> <span class="n">x</span>        <span class="c"># ERROR! Inconsistent type for x!</span>
-</pre></div>
+    return x        # ERROR! Inconsistent type for x!</pre>
 </div>
 <p>This code is invalid because strings and integers are not compatible.
 However, if we do not read <tt class="docutils literal"><span class="pre">x</span></tt> after the if block, the code will
 compile fine, since it does not need to unify the type:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="nd">@jit</span>
-<span class="k">def</span> <span class="nf">compatible_types</span><span class="p">(</span><span class="n">arg</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">arg</span> <span class="o">&gt;</span> <span class="mi">10</span><span class="p">:</span>
-        <span class="n">x</span> <span class="o">=</span> <span class="s">&quot;hello&quot;</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">x</span> <span class="o">=</span> <span class="n">arg</span>
+<div class="highlight-python"><pre>@jit
+def compatible_types(arg):
+    if arg &gt; 10:
+        x = "hello"
+    else:
+        x = arg
 
-    <span class="n">x</span> <span class="o">=</span> <span class="n">func</span><span class="p">()</span>
-    <span class="k">return</span> <span class="n">x</span>
-</pre></div>
+    x = func()
+    return x</pre>
 </div>
 <p>The same goes for loop carried dependencies and variables escaping loops, e.g.:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="nd">@jit</span>
-<span class="k">def</span> <span class="nf">incompatible_types2</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
-    <span class="n">x</span> <span class="o">=</span> <span class="s">&quot;hello&quot;</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
-        <span class="k">print</span> <span class="n">x</span>     <span class="c"># ERROR! Inconsistent type for x!</span>
-        <span class="n">x</span> <span class="o">=</span> <span class="n">i</span>
+<div class="highlight-python"><pre>@jit
+def incompatible_types2(N):
+    x = "hello"
+    for i in range(N):
+        print x     # ERROR! Inconsistent type for x!
+        x = i
 
-    <span class="k">return</span> <span class="n">x</span>
+    return x
 
-<span class="nd">@jit</span>
-<span class="k">def</span> <span class="nf">incompatible_types3</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
-    <span class="n">x</span> <span class="o">=</span> <span class="s">&quot;hello&quot;</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
-        <span class="n">x</span> <span class="o">=</span> <span class="n">i</span>
-        <span class="k">print</span> <span class="n">x</span>
+@jit
+def incompatible_types3(N):
+    x = "hello"
+    for i in range(N):
+        x = i
+        print x
 
-    <span class="k">return</span> <span class="n">x</span>        <span class="c"># ERROR! Inconsistent type for x if N &lt;= 0</span>
-</pre></div>
+    return x        # ERROR! Inconsistent type for x if N &lt;= 0</pre>
 </div>
 <p>Cases where the type inferencer doesn&#8217;t know the type is often when you call
 a Python function or method that is not a numba function and numba doesn&#8217;t
@@ -376,17 +370,15 @@ otherwise recognize.</p>
 <p>Numba allows you to obtain the type of a expression or variable through
 the typeof function in a Numba function. This type can then be used for
 instance to cast other values:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="nb">type</span> <span class="o">=</span> <span class="n">numba</span><span class="o">.</span><span class="n">typeof</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">y</span><span class="p">)</span>
-<span class="n">value</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
-</pre></div>
+<div class="highlight-python"><pre>type = numba.typeof(x + y)
+value = type(value)</pre>
 </div>
 <p>When used outside of a Numba function, it returns the type the type inferencer
 would infer for that value:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">numba</span><span class="o">.</span><span class="n">typeof</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span>
-<span class="go">double</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">numba</span><span class="o">.</span><span class="n">typeof</span><span class="p">(</span><span class="n">cmath</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
-<span class="go">complex128</span>
-</pre></div>
+<div class="highlight-python"><pre>&gt;&gt;&gt; numba.typeof(1.0)
+double
+&gt;&gt;&gt; numba.typeof(cmath.sqrt(-1))
+complex128</pre>
 </div>
 </div>
 <div class="section" id="more-complex-types">
@@ -416,7 +408,7 @@ such as structs, pointers, strings and user defined classes. More on this soon..
         <li><a href="py-modindex.html" title="Python Module Index" >modules</a></li>
         <li><a href="arrays.html" title="Arrays" >next</a></li>
         <li><a href="quickstart.html" title="Quick Start" >previous</a></li>
-        <li><a href="index.html">numba 0.13.1-127-gcababd3 documentation</a></li> 
+        <li><a href="index.html">numba 0.13.4 documentation</a></li> 
       
     </ul>
   </div>

@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     
-    <title>Code Generation Utilties &mdash; numba 0.13.1-127-gcababd3 documentation</title>
+    <title>Code Generation Utilties &mdash; numba 0.13.4 documentation</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
@@ -34,7 +34,7 @@
 <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
             URL_ROOT:    './',
-            VERSION:     '0.13.1-127-gcababd3',
+            VERSION:     '0.13.4',
             COLLAPSE_INDEX: false,
             FILE_SUFFIX: '.html',
             HAS_SOURCE:  true
@@ -58,8 +58,7 @@
     });
   });
 </script>
-    <link rel="top" title="numba 0.13.1-127-gcababd3 documentation" href="index.html" />
-    <link rel="next" title="Numba Language Specification" href="spec.html" />
+    <link rel="top" title="numba 0.13.4 documentation" href="index.html" />
     <link rel="prev" title="Numba Architecture" href="architecture.html" /> 
   </head>
   <body>
@@ -71,7 +70,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="index.html">numba 0.13.1-127-gcababd3 documentation</a>
+          <a class="brand" href="index.html">numba 0.13.4 documentation</a>
           <div class="nav-collapse collapse">
             <ul class="nav pull-right">
               
@@ -80,9 +79,6 @@
                 </li>
                 <li>
                 <a href="py-modindex.html" title="Python Module Index" >modules</a>
-                </li>
-                <li>
-                <a href="spec.html" title="Numba Language Specification" accesskey="N">next</a>
                 </li>
                 <li>
                 <a href="architecture.html" title="Numba Architecture" accesskey="P">previous</a>
@@ -117,9 +113,6 @@
   <h4>Previous topic</h4>
   <p class="topless"><a href="architecture.html"
                         title="previous chapter">Numba Architecture</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="spec.html"
-                        title="next chapter">Numba Language Specification</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/cgutils.txt"
@@ -161,9 +154,6 @@
   <h4>Previous topic</h4>
   <p class="topless"><a href="architecture.html"
                         title="previous chapter">Numba Architecture</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="spec.html"
-                        title="next chapter">Numba Language Specification</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/cgutils.txt"
@@ -217,17 +207,16 @@ for manuipluting structures.  The <tt class="docutils literal"><span class="pre"
 attribute declares a list of (name, type) pairs for each field of the
 structure.</p>
 <p>For example, The complex number structures are defined as:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">types</span><span class="p">,</span> <span class="n">cgutils</span>
+<div class="highlight-python"><pre>from numba import types, cgutils
 
-<span class="k">class</span> <span class="nc">Complex64</span><span class="p">(</span><span class="n">cgutils</span><span class="o">.</span><span class="n">Structure</span><span class="p">):</span>
-    <span class="n">_fields</span> <span class="o">=</span> <span class="p">[(</span><span class="s">&#39;real&#39;</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span>
-               <span class="p">(</span><span class="s">&#39;imag&#39;</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">float32</span><span class="p">)]</span>
+class Complex64(cgutils.Structure):
+    _fields = [('real', types.float32),
+               ('imag', types.float32)]
 
 
-<span class="k">class</span> <span class="nc">Complex128</span><span class="p">(</span><span class="n">cgutils</span><span class="o">.</span><span class="n">Structure</span><span class="p">):</span>
-    <span class="n">_fields</span> <span class="o">=</span> <span class="p">[(</span><span class="s">&#39;real&#39;</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">float64</span><span class="p">),</span>
-               <span class="p">(</span><span class="s">&#39;imag&#39;</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">float64</span><span class="p">)]</span>
-</pre></div>
+class Complex128(cgutils.Structure):
+    _fields = [('real', types.float64),
+               ('imag', types.float64)]</pre>
 </div>
 <p>The constructor of <tt class="docutils literal"><span class="pre">Structure</span></tt> requires the codegen context and
 llvm builder.  Optionally, user can provide the <tt class="docutils literal"><span class="pre">value</span></tt> keyword argument
@@ -242,10 +231,9 @@ value, use <tt class="docutils literal"><span class="pre">Structure._getvalue</s
 (instance of <tt class="docutils literal"><span class="pre">llvm.core.Value</span></tt>).</p>
 <p>Each field is a load/store property of the <tt class="docutils literal"><span class="pre">Structure</span></tt> instance.  Accessing
 the <tt class="docutils literal"><span class="pre">real</span></tt> field of <tt class="docutils literal"><span class="pre">Complex64</span></tt>, for example, looks like:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">c</span> <span class="o">=</span> <span class="n">Complex64</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">builder</span><span class="p">)</span>
-<span class="n">c</span><span class="o">.</span><span class="n">real</span> <span class="o">=</span> <span class="n">llvm</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">Constant</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">lc</span><span class="o">.</span><span class="n">Type</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="mf">1.23</span><span class="p">)</span>
-<span class="n">two_times_real</span> <span class="o">=</span> <span class="n">builder</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">real</span><span class="p">)</span>
-</pre></div>
+<div class="highlight-python"><pre>c = Complex64(context, builder)
+c.real = llvm.core.Constant.real(lc.Type.float32, 1.23)
+two_times_real = builder.add(c.real, c.real)</pre>
 </div>
 </div>
 </div>
@@ -268,9 +256,8 @@ the <tt class="docutils literal"><span class="pre">real</span></tt> field of <tt
       
         <li><a href="genindex.html" title="General Index" >index</a></li>
         <li><a href="py-modindex.html" title="Python Module Index" >modules</a></li>
-        <li><a href="spec.html" title="Numba Language Specification" >next</a></li>
         <li><a href="architecture.html" title="Numba Architecture" >previous</a></li>
-        <li><a href="index.html">numba 0.13.1-127-gcababd3 documentation</a></li> 
+        <li><a href="index.html">numba 0.13.4 documentation</a></li> 
       
     </ul>
   </div>

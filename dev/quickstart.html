@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     
-    <title>Quick Start &mdash; numba 0.13.1-127-gcababd3 documentation</title>
+    <title>Quick Start &mdash; numba 0.13.4 documentation</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
@@ -34,7 +34,7 @@
 <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
             URL_ROOT:    './',
-            VERSION:     '0.13.1-127-gcababd3',
+            VERSION:     '0.13.4',
             COLLAPSE_INDEX: false,
             FILE_SUFFIX: '.html',
             HAS_SOURCE:  true
@@ -58,7 +58,7 @@
     });
   });
 </script>
-    <link rel="top" title="numba 0.13.1-127-gcababd3 documentation" href="index.html" />
+    <link rel="top" title="numba 0.13.4 documentation" href="index.html" />
     <link rel="next" title="Types" href="types.html" />
     <link rel="prev" title="Installation" href="install.html" /> 
   </head>
@@ -71,7 +71,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="index.html">numba 0.13.1-127-gcababd3 documentation</a>
+          <a class="brand" href="index.html">numba 0.13.4 documentation</a>
           <div class="nav-collapse collapse">
             <ul class="nav pull-right">
               
@@ -177,53 +177,50 @@
                   
   <div class="section" id="quick-start">
 <h1>Quick Start<a class="headerlink" href="#quick-start" title="Permalink to this headline">¶</a></h1>
-<p>Numba compiles Python code to LLVM IR which can be natively executed at
-runtime much faster than pure Python code. The first step to using Numba is
-becoming familiar with the jit decorator, which tells Numba which functions to
+<p>Numba compiles Python code to LLVM IR which can be natively executed at runtime
+much faster than pure Python code. The first step to using Numba is becoming
+familiar with the <tt class="docutils literal"><span class="pre">jit</span></tt> decorator, which tells Numba which functions to
 compile:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">jit</span>
+<div class="highlight-python"><pre>from numba import jit
 
-<span class="nd">@jit</span>
-<span class="k">def</span> <span class="nf">sum</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
-</pre></div>
+@jit
+def sum(x, y):
+    return x + y</pre>
 </div>
 <p>The very basic example above is compiled for any compatible input types
-automatically when the sum1d function is called. The result is a new function
+automatically when the <tt class="docutils literal"><span class="pre">sum</span></tt> function is called. The result is a new function
 with performance comparable to a compiled function written in C (assuming best
 case scenario; more on that later). To compile for specific input types, we
 can tell Numba what those input types are:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="nd">@jit</span><span class="p">(</span><span class="s">&#39;f8(f8)&#39;</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">sum</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
-</pre></div>
+<div class="highlight-python"><pre>@jit('f8(f8,f8)')
+def sum(x, y):
+    return x + y</pre>
 </div>
-<p>The string above passed to the jit decorator tells Numba the return type is an
-8 byte float, and the single argument passed in is also an 8 byte float. The
-string takes the form &#8216;returntype(arg1type, arg2type, ...)&#8217;.</p>
+<p>The string above passed to the <tt class="docutils literal"><span class="pre">jit</span></tt> decorator tells Numba the return type is an
+8 byte float, and the two arguments passed in are also 8 byte floats. The
+string takes the form <tt class="docutils literal"><span class="pre">returntype(arg1type,</span> <span class="pre">arg2type,</span> <span class="pre">...)</span></tt>.</p>
 <p>One of the main features of Numba is it&#8217;s support for NumPy arrays. The
 following example shows how a function can be compiled that takes a NumPy array
 of floats as an input:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="nd">@jit</span><span class="p">(</span><span class="s">&#39;f8(f8[:])&#39;</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">sum1d</span><span class="p">(</span><span class="n">array</span><span class="p">):</span>
-    <span class="nb">sum</span> <span class="o">=</span> <span class="mf">0.0</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">array</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
-        <span class="nb">sum</span> <span class="o">+=</span> <span class="n">array</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-    <span class="k">return</span> <span class="nb">sum</span>
-</pre></div>
+<div class="highlight-python"><pre>@jit('f8(f8[:])')
+def sum1d(array):
+    sum = 0.0
+    for i in range(array.shape[0]):
+        sum += array[i]
+    return sum</pre>
 </div>
 <p>There are two main things to notice in the example above. The input argument is
-specified by the string &#8216;f8[:]&#8217;, which means a 1d array of 8 byte floats. A
-2d array would be specified as &#8216;f8[:, :]&#8217;, a 3d array as &#8216;f8[:, :, :]&#8217;, and so
-on. The other thing to take note of is the array indexing and shape method call,
-and the fact that we&#8217;re iterating over a NumPy array using Python. Normally
-this would be terribly slow and would be cause for writing a NumPy ufunc in C,
-but the performance of the code above is the same as NumPy&#8217;s sum method.</p>
+specified by the string <tt class="docutils literal"><span class="pre">f8[:]</span></tt>, which means a 1d array of 8 byte floats. A
+2d array would be specified as <tt class="docutils literal"><span class="pre">f8[:,</span> <span class="pre">:]</span></tt>, a 3d array as <tt class="docutils literal"><span class="pre">f8[:,</span> <span class="pre">:,</span> <span class="pre">:]</span></tt>, and
+so on. The other thing to take note of is the array indexing and shape method
+call, and the fact that we&#8217;re iterating over a NumPy array using Python.
+Normally this would be terribly slow and would be cause for writing a NumPy
+ufunc in C, but the performance of the code above is the same as NumPy&#8217;s
+<tt class="docutils literal"><span class="pre">sum</span></tt> method.</p>
 <p>Numba can also infer the array type automatically like other elementary types:</p>
-<div class="highlight-python"><div class="highlight"><pre>@jit
-def sum1d(array)
-    ...
-</pre></div>
+<div class="highlight-python"><pre>@jit
+def sum1d(array):
+    ...</pre>
 </div>
 <p>Numba&#8217;s elementary built in types in are summarized in the table below and can
 be found in the <tt class="docutils literal"><span class="pre">numba</span></tt> namespace.</p>
@@ -318,12 +315,11 @@ be found in the <tt class="docutils literal"><span class="pre">numba</span></tt>
 <tt class="docutils literal"><span class="pre">int_</span></tt>, <tt class="docutils literal"><span class="pre">short</span></tt>, <tt class="docutils literal"><span class="pre">ulonglong</span></tt>, etc.</p>
 <p>Function signatures can also be expressed with the type objects directly as
 opposed to using strings. For example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">jit</span><span class="p">,</span> <span class="n">f8</span>
+<div class="highlight-python"><pre>from numba import jit, f8
 
-<span class="nd">@jit</span><span class="p">(</span><span class="n">f8</span><span class="p">(</span><span class="n">f8</span><span class="p">[:]))</span>
-<span class="k">def</span> <span class="nf">sum1d</span><span class="p">(</span><span class="n">array</span><span class="p">):</span>
-    <span class="o">...</span>
-</pre></div>
+@jit(f8(f8[:]))
+def sum1d(array):
+    ...</pre>
 </div>
 <p>In the example above, the argument type object is passed in to the return type
 object&#8217;s constructor.</p>
@@ -331,73 +327,71 @@ object&#8217;s constructor.</p>
 isn&#8217;t (yet) possible. If Numba can&#8217;t infer the type of a variable or doesn&#8217;t
 support a particular data type, it falls back to using Python objects. This is
 of course much slower. If you&#8217;re having performance issues and suspect Python
-objects are to blame, you can use the nopython flag to force Numba to abort
+objects are to blame, you can use the <tt class="docutils literal"><span class="pre">nopython</span></tt> flag to force Numba to abort
 if it can&#8217;t avoid using Python objects:</p>
-<div class="highlight-python"><div class="highlight"><pre>@jit(nopython=True):
+<div class="highlight-python"><pre>@jit(nopython=True)
 def sum1d(array):
-    ...
-</pre></div>
+    ...</pre>
 </div>
-<p>Another useful debugging tool is Numba&#8217;s new inspect_types method. This can be
-called for any Numba compiled function to get a listing of the Numba IR
+<p>Another useful debugging tool is Numba&#8217;s new <tt class="docutils literal"><span class="pre">inspect_types</span></tt> method. This can
+be called for any Numba compiled function to get a listing of the Numba IR
 generated from the Python code as well as the inferred types of each variable:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">sum1d</span><span class="o">.</span><span class="n">inspect_types</span><span class="p">()</span>
-<span class="go">sum1d (array(float64, 1d, A),) -&gt; float64</span>
-<span class="go">``-----------------------------------------------------------------------``</span>
-<span class="go"># --- LINE 5 ---</span>
+<div class="highlight-python"><pre>&gt;&gt;&gt; sum1d.inspect_types()
+sum1d (array(float64, 1d, A),) -&gt; float64
+``-----------------------------------------------------------------------``
+# --- LINE 5 ---
 
-<span class="go">@jit(&#39;f8(f8[:])&#39;)</span>
+@jit('f8(f8[:])')
 
-<span class="go"># --- LINE 6 ---</span>
+# --- LINE 6 ---
 
-<span class="go">def sum1d(array):</span>
+def sum1d(array):
 
-<span class="go">    # --- LINE 7 ---</span>
-<span class="go">    # label 0</span>
-<span class="go">    #   $0.1 = const(&lt;type &#39;float&#39;&gt;, 0.0)  :: float64</span>
-<span class="go">    #   sum = $0.1  :: float64</span>
+    # --- LINE 7 ---
+    # label 0
+    #   $0.1 = const(&lt;type 'float'&gt;, 0.0)  :: float64
+    #   sum = $0.1  :: float64
 
-<span class="go">    sum = 0.0</span>
+    sum = 0.0
 
-<span class="go">    # --- LINE 8 ---</span>
-<span class="go">    #   jump 6</span>
-<span class="go">    # label 6</span>
-<span class="go">    #   $6.1 = global(range: &lt;built-in function range&gt;)  :: range</span>
-<span class="go">    #   $6.2 = getattr(attr=shape, value=array)  :: (int64 x 1)</span>
-<span class="go">    #   $6.3 = const(&lt;type &#39;int&#39;&gt;, 0)  :: int32</span>
-<span class="go">    #   $6.4 = getitem(index=$6.3, target=$6.2)  :: int64</span>
-<span class="go">    #   $6.5 = call $6.1($6.4, )  :: (int64,) -&gt; range_state64</span>
-<span class="go">    #   $6.6 = getiter(value=$6.5)  :: range_iter64</span>
-<span class="go">    #   jump 26</span>
-<span class="go">    # label 26</span>
-<span class="go">    #   $26.1 = iternext(value=$6.6)  :: int64</span>
-<span class="go">    #   $26.2 = itervalid(value=$6.6)  :: bool</span>
-<span class="go">    #   branch $26.2, 29, 50</span>
-<span class="go">    # label 29</span>
-<span class="go">    #   $29.1 = $26.1  :: int64</span>
-<span class="go">    #   i = $29.1  :: int64</span>
+    # --- LINE 8 ---
+    #   jump 6
+    # label 6
+    #   $6.1 = global(range: &lt;built-in function range&gt;)  :: range
+    #   $6.2 = getattr(attr=shape, value=array)  :: (int64 x 1)
+    #   $6.3 = const(&lt;type 'int'&gt;, 0)  :: int32
+    #   $6.4 = getitem(index=$6.3, target=$6.2)  :: int64
+    #   $6.5 = call $6.1($6.4, )  :: (int64,) -&gt; range_state64
+    #   $6.6 = getiter(value=$6.5)  :: range_iter64
+    #   jump 26
+    # label 26
+    #   $26.1 = iternext(value=$6.6)  :: int64
+    #   $26.2 = itervalid(value=$6.6)  :: bool
+    #   branch $26.2, 29, 50
+    # label 29
+    #   $29.1 = $26.1  :: int64
+    #   i = $29.1  :: int64
 
-<span class="go">    for i in range(array.shape[0]):</span>
+    for i in range(array.shape[0]):
 
-<span class="go">        # --- LINE 9 ---</span>
-<span class="go">        # label 49</span>
-<span class="go">        #   del $6.6</span>
-<span class="go">        #   $29.2 = getitem(index=i, target=array)  :: float64</span>
-<span class="go">        #   $29.3 = sum + $29.2  :: float64</span>
-<span class="go">        #   sum = $29.3  :: float64</span>
-<span class="go">        #   jump 26</span>
+        # --- LINE 9 ---
+        # label 49
+        #   del $6.6
+        #   $29.2 = getitem(index=i, target=array)  :: float64
+        #   $29.3 = sum + $29.2  :: float64
+        #   sum = $29.3  :: float64
+        #   jump 26
 
-<span class="go">        sum += array[i]</span>
+        sum += array[i]
 
-<span class="go">    # --- LINE 10 ---</span>
-<span class="go">    #   jump 50</span>
-<span class="go">    # label 50</span>
-<span class="go">    #   return sum</span>
+    # --- LINE 10 ---
+    #   jump 50
+    # label 50
+    #   return sum
 
-<span class="go">    return sum</span>
-</pre></div>
+    return sum</pre>
 </div>
-<p>For get a better feel of what numba can do, see <a class="reference internal" href="examples.html#id1"><em>Examples</em></a>.</p>
+<p>For get a better feel of what Numba can do, see <a class="reference internal" href="examples.html#id1"><em>Examples</em></a>.</p>
 </div>
 
 
@@ -420,7 +414,7 @@ generated from the Python code as well as the inferred types of each variable:</
         <li><a href="py-modindex.html" title="Python Module Index" >modules</a></li>
         <li><a href="types.html" title="Types" >next</a></li>
         <li><a href="install.html" title="Installation" >previous</a></li>
-        <li><a href="index.html">numba 0.13.1-127-gcababd3 documentation</a></li> 
+        <li><a href="index.html">numba 0.13.4 documentation</a></li> 
       
     </ul>
   </div>

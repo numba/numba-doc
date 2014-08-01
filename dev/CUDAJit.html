@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     
-    <title>Writing CUDA-Python &mdash; numba 0.13.1-127-gcababd3 documentation</title>
+    <title>Writing CUDA-Python &mdash; numba 0.13.4 documentation</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
@@ -34,7 +34,7 @@
 <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
             URL_ROOT:    './',
-            VERSION:     '0.13.1-127-gcababd3',
+            VERSION:     '0.13.4',
             COLLAPSE_INDEX: false,
             FILE_SUFFIX: '.html',
             HAS_SOURCE:  true
@@ -58,7 +58,7 @@
     });
   });
 </script>
-    <link rel="top" title="numba 0.13.1-127-gcababd3 documentation" href="index.html" />
+    <link rel="top" title="numba 0.13.4 documentation" href="index.html" />
     <link rel="next" title="CUDA Device Management" href="CUDADevice.html" />
     <link rel="prev" title="CUDA Programming Introduction" href="CUDAintro.html" /> 
   </head>
@@ -71,7 +71,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="index.html">numba 0.13.1-127-gcababd3 documentation</a>
+          <a class="brand" href="index.html">numba 0.13.4 documentation</a>
           <div class="nav-collapse collapse">
             <ul class="nav pull-right">
               
@@ -116,6 +116,7 @@
 <li><a class="reference internal" href="#cuda-stream">CUDA Stream</a></li>
 <li><a class="reference internal" href="#shared-memory">Shared Memory</a></li>
 <li><a class="reference internal" href="#synchronization-primitives">Synchronization Primitives</a></li>
+<li><a class="reference internal" href="#atomic-operations">Atomic Operations</a></li>
 </ul>
 </li>
 </ul>
@@ -166,6 +167,7 @@
 <li><a class="reference internal" href="#cuda-stream">CUDA Stream</a></li>
 <li><a class="reference internal" href="#shared-memory">Shared Memory</a></li>
 <li><a class="reference internal" href="#synchronization-primitives">Synchronization Primitives</a></li>
+<li><a class="reference internal" href="#atomic-operations">Atomic Operations</a></li>
 </ul>
 </li>
 </ul>
@@ -359,6 +361,17 @@ the same result.</p>
 <span class="n">array</span><span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">]</span> <span class="o">=</span> <span class="n">something</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 </pre></div>
 </div>
+<p>Similarly, the total size of the grid in each dimension is frequently used
+as the stride when looping in a kernel, so there is also a shorthand function
+for that calculation.</p>
+<p>For a 1D grid:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">xstride</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">gridsize</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>  <span class="c"># = cuda.blockDim.x * cuda.gridDim.x</span>
+</pre></div>
+</div>
+<p>For a 2D grid:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">xstride</span><span class="p">,</span> <span class="n">ystride</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">gridsize</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>  <span class="c"># = cuda.blockDim.x * cuda.gridDim.x, cuda.blockDim.y * cuda.gridDim.y</span>
+</pre></div>
+</div>
 </div>
 <div class="section" id="memory-transfer">
 <h2>Memory Transfer<a class="headerlink" href="#memory-transfer" title="Permalink to this headline">¶</a></h2>
@@ -484,7 +497,7 @@ invocation can use CUDA stream:</p>
 <div class="section" id="shared-memory">
 <h2>Shared Memory<a class="headerlink" href="#shared-memory" title="Permalink to this headline">¶</a></h2>
 <p>For maximum performance, a CUDA kernel needs to use shared memory for manual caching of data.  CUDA JIT supports the use of <tt class="docutils literal"><span class="pre">cuda.shared.array(shape,</span> <span class="pre">dtype)</span></tt> for specifying an NumPy-array-like object inside a kernel.</p>
-<p>For example::</p>
+<p>For example:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">bpg</span> <span class="o">=</span> <span class="mi">50</span>
 <span class="n">tpb</span> <span class="o">=</span> <span class="mi">32</span>
 <span class="n">n</span> <span class="o">=</span> <span class="n">bpg</span> <span class="o">*</span> <span class="n">tpb</span>
@@ -572,6 +585,22 @@ invocation can use CUDA stream:</p>
 <h2>Synchronization Primitives<a class="headerlink" href="#synchronization-primitives" title="Permalink to this headline">¶</a></h2>
 <p>We currently support <tt class="docutils literal"><span class="pre">cuda.syncthreads()</span></tt> only.  It is the same as <tt class="docutils literal"><span class="pre">__syncthreads()</span></tt> in CUDA-C.</p>
 </div>
+<div class="section" id="atomic-operations">
+<h2>Atomic Operations<a class="headerlink" href="#atomic-operations" title="Permalink to this headline">¶</a></h2>
+<p>Numba supports atomic addition on <tt class="docutils literal"><span class="pre">uint32</span></tt> and <tt class="docutils literal"><span class="pre">float32</span></tt> arrays in shared
+or global memory.  These are accessed via the
+<tt class="docutils literal"><span class="pre">cuda.atomic.add(array,</span> <span class="pre">index,</span> <span class="pre">value)</span></tt> function:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@cuda.jit</span><span class="p">(</span><span class="s">&#39;void(uint32[:], uint32[:])&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">fill_bins</span><span class="p">(</span><span class="n">indices</span><span class="p">,</span> <span class="n">bin_counts</span><span class="p">):</span>
+    <span class="n">offset</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">stride</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">gridDim</span><span class="o">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">cuda</span><span class="o">.</span><span class="n">blockDim</span><span class="o">.</span><span class="n">x</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">offset</span><span class="p">,</span> <span class="n">indices</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">stride</span><span class="p">):</span>
+        <span class="n">cuda</span><span class="o">.</span><span class="n">atomic</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">bin_counts</span><span class="p">,</span> <span class="n">indices</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>A tuple can be used for the index argument if the array is multidimensional.</p>
+</div>
 </div>
 
 
@@ -594,7 +623,7 @@ invocation can use CUDA stream:</p>
         <li><a href="py-modindex.html" title="Python Module Index" >modules</a></li>
         <li><a href="CUDADevice.html" title="CUDA Device Management" >next</a></li>
         <li><a href="CUDAintro.html" title="CUDA Programming Introduction" >previous</a></li>
-        <li><a href="index.html">numba 0.13.1-127-gcababd3 documentation</a></li> 
+        <li><a href="index.html">numba 0.13.4 documentation</a></li> 
       
     </ul>
   </div>

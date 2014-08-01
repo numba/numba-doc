@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     
-    <title>Static Compilation (pycc) &mdash; numba 0.13.1-127-gcababd3 documentation</title>
+    <title>Static Compilation (pycc) &mdash; numba 0.13.4 documentation</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
@@ -34,7 +34,7 @@
 <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
             URL_ROOT:    './',
-            VERSION:     '0.13.1-127-gcababd3',
+            VERSION:     '0.13.4',
             COLLAPSE_INDEX: false,
             FILE_SUFFIX: '.html',
             HAS_SOURCE:  true
@@ -58,7 +58,7 @@
     });
   });
 </script>
-    <link rel="top" title="numba 0.13.1-127-gcababd3 documentation" href="index.html" />
+    <link rel="top" title="numba 0.13.4 documentation" href="index.html" />
     <link rel="next" title="Numba Debugging Tips" href="debugging.html" />
     <link rel="prev" title="CUDA Support" href="CUDASupport.html" /> 
   </head>
@@ -71,7 +71,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="index.html">numba 0.13.1-127-gcababd3 documentation</a>
+          <a class="brand" href="index.html">numba 0.13.4 documentation</a>
           <div class="nav-collapse collapse">
             <ul class="nav pull-right">
               
@@ -181,29 +181,31 @@
 The user writes the functions, exports them and the compiler will import
 the module, collect the exported functions and compile them to a shared
 library. Below is an example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="o">*</span>
+<div class="highlight-python"><pre>from numba import *
 
-<span class="k">def</span> <span class="nf">mult</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">a</span> <span class="o">*</span> <span class="n">b</span>
+def mult(a, b):
+    return a * b
 
-<span class="n">export</span><span class="p">(</span><span class="s">&#39;mult f8(f8, f8)&#39;</span><span class="p">)(</span><span class="n">mult</span><span class="p">)</span>
-<span class="n">exportmany</span><span class="p">([</span><span class="s">&#39;multf f4(f4, f4)&#39;</span><span class="p">,</span> <span class="s">&#39;multi i4(i4, i4)&#39;</span><span class="p">])(</span><span class="n">mult</span><span class="p">)</span>
-<span class="n">export</span><span class="p">(</span><span class="s">&#39;multc c16(c16, c16)&#39;</span><span class="p">)(</span><span class="n">mult</span><span class="p">)</span>
-</pre></div>
+export('mult f8(f8, f8)')(mult)
+exportmany(['multf f4(f4, f4)', 'multi i4(i4, i4)'])(mult)
+export('multc c16(c16, c16)')(mult)</pre>
 </div>
 <p>This defines a trivial function and exports four specializations under
 different names. The code can be compiled as follows:</p>
-<div class="highlight-python"><div class="highlight"><pre>pycc thefile.py
-</pre></div>
+<div class="highlight-python"><pre>pycc thefile.py</pre>
 </div>
 <p>Which will create a pure shared library for your platform which can be
 linked against any other program.  This is <strong>not</strong> a Python extension.
 You would have to use ctypes to load the code that is created.
 Multiple files may be given to compile them simultaneously into a
 shared library. Options exist to compile to native object files
-instead of a shared library, to emit LLVM code or to generate a C
-header file with function prototypes. For more information on the
+instead of a shared library and to emit LLVM code. For more information on the
 available command line options, see <tt class="docutils literal"><span class="pre">pycc</span> <span class="pre">-h</span></tt>.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">C header generation has been disabled in this release due to an incorrect
+implementation.  The feature will return in a future release of Numba.</p>
+</div>
 </div>
 
 
@@ -226,7 +228,7 @@ available command line options, see <tt class="docutils literal"><span class="pr
         <li><a href="py-modindex.html" title="Python Module Index" >modules</a></li>
         <li><a href="debugging.html" title="Numba Debugging Tips" >next</a></li>
         <li><a href="CUDASupport.html" title="CUDA Support" >previous</a></li>
-        <li><a href="index.html">numba 0.13.1-127-gcababd3 documentation</a></li> 
+        <li><a href="index.html">numba 0.13.4 documentation</a></li> 
       
     </ul>
   </div>
