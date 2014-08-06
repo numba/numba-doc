@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     
-    <title>Interfacing with C &mdash; numba 0.13.4 documentation</title>
+    <title>Interfacing with C &mdash; numba 0.13.4-96-gd766d63 documentation</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
@@ -34,7 +34,7 @@
 <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
             URL_ROOT:    './',
-            VERSION:     '0.13.4',
+            VERSION:     '0.13.4-96-gd766d63',
             COLLAPSE_INDEX: false,
             FILE_SUFFIX: '.html',
             HAS_SOURCE:  true
@@ -58,7 +58,7 @@
     });
   });
 </script>
-    <link rel="top" title="numba 0.13.4 documentation" href="index.html" />
+    <link rel="top" title="numba 0.13.4-96-gd766d63 documentation" href="index.html" />
     <link rel="next" title="CUDA Programming Introduction" href="CUDAintro.html" />
     <link rel="prev" title="Numpy Support in numba" href="numpy_support.html" /> 
   </head>
@@ -71,7 +71,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="index.html">numba 0.13.4 documentation</a>
+          <a class="brand" href="index.html">numba 0.13.4-96-gd766d63 documentation</a>
           <div class="nav-collapse collapse">
             <ul class="nav pull-right">
               
@@ -199,44 +199,46 @@
 <div class="section" id="cffi">
 <h2>CFFI<a class="headerlink" href="#cffi" title="Permalink to this headline">¶</a></h2>
 <p>Numba supports calling C functions wrapped with CFFI:</p>
-<div class="highlight-python"><pre>from numba import jit
-from cffi import FFI
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">jit</span>
+<span class="kn">from</span> <span class="nn">cffi</span> <span class="kn">import</span> <span class="n">FFI</span>
 
-ffi = FFI()
-ffi.cdef('double sin(double x);')
+<span class="n">ffi</span> <span class="o">=</span> <span class="n">FFI</span><span class="p">()</span>
+<span class="n">ffi</span><span class="o">.</span><span class="n">cdef</span><span class="p">(</span><span class="s">&#39;double sin(double x);&#39;</span><span class="p">)</span>
 
-# loads the entire C namespace
-C = ffi.dlopen(None)
-c_sin = C.sin
+<span class="c"># loads the entire C namespace</span>
+<span class="n">C</span> <span class="o">=</span> <span class="n">ffi</span><span class="o">.</span><span class="n">dlopen</span><span class="p">(</span><span class="bp">None</span><span class="p">)</span>
+<span class="n">c_sin</span> <span class="o">=</span> <span class="n">C</span><span class="o">.</span><span class="n">sin</span>
 
-@jit(nopython=True)
-def cffi_sin_example(x):
-    return c_sin(x)</pre>
+<span class="nd">@jit</span><span class="p">(</span><span class="n">nopython</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">cffi_sin_example</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">c_sin</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</pre></div>
 </div>
 </div>
 <div class="section" id="ctypes">
 <h2>ctypes<a class="headerlink" href="#ctypes" title="Permalink to this headline">¶</a></h2>
 <p>Numba also supports calling C functions wrapped with ctypes:</p>
-<div class="highlight-python"><pre># This example doesn't work on Windows platforms
-from ctypes import *
-from math import pi
-from numba import jit, double
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># This example doesn&#39;t work on Windows platforms</span>
+<span class="kn">from</span> <span class="nn">ctypes</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">pi</span>
+<span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">jit</span><span class="p">,</span> <span class="n">double</span>
 
-proc = CDLL(None)
+<span class="n">proc</span> <span class="o">=</span> <span class="n">CDLL</span><span class="p">(</span><span class="bp">None</span><span class="p">)</span>
 
-c_sin = proc.sin
-c_sin.argtypes = [c_double]
-c_sin.restype = c_double
+<span class="n">c_sin</span> <span class="o">=</span> <span class="n">proc</span><span class="o">.</span><span class="n">sin</span>
+<span class="n">c_sin</span><span class="o">.</span><span class="n">argtypes</span> <span class="o">=</span> <span class="p">[</span><span class="n">c_double</span><span class="p">]</span>
+<span class="n">c_sin</span><span class="o">.</span><span class="n">restype</span> <span class="o">=</span> <span class="n">c_double</span>
 
-@jit
-def use_c_sin(x):
-    return c_sin(x)
+<span class="nd">@jit</span>
+<span class="k">def</span> <span class="nf">use_c_sin</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">c_sin</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 
-ctype_wrapping = CFUNCTYPE(c_double, c_double)(use_c_sin)
+<span class="n">ctype_wrapping</span> <span class="o">=</span> <span class="n">CFUNCTYPE</span><span class="p">(</span><span class="n">c_double</span><span class="p">,</span> <span class="n">c_double</span><span class="p">)(</span><span class="n">use_c_sin</span><span class="p">)</span>
 
-@jit
-def use_ctype_wrapping(x):
-    return ctype_wrapping(x)</pre>
+<span class="nd">@jit</span>
+<span class="k">def</span> <span class="nf">use_ctype_wrapping</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">ctype_wrapping</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</pre></div>
 </div>
 </div>
 </div>
@@ -261,7 +263,7 @@ def use_ctype_wrapping(x):
         <li><a href="py-modindex.html" title="Python Module Index" >modules</a></li>
         <li><a href="CUDAintro.html" title="CUDA Programming Introduction" >next</a></li>
         <li><a href="numpy_support.html" title="Numpy Support in numba" >previous</a></li>
-        <li><a href="index.html">numba 0.13.4 documentation</a></li> 
+        <li><a href="index.html">numba 0.13.4-96-gd766d63 documentation</a></li> 
       
     </ul>
   </div>

@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     
-    <title>numba package &mdash; numba 0.13.4 documentation</title>
+    <title>numba package &mdash; numba 0.13.4-96-gd766d63 documentation</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
@@ -34,7 +34,7 @@
 <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
             URL_ROOT:    '../',
-            VERSION:     '0.13.4',
+            VERSION:     '0.13.4-96-gd766d63',
             COLLAPSE_INDEX: false,
             FILE_SUFFIX: '.html',
             HAS_SOURCE:  true
@@ -58,7 +58,7 @@
     });
   });
 </script>
-    <link rel="top" title="numba 0.13.4 documentation" href="../index.html" /> 
+    <link rel="top" title="numba 0.13.4-96-gd766d63 documentation" href="../index.html" /> 
   </head>
   <body>
     <div class="navbar navbar-fixed-top ">
@@ -69,7 +69,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="../index.html">numba 0.13.4 documentation</a>
+          <a class="brand" href="../index.html">numba 0.13.4-96-gd766d63 documentation</a>
           <div class="nav-collapse collapse">
             <ul class="nav pull-right">
               
@@ -1118,6 +1118,13 @@ at least the entry point.</div></blockquote>
 </dd></dl>
 
 <dl class="method">
+<dt id="numba.controlflow.CFGraph.descendents">
+<tt class="descname">descendents</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#numba.controlflow.CFGraph.descendents" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the set of descendents of the given <em>node</em>, in topological
+order (ignoring back edges).</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="numba.controlflow.CFGraph.dominators">
 <tt class="descname">dominators</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.controlflow.CFGraph.dominators" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a dictionary of {node -&gt; set(nodes)} mapping each node to
@@ -1191,6 +1198,20 @@ must have been fully populated, and its entry point specified.</p>
 <tt class="descname">successors</tt><big>(</big><em>src</em><big>)</big><a class="headerlink" href="#numba.controlflow.CFGraph.successors" title="Permalink to this definition">¶</a></dt>
 <dd><p>Yield (node, data) pairs representing the successors of node <em>src</em>.
 (<em>data</em> will be None if no data was specified when adding the edge)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.controlflow.CFGraph.topo_order">
+<tt class="descname">topo_order</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.controlflow.CFGraph.topo_order" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the sequence of nodes in topological order (ignoring back
+edges).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.controlflow.CFGraph.topo_sort">
+<tt class="descname">topo_sort</tt><big>(</big><em>nodes</em>, <em>reverse=False</em><big>)</big><a class="headerlink" href="#numba.controlflow.CFGraph.topo_sort" title="Permalink to this definition">¶</a></dt>
+<dd><p>Iterate over the <em>nodes</em> in topological order (ignoring back edges).
+The sort isn&#8217;t guaranteed to be stable.</p>
 </dd></dl>
 
 </dd></dl>
@@ -1329,32 +1350,8 @@ must have been fully populated, and its entry point specified.</p>
 <dl class="class">
 <dt id="numba.controlflow.Loop">
 <em class="property">class </em><tt class="descclassname">numba.controlflow.</tt><tt class="descname">Loop</tt><a class="headerlink" href="#numba.controlflow.Loop" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">tuple</span></tt></p>
-<p>Loop(entries, exits, header, body)</p>
-<dl class="attribute">
-<dt id="numba.controlflow.Loop.body">
-<tt class="descname">body</tt><a class="headerlink" href="#numba.controlflow.Loop.body" title="Permalink to this definition">¶</a></dt>
-<dd><p>Alias for field number 3</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="numba.controlflow.Loop.entries">
-<tt class="descname">entries</tt><a class="headerlink" href="#numba.controlflow.Loop.entries" title="Permalink to this definition">¶</a></dt>
-<dd><p>Alias for field number 0</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="numba.controlflow.Loop.exits">
-<tt class="descname">exits</tt><a class="headerlink" href="#numba.controlflow.Loop.exits" title="Permalink to this definition">¶</a></dt>
-<dd><p>Alias for field number 1</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="numba.controlflow.Loop.header">
-<tt class="descname">header</tt><a class="headerlink" href="#numba.controlflow.Loop.header" title="Permalink to this definition">¶</a></dt>
-<dd><p>Alias for field number 2</p>
-</dd></dl>
-
+<dd><p>Bases: <a class="reference internal" href="#numba.controlflow.Loop" title="numba.controlflow.Loop"><tt class="xref py py-class docutils literal"><span class="pre">numba.controlflow.Loop</span></tt></a></p>
+<p>A control flow loop, as detected by a CFGraph object.</p>
 </dd></dl>
 
 </div>
@@ -1893,11 +1890,6 @@ This would allow the use of <cite>and</cite> and <cite>or</cite> and python2.6 j
 <em class="property">class </em><tt class="descclassname">numba.dataflow.</tt><tt class="descname">LoopBlock</tt><a class="headerlink" href="#numba.dataflow.LoopBlock" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
 <dl class="attribute">
-<dt id="numba.dataflow.LoopBlock.iterator">
-<tt class="descname">iterator</tt><a class="headerlink" href="#numba.dataflow.LoopBlock.iterator" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
 <dt id="numba.dataflow.LoopBlock.stack_offset">
 <tt class="descname">stack_offset</tt><a class="headerlink" href="#numba.dataflow.LoopBlock.stack_offset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -2004,7 +1996,9 @@ value is False.</p>
 <dl class="class">
 <dt id="numba.dispatcher.LiftedLoop">
 <em class="property">class </em><tt class="descclassname">numba.dispatcher.</tt><tt class="descname">LiftedLoop</tt><big>(</big><em>bytecode</em>, <em>typingctx</em>, <em>targetctx</em>, <em>locals</em>, <em>flags</em><big>)</big><a class="headerlink" href="#numba.dispatcher.LiftedLoop" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#numba.dispatcher.Overloaded" title="numba.dispatcher.Overloaded"><tt class="xref py py-class docutils literal"><span class="pre">numba.dispatcher.Overloaded</span></tt></a></p>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">numba.dispatcher._OverloadedBase</span></tt></p>
+<p>Implementation of the hidden dispatcher objects used for lifted loop
+(a lifted loop is really compiled as a separate function).</p>
 <dl class="method">
 <dt id="numba.dispatcher.LiftedLoop.compile">
 <tt class="descname">compile</tt><big>(</big><em>sig</em><big>)</big><a class="headerlink" href="#numba.dispatcher.LiftedLoop.compile" title="Permalink to this definition">¶</a></dt>
@@ -2015,57 +2009,15 @@ value is False.</p>
 <dl class="class">
 <dt id="numba.dispatcher.Overloaded">
 <em class="property">class </em><tt class="descclassname">numba.dispatcher.</tt><tt class="descname">Overloaded</tt><big>(</big><em>py_func</em>, <em>locals={}</em>, <em>targetoptions={}</em><big>)</big><a class="headerlink" href="#numba.dispatcher.Overloaded" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">_dispatcher.Dispatcher</span></tt></p>
-<p>Abstract class. Subclass should define targetdescr class attribute.</p>
-<dl class="method">
-<dt id="numba.dispatcher.Overloaded.add_overload">
-<tt class="descname">add_overload</tt><big>(</big><em>cres</em><big>)</big><a class="headerlink" href="#numba.dispatcher.Overloaded.add_overload" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">numba.dispatcher._OverloadedBase</span></tt></p>
+<p>Implementation of user-facing dispatcher objects (i.e. created using
+the &#64;jit decorator).
+This is an abstract base class. Subclasses should define the targetdescr
+class attribute.</p>
 <dl class="method">
 <dt id="numba.dispatcher.Overloaded.compile">
 <tt class="descname">compile</tt><big>(</big><em>sig</em>, <em>locals={}</em>, <em>**targetoptions</em><big>)</big><a class="headerlink" href="#numba.dispatcher.Overloaded.compile" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
-
-<dl class="method">
-<dt id="numba.dispatcher.Overloaded.disable_compile">
-<tt class="descname">disable_compile</tt><big>(</big><em>val=True</em><big>)</big><a class="headerlink" href="#numba.dispatcher.Overloaded.disable_compile" title="Permalink to this definition">¶</a></dt>
-<dd><p>Disable the compilation of new signatures at call time.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="numba.dispatcher.Overloaded.get_overload">
-<tt class="descname">get_overload</tt><big>(</big><em>sig</em><big>)</big><a class="headerlink" href="#numba.dispatcher.Overloaded.get_overload" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="numba.dispatcher.Overloaded.inspect_types">
-<tt class="descname">inspect_types</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.dispatcher.Overloaded.inspect_types" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="numba.dispatcher.Overloaded.is_compiling">
-<tt class="descname">is_compiling</tt><a class="headerlink" href="#numba.dispatcher.Overloaded.is_compiling" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="numba.dispatcher.Overloaded.jit">
-<tt class="descname">jit</tt><big>(</big><em>sig</em>, <em>**kws</em><big>)</big><a class="headerlink" href="#numba.dispatcher.Overloaded.jit" title="Permalink to this definition">¶</a></dt>
-<dd><p>Alias of compile(sig, <a href="#id7"><span class="problematic" id="id8">**</span></a>kws)</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="numba.dispatcher.Overloaded.signatures">
-<tt class="descname">signatures</tt><a class="headerlink" href="#numba.dispatcher.Overloaded.signatures" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a list of compiled function signatures.</p>
-</dd></dl>
-
-<dl class="classmethod">
-<dt id="numba.dispatcher.Overloaded.typeof_pyval">
-<em class="property">classmethod </em><tt class="descname">typeof_pyval</tt><big>(</big><em>val</em><big>)</big><a class="headerlink" href="#numba.dispatcher.Overloaded.typeof_pyval" title="Permalink to this definition">¶</a></dt>
-<dd><p>This is called from numba._dispatcher as a fallback if the native code
-cannot decide the type.</p>
-</dd></dl>
 
 </dd></dl>
 
@@ -2330,7 +2282,8 @@ simplified assignment source (earlier assigned to <em>srcvar</em>).</p>
 <dl class="method">
 <dt id="numba.interpreter.Interpreter.get">
 <tt class="descname">get</tt><big>(</big><em>name</em><big>)</big><a class="headerlink" href="#numba.interpreter.Interpreter.get" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Get the variable (a Var instance) with the given <em>name</em>.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="numba.interpreter.Interpreter.get_closure_value">
@@ -2623,7 +2576,7 @@ as a builtins (second).  If both failed, return a ir.UNDEFINED.</p>
 
 <dl class="method">
 <dt id="numba.interpreter.Interpreter.op_POP_BLOCK">
-<tt class="descname">op_POP_BLOCK</tt><big>(</big><em>inst</em>, <em>delitems=()</em><big>)</big><a class="headerlink" href="#numba.interpreter.Interpreter.op_POP_BLOCK" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">op_POP_BLOCK</tt><big>(</big><em>inst</em><big>)</big><a class="headerlink" href="#numba.interpreter.Interpreter.op_POP_BLOCK" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -2753,11 +2706,6 @@ as a builtins (second).  If both failed, return a ir.UNDEFINED.</p>
 (a str object).</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="numba.interpreter.Interpreter.verify">
-<tt class="descname">verify</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.interpreter.Interpreter.verify" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
 </dd></dl>
 
 </div>
@@ -2788,6 +2736,12 @@ as a builtins (second).  If both failed, return a ir.UNDEFINED.</p>
 <dd></dd></dl>
 
 <dl class="method">
+<dt id="numba.ir.Block.insert_after">
+<tt class="descname">insert_after</tt><big>(</big><em>stmt</em>, <em>other</em><big>)</big><a class="headerlink" href="#numba.ir.Block.insert_after" title="Permalink to this definition">¶</a></dt>
+<dd><p>Insert <em>stmt</em> after <em>other</em>.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="numba.ir.Block.insert_before_terminator">
 <tt class="descname">insert_before_terminator</tt><big>(</big><em>stmt</em><big>)</big><a class="headerlink" href="#numba.ir.Block.insert_before_terminator" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -2795,6 +2749,11 @@ as a builtins (second).  If both failed, return a ir.UNDEFINED.</p>
 <dl class="attribute">
 <dt id="numba.ir.Block.is_terminated">
 <tt class="descname">is_terminated</tt><a class="headerlink" href="#numba.ir.Block.is_terminated" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.ir.Block.prepend">
+<tt class="descname">prepend</tt><big>(</big><em>inst</em><big>)</big><a class="headerlink" href="#numba.ir.Block.prepend" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -2846,7 +2805,9 @@ as a builtins (second).  If both failed, return a ir.UNDEFINED.</p>
 <dl class="class">
 <dt id="numba.ir.Expr">
 <em class="property">class </em><tt class="descclassname">numba.ir.</tt><tt class="descname">Expr</tt><big>(</big><em>op</em>, <em>loc</em>, <em>**kws</em><big>)</big><a class="headerlink" href="#numba.ir.Expr" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<dd><p>Bases: <a class="reference internal" href="#numba.ir.Inst" title="numba.ir.Inst"><tt class="xref py py-class docutils literal"><span class="pre">numba.ir.Inst</span></tt></a></p>
+<p>An IR expression (an instruction which can only be part of a larger
+statement).</p>
 <dl class="classmethod">
 <dt id="numba.ir.Expr.binop">
 <em class="property">classmethod </em><tt class="descname">binop</tt><big>(</big><em>fn</em>, <em>lhs</em>, <em>rhs</em>, <em>loc</em><big>)</big><a class="headerlink" href="#numba.ir.Expr.binop" title="Permalink to this definition">¶</a></dt>
@@ -2949,6 +2910,19 @@ as a builtins (second).  If both failed, return a ir.UNDEFINED.</p>
 </dd></dl>
 
 <dl class="class">
+<dt id="numba.ir.Inst">
+<em class="property">class </em><tt class="descclassname">numba.ir.</tt><tt class="descname">Inst</tt><a class="headerlink" href="#numba.ir.Inst" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Base class for all IR instructions.</p>
+<dl class="method">
+<dt id="numba.ir.Inst.list_vars">
+<tt class="descname">list_vars</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.ir.Inst.list_vars" title="Permalink to this definition">¶</a></dt>
+<dd><p>List the variables used (read or written) by the instruction.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="numba.ir.Intrinsic">
 <em class="property">class </em><tt class="descclassname">numba.ir.</tt><tt class="descname">Intrinsic</tt><big>(</big><em>name</em>, <em>type</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.ir.Intrinsic" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
@@ -2980,18 +2954,8 @@ as a builtins (second).  If both failed, return a ir.UNDEFINED.</p>
 
 <dl class="class">
 <dt id="numba.ir.Loop">
-<em class="property">class </em><tt class="descclassname">numba.ir.</tt><tt class="descname">Loop</tt><big>(</big><em>entry</em>, <em>exit</em>, <em>condition=None</em><big>)</big><a class="headerlink" href="#numba.ir.Loop" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">numba.ir.</tt><tt class="descname">Loop</tt><big>(</big><em>entry</em>, <em>exit</em><big>)</big><a class="headerlink" href="#numba.ir.Loop" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
-<dl class="attribute">
-<dt id="numba.ir.Loop.body">
-<tt class="descname">body</tt><a class="headerlink" href="#numba.ir.Loop.body" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="numba.ir.Loop.condition">
-<tt class="descname">condition</tt><a class="headerlink" href="#numba.ir.Loop.condition" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
 <dl class="attribute">
 <dt id="numba.ir.Loop.entry">
 <tt class="descname">entry</tt><a class="headerlink" href="#numba.ir.Loop.entry" title="Permalink to this definition">¶</a></dt>
@@ -3000,16 +2964,6 @@ as a builtins (second).  If both failed, return a ir.UNDEFINED.</p>
 <dl class="attribute">
 <dt id="numba.ir.Loop.exit">
 <tt class="descname">exit</tt><a class="headerlink" href="#numba.ir.Loop.exit" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="numba.ir.Loop.valid">
-<tt class="descname">valid</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.ir.Loop.valid" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="numba.ir.Loop.verify">
-<tt class="descname">verify</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.ir.Loop.verify" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -3122,10 +3076,17 @@ as a builtins (second).  If both failed, return a ir.UNDEFINED.</p>
 <dl class="class">
 <dt id="numba.ir.Stmt">
 <em class="property">class </em><tt class="descclassname">numba.ir.</tt><tt class="descname">Stmt</tt><a class="headerlink" href="#numba.ir.Stmt" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<dd><p>Bases: <a class="reference internal" href="#numba.ir.Inst" title="numba.ir.Inst"><tt class="xref py py-class docutils literal"><span class="pre">numba.ir.Inst</span></tt></a></p>
+<p>Base class for IR statements (instructions which can appear on their
+own in a Block).</p>
 <dl class="attribute">
 <dt id="numba.ir.Stmt.is_terminator">
 <tt class="descname">is_terminator</tt><em class="property"> = False</em><a class="headerlink" href="#numba.ir.Stmt.is_terminator" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.ir.Stmt.list_vars">
+<tt class="descname">list_vars</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.ir.Stmt.list_vars" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -3271,7 +3232,7 @@ Both <cite>outer</cite> and <cite>loops</cite> are list-like (<cite>append(item)
 <span id="numba-lowering-module"></span><h2>numba.lowering module<a class="headerlink" href="#module-numba.lowering" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="numba.lowering.BaseLower">
-<em class="property">class </em><tt class="descclassname">numba.lowering.</tt><tt class="descname">BaseLower</tt><big>(</big><em>context</em>, <em>fndesc</em><big>)</big><a class="headerlink" href="#numba.lowering.BaseLower" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">numba.lowering.</tt><tt class="descname">BaseLower</tt><big>(</big><em>context</em>, <em>fndesc</em>, <em>interp</em><big>)</big><a class="headerlink" href="#numba.lowering.BaseLower" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
 <p>Lower IR to LLVM</p>
 <dl class="method">
@@ -3329,7 +3290,7 @@ Both <cite>outer</cite> and <cite>loops</cite> are list-like (<cite>append(item)
 
 <dl class="class">
 <dt id="numba.lowering.FunctionDescriptor">
-<em class="property">class </em><tt class="descclassname">numba.lowering.</tt><tt class="descname">FunctionDescriptor</tt><big>(</big><em>native</em>, <em>modname</em>, <em>qualname</em>, <em>unique_name</em>, <em>doc</em>, <em>blocks</em>, <em>typemap</em>, <em>restype</em>, <em>calltypes</em>, <em>args</em>, <em>kws</em>, <em>mangler=None</em>, <em>argtypes=None</em>, <em>globals=None</em><big>)</big><a class="headerlink" href="#numba.lowering.FunctionDescriptor" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">numba.lowering.</tt><tt class="descname">FunctionDescriptor</tt><big>(</big><em>native</em>, <em>modname</em>, <em>qualname</em>, <em>unique_name</em>, <em>doc</em>, <em>typemap</em>, <em>restype</em>, <em>calltypes</em>, <em>args</em>, <em>kws</em>, <em>mangler=None</em>, <em>argtypes=None</em><big>)</big><a class="headerlink" href="#numba.lowering.FunctionDescriptor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
 <dl class="attribute">
 <dt id="numba.lowering.FunctionDescriptor.args">
@@ -3342,11 +3303,6 @@ Both <cite>outer</cite> and <cite>loops</cite> are list-like (<cite>append(item)
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="numba.lowering.FunctionDescriptor.blocks">
-<tt class="descname">blocks</tt><a class="headerlink" href="#numba.lowering.FunctionDescriptor.blocks" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
 <dt id="numba.lowering.FunctionDescriptor.calltypes">
 <tt class="descname">calltypes</tt><a class="headerlink" href="#numba.lowering.FunctionDescriptor.calltypes" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -3354,11 +3310,6 @@ Both <cite>outer</cite> and <cite>loops</cite> are list-like (<cite>append(item)
 <dl class="attribute">
 <dt id="numba.lowering.FunctionDescriptor.doc">
 <tt class="descname">doc</tt><a class="headerlink" href="#numba.lowering.FunctionDescriptor.doc" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="numba.lowering.FunctionDescriptor.globals">
-<tt class="descname">globals</tt><a class="headerlink" href="#numba.lowering.FunctionDescriptor.globals" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -3413,7 +3364,7 @@ generated.</p>
 
 <dl class="class">
 <dt id="numba.lowering.Lower">
-<em class="property">class </em><tt class="descclassname">numba.lowering.</tt><tt class="descname">Lower</tt><big>(</big><em>context</em>, <em>fndesc</em><big>)</big><a class="headerlink" href="#numba.lowering.Lower" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">numba.lowering.</tt><tt class="descname">Lower</tt><big>(</big><em>context</em>, <em>fndesc</em>, <em>interp</em><big>)</big><a class="headerlink" href="#numba.lowering.Lower" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#numba.lowering.BaseLower" title="numba.lowering.BaseLower"><tt class="xref py py-class docutils literal"><span class="pre">numba.lowering.BaseLower</span></tt></a></p>
 <dl class="method">
 <dt id="numba.lowering.Lower.alloca">
@@ -3470,7 +3421,7 @@ generated.</p>
 
 <dl class="class">
 <dt id="numba.lowering.PythonFunctionDescriptor">
-<em class="property">class </em><tt class="descclassname">numba.lowering.</tt><tt class="descname">PythonFunctionDescriptor</tt><big>(</big><em>native</em>, <em>modname</em>, <em>qualname</em>, <em>unique_name</em>, <em>doc</em>, <em>blocks</em>, <em>typemap</em>, <em>restype</em>, <em>calltypes</em>, <em>args</em>, <em>kws</em>, <em>mangler=None</em>, <em>argtypes=None</em>, <em>globals=None</em><big>)</big><a class="headerlink" href="#numba.lowering.PythonFunctionDescriptor" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">numba.lowering.</tt><tt class="descname">PythonFunctionDescriptor</tt><big>(</big><em>native</em>, <em>modname</em>, <em>qualname</em>, <em>unique_name</em>, <em>doc</em>, <em>typemap</em>, <em>restype</em>, <em>calltypes</em>, <em>args</em>, <em>kws</em>, <em>mangler=None</em>, <em>argtypes=None</em><big>)</big><a class="headerlink" href="#numba.lowering.PythonFunctionDescriptor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#numba.lowering.FunctionDescriptor" title="numba.lowering.FunctionDescriptor"><tt class="xref py py-class docutils literal"><span class="pre">numba.lowering.FunctionDescriptor</span></tt></a></p>
 <dl class="classmethod">
 <dt id="numba.lowering.PythonFunctionDescriptor.from_object_mode_function">
@@ -3593,7 +3544,7 @@ and executed in object mode.</p>
 <p>Lowering implementation for object mode.</p>
 <dl class="class">
 <dt id="numba.objmode.PyLower">
-<em class="property">class </em><tt class="descclassname">numba.objmode.</tt><tt class="descname">PyLower</tt><big>(</big><em>context</em>, <em>fndesc</em><big>)</big><a class="headerlink" href="#numba.objmode.PyLower" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">numba.objmode.</tt><tt class="descname">PyLower</tt><big>(</big><em>context</em>, <em>fndesc</em>, <em>interp</em><big>)</big><a class="headerlink" href="#numba.objmode.PyLower" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#numba.lowering.BaseLower" title="numba.lowering.BaseLower"><tt class="xref py py-class docutils literal"><span class="pre">numba.lowering.BaseLower</span></tt></a></p>
 <dl class="method">
 <dt id="numba.objmode.PyLower.alloca">
@@ -3608,7 +3559,8 @@ Use <tt class="docutils literal"><span class="pre">ltype</span></tt> to override
 <tt class="descname">builtin_lookup</tt><big>(</big><em>mod</em>, <em>name</em><big>)</big><a class="headerlink" href="#numba.objmode.PyLower.builtin_lookup" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="docutils">
 <dt>mod:</dt>
-<dd>The __builtins__ dictionary or module</dd>
+<dd>The __builtins__ dictionary or module, as looked up in
+a module&#8217;s globals.</dd>
 <dt>name: str</dt>
 <dd>The object to lookup</dd>
 </dl>
@@ -3667,11 +3619,6 @@ A borrowed reference is returned.</p>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="numba.objmode.PyLower.getvar">
-<tt class="descname">getvar</tt><big>(</big><em>name</em>, <em>ltype=None</em><big>)</big><a class="headerlink" href="#numba.objmode.PyLower.getvar" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
 <dt id="numba.objmode.PyLower.incref">
 <tt class="descname">incref</tt><big>(</big><em>value</em><big>)</big><a class="headerlink" href="#numba.objmode.PyLower.incref" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -3694,7 +3641,8 @@ A borrowed reference is returned.</p>
 <dl class="method">
 <dt id="numba.objmode.PyLower.loadvar">
 <tt class="descname">loadvar</tt><big>(</big><em>name</em><big>)</big><a class="headerlink" href="#numba.objmode.PyLower.loadvar" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Load the llvm value of the variable named <em>name</em>.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="numba.objmode.PyLower.lower_assign">
@@ -4787,6 +4735,16 @@ the targets to choose their representation.</p>
 <dd><p>Return the number of bits necessary to represent integer <cite>intval</cite>.</p>
 </dd></dl>
 
+<dl class="class">
+<dt id="numba.utils.cached_property">
+<em class="property">class </em><tt class="descclassname">numba.utils.</tt><tt class="descname">cached_property</tt><big>(</big><em>func</em>, <em>name=None</em><big>)</big><a class="headerlink" href="#numba.utils.cached_property" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Decorator that converts a method with a single self argument into a
+property cached on the instance.</p>
+<p>Optional <tt class="docutils literal"><span class="pre">name</span></tt> argument allows you to make cached properties of other
+methods. (e.g.  url = cached_property(get_absolute_url, name=&#8217;url&#8217;) )</p>
+</dd></dl>
+
 <dl class="function">
 <dt id="numba.utils.dict_iteritems">
 <tt class="descclassname">numba.utils.</tt><tt class="descname">dict_iteritems</tt><big>(</big><em>d</em><big>)</big><a class="headerlink" href="#numba.utils.dict_iteritems" title="Permalink to this definition">¶</a></dt>
@@ -4828,6 +4786,15 @@ the targets to choose their representation.</p>
 <dd></dd></dl>
 
 <dl class="function">
+<dt id="numba.utils.shutting_down">
+<tt class="descclassname">numba.utils.</tt><tt class="descname">shutting_down</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.utils.shutting_down" title="Permalink to this definition">¶</a></dt>
+<dd><p>Whether the interpreter is currently shutting down.
+For use in finalizers, __del__ methods, and similar; it is advised
+to early bind this function rather than look it up when calling it,
+since at shutdown module globals may be cleared.</p>
+</dd></dl>
+
+<dl class="function">
 <dt id="numba.utils.total_ordering">
 <tt class="descclassname">numba.utils.</tt><tt class="descname">total_ordering</tt><big>(</big><em>cls</em><big>)</big><a class="headerlink" href="#numba.utils.total_ordering" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class decorator that fills in missing ordering methods</p>
@@ -4842,11 +4809,11 @@ the targets to choose their representation.</p>
 <tt class="descclassname">numba.</tt><tt class="descname">jit</tt><big>(</big><em>signature_or_function=None</em>, <em>argtypes=None</em>, <em>restype=None</em>, <em>locals={}</em>, <em>target='cpu'</em>, <em>**targetoptions</em><big>)</big><a class="headerlink" href="#numba.jit" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="docutils">
 <dt>jit([signature_or_function, [locals={}, [target=&#8217;cpu&#8217;,</dt>
-<dd>[<a href="#id9"><span class="problematic" id="id10">**</span></a>targetoptions]]]])</dd>
+<dd>[<a href="#id7"><span class="problematic" id="id8">**</span></a>targetoptions]]]])</dd>
 </dl>
 <p>The function can be used as the following versions:</p>
 <ol class="arabic">
-<li><p class="first">jit(signature, [target=&#8217;cpu&#8217;, [<a href="#id11"><span class="problematic" id="id12">**</span></a>targetoptions]]) -&gt; jit(function)</p>
+<li><p class="first">jit(signature, [target=&#8217;cpu&#8217;, [<a href="#id9"><span class="problematic" id="id10">**</span></a>targetoptions]]) -&gt; jit(function)</p>
 <blockquote>
 <div><p>Equivalent to:</p>
 <blockquote>
@@ -4879,7 +4846,7 @@ def foo(x, y):</p>
 </div></blockquote>
 </div></blockquote>
 </li>
-<li><p class="first">jit([target=&#8217;cpu&#8217;, [<a href="#id13"><span class="problematic" id="id14">**</span></a>targetoptions]]) -&gt; configured_jit(function)</p>
+<li><p class="first">jit([target=&#8217;cpu&#8217;, [<a href="#id11"><span class="problematic" id="id12">**</span></a>targetoptions]]) -&gt; configured_jit(function)</p>
 <blockquote>
 <div><p>Same as old autojit and 2).  But configure with target and default
 target-options.</p>
@@ -5024,7 +4991,7 @@ e.g. &#8220;(m, n), (n, p)-&gt;(m, p)&#8221;</dd>
       
         <li><a href="../genindex.html" title="General Index" >index</a></li>
         <li><a href="../py-modindex.html" title="Python Module Index" >modules</a></li>
-        <li><a href="../index.html">numba 0.13.4 documentation</a></li> 
+        <li><a href="../index.html">numba 0.13.4-96-gd766d63 documentation</a></li> 
       
     </ul>
   </div>

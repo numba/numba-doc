@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     
-    <title>Arrays &mdash; numba 0.13.4 documentation</title>
+    <title>Arrays &mdash; numba 0.13.4-96-gd766d63 documentation</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
@@ -34,7 +34,7 @@
 <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
             URL_ROOT:    './',
-            VERSION:     '0.13.4',
+            VERSION:     '0.13.4-96-gd766d63',
             COLLAPSE_INDEX: false,
             FILE_SUFFIX: '.html',
             HAS_SOURCE:  true
@@ -58,7 +58,7 @@
     });
   });
 </script>
-    <link rel="top" title="numba 0.13.4 documentation" href="index.html" />
+    <link rel="top" title="numba 0.13.4-96-gd766d63 documentation" href="index.html" />
     <link rel="next" title="UFuncs" href="ufuncs.html" />
     <link rel="prev" title="Types" href="types.html" /> 
   </head>
@@ -71,7 +71,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="index.html">numba 0.13.4 documentation</a>
+          <a class="brand" href="index.html">numba 0.13.4-96-gd766d63 documentation</a>
           <div class="nav-collapse collapse">
             <ul class="nav pull-right">
               
@@ -216,55 +216,59 @@ if not all ufuncs should work in object mode though.</li>
 automatically trying to jit loops in nopython mode. This allows for array
 creation at the top of a function while still getting almost all the performance
 of nopython mode. For example, the following simple function:</p>
-<div class="highlight-python"><pre># compiled in object mode
-@jit
-def sum(x, y):
-    array = np.arange(x * y).reshape(x, y)
-    sum = 0
-    for i in range(x):
-        for j in range(y):
-            sum += array[i, j]
-    return sum</pre>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># compiled in object mode</span>
+<span class="nd">@jit</span>
+<span class="k">def</span> <span class="nf">sum</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="n">array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+    <span class="nb">sum</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">y</span><span class="p">):</span>
+            <span class="nb">sum</span> <span class="o">+=</span> <span class="n">array</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span>
+    <span class="k">return</span> <span class="nb">sum</span>
+</pre></div>
 </div>
 <p>looks like the equivalent of the following after being compiled by Numba:</p>
-<div class="highlight-python"><pre># compiled in nopython mode
-@njit
-def jitted_loop(array, x, y):
-    sum = 0
-    for i in range(x):
-        for j in range(y):
-            sum += array[i, j]
-    return sum
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># compiled in nopython mode</span>
+<span class="nd">@njit</span>
+<span class="k">def</span> <span class="nf">jitted_loop</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="nb">sum</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">y</span><span class="p">):</span>
+            <span class="nb">sum</span> <span class="o">+=</span> <span class="n">array</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span>
+    <span class="k">return</span> <span class="nb">sum</span>
 
-# compiled in object mode
-@jit
-def sum(x, y):
-    array = np.arange(x * y).reshape(x, y)
-    return jitted_loop(array, x, y)</pre>
+<span class="c"># compiled in object mode</span>
+<span class="nd">@jit</span>
+<span class="k">def</span> <span class="nf">sum</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="n">array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">jitted_loop</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+</pre></div>
 </div>
 <p>Another consequence of array creation being restricted to object mode is that
 NumPy ufuncs that return the result as a new array are not allowed in nopython
 mode. Fortunately we can declare an output array at the top of our function and
 pass that in to the ufunc to store our result. For example, the following:</p>
-<div class="highlight-python"><pre>@jit
-def foo():
-    # initialize stuff
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@jit</span>
+<span class="k">def</span> <span class="nf">foo</span><span class="p">():</span>
+    <span class="c"># initialize stuff</span>
 
-    # slow loop in object mode
-    for i in range(x):
-        result = np.multiply(a, b)</pre>
+    <span class="c"># slow loop in object mode</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+</pre></div>
 </div>
 <p>should be rewritten like the following to take advantage of loop jitting:</p>
-<div class="highlight-python"><pre>@jit
-def foo():
-    # initialize stuff
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@jit</span>
+<span class="k">def</span> <span class="nf">foo</span><span class="p">():</span>
+    <span class="c"># initialize stuff</span>
 
-    # create output array
-    result = np.zeros(a.size)
+    <span class="c"># create output array</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
 
-    # jitted loop in nopython mode
-    for i in range(x):
-        np.multiply(a, b, result)</pre>
+    <span class="c"># jitted loop in nopython mode</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
+</pre></div>
 </div>
 </div>
 <div class="section" id="loop-jitting-constraints">
@@ -278,57 +282,61 @@ relaxed in further development.</p>
 <li>the loop binds a value to a variable that is read outside of the loop.</li>
 </ul>
 <p>The following is rejected due to a return statement in the loop:</p>
-<div class="highlight-python"><pre>@jit
-def foo(n):
-    result = np.zeros(n)
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@jit</span>
+<span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
 
-    # Rejected loop-jitting candidate
-    for i in range(n):
-        result[i] = i   # setitem is accepted
-        if i &gt; 10:
-            return      # return is not accepted
+    <span class="c"># Rejected loop-jitting candidate</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span>   <span class="c"># setitem is accepted</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">10</span><span class="p">:</span>
+            <span class="k">return</span>      <span class="c"># return is not accepted</span>
 
-    return result</pre>
+    <span class="k">return</span> <span class="n">result</span>
+</pre></div>
 </div>
 <p>The following is rejected due to an assigning to a variable read outside of
 the loop:</p>
-<div class="highlight-python"><pre>@jit
-def foo(n):
-    result = np.zeros(n)
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@jit</span>
+<span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
 
-    x = 1
-    # Rejected loop-jitting candidate
-    for i in range(n):
-        x = result[i]           # assign to variable 'x'
+    <span class="n">x</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="c"># Rejected loop-jitting candidate</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>           <span class="c"># assign to variable &#39;x&#39;</span>
 
-    result += x                 # reading variable 'x'
-    return result</pre>
+    <span class="n">result</span> <span class="o">+=</span> <span class="n">x</span>                 <span class="c"># reading variable &#39;x&#39;</span>
+    <span class="k">return</span> <span class="n">result</span>
+</pre></div>
 </div>
 <p>The following is accepted:</p>
-<div class="highlight-python"><pre>@jit
-def foo(n):
-    result = np.zeros(n)
-    x = 1
-    # Accepted loop-jitting candidate
-    for i in range(n):
-        x = 2
-    x = 3               # 'x' is only written to
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@jit</span>
+<span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="c"># Accepted loop-jitting candidate</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="mi">3</span>               <span class="c"># &#39;x&#39; is only written to</span>
 
-    return result</pre>
+    <span class="k">return</span> <span class="n">result</span>
+</pre></div>
 </div>
 <p>The following is accepted:</p>
-<div class="highlight-python"><pre>@jit
-def foo(n):
-    result = np.zeros(n)
-    x = 1
-    # Accepted loop-jitting candidate
-    for i in range(n):
-        result[i] = x
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@jit</span>
+<span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="c"># Accepted loop-jitting candidate</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span>
 
-    return result</pre>
+    <span class="k">return</span> <span class="n">result</span>
+</pre></div>
 </div>
 <p>User can inspect the loop-jitting by running <cite>foo.inspect_types()</cite>:</p>
-<div class="highlight-python"><pre>foo (int32,) -&gt; pyobject
+<div class="highlight-python"><div class="highlight"><pre>foo (int32,) -&gt; pyobject
 --------------------------------------------------------------------------------
 # File: somefile.py
 # --- LINE 1 ---
@@ -341,7 +349,7 @@ def foo(n):
 
     # --- LINE 3 ---
     # label 0
-    #   $0.1 = global(numpy: &lt;module 'numpy' from '.../numpy/__init__.py'&gt;)
+    #   $0.1 = global(numpy: &lt;module &#39;numpy&#39; from &#39;.../numpy/__init__.py&#39;&gt;)
       :: pyobject
     #   $0.2 = getattr(value=$0.1, attr=zeros)  :: pyobject
     #   result = call $0.2(n, )  :: pyobject
@@ -349,7 +357,7 @@ def foo(n):
     result = numpy.zeros(n)
 
     # --- LINE 4 ---
-    #   x = const(&lt;class 'int'&gt;, 1)  :: pyobject
+    #   x = const(&lt;class &#39;int&#39;&gt;, 1)  :: pyobject
 
     x = 1
 
@@ -398,7 +406,7 @@ def foo(n):
     #   $34.2 = itervalid(value=$21.3)  :: bool
     #   branch $34.2, 37, 53
     # label 21
-    #   $21.1 = global(range: &lt;class 'range'&gt;)  :: range
+    #   $21.1 = global(range: &lt;class &#39;range&#39;&gt;)  :: range
     #   $21.2 = call $21.1(n, )  :: (int32,) -&gt; range_state32
     #   $21.3 = getiter(value=$21.2)  :: range_iter32
     #   jump 34
@@ -413,7 +421,7 @@ def foo(n):
         #   del $21.3
         #   jump 54
         # label 54
-        #   $54.1 = const(&lt;class 'NoneType'&gt;, None)  :: none
+        #   $54.1 = const(&lt;class &#39;NoneType&#39;&gt;, None)  :: none
         #   return $54.1
         #   result[i] = x  :: (array(float64, 1d, C), int64, float64) -&gt; none
         #   jump 34
@@ -426,7 +434,8 @@ def foo(n):
 
 
 
-================================================================================</pre>
+================================================================================
+</pre></div>
 </div>
 </div>
 </div>
@@ -451,7 +460,7 @@ def foo(n):
         <li><a href="py-modindex.html" title="Python Module Index" >modules</a></li>
         <li><a href="ufuncs.html" title="UFuncs" >next</a></li>
         <li><a href="types.html" title="Types" >previous</a></li>
-        <li><a href="index.html">numba 0.13.4 documentation</a></li> 
+        <li><a href="index.html">numba 0.13.4-96-gd766d63 documentation</a></li> 
       
     </ul>
   </div>

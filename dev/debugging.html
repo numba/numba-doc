@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     
-    <title>Numba Debugging Tips &mdash; numba 0.13.4 documentation</title>
+    <title>Numba Debugging Tips &mdash; numba 0.13.4-96-gd766d63 documentation</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
@@ -34,7 +34,7 @@
 <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
             URL_ROOT:    './',
-            VERSION:     '0.13.4',
+            VERSION:     '0.13.4-96-gd766d63',
             COLLAPSE_INDEX: false,
             FILE_SUFFIX: '.html',
             HAS_SOURCE:  true
@@ -58,7 +58,7 @@
     });
   });
 </script>
-    <link rel="top" title="numba 0.13.4 documentation" href="index.html" />
+    <link rel="top" title="numba 0.13.4-96-gd766d63 documentation" href="index.html" />
     <link rel="next" title="Release Notes" href="releases.html" />
     <link rel="prev" title="Static Compilation (pycc)" href="pycc.html" /> 
   </head>
@@ -71,7 +71,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="index.html">numba 0.13.4 documentation</a>
+          <a class="brand" href="index.html">numba 0.13.4-96-gd766d63 documentation</a>
           <div class="nav-collapse collapse">
             <ul class="nav pull-right">
               
@@ -185,23 +185,25 @@ to compile everything down to low level types, but if it runs into trouble it
 will fall back to using Python objects. Setting nopython=True in the jit
 decorator will tell Numba to never use objects, and instead bail out if it
 runs into trouble:</p>
-<div class="highlight-python"><pre>@jit(nopython=True)
+<div class="highlight-python"><div class="highlight"><pre>@jit(nopython=True)
 def foo()
-    ...</pre>
+    ...
+</pre></div>
 </div>
 <p>which will result in an error if Numba can&#8217;t figure out the type of a variable
 or function.</p>
 <p>Another more advanced method for figuring out what&#8217;s going on is using the
 inspect_types method. Calling inspect_types for a function compiled with Numba
 like so:</p>
-<div class="highlight-python"><pre>@jit
-def foo(x):
-    return np.sin(x)
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@jit</span>
+<span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 
-foo.inspect_types()</pre>
+<span class="n">foo</span><span class="o">.</span><span class="n">inspect_types</span><span class="p">()</span>
+</pre></div>
 </div>
 <p>will result in output similar to the following:</p>
-<div class="highlight-python"><pre>foo (pyobject,) -&gt; pyobject
+<div class="highlight-python"><div class="highlight"><pre>foo (pyobject,) -&gt; pyobject
 
 ---------------------------
 
@@ -215,12 +217,13 @@ def foo(x):
 
     # --- LINE 27 ---
     # label 0
-    #   $0.1 = global(np: &lt;module 'numpy' from '/Users/jayvius/anaconda/envs/dev/lib/python2.7/site-packages/numpy/__init__.pyc'&gt;)  :: pyobject
+    #   $0.1 = global(np: &lt;module &#39;numpy&#39; from &#39;/Users/jayvius/anaconda/envs/dev/lib/python2.7/site-packages/numpy/__init__.pyc&#39;&gt;)  :: pyobject
     #   $0.2 = getattr(attr=sin, value=$0.1)  :: pyobject
     #   $0.3 = call $0.2(x, )  :: pyobject
     #   return $0.3
 
-    return np.sin(x)</pre>
+    return np.sin(x)
+</pre></div>
 </div>
 <p>A few things to take note of here: First, every line of Python code is preceded
 by several lines of Numba IR code that gives a glimpse into what Numba is doing
@@ -251,7 +254,7 @@ Python object layer to call it.</p>
         <li><a href="py-modindex.html" title="Python Module Index" >modules</a></li>
         <li><a href="releases.html" title="Release Notes" >next</a></li>
         <li><a href="pycc.html" title="Static Compilation (pycc)" >previous</a></li>
-        <li><a href="index.html">numba 0.13.4 documentation</a></li> 
+        <li><a href="index.html">numba 0.13.4-96-gd766d63 documentation</a></li> 
       
     </ul>
   </div>
