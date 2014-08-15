@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     
-    <title>numba package &mdash; numba 0.13.4-96-gd766d63 documentation</title>
+    <title>numba package &mdash; numba 0.13.4-196-gf9a65cc documentation</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
@@ -34,7 +34,7 @@
 <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
             URL_ROOT:    '../',
-            VERSION:     '0.13.4-96-gd766d63',
+            VERSION:     '0.13.4-196-gf9a65cc',
             COLLAPSE_INDEX: false,
             FILE_SUFFIX: '.html',
             HAS_SOURCE:  true
@@ -58,7 +58,7 @@
     });
   });
 </script>
-    <link rel="top" title="numba 0.13.4-96-gd766d63 documentation" href="../index.html" /> 
+    <link rel="top" title="numba 0.13.4-196-gf9a65cc documentation" href="../index.html" /> 
   </head>
   <body>
     <div class="navbar navbar-fixed-top ">
@@ -69,7 +69,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="../index.html">numba 0.13.4-96-gd766d63 documentation</a>
+          <a class="brand" href="../index.html">numba 0.13.4-196-gf9a65cc documentation</a>
           <div class="nav-collapse collapse">
             <ul class="nav pull-right">
               
@@ -125,6 +125,7 @@
 <li><a class="reference internal" href="#module-numba.looplifting">numba.looplifting module</a></li>
 <li><a class="reference internal" href="#module-numba.lowering">numba.lowering module</a></li>
 <li><a class="reference internal" href="#module-numba.macro">numba.macro module</a></li>
+<li><a class="reference internal" href="#module-numba.npdatetime">numba.npdatetime module</a></li>
 <li><a class="reference internal" href="#module-numba.numpy_support">numba.numpy_support module</a></li>
 <li><a class="reference internal" href="#module-numba.objmode">numba.objmode module</a></li>
 <li><a class="reference internal" href="#module-numba.pythonapi">numba.pythonapi module</a></li>
@@ -198,6 +199,7 @@
 <li><a class="reference internal" href="#module-numba.looplifting">numba.looplifting module</a></li>
 <li><a class="reference internal" href="#module-numba.lowering">numba.lowering module</a></li>
 <li><a class="reference internal" href="#module-numba.macro">numba.macro module</a></li>
+<li><a class="reference internal" href="#module-numba.npdatetime">numba.npdatetime module</a></li>
 <li><a class="reference internal" href="#module-numba.numpy_support">numba.numpy_support module</a></li>
 <li><a class="reference internal" href="#module-numba.objmode">numba.objmode module</a></li>
 <li><a class="reference internal" href="#module-numba.pythonapi">numba.pythonapi module</a></li>
@@ -321,6 +323,7 @@
 <li class="toctree-l2"><a class="reference internal" href="numba.targets.html#module-numba.targets.intrinsics">numba.targets.intrinsics module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="numba.targets.html#module-numba.targets.iterators">numba.targets.iterators module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="numba.targets.html#module-numba.targets.mathimpl">numba.targets.mathimpl module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="numba.targets.html#module-numba.targets.npdatetime">numba.targets.npdatetime module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="numba.targets.html#module-numba.targets.npyimpl">numba.targets.npyimpl module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="numba.targets.html#module-numba.targets.operatorimpl">numba.targets.operatorimpl module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="numba.targets.html#module-numba.targets.options">numba.targets.options module</a></li>
@@ -344,6 +347,7 @@
 <li class="toctree-l2"><a class="reference internal" href="numba.typing.html#module-numba.typing.context">numba.typing.context module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="numba.typing.html#module-numba.typing.ctypes_utils">numba.typing.ctypes_utils module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="numba.typing.html#module-numba.typing.mathdecl">numba.typing.mathdecl module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="numba.typing.html#module-numba.typing.npdatetime">numba.typing.npdatetime module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="numba.typing.html#module-numba.typing.npydecl">numba.typing.npydecl module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="numba.typing.html#module-numba.typing.operatordecl">numba.typing.operatordecl module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="numba.typing.html#module-numba.typing.templates">numba.typing.templates module</a></li>
@@ -676,6 +680,15 @@ named fields and attribute access.</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="numba.cgutils.divmod_by_constant">
+<tt class="descclassname">numba.cgutils.</tt><tt class="descname">divmod_by_constant</tt><big>(</big><em>builder</em>, <em>val</em>, <em>divisor</em><big>)</big><a class="headerlink" href="#numba.cgutils.divmod_by_constant" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the (quotient, remainder) of <em>val</em> divided by the constant
+positive <em>divisor</em>.  The semantics reflects those of Python integer
+floor division, rather than C&#8217;s / LLVM&#8217;s signed division and modulo.
+The difference lies with a negative <em>val</em>.</p>
+</dd></dl>
+
+<dl class="function">
 <dt id="numba.cgutils.for_range">
 <tt class="descclassname">numba.cgutils.</tt><tt class="descname">for_range</tt><big>(</big><em>*args</em>, <em>**kwds</em><big>)</big><a class="headerlink" href="#numba.cgutils.for_range" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -751,6 +764,12 @@ named fields and attribute access.</p>
 <dt id="numba.cgutils.get_strides_from_slice">
 <tt class="descclassname">numba.cgutils.</tt><tt class="descname">get_strides_from_slice</tt><big>(</big><em>builder</em>, <em>ndim</em>, <em>strides</em>, <em>slice</em>, <em>ax</em><big>)</big><a class="headerlink" href="#numba.cgutils.get_strides_from_slice" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.cgutils.global_constant">
+<tt class="descclassname">numba.cgutils.</tt><tt class="descname">global_constant</tt><big>(</big><em>builder_or_module</em>, <em>name</em>, <em>value</em>, <em>linkage=LINKAGE_INTERNAL(8)</em><big>)</big><a class="headerlink" href="#numba.cgutils.global_constant" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get or create a (LLVM module-)global constant with <em>name</em> or <em>value</em>.</p>
+</dd></dl>
 
 <dl class="function">
 <dt id="numba.cgutils.goto_block">
@@ -833,6 +852,12 @@ of basic block <em>bb</em> (but before any terminator).</p>
 <dt id="numba.cgutils.is_pointer">
 <tt class="descclassname">numba.cgutils.</tt><tt class="descname">is_pointer</tt><big>(</big><em>ltyp</em><big>)</big><a class="headerlink" href="#numba.cgutils.is_pointer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Whether the LLVM type <em>typ</em> is a struct type.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cgutils.is_scalar_neg">
+<tt class="descclassname">numba.cgutils.</tt><tt class="descname">is_scalar_neg</tt><big>(</big><em>builder</em>, <em>value</em><big>)</big><a class="headerlink" href="#numba.cgutils.is_scalar_neg" title="Permalink to this definition">¶</a></dt>
+<dd><p>is _value_ negative?. Assumes _value_ is signed</p>
 </dd></dl>
 
 <dl class="function">
@@ -1000,9 +1025,34 @@ the pointed item type.</p>
 
 </dd></dl>
 
+<dl class="class">
+<dt id="numba.compiler.FunctionAttributes">
+<em class="property">class </em><tt class="descclassname">numba.compiler.</tt><tt class="descname">FunctionAttributes</tt><a class="headerlink" href="#numba.compiler.FunctionAttributes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">tuple</span></tt></p>
+<p>FunctionAttributes(name, filename, lineno)</p>
+<dl class="attribute">
+<dt id="numba.compiler.FunctionAttributes.filename">
+<tt class="descname">filename</tt><a class="headerlink" href="#numba.compiler.FunctionAttributes.filename" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="numba.compiler.FunctionAttributes.lineno">
+<tt class="descname">lineno</tt><a class="headerlink" href="#numba.compiler.FunctionAttributes.lineno" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 2</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="numba.compiler.FunctionAttributes.name">
+<tt class="descname">name</tt><a class="headerlink" href="#numba.compiler.FunctionAttributes.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+</dd></dl>
+
 <dl class="function">
 <dt id="numba.compiler.compile_bytecode">
-<tt class="descclassname">numba.compiler.</tt><tt class="descname">compile_bytecode</tt><big>(</big><em>typingctx</em>, <em>targetctx</em>, <em>bc</em>, <em>args</em>, <em>return_type</em>, <em>flags</em>, <em>locals</em>, <em>lifted=()</em><big>)</big><a class="headerlink" href="#numba.compiler.compile_bytecode" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">numba.compiler.</tt><tt class="descname">compile_bytecode</tt><big>(</big><em>typingctx</em>, <em>targetctx</em>, <em>bc</em>, <em>args</em>, <em>return_type</em>, <em>flags</em>, <em>locals</em>, <em>lifted=()</em>, <em>func_attr=FunctionAttributes(name='&lt;anonymous&gt;'</em>, <em>filename='&lt;unknown&gt;'</em>, <em>lineno=0)</em><big>)</big><a class="headerlink" href="#numba.compiler.compile_bytecode" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="function">
@@ -1029,6 +1079,14 @@ Good for testing.</p>
 <dt id="numba.compiler.compile_result">
 <tt class="descclassname">numba.compiler.</tt><tt class="descname">compile_result</tt><big>(</big><em>**kws</em><big>)</big><a class="headerlink" href="#numba.compiler.compile_result" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.compiler.get_function_attributes">
+<tt class="descclassname">numba.compiler.</tt><tt class="descname">get_function_attributes</tt><big>(</big><em>func</em><big>)</big><a class="headerlink" href="#numba.compiler.get_function_attributes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract the function attributes from a Python function or object with
+<em>py_func</em> attribute, such as CPUOverloaded.</p>
+<p>Returns an instance of FunctionAttributes.</p>
+</dd></dl>
 
 <dl class="function">
 <dt id="numba.compiler.ir_optimize_for_py_stage">
@@ -1071,6 +1129,12 @@ refct calls for object mode.</p>
 </div>
 <div class="section" id="module-numba.config">
 <span id="numba-config-module"></span><h2>numba.config module<a class="headerlink" href="#module-numba.config" title="Permalink to this headline">¶</a></h2>
+<dl class="exception">
+<dt id="numba.config.NumbaWarning">
+<em class="property">exception </em><tt class="descclassname">numba.config.</tt><tt class="descname">NumbaWarning</tt><a class="headerlink" href="#numba.config.NumbaWarning" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">exceptions.Warning</span></tt></p>
+</dd></dl>
+
 </div>
 <div class="section" id="module-numba.controlflow">
 <span id="numba-controlflow-module"></span><h2>numba.controlflow module<a class="headerlink" href="#module-numba.controlflow" title="Permalink to this headline">¶</a></h2>
@@ -2732,7 +2796,7 @@ as a builtins (second).  If both failed, return a ir.UNDEFINED.</p>
 
 <dl class="method">
 <dt id="numba.ir.Block.dump">
-<tt class="descname">dump</tt><big>(</big><em>file=&lt;open file '&lt;stdout&gt;'</em>, <em>mode 'w' at 0x10028e150&gt;</em><big>)</big><a class="headerlink" href="#numba.ir.Block.dump" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">dump</tt><big>(</big><em>file=&lt;open file '&lt;stdout&gt;'</em>, <em>mode 'w' at 0x2b7234000150&gt;</em><big>)</big><a class="headerlink" href="#numba.ir.Block.dump" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -3491,12 +3555,55 @@ and executed in object mode.</p>
 <dd></dd></dl>
 
 </div>
+<div class="section" id="module-numba.npdatetime">
+<span id="numba-npdatetime-module"></span><h2>numba.npdatetime module<a class="headerlink" href="#module-numba.npdatetime" title="Permalink to this headline">¶</a></h2>
+<p>Helper functions for numpy.timedelta64 and numpy.datetime64.
+For now, multiples-of-units (for example timedeltas expressed in tens
+of seconds) are not supported.</p>
+<dl class="function">
+<dt id="numba.npdatetime.can_cast_timedelta_units">
+<tt class="descclassname">numba.npdatetime.</tt><tt class="descname">can_cast_timedelta_units</tt><big>(</big><em>src</em>, <em>dest</em><big>)</big><a class="headerlink" href="#numba.npdatetime.can_cast_timedelta_units" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.npdatetime.combine_datetime_timedelta_units">
+<tt class="descclassname">numba.npdatetime.</tt><tt class="descname">combine_datetime_timedelta_units</tt><big>(</big><em>datetime_unit</em>, <em>timedelta_unit</em><big>)</big><a class="headerlink" href="#numba.npdatetime.combine_datetime_timedelta_units" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the unit result of combining <em>datetime_unit</em> with <em>timedelta_unit</em>
+(e.g. by adding or subtracting).  None is returned if combining
+those units is forbidden.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.npdatetime.get_best_unit">
+<tt class="descclassname">numba.npdatetime.</tt><tt class="descname">get_best_unit</tt><big>(</big><em>unit_a</em>, <em>unit_b</em><big>)</big><a class="headerlink" href="#numba.npdatetime.get_best_unit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the best (i.e. finer-grained) of two units.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.npdatetime.get_datetime_timedelta_conversion">
+<tt class="descclassname">numba.npdatetime.</tt><tt class="descname">get_datetime_timedelta_conversion</tt><big>(</big><em>datetime_unit</em>, <em>timedelta_unit</em><big>)</big><a class="headerlink" href="#numba.npdatetime.get_datetime_timedelta_conversion" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute a possible conversion for combining <em>datetime_unit</em> and
+<em>timedelta_unit</em> (presumably for adding or subtracting).
+Return (result unit, integer datetime multiplier, integer timedelta multiplier).
+RuntimeError is raised if the combination is impossible.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.npdatetime.get_timedelta_conversion_factor">
+<tt class="descclassname">numba.npdatetime.</tt><tt class="descname">get_timedelta_conversion_factor</tt><big>(</big><em>src_unit</em>, <em>dest_unit</em><big>)</big><a class="headerlink" href="#numba.npdatetime.get_timedelta_conversion_factor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return an integer multiplier allowing to convert from timedeltas
+of <em>src_unit</em> to <em>dest_unit</em>.</p>
+</dd></dl>
+
+</div>
 <div class="section" id="module-numba.numpy_support">
 <span id="numba-numpy-support-module"></span><h2>numba.numpy_support module<a class="headerlink" href="#module-numba.numpy_support" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="numba.numpy_support.from_dtype">
 <tt class="descclassname">numba.numpy_support.</tt><tt class="descname">from_dtype</tt><big>(</big><em>dtype</em><big>)</big><a class="headerlink" href="#numba.numpy_support.from_dtype" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Return a Numba Type instance corresponding to the given Numpy <em>dtype</em>.
+NotImplementedError is raised on unsupported Numpy dtypes.</p>
+</dd></dl>
 
 <dl class="function">
 <dt id="numba.numpy_support.from_struct_dtype">
@@ -3532,6 +3639,32 @@ and executed in object mode.</p>
 <dt id="numba.numpy_support.numpy_letter_types_to_numba_types">
 <tt class="descclassname">numba.numpy_support.</tt><tt class="descname">numpy_letter_types_to_numba_types</tt><big>(</big><em>numpy_letter_types_seq</em><big>)</big><a class="headerlink" href="#numba.numpy_support.numpy_letter_types_to_numba_types" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.numpy_support.supported_letter_types">
+<tt class="descclassname">numba.numpy_support.</tt><tt class="descname">supported_letter_types</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.numpy_support.supported_letter_types" title="Permalink to this definition">¶</a></dt>
+<dd><p>the supported dtypes in letter form. Notable exceptions are:
+&#8216;O&#8217; - object
+&#8216;g&#8217; - long double
+&#8216;G&#8217; - long complex double
+&#8216;m&#8217; - timedelta64
+&#8216;M&#8217; - datetime64
+&#8216;e&#8217; - float16
+&#8216;F&#8217; - complex float (complex64, made of two floats)
+&#8216;D&#8217; - complex double (complex128, made of two doubles)</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.numpy_support.supported_ufunc_loop">
+<tt class="descclassname">numba.numpy_support.</tt><tt class="descname">supported_ufunc_loop</tt><big>(</big><em>ufunc</em>, <em>loop_signature</em><big>)</big><a class="headerlink" href="#numba.numpy_support.supported_ufunc_loop" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns whether the ufunc with the loop signature &#8216;loop_signature&#8217;
+is supported -in nopython-</p>
+<p>ufunc - the ufunc</p>
+<dl class="docutils">
+<dt>loop_signature - the signature string for the loop, as found in</dt>
+<dd>the ufunc &#8216;types&#8217; attribute (something like &#8216;ff-&gt;f&#8217;)</dd>
+</dl>
+</dd></dl>
 
 <dl class="function">
 <dt id="numba.numpy_support.ufunc_find_matching_loop">
@@ -3787,6 +3920,16 @@ helpers).</p>
 <dd></dd></dl>
 
 <dl class="method">
+<dt id="numba.pythonapi.PythonAPI.create_np_datetime">
+<tt class="descname">create_np_datetime</tt><big>(</big><em>val</em>, <em>unit_code</em><big>)</big><a class="headerlink" href="#numba.pythonapi.PythonAPI.create_np_datetime" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.pythonapi.PythonAPI.create_np_timedelta">
+<tt class="descname">create_np_timedelta</tt><big>(</big><em>val</em>, <em>unit_code</em><big>)</big><a class="headerlink" href="#numba.pythonapi.PythonAPI.create_np_timedelta" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
 <dt id="numba.pythonapi.PythonAPI.decref">
 <tt class="descname">decref</tt><big>(</big><em>obj</em><big>)</big><a class="headerlink" href="#numba.pythonapi.PythonAPI.decref" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -3836,6 +3979,16 @@ helpers).</p>
 <dl class="method">
 <dt id="numba.pythonapi.PythonAPI.err_set_string">
 <tt class="descname">err_set_string</tt><big>(</big><em>exctype</em>, <em>msg</em><big>)</big><a class="headerlink" href="#numba.pythonapi.PythonAPI.err_set_string" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.pythonapi.PythonAPI.extract_np_datetime">
+<tt class="descname">extract_np_datetime</tt><big>(</big><em>obj</em><big>)</big><a class="headerlink" href="#numba.pythonapi.PythonAPI.extract_np_datetime" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.pythonapi.PythonAPI.extract_np_timedelta">
+<tt class="descname">extract_np_timedelta</tt><big>(</big><em>obj</em><big>)</big><a class="headerlink" href="#numba.pythonapi.PythonAPI.extract_np_timedelta" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -4312,15 +4465,6 @@ of the opid.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="numba.testing.multitest">
-<tt class="descclassname">numba.testing.</tt><tt class="descname">multitest</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.testing.multitest" title="Permalink to this definition">¶</a></dt>
-<dd><p>Run tests in multiple processes.</p>
-<p>Use this for running all tests under <tt class="docutils literal"><span class="pre">numba.tests</span></tt> quickly.
-This isn&#8217;t compatible with command-line test options such as <tt class="docutils literal"><span class="pre">--failfast</span></tt>,
-etc.</p>
-</dd></dl>
-
-<dl class="function">
 <dt id="numba.testing.run_tests">
 <tt class="descclassname">numba.testing.</tt><tt class="descname">run_tests</tt><big>(</big><em>suite</em>, <em>xmloutput=None</em><big>)</big><a class="headerlink" href="#numba.testing.run_tests" title="Permalink to this definition">¶</a></dt>
 <dd><ul>
@@ -4765,6 +4909,46 @@ methods. (e.g.  url = cached_property(get_absolute_url, name=&#8217;url&#8217;) 
 <tt class="descclassname">numba.utils.</tt><tt class="descname">dict_values</tt><big>(</big><em>d</em><big>)</big><a class="headerlink" href="#numba.utils.dict_values" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="class">
+<dt id="numba.utils.finalize">
+<em class="property">class </em><tt class="descclassname">numba.utils.</tt><tt class="descname">finalize</tt><big>(</big><em>obj</em>, <em>func</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#numba.utils.finalize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class for finalization of weakrefable objects</p>
+<p>finalize(obj, func, <a href="#id7"><span class="problematic" id="id8">*</span></a>args, <a href="#id9"><span class="problematic" id="id10">**</span></a>kwargs) returns a callable finalizer
+object which will be called when obj is garbage collected. The
+first time the finalizer is called it evaluates func(<a href="#id11"><span class="problematic" id="id12">*</span></a>arg, <a href="#id13"><span class="problematic" id="id14">**</span></a>kwargs)
+and returns the result. After this the finalizer is dead, and
+calling it just returns None.</p>
+<p>When the program exits any remaining finalizers for which the
+atexit attribute is true will be run in reverse order of creation.
+By default atexit is true.</p>
+<dl class="attribute">
+<dt id="numba.utils.finalize.alive">
+<tt class="descname">alive</tt><a class="headerlink" href="#numba.utils.finalize.alive" title="Permalink to this definition">¶</a></dt>
+<dd><p>Whether finalizer is alive</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="numba.utils.finalize.atexit">
+<tt class="descname">atexit</tt><a class="headerlink" href="#numba.utils.finalize.atexit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Whether finalizer should be called at exit</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.utils.finalize.detach">
+<tt class="descname">detach</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.utils.finalize.detach" title="Permalink to this definition">¶</a></dt>
+<dd><p>If alive then mark as dead and return (obj, func, args, kwargs);
+otherwise return None</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.utils.finalize.peek">
+<tt class="descname">peek</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.utils.finalize.peek" title="Permalink to this definition">¶</a></dt>
+<dd><p>If alive then return (obj, func, args, kwargs);
+otherwise return None</p>
+</dd></dl>
+
+</dd></dl>
+
 <dl class="function">
 <dt id="numba.utils.format_time">
 <tt class="descclassname">numba.utils.</tt><tt class="descname">format_time</tt><big>(</big><em>tm</em><big>)</big><a class="headerlink" href="#numba.utils.format_time" title="Permalink to this definition">¶</a></dt>
@@ -4787,7 +4971,7 @@ methods. (e.g.  url = cached_property(get_absolute_url, name=&#8217;url&#8217;) 
 
 <dl class="function">
 <dt id="numba.utils.shutting_down">
-<tt class="descclassname">numba.utils.</tt><tt class="descname">shutting_down</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.utils.shutting_down" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">numba.utils.</tt><tt class="descname">shutting_down</tt><big>(</big><em>globals=&lt;built-in function globals&gt;</em><big>)</big><a class="headerlink" href="#numba.utils.shutting_down" title="Permalink to this definition">¶</a></dt>
 <dd><p>Whether the interpreter is currently shutting down.
 For use in finalizers, __del__ methods, and similar; it is advised
 to early bind this function rather than look it up when calling it,
@@ -4809,11 +4993,11 @@ since at shutdown module globals may be cleared.</p>
 <tt class="descclassname">numba.</tt><tt class="descname">jit</tt><big>(</big><em>signature_or_function=None</em>, <em>argtypes=None</em>, <em>restype=None</em>, <em>locals={}</em>, <em>target='cpu'</em>, <em>**targetoptions</em><big>)</big><a class="headerlink" href="#numba.jit" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="docutils">
 <dt>jit([signature_or_function, [locals={}, [target=&#8217;cpu&#8217;,</dt>
-<dd>[<a href="#id7"><span class="problematic" id="id8">**</span></a>targetoptions]]]])</dd>
+<dd>[<a href="#id15"><span class="problematic" id="id16">**</span></a>targetoptions]]]])</dd>
 </dl>
 <p>The function can be used as the following versions:</p>
 <ol class="arabic">
-<li><p class="first">jit(signature, [target=&#8217;cpu&#8217;, [<a href="#id9"><span class="problematic" id="id10">**</span></a>targetoptions]]) -&gt; jit(function)</p>
+<li><p class="first">jit(signature, [target=&#8217;cpu&#8217;, [<a href="#id17"><span class="problematic" id="id18">**</span></a>targetoptions]]) -&gt; jit(function)</p>
 <blockquote>
 <div><p>Equivalent to:</p>
 <blockquote>
@@ -4846,7 +5030,7 @@ def foo(x, y):</p>
 </div></blockquote>
 </div></blockquote>
 </li>
-<li><p class="first">jit([target=&#8217;cpu&#8217;, [<a href="#id11"><span class="problematic" id="id12">**</span></a>targetoptions]]) -&gt; configured_jit(function)</p>
+<li><p class="first">jit([target=&#8217;cpu&#8217;, [<a href="#id19"><span class="problematic" id="id20">**</span></a>targetoptions]]) -&gt; configured_jit(function)</p>
 <blockquote>
 <div><p>Same as old autojit and 2).  But configure with target and default
 target-options.</p>
@@ -4991,7 +5175,7 @@ e.g. &#8220;(m, n), (n, p)-&gt;(m, p)&#8221;</dd>
       
         <li><a href="../genindex.html" title="General Index" >index</a></li>
         <li><a href="../py-modindex.html" title="Python Module Index" >modules</a></li>
-        <li><a href="../index.html">numba 0.13.4-96-gd766d63 documentation</a></li> 
+        <li><a href="../index.html">numba 0.13.4-196-gf9a65cc documentation</a></li> 
       
     </ul>
   </div>
