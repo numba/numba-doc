@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     
-    <title>numba.targets package &mdash; numba 0.13.4-225-g330c240 documentation</title>
+    <title>numba.targets package &mdash; numba 0.13.4-258-g002ee45 documentation</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
@@ -34,7 +34,7 @@
 <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
             URL_ROOT:    '../',
-            VERSION:     '0.13.4-225-g330c240',
+            VERSION:     '0.13.4-258-g002ee45',
             COLLAPSE_INDEX: false,
             FILE_SUFFIX: '.html',
             HAS_SOURCE:  true
@@ -58,7 +58,7 @@
     });
   });
 </script>
-    <link rel="top" title="numba 0.13.4-225-g330c240 documentation" href="../index.html" /> 
+    <link rel="top" title="numba 0.13.4-258-g002ee45 documentation" href="../index.html" /> 
   </head>
   <body>
     <div class="navbar navbar-fixed-top ">
@@ -69,7 +69,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="../index.html">numba 0.13.4-225-g330c240 documentation</a>
+          <a class="brand" href="../index.html">numba 0.13.4-258-g002ee45 documentation</a>
           <div class="nav-collapse collapse">
             <ul class="nav pull-right">
               
@@ -111,12 +111,14 @@
 <li><a class="reference internal" href="#module-numba.targets.iterators">numba.targets.iterators module</a></li>
 <li><a class="reference internal" href="#module-numba.targets.mathimpl">numba.targets.mathimpl module</a></li>
 <li><a class="reference internal" href="#module-numba.targets.npdatetime">numba.targets.npdatetime module</a></li>
+<li><a class="reference internal" href="#module-numba.targets.npyfuncs">numba.targets.npyfuncs module</a></li>
 <li><a class="reference internal" href="#module-numba.targets.npyimpl">numba.targets.npyimpl module</a></li>
 <li><a class="reference internal" href="#module-numba.targets.operatorimpl">numba.targets.operatorimpl module</a></li>
 <li><a class="reference internal" href="#module-numba.targets.options">numba.targets.options module</a></li>
 <li><a class="reference internal" href="#module-numba.targets.printimpl">numba.targets.printimpl module</a></li>
 <li><a class="reference internal" href="#module-numba.targets.rangeobj">numba.targets.rangeobj module</a></li>
 <li><a class="reference internal" href="#module-numba.targets.registry">numba.targets.registry module</a></li>
+<li><a class="reference internal" href="#module-numba.targets.ufunc_db">numba.targets.ufunc_db module</a></li>
 <li><a class="reference internal" href="#module-numba.targets">Module contents</a></li>
 </ul>
 </li>
@@ -165,12 +167,14 @@
 <li><a class="reference internal" href="#module-numba.targets.iterators">numba.targets.iterators module</a></li>
 <li><a class="reference internal" href="#module-numba.targets.mathimpl">numba.targets.mathimpl module</a></li>
 <li><a class="reference internal" href="#module-numba.targets.npdatetime">numba.targets.npdatetime module</a></li>
+<li><a class="reference internal" href="#module-numba.targets.npyfuncs">numba.targets.npyfuncs module</a></li>
 <li><a class="reference internal" href="#module-numba.targets.npyimpl">numba.targets.npyimpl module</a></li>
 <li><a class="reference internal" href="#module-numba.targets.operatorimpl">numba.targets.operatorimpl module</a></li>
 <li><a class="reference internal" href="#module-numba.targets.options">numba.targets.options module</a></li>
 <li><a class="reference internal" href="#module-numba.targets.printimpl">numba.targets.printimpl module</a></li>
 <li><a class="reference internal" href="#module-numba.targets.rangeobj">numba.targets.rangeobj module</a></li>
 <li><a class="reference internal" href="#module-numba.targets.registry">numba.targets.registry module</a></li>
+<li><a class="reference internal" href="#module-numba.targets.ufunc_db">numba.targets.ufunc_db module</a></li>
 <li><a class="reference internal" href="#module-numba.targets">Module contents</a></li>
 </ul>
 </li>
@@ -1585,7 +1589,7 @@ result pair.</p>
 <p>Fix 64-bit div/mod on 32-bit machines</p>
 <dl class="attribute">
 <dt id="numba.targets.intrinsics.DivmodFixer.I64">
-<tt class="descname">I64</tt><em class="property"> = &lt;llvm.core.IntegerType object at 0x2b4edf616d50&gt;</em><a class="headerlink" href="#numba.targets.intrinsics.DivmodFixer.I64" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">I64</tt><em class="property"> = &lt;llvm.core.IntegerType object at 0x2ad4cfb9fdd0&gt;</em><a class="headerlink" href="#numba.targets.intrinsics.DivmodFixer.I64" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -1954,6 +1958,52 @@ since the 1970 epoch.</p>
 </dd></dl>
 
 </div>
+<div class="section" id="module-numba.targets.npyfuncs">
+<span id="numba-targets-npyfuncs-module"></span><h2>numba.targets.npyfuncs module<a class="headerlink" href="#module-numba.targets.npyfuncs" title="Permalink to this headline">¶</a></h2>
+<p>Codegen for functions used as kernels in NumPy functions</p>
+<p>Typically, the kernels of several ufuncs that can&#8217;t map directly to
+Python builtins</p>
+<dl class="function">
+<dt id="numba.targets.npyfuncs.np_complex_div_impl">
+<tt class="descclassname">numba.targets.npyfuncs.</tt><tt class="descname">np_complex_div_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.npyfuncs.np_complex_div_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.npyfuncs.np_complex_floor_div_impl">
+<tt class="descclassname">numba.targets.npyfuncs.</tt><tt class="descname">np_complex_floor_div_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.npyfuncs.np_complex_floor_div_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.npyfuncs.np_int_sdiv_impl">
+<tt class="descclassname">numba.targets.npyfuncs.</tt><tt class="descname">np_int_sdiv_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.npyfuncs.np_int_sdiv_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.npyfuncs.np_int_truediv_impl">
+<tt class="descclassname">numba.targets.npyfuncs.</tt><tt class="descname">np_int_truediv_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.npyfuncs.np_int_truediv_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.npyfuncs.np_int_udiv_impl">
+<tt class="descclassname">numba.targets.npyfuncs.</tt><tt class="descname">np_int_udiv_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.npyfuncs.np_int_udiv_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.npyfuncs.np_real_div_impl">
+<tt class="descclassname">numba.targets.npyfuncs.</tt><tt class="descname">np_real_div_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.npyfuncs.np_real_div_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.npyfuncs.np_real_floor_div_impl">
+<tt class="descclassname">numba.targets.npyfuncs.</tt><tt class="descname">np_real_floor_div_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.npyfuncs.np_real_floor_div_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.targets.npyfuncs.np_real_floor_impl">
+<tt class="descclassname">numba.targets.npyfuncs.</tt><tt class="descname">np_real_floor_impl</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.targets.npyfuncs.np_real_floor_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
 <div class="section" id="module-numba.targets.npyimpl">
 <span id="numba-targets-npyimpl-module"></span><h2>numba.targets.npyimpl module<a class="headerlink" href="#module-numba.targets.npyimpl" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
@@ -2222,7 +2272,7 @@ instance of types.RangeIteratorType).</p>
 <dd><p>Bases: <a class="reference internal" href="numba.html#numba.dispatcher.Overloaded" title="numba.dispatcher.Overloaded"><tt class="xref py py-class docutils literal"><span class="pre">numba.dispatcher.Overloaded</span></tt></a></p>
 <dl class="attribute">
 <dt id="numba.targets.registry.CPUOverloaded.targetdescr">
-<tt class="descname">targetdescr</tt><em class="property"> = &lt;numba.targets.registry.CPUTarget object at 0x2b4edfc45cd0&gt;</em><a class="headerlink" href="#numba.targets.registry.CPUOverloaded.targetdescr" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">targetdescr</tt><em class="property"> = &lt;numba.targets.registry.CPUTarget object at 0x2ad4d01d6b10&gt;</em><a class="headerlink" href="#numba.targets.registry.CPUOverloaded.targetdescr" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -2239,12 +2289,12 @@ instance of types.RangeIteratorType).</p>
 
 <dl class="attribute">
 <dt id="numba.targets.registry.CPUTarget.target_context">
-<tt class="descname">target_context</tt><em class="property"> = &lt;numba.targets.cpu.CPUContext object at 0x2b4edfc37910&gt;</em><a class="headerlink" href="#numba.targets.registry.CPUTarget.target_context" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">target_context</tt><em class="property"> = &lt;numba.targets.cpu.CPUContext object at 0x2ad4d01cd750&gt;</em><a class="headerlink" href="#numba.targets.registry.CPUTarget.target_context" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="numba.targets.registry.CPUTarget.typing_context">
-<tt class="descname">typing_context</tt><em class="property"> = &lt;numba.typing.context.Context object at 0x2b4edfc378d0&gt;</em><a class="headerlink" href="#numba.targets.registry.CPUTarget.typing_context" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">typing_context</tt><em class="property"> = &lt;numba.typing.context.Context object at 0x2ad4d01cd710&gt;</em><a class="headerlink" href="#numba.targets.registry.CPUTarget.typing_context" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -2258,6 +2308,26 @@ instance of types.RangeIteratorType).</p>
 <div>A dictionary of target-name -&gt; function, where function is executed
 the first time a target is used.  It is used for deferred
 initialization for some targets (e.g. gpu).</div></blockquote>
+</dd></dl>
+
+</div>
+<div class="section" id="module-numba.targets.ufunc_db">
+<span id="numba-targets-ufunc-db-module"></span><h2>numba.targets.ufunc_db module<a class="headerlink" href="#module-numba.targets.ufunc_db" title="Permalink to this headline">¶</a></h2>
+<p>This file contains information on how to translate different ufuncs
+into numba. It is a database of different ufuncs and how each of its
+loops maps to a function that implements the inner kernel of that ufunc
+(the inner kernel being the per-element function).</p>
+<p>Use the function get_ufunc_info to get the information related to the
+ufunc</p>
+<dl class="function">
+<dt id="numba.targets.ufunc_db.get_ufunc_info">
+<tt class="descclassname">numba.targets.ufunc_db.</tt><tt class="descname">get_ufunc_info</tt><big>(</big><em>ufunc_key</em><big>)</big><a class="headerlink" href="#numba.targets.ufunc_db.get_ufunc_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>get the lowering information for the ufunc with key ufunc_key.</p>
+<p>The lowering information is a dictionary that maps from a numpy
+loop string (as given by the ufunc types attribute) to a function
+that handles code generation for a scalar version of the ufunc
+(that is, generates the &#8220;per element&#8221; operation&#8221;).</p>
+<p>raises a KeyError if the ufunc is not in the ufunc_db</p>
 </dd></dl>
 
 </div>
@@ -2284,7 +2354,7 @@ initialization for some targets (e.g. gpu).</div></blockquote>
       
         <li><a href="../genindex.html" title="General Index" >index</a></li>
         <li><a href="../py-modindex.html" title="Python Module Index" >modules</a></li>
-        <li><a href="../index.html">numba 0.13.4-225-g330c240 documentation</a></li> 
+        <li><a href="../index.html">numba 0.13.4-258-g002ee45 documentation</a></li> 
       
     </ul>
   </div>
