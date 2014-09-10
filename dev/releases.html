@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     
-    <title>Release Notes &mdash; numba 0.13.4-452-g5682b60 documentation</title>
+    <title>Release Notes &mdash; numba 0.13.4-454-gdd69abd documentation</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
@@ -34,7 +34,7 @@
 <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
             URL_ROOT:    './',
-            VERSION:     '0.13.4-452-g5682b60',
+            VERSION:     '0.13.4-454-gdd69abd',
             COLLAPSE_INDEX: false,
             FILE_SUFFIX: '.html',
             HAS_SOURCE:  true
@@ -58,7 +58,7 @@
     });
   });
 </script>
-    <link rel="top" title="numba 0.13.4-452-g5682b60 documentation" href="index.html" />
+    <link rel="top" title="numba 0.13.4-454-gdd69abd documentation" href="index.html" />
     <link rel="next" title="Contributing to Numba" href="developer/contributing.html" />
     <link rel="prev" title="Numba Debugging Tips" href="debugging.html" /> 
   </head>
@@ -71,7 +71,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="index.html">numba 0.13.4-452-g5682b60 documentation</a>
+          <a class="brand" href="index.html">numba 0.13.4-454-gdd69abd documentation</a>
           <div class="nav-collapse collapse">
             <ul class="nav pull-right">
               
@@ -108,6 +108,7 @@
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Release Notes</a><ul>
+<li><a class="reference internal" href="#version-0-14">Version 0.14</a></li>
 <li><a class="reference internal" href="#version-0-13-4">Version 0.13.4</a></li>
 <li><a class="reference internal" href="#version-0-13-3">Version 0.13.3</a></li>
 <li><a class="reference internal" href="#version-0-13-2">Version 0.13.2</a></li>
@@ -172,6 +173,7 @@
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Release Notes</a><ul>
+<li><a class="reference internal" href="#version-0-14">Version 0.14</a></li>
 <li><a class="reference internal" href="#version-0-13-4">Version 0.13.4</a></li>
 <li><a class="reference internal" href="#version-0-13-3">Version 0.13.3</a></li>
 <li><a class="reference internal" href="#version-0-13-2">Version 0.13.2</a></li>
@@ -235,6 +237,57 @@
                   
   <div class="section" id="release-notes">
 <h1>Release Notes<a class="headerlink" href="#release-notes" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="version-0-14">
+<h2>Version 0.14<a class="headerlink" href="#version-0-14" title="Permalink to this headline">¶</a></h2>
+<p>Features:</p>
+<ul class="simple">
+<li>Support for nearly all the Numpy math functions (including comparison,
+logical, bitwise and some previously missing float functions) in nopython mode.</li>
+<li>The Numpy datetime64 and timedelta64 dtypes are supported in nopython mode
+with Numpy 1.7 and later.</li>
+<li>Support for Numpy math functions on complex numbers in nopython mode.</li>
+<li>ndarray.sum() is supported in nopython mode.</li>
+<li>Better error messages when unsupported types are used in Numpy math functions.</li>
+<li>Set NUMBA_WARNINGS=1 in the environment to see which functions are compiled
+in object mode vs. nopython mode.</li>
+<li>Add support for the two-argument pow() builtin function in nopython mode.</li>
+<li>New developer documentation describing how Numba works, and how to
+add new types.</li>
+<li>Support for Numpy record arrays on the GPU. (Note: Improper alignment of dtype
+fields will cause an exception to be raised.)</li>
+<li>Slices on GPU device arrays.</li>
+<li>GPU objects can be used as Python context managers to select the active
+device in a block.</li>
+<li>GPU device arrays can be bound to a CUDA stream.  All subsequent operations
+(such as memory copies) will be queued on that stream instead of the default.
+This can prevent unnecessary synchronization with other streams.</li>
+</ul>
+<p>Fixes:</p>
+<ul class="simple">
+<li>Generation of AVX instructions has been disabled to avoid performance bugs
+when calling external math functions that may use SSE instructions,
+especially on OS X.</li>
+<li>JIT functions can be removed by the garbage collector when they are no
+longer accessible.</li>
+<li>Various other reference counting fixes to prevent memory leaks.</li>
+<li>Fixed handling of exception when input argument is out of range.</li>
+<li>Prevent autojit functions from making unsafe numeric conversions when
+called with different numeric types.</li>
+<li>Fix a compilation error when an unhashable global value is accessed.</li>
+<li>Gracefully handle failure to enable faulthandler in the IPython Notebook.</li>
+<li>Fix a bug that caused loop lifting to fail if the loop was inside an
+<tt class="docutils literal"><span class="pre">else</span></tt> block.</li>
+<li>Fixed a problem with selecting CUDA devices in multithreaded programs on
+Linux.</li>
+<li>The <tt class="docutils literal"><span class="pre">pow()</span></tt> function (and <tt class="docutils literal"><span class="pre">**</span></tt> operation) applied to two integers now
+returns an integer rather than a float.</li>
+<li>Numpy arrays using the object dtype no longer cause an exception in the
+autojit.</li>
+<li>Attempts to write to a global array will cause compilation to fall back
+to object mode, rather than attempt and fail at nopython mode.</li>
+<li><tt class="docutils literal"><span class="pre">range()</span></tt> works with all negative arguments (ex: <tt class="docutils literal"><span class="pre">range(-10,</span> <span class="pre">-12,</span> <span class="pre">-1)</span></tt>)</li>
+</ul>
+</div>
 <div class="section" id="version-0-13-4">
 <h2>Version 0.13.4<a class="headerlink" href="#version-0-13-4" title="Permalink to this headline">¶</a></h2>
 <p>Features:</p>
@@ -661,7 +714,7 @@ binary ufuncs + methods (reduce, accumulate, reduceat, outer)</li>
         <li><a href="py-modindex.html" title="Python Module Index" >modules</a></li>
         <li><a href="developer/contributing.html" title="Contributing to Numba" >next</a></li>
         <li><a href="debugging.html" title="Numba Debugging Tips" >previous</a></li>
-        <li><a href="index.html">numba 0.13.4-452-g5682b60 documentation</a></li> 
+        <li><a href="index.html">numba 0.13.4-454-gdd69abd documentation</a></li> 
       
     </ul>
   </div>
