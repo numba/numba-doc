@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+
+
+
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+    <title>CUDA Programming Introduction &mdash; numba 0.14.0 documentation</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    
+<link rel="stylesheet" href="_static/css/basicstrap-base.css" type="text/css" />
+<link rel="stylesheet" href="_static/css/bootstrap.min.css" type="text/css" />
+<link rel="stylesheet" href="_static/css/font-awesome.min.css">
+<!--[if IE 7]>
+<link rel="stylesheet" href="_static/css/font-awesome-ie7.min.css">
+<![endif]-->
+<style type="text/css">
+  body {
+    padding-top: 60px;
+    padding-bottom: 40px;
+  }
+}
+</style>
+<link rel="stylesheet" href="_static/basicstrap.css" type="text/css" />
+<link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+<link rel="stylesheet" href="_static/css/bootstrap-responsive.min.css" type="text/css" />
+    
+<script type="text/javascript">
+  var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:    './',
+            VERSION:     '0.14.0',
+            COLLAPSE_INDEX: false,
+            FILE_SUFFIX: '.html',
+            HAS_SOURCE:  true
+  };
+</script>
+<script type="text/javascript" src="_static/js/jquery.min.js"></script>
+<script type="text/javascript" src="_static/underscore.js"></script>
+<script type="text/javascript" src="_static/doctools.js"></script>
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/javascript" src="_static/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+  $(document).ready(function(){
+    $('.show-sidebar').click(function(e) {
+       e.preventDefault();
+       if ($(".show-sidebar").html() == "Open Table Of Contents") {
+          $('.for-mobile').removeClass('hidden-phone');
+          $(".show-sidebar").html("Close Table Of Contents");
+       } else {
+          $(".show-sidebar").html("Open Table Of Contents");
+       }
+    });
+  });
+</script>
+    <link rel="top" title="numba 0.14.0 documentation" href="index.html" />
+    <link rel="next" title="Writing CUDA-Python" href="CUDAJit.html" />
+    <link rel="prev" title="Interfacing with C" href="interface_c.html" /> 
+  </head>
+  <body>
+    <div class="navbar navbar-fixed-top ">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="index.html">numba 0.14.0 documentation</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav pull-right">
+              
+                <li>
+                <a href="genindex.html" title="General Index" accesskey="I">index</a>
+                </li>
+                <li>
+                <a href="py-modindex.html" title="Python Module Index" >modules</a>
+                </li>
+                <li>
+                <a href="CUDAJit.html" title="Writing CUDA-Python" accesskey="N">next</a>
+                </li>
+                <li>
+                <a href="interface_c.html" title="Interfacing with C" accesskey="P">previous</a>
+                </li>
+              
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <!-- container -->
+    <div class="container-fluid">
+
+
+      
+      <div class="row-fluid hidden-desktop hidden-tablet">
+      
+<div class="span3 ">
+  <a class="visible-phone btn btn-small show-sidebar" data-toggle="collapse" data-target=".for-mobile">Open Table Of Contents</a>
+  <div class="for-mobile sidebar hidden-phone">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">CUDA Programming Introduction</a><ul>
+<li><a class="reference internal" href="#a-very-brief-introduction-to-cuda">A Very Brief Introduction to CUDA</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="interface_c.html"
+                        title="previous chapter">Interfacing with C</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="CUDAJit.html"
+                        title="next chapter">Writing CUDA-Python</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/CUDAintro.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox">
+  <h3>Quick search</h3>
+  <form class="search form-search" action="search.html" method="get">
+      <div class="input-append">
+        <input type="text" class="search-query" name="q">
+        <input type="submit" class="btn" value="Go" />
+      </div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+  </div>
+</div>
+      </div>
+      
+
+      <!-- row -->
+      <div class="row-fluid">
+         
+<div class="span3 visible-desktop visible-tablet">
+  <div class=" sidebar hidden-phone">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">CUDA Programming Introduction</a><ul>
+<li><a class="reference internal" href="#a-very-brief-introduction-to-cuda">A Very Brief Introduction to CUDA</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="interface_c.html"
+                        title="previous chapter">Interfacing with C</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="CUDAJit.html"
+                        title="next chapter">Writing CUDA-Python</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/CUDAintro.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox">
+  <h3>Quick search</h3>
+  <form class="search form-search" action="search.html" method="get">
+      <div class="input-append">
+        <input type="text" class="search-query" name="q">
+        <input type="submit" class="btn" value="Go" />
+      </div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+  </div>
+</div> 
+        
+
+        <div class="span9">
+          <div class="document">
+            <div class="documentwrapper">
+              <div class="bodywrapper">
+                <div class="body">
+                  
+  <div class="section" id="cuda-programming-introduction">
+<span id="cuda-int"></span><h1>CUDA Programming Introduction<a class="headerlink" href="#cuda-programming-introduction" title="Permalink to this headline">¶</a></h1>
+<p>Numba now contains preliminary support for CUDA programming. Numba will
+eventually provide multiple entry points for programmers of different levels
+of expertise on CUDA. For now, Numba provides a Python dialect
+for low-level programming on the CUDA hardware. It provides full control over
+the hardware for fine tunning the performance of CUDA kernels.</p>
+<div class="section" id="a-very-brief-introduction-to-cuda">
+<h2>A Very Brief Introduction to CUDA<a class="headerlink" href="#a-very-brief-introduction-to-cuda" title="Permalink to this headline">¶</a></h2>
+<p>A <a class="reference external" href="https://developer.nvidia.com/what-cuda">CUDA GPU</a> contains one or more <cite>streaming multiprocessors</cite> (SMs). Each SM is
+a manycore processor that is optimized for high throughput.  The <cite>manycore</cite>
+architecture is very different from the common multicore CPU architecture.
+Instead of having a large cache and complex logic for instruction level
+optimization, a manycore processor achieves high throughput by executing many
+threads in parallel on many simpler cores.  It overcomes latency due to cache
+miss or long operations by using zero-cost context switching.  It is common
+to launch a CUDA kernel with hundreds or thousands of threads to keep the
+GPU busy.</p>
+<p>The CUDA programming model is similar to the SIMD vector model in
+modern CPUs.  A CUDA SM schedules the same instruction from a <em>warp</em>
+of 32-threads at each issuing cycle.
+The advantage of CUDA is that the programmer does not need to
+handle the divergence of execution path in a warp, whereas a SIMD
+programmer would be required to properly mask and shuffle the vectors.
+The CUDA model decouples the data structure from the program logic.</p>
+<p>To know more about CUDA, please refer to <a class="reference external" href="http://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html">NVIDIA CUDA-C Programming Guide</a>.</p>
+</div>
+</div>
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        
+      </div><!-- /row -->
+
+      <!-- row -->
+      <div class="row-fluid">
+<div class="related navbar ">
+  <div class="navbar-inner">
+    <ul class="nav pull-right">
+      
+        <li><a href="genindex.html" title="General Index" >index</a></li>
+        <li><a href="py-modindex.html" title="Python Module Index" >modules</a></li>
+        <li><a href="CUDAJit.html" title="Writing CUDA-Python" >next</a></li>
+        <li><a href="interface_c.html" title="Interfacing with C" >previous</a></li>
+        <li><a href="index.html">numba 0.14.0 documentation</a></li> 
+      
+    </ul>
+  </div>
+</div>
+      </div><!-- /row -->
+
+      <!-- footer -->
+      <footer>
+          &copy; Copyright 2012-2014, Continuum Analytics.
+        Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.2.
+      </footer>
+      <!-- /footer -->
+
+    </div>
+    <!-- /container -->
+
+  </body>
+</html>
