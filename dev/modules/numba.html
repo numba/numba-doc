@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     
-    <title>numba package &mdash; numba 0.14.0-8-gaea3830 documentation</title>
+    <title>numba package &mdash; numba 0.14.0-10-gf4eb263 documentation</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
@@ -34,7 +34,7 @@
 <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
             URL_ROOT:    '../',
-            VERSION:     '0.14.0-8-gaea3830',
+            VERSION:     '0.14.0-10-gf4eb263',
             COLLAPSE_INDEX: false,
             FILE_SUFFIX: '.html',
             HAS_SOURCE:  true
@@ -58,7 +58,7 @@
     });
   });
 </script>
-    <link rel="top" title="numba 0.14.0-8-gaea3830 documentation" href="../index.html" /> 
+    <link rel="top" title="numba 0.14.0-10-gf4eb263 documentation" href="../index.html" /> 
   </head>
   <body>
     <div class="navbar navbar-fixed-top ">
@@ -69,7 +69,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="../index.html">numba 0.14.0-8-gaea3830 documentation</a>
+          <a class="brand" href="../index.html">numba 0.14.0-10-gf4eb263 documentation</a>
           <div class="nav-collapse collapse">
             <ul class="nav pull-right">
               
@@ -2016,14 +2016,61 @@ This would allow the use of <cite>and</cite> and <cite>or</cite> and python2.6 j
 
 <dl class="function">
 <dt id="numba.decorators.jit">
-<tt class="descclassname">numba.decorators.</tt><tt class="descname">jit</tt><big>(</big><em>signature_or_function=None</em>, <em>argtypes=None</em>, <em>restype=None</em>, <em>locals={}</em>, <em>target='cpu'</em>, <em>**targetoptions</em><big>)</big><a class="headerlink" href="#numba.decorators.jit" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="docutils">
-<dt>jit([signature_or_function, [locals={}, [target=&#8217;cpu&#8217;,</dt>
-<dd>[<a href="#id1"><span class="problematic" id="id2">**</span></a>targetoptions]]]])</dd>
+<tt class="descclassname">numba.decorators.</tt><tt class="descname">jit</tt><big>(</big><span class="optional">[</span><em>signature_or_function</em><span class="optional">[</span>, <em>locals={}</em><span class="optional">[</span>, <em>target='cpu'</em><span class="optional">[</span>, <em>**targetoptions</em><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><big>)</big><a class="headerlink" href="#numba.decorators.jit" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function is used to compile a Python function into native code. It is
+designed to be used as a decorator for the function to be compiled,
+but it can also be called as a regular function.</p>
+<dl class="docutils">
+<dt>signature_or_function: function or str</dt>
+<dd>This argument takes either the function to be compiled, or the signature
+of the function to be compiled. If this function is used as a decorator,
+the function to be compiled is the decorated function. In that case,
+this argument should only be used to optionally specify the function
+signature. If this function is called like a regular function, and this
+argument is used to specify the function signature, this function will
+return another jit function object which can be called again with the
+function to be compiled as this argument.</dd>
 </dl>
-<p>The function can be used as the following versions:</p>
+<p>argtypes: deprecated</p>
+<p>restype: deprecated</p>
+<dl class="docutils">
+<dt>locals: dict</dt>
+<dd>Mapping of local variable names to Numba types. Used to override the
+types deduced by Numba&#8217;s type inference engine.</dd>
+<dt>targets: str</dt>
+<dd>Specifies the target platform to compile for. Valid targets are cpu,
+gpu, npyufunc, and cuda. Defaults to cpu.</dd>
+<dt>targetoptions: </dt>
+<dd><dl class="first last docutils">
+<dt>For a cpu target, valid options are:</dt>
+<dd><dl class="first last docutils">
+<dt>nopython: bool</dt>
+<dd>Set to True to disable the use of PyObjects and Python API
+calls. The default behavior is to allow the use of PyObjects
+and Python API. Default value is False.</dd>
+<dt>forceobj: bool</dt>
+<dd>Set to True to force the use of PyObjects for every value.
+Default value is False.</dd>
+<dt>looplift: bool</dt>
+<dd>Set to True to enable jitting loops in nopython mode while
+leaving surrounding code in object mode. This allows functions
+to allocate NumPy arrays and use Python objects, while the
+tight loops in the function can still be compiled in nopython
+mode. Any arrays that the tight loop uses should be created
+before the loop is entered. Default value is True.</dd>
+<dt>wraparound: bool</dt>
+<dd>Set to True to enable array indexing wraparound for negative
+indices, for a small performance penalty. Default value
+is True.</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+</dl>
+<p>compiled function</p>
+<p>The function can be used in the following ways:</p>
 <ol class="arabic">
-<li><p class="first">jit(signature, [target=&#8217;cpu&#8217;, [<a href="#id3"><span class="problematic" id="id4">**</span></a>targetoptions]]) -&gt; jit(function)</p>
+<li><p class="first">jit(signature, [target=&#8217;cpu&#8217;, [<a href="#id1"><span class="problematic" id="id2">**</span></a>targetoptions]]) -&gt; jit(function)</p>
 <blockquote>
 <div><p>Equivalent to:</p>
 <blockquote>
@@ -2056,7 +2103,7 @@ def foo(x, y):</p>
 </div></blockquote>
 </div></blockquote>
 </li>
-<li><p class="first">jit([target=&#8217;cpu&#8217;, [<a href="#id5"><span class="problematic" id="id6">**</span></a>targetoptions]]) -&gt; configured_jit(function)</p>
+<li><p class="first">jit([target=&#8217;cpu&#8217;, [<a href="#id3"><span class="problematic" id="id4">**</span></a>targetoptions]]) -&gt; configured_jit(function)</p>
 <blockquote>
 <div><p>Same as old autojit and 2).  But configure with target and default
 target-options.</p>
@@ -2071,30 +2118,13 @@ def foo(x, y):</p>
 </div></blockquote>
 </li>
 </ol>
-<p>The CPU (default target) defines the following:</p>
-<blockquote>
-<div><ul>
-<li><p class="first">nopython: [bool]</p>
-<blockquote>
-<div><p>Set to True to disable the use of PyObjects and Python API
-calls.  The default behavior is to allow the use of PyObjects and
-Python API.  Default value is False.</p>
-</div></blockquote>
-</li>
-<li><p class="first">forceobj: [bool]</p>
-<blockquote>
-<div><p>Set to True to force the use of PyObjects for every value.  Default
-value is False.</p>
-</div></blockquote>
-</li>
-</ul>
-</div></blockquote>
 </dd></dl>
 
 <dl class="function">
 <dt id="numba.decorators.njit">
 <tt class="descclassname">numba.decorators.</tt><tt class="descname">njit</tt><big>(</big><em>*args</em>, <em>**kws</em><big>)</big><a class="headerlink" href="#numba.decorators.njit" title="Permalink to this definition">¶</a></dt>
-<dd><p>Equavilent to jit(nopython=True)</p>
+<dd><p>Equivalent to jit(nopython=True)</p>
+<p>See documentation for jit function/decorator for full description.</p>
 </dd></dl>
 
 </div>
@@ -2878,7 +2908,7 @@ the each element.</p>
 
 <dl class="method">
 <dt id="numba.ir.Block.dump">
-<tt class="descname">dump</tt><big>(</big><em>file=&lt;open file '&lt;stdout&gt;'</em>, <em>mode 'w' at 0x2b57746a9150&gt;</em><big>)</big><a class="headerlink" href="#numba.ir.Block.dump" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">dump</tt><big>(</big><em>file=&lt;open file '&lt;stdout&gt;'</em>, <em>mode 'w' at 0x2ab6878a0150&gt;</em><big>)</big><a class="headerlink" href="#numba.ir.Block.dump" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -5196,9 +5226,9 @@ methods. (e.g.  url = cached_property(get_absolute_url, name=&#8217;url&#8217;) 
 <dt id="numba.utils.finalize">
 <em class="property">class </em><tt class="descclassname">numba.utils.</tt><tt class="descname">finalize</tt><big>(</big><em>obj</em>, <em>func</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#numba.utils.finalize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class for finalization of weakrefable objects</p>
-<p>finalize(obj, func, <a href="#id7"><span class="problematic" id="id8">*</span></a>args, <a href="#id9"><span class="problematic" id="id10">**</span></a>kwargs) returns a callable finalizer
+<p>finalize(obj, func, <a href="#id5"><span class="problematic" id="id6">*</span></a>args, <a href="#id7"><span class="problematic" id="id8">**</span></a>kwargs) returns a callable finalizer
 object which will be called when obj is garbage collected. The
-first time the finalizer is called it evaluates func(<a href="#id11"><span class="problematic" id="id12">*</span></a>arg, <a href="#id13"><span class="problematic" id="id14">**</span></a>kwargs)
+first time the finalizer is called it evaluates func(<a href="#id9"><span class="problematic" id="id10">*</span></a>arg, <a href="#id11"><span class="problematic" id="id12">**</span></a>kwargs)
 and returns the result. After this the finalizer is dead, and
 calling it just returns None.</p>
 <p>When the program exits any remaining finalizers for which the
@@ -5263,14 +5293,61 @@ since at shutdown module globals may be cleared.</p>
 <p>Expose top-level symbols that are safe for import *</p>
 <dl class="function">
 <dt id="numba.jit">
-<tt class="descclassname">numba.</tt><tt class="descname">jit</tt><big>(</big><em>signature_or_function=None</em>, <em>argtypes=None</em>, <em>restype=None</em>, <em>locals={}</em>, <em>target='cpu'</em>, <em>**targetoptions</em><big>)</big><a class="headerlink" href="#numba.jit" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="docutils">
-<dt>jit([signature_or_function, [locals={}, [target=&#8217;cpu&#8217;,</dt>
-<dd>[<a href="#id15"><span class="problematic" id="id16">**</span></a>targetoptions]]]])</dd>
+<tt class="descclassname">numba.</tt><tt class="descname">jit</tt><big>(</big><span class="optional">[</span><em>signature_or_function</em><span class="optional">[</span>, <em>locals={}</em><span class="optional">[</span>, <em>target='cpu'</em><span class="optional">[</span>, <em>**targetoptions</em><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><big>)</big><a class="headerlink" href="#numba.jit" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function is used to compile a Python function into native code. It is
+designed to be used as a decorator for the function to be compiled,
+but it can also be called as a regular function.</p>
+<dl class="docutils">
+<dt>signature_or_function: function or str</dt>
+<dd>This argument takes either the function to be compiled, or the signature
+of the function to be compiled. If this function is used as a decorator,
+the function to be compiled is the decorated function. In that case,
+this argument should only be used to optionally specify the function
+signature. If this function is called like a regular function, and this
+argument is used to specify the function signature, this function will
+return another jit function object which can be called again with the
+function to be compiled as this argument.</dd>
 </dl>
-<p>The function can be used as the following versions:</p>
+<p>argtypes: deprecated</p>
+<p>restype: deprecated</p>
+<dl class="docutils">
+<dt>locals: dict</dt>
+<dd>Mapping of local variable names to Numba types. Used to override the
+types deduced by Numba&#8217;s type inference engine.</dd>
+<dt>targets: str</dt>
+<dd>Specifies the target platform to compile for. Valid targets are cpu,
+gpu, npyufunc, and cuda. Defaults to cpu.</dd>
+<dt>targetoptions: </dt>
+<dd><dl class="first last docutils">
+<dt>For a cpu target, valid options are:</dt>
+<dd><dl class="first last docutils">
+<dt>nopython: bool</dt>
+<dd>Set to True to disable the use of PyObjects and Python API
+calls. The default behavior is to allow the use of PyObjects
+and Python API. Default value is False.</dd>
+<dt>forceobj: bool</dt>
+<dd>Set to True to force the use of PyObjects for every value.
+Default value is False.</dd>
+<dt>looplift: bool</dt>
+<dd>Set to True to enable jitting loops in nopython mode while
+leaving surrounding code in object mode. This allows functions
+to allocate NumPy arrays and use Python objects, while the
+tight loops in the function can still be compiled in nopython
+mode. Any arrays that the tight loop uses should be created
+before the loop is entered. Default value is True.</dd>
+<dt>wraparound: bool</dt>
+<dd>Set to True to enable array indexing wraparound for negative
+indices, for a small performance penalty. Default value
+is True.</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+</dl>
+<p>compiled function</p>
+<p>The function can be used in the following ways:</p>
 <ol class="arabic">
-<li><p class="first">jit(signature, [target=&#8217;cpu&#8217;, [<a href="#id17"><span class="problematic" id="id18">**</span></a>targetoptions]]) -&gt; jit(function)</p>
+<li><p class="first">jit(signature, [target=&#8217;cpu&#8217;, [<a href="#id13"><span class="problematic" id="id14">**</span></a>targetoptions]]) -&gt; jit(function)</p>
 <blockquote>
 <div><p>Equivalent to:</p>
 <blockquote>
@@ -5303,7 +5380,7 @@ def foo(x, y):</p>
 </div></blockquote>
 </div></blockquote>
 </li>
-<li><p class="first">jit([target=&#8217;cpu&#8217;, [<a href="#id19"><span class="problematic" id="id20">**</span></a>targetoptions]]) -&gt; configured_jit(function)</p>
+<li><p class="first">jit([target=&#8217;cpu&#8217;, [<a href="#id15"><span class="problematic" id="id16">**</span></a>targetoptions]]) -&gt; configured_jit(function)</p>
 <blockquote>
 <div><p>Same as old autojit and 2).  But configure with target and default
 target-options.</p>
@@ -5318,24 +5395,6 @@ def foo(x, y):</p>
 </div></blockquote>
 </li>
 </ol>
-<p>The CPU (default target) defines the following:</p>
-<blockquote>
-<div><ul>
-<li><p class="first">nopython: [bool]</p>
-<blockquote>
-<div><p>Set to True to disable the use of PyObjects and Python API
-calls.  The default behavior is to allow the use of PyObjects and
-Python API.  Default value is False.</p>
-</div></blockquote>
-</li>
-<li><p class="first">forceobj: [bool]</p>
-<blockquote>
-<div><p>Set to True to force the use of PyObjects for every value.  Default
-value is False.</p>
-</div></blockquote>
-</li>
-</ul>
-</div></blockquote>
 </dd></dl>
 
 <dl class="function">
@@ -5348,7 +5407,8 @@ value is False.</p>
 <dl class="function">
 <dt id="numba.njit">
 <tt class="descclassname">numba.</tt><tt class="descname">njit</tt><big>(</big><em>*args</em>, <em>**kws</em><big>)</big><a class="headerlink" href="#numba.njit" title="Permalink to this definition">¶</a></dt>
-<dd><p>Equavilent to jit(nopython=True)</p>
+<dd><p>Equivalent to jit(nopython=True)</p>
+<p>See documentation for jit function/decorator for full description.</p>
 </dd></dl>
 
 <dl class="function">
@@ -5455,7 +5515,7 @@ NotImplementedError is raised on unsupported Numpy dtypes.</p>
       
         <li><a href="../genindex.html" title="General Index" >index</a></li>
         <li><a href="../py-modindex.html" title="Python Module Index" >modules</a></li>
-        <li><a href="../index.html">numba 0.14.0-8-gaea3830 documentation</a></li> 
+        <li><a href="../index.html">numba 0.14.0-10-gf4eb263 documentation</a></li> 
       
     </ul>
   </div>
