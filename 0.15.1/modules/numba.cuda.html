@@ -1,0 +1,2334 @@
+<!DOCTYPE html>
+
+
+
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+    <title>numba.cuda package &mdash; numba 0.15.1 documentation</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    
+
+<link rel="stylesheet" href="../_static/css/basicstrap-base.css" type="text/css" />
+<link rel="stylesheet" id="current-theme" href="../_static/css/bootstrap3/bootstrap.min.css" type="text/css" />
+<link rel="stylesheet" id="current-adjust-theme" type="text/css" />
+
+<link rel="stylesheet" href="../_static/css/font-awesome.min.css">
+
+<style type="text/css">
+  body {
+    padding-top: 60px;
+    padding-bottom: 40px;
+  }
+}
+</style>
+
+<link rel="stylesheet" href="../_static/css/basicstrap.css" type="text/css" />
+<link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+<script type="text/javascript">
+  var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:    '../',
+            VERSION:     '0.15.1',
+            COLLAPSE_INDEX: false,
+            FILE_SUFFIX: '.html',
+            HAS_SOURCE:  true
+  };
+</script>
+    <script type="text/javascript" src="../_static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../_static/js/bootstrap3.min.js"></script>
+<script type="text/javascript" src="../_static/js/jquery.cookie.min.js"></script>
+<script type="text/javascript" src="../_static/js/basicstrap.js"></script>
+<script type="text/javascript">
+</script>
+    <link rel="top" title="numba 0.15.1 documentation" href="../index.html" /> 
+  </head>
+  <body role="document">
+    <div id="navbar-top" class="navbar navbar-fixed-top navbar-default" role="navigation" aria-label="top navigation">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="../index.html">numba 0.15.1 documentation</a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+              <li class="dropdown visible-xs">
+                <a role="button" id="localToc" data-toggle="dropdown" data-target="#" href="#">Table Of Contents <b class="caret"></b></a>
+                <ul class="dropdown-menu localtoc sp-localtoc" role="menu" aria-labelledby="localToc">
+                <ul>
+<li><a class="reference internal" href="#">numba.cuda package</a><ul>
+<li><a class="reference internal" href="#subpackages">Subpackages</a></li>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-numba.cuda.api">numba.cuda.api module</a></li>
+<li><a class="reference internal" href="#module-numba.cuda.compiler">numba.cuda.compiler module</a></li>
+<li><a class="reference internal" href="#module-numba.cuda.cudadecl">numba.cuda.cudadecl module</a></li>
+<li><a class="reference internal" href="#module-numba.cuda.cudaimpl">numba.cuda.cudaimpl module</a></li>
+<li><a class="reference internal" href="#module-numba.cuda.cudamath">numba.cuda.cudamath module</a></li>
+<li><a class="reference internal" href="#module-numba.cuda.decorators">numba.cuda.decorators module</a></li>
+<li><a class="reference internal" href="#module-numba.cuda.descriptor">numba.cuda.descriptor module</a></li>
+<li><a class="reference internal" href="#module-numba.cuda.dispatcher">numba.cuda.dispatcher module</a></li>
+<li><a class="reference internal" href="#module-numba.cuda.errors">numba.cuda.errors module</a></li>
+<li><a class="reference internal" href="#module-numba.cuda.initialize">numba.cuda.initialize module</a></li>
+<li><a class="reference internal" href="#module-numba.cuda.libdevice">numba.cuda.libdevice module</a></li>
+<li><a class="reference internal" href="#module-numba.cuda.nvvmutils">numba.cuda.nvvmutils module</a></li>
+<li><a class="reference internal" href="#module-numba.cuda.stubs">numba.cuda.stubs module</a></li>
+<li><a class="reference internal" href="#module-numba.cuda.target">numba.cuda.target module</a></li>
+<li><a class="reference internal" href="#module-numba.cuda.testing">numba.cuda.testing module</a></li>
+<li><a class="reference internal" href="#module-numba.cuda">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+                </ul>
+              </li>
+
+            
+              <li><a href="../py-modindex.html" title="Python Module Index" >modules </a></li>
+              <li><a href="../genindex.html" title="General Index" accesskey="I">index </a></li>
+            
+            <li class="visible-xs"><a href="../_sources/modules/numba.cuda.txt" rel="nofollow">Show Source</a></li>
+
+            <li class="visible-xs">
+                <form class="search form-search form-inline navbar-form navbar-right sp-searchbox" action="../search.html" method="get">
+                  <div class="input-append input-group">
+                    <input type="text" class="search-query form-control" name="q" placeholder="Search...">
+                    <span class="input-group-btn">
+                    <input type="submit" class="btn" value="Go" />
+                    </span>
+                  </div>
+                  <input type="hidden" name="check_keywords" value="yes" />
+                  <input type="hidden" name="area" value="default" />
+                </form>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    
+
+    <!-- container -->
+    <div class="container-fluid">
+
+      <!-- row -->
+      <div class="row">
+         
+<div class="col-md-3 hidden-xs">
+  <div class="sidebar hidden-xs" role="navigation" aria-label="main navigation">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">numba.cuda package</a><ul>
+<li><a class="reference internal" href="#subpackages">Subpackages</a></li>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-numba.cuda.api">numba.cuda.api module</a></li>
+<li><a class="reference internal" href="#module-numba.cuda.compiler">numba.cuda.compiler module</a></li>
+<li><a class="reference internal" href="#module-numba.cuda.cudadecl">numba.cuda.cudadecl module</a></li>
+<li><a class="reference internal" href="#module-numba.cuda.cudaimpl">numba.cuda.cudaimpl module</a></li>
+<li><a class="reference internal" href="#module-numba.cuda.cudamath">numba.cuda.cudamath module</a></li>
+<li><a class="reference internal" href="#module-numba.cuda.decorators">numba.cuda.decorators module</a></li>
+<li><a class="reference internal" href="#module-numba.cuda.descriptor">numba.cuda.descriptor module</a></li>
+<li><a class="reference internal" href="#module-numba.cuda.dispatcher">numba.cuda.dispatcher module</a></li>
+<li><a class="reference internal" href="#module-numba.cuda.errors">numba.cuda.errors module</a></li>
+<li><a class="reference internal" href="#module-numba.cuda.initialize">numba.cuda.initialize module</a></li>
+<li><a class="reference internal" href="#module-numba.cuda.libdevice">numba.cuda.libdevice module</a></li>
+<li><a class="reference internal" href="#module-numba.cuda.nvvmutils">numba.cuda.nvvmutils module</a></li>
+<li><a class="reference internal" href="#module-numba.cuda.stubs">numba.cuda.stubs module</a></li>
+<li><a class="reference internal" href="#module-numba.cuda.target">numba.cuda.target module</a></li>
+<li><a class="reference internal" href="#module-numba.cuda.testing">numba.cuda.testing module</a></li>
+<li><a class="reference internal" href="#module-numba.cuda">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/modules/numba.cuda.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" role="search">
+  <h3>Quick search</h3>
+  <form class="search form-inline" action="../search.html" method="get">
+      <div class="input-append input-group">
+        <input type="text" class="search-query form-control" name="q" placeholder="Search...">
+        <span class="input-group-btn">
+        <input type="submit" class="btn" value="Go" />
+        </span>
+      </div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+  </div>
+</div> 
+        
+
+        <div class="col-md-9">
+          <div class="document" role="main">
+            <div class="documentwrapper">
+              <div class="bodywrapper">
+                <div class="body">
+                  
+  <div class="section" id="numba-cuda-package">
+<h1>numba.cuda package<a class="headerlink" href="#numba-cuda-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="numba.cuda.cudadrv.html">numba.cuda.cudadrv package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="numba.cuda.cudadrv.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="numba.cuda.cudadrv.html#module-numba.cuda.cudadrv.devicearray">numba.cuda.cudadrv.devicearray module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="numba.cuda.cudadrv.html#module-numba.cuda.cudadrv.devices">numba.cuda.cudadrv.devices module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="numba.cuda.cudadrv.html#module-numba.cuda.cudadrv.driver">numba.cuda.cudadrv.driver module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="numba.cuda.cudadrv.html#module-numba.cuda.cudadrv.drvapi">numba.cuda.cudadrv.drvapi module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="numba.cuda.cudadrv.html#module-numba.cuda.cudadrv.enums">numba.cuda.cudadrv.enums module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="numba.cuda.cudadrv.html#module-numba.cuda.cudadrv.error">numba.cuda.cudadrv.error module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="numba.cuda.cudadrv.html#module-numba.cuda.cudadrv.libs">numba.cuda.cudadrv.libs module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="numba.cuda.cudadrv.html#module-numba.cuda.cudadrv.ndarray">numba.cuda.cudadrv.ndarray module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="numba.cuda.cudadrv.html#module-numba.cuda.cudadrv.nvvm">numba.cuda.cudadrv.nvvm module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="numba.cuda.cudadrv.html#module-numba.cuda.cudadrv">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-numba.cuda.api">
+<span id="numba-cuda-api-module"></span><h2>numba.cuda.api module<a class="headerlink" href="#module-numba.cuda.api" title="Permalink to this headline">¶</a></h2>
+<p>API that are reported to numba.cuda</p>
+<dl class="function">
+<dt id="numba.cuda.api.close">
+<tt class="descclassname">numba.cuda.api.</tt><tt class="descname">close</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.api.close" title="Permalink to this definition">¶</a></dt>
+<dd><p>Explicitly closes the context.</p>
+<p>Destroy the current context of the current thread</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.api.defer_cleanup">
+<tt class="descclassname">numba.cuda.api.</tt><tt class="descname">defer_cleanup</tt><big>(</big><em>*args</em>, <em>**kwds</em><big>)</big><a class="headerlink" href="#numba.cuda.api.defer_cleanup" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.api.detect">
+<tt class="descclassname">numba.cuda.api.</tt><tt class="descname">detect</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.api.detect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Detect hardware support</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.api.device_array">
+<tt class="descclassname">numba.cuda.api.</tt><tt class="descname">device_array</tt><big>(</big><em>shape</em>, <em>dtype=np.float</em>, <em>strides=None</em>, <em>order='C'</em>, <em>stream=0</em><big>)</big><a class="headerlink" href="#numba.cuda.api.device_array" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allocate an empty device ndarray. Similar to numpy.empty()</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.api.device_array_like">
+<tt class="descclassname">numba.cuda.api.</tt><tt class="descname">device_array_like</tt><big>(</big><em>ary</em>, <em>stream=0</em><big>)</big><a class="headerlink" href="#numba.cuda.api.device_array_like" title="Permalink to this definition">¶</a></dt>
+<dd><p>Call cuda.devicearray() with information from the array.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.api.event">
+<tt class="descclassname">numba.cuda.api.</tt><tt class="descname">event</tt><big>(</big><em>timing=True</em><big>)</big><a class="headerlink" href="#numba.cuda.api.event" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a CUDA event.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.api.get_current_device">
+<tt class="descclassname">numba.cuda.api.</tt><tt class="descname">get_current_device</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.api.get_current_device" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get current device associated with the current thread</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.api.list_devices">
+<tt class="descclassname">numba.cuda.api.</tt><tt class="descname">list_devices</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.api.list_devices" title="Permalink to this definition">¶</a></dt>
+<dd><p>List all CUDA devices</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.api.mapped">
+<tt class="descclassname">numba.cuda.api.</tt><tt class="descname">mapped</tt><big>(</big><em>*args</em>, <em>**kws</em><big>)</big><a class="headerlink" href="#numba.cuda.api.mapped" title="Permalink to this definition">¶</a></dt>
+<dd><p>A context manager for temporarily mapping a sequence of host ndarrays.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.api.mapped_array">
+<tt class="descclassname">numba.cuda.api.</tt><tt class="descname">mapped_array</tt><big>(</big><em>shape</em>, <em>dtype=np.float</em>, <em>strides=None</em>, <em>order='C'</em>, <em>stream=0</em>, <em>portable=False</em>, <em>wc=False</em><big>)</big><a class="headerlink" href="#numba.cuda.api.mapped_array" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allocate a mapped ndarray with a buffer that is pinned and mapped on
+to the device. Similar to numpy.empty()</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>portable</strong> &#8211; a boolean flag to allow the allocated device memory to be
+usable in multiple devices.</li>
+<li><strong>wc</strong> &#8211; a boolean flag to enable writecombined allocation which is faster
+to write by the host and to read by the device, but slower to
+write by the host and slower to write by the device.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.api.pinned">
+<tt class="descclassname">numba.cuda.api.</tt><tt class="descname">pinned</tt><big>(</big><em>*args</em>, <em>**kws</em><big>)</big><a class="headerlink" href="#numba.cuda.api.pinned" title="Permalink to this definition">¶</a></dt>
+<dd><p>A context manager for temporary pinning a sequence of host ndarrays.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.api.pinned_array">
+<tt class="descclassname">numba.cuda.api.</tt><tt class="descname">pinned_array</tt><big>(</big><em>shape</em>, <em>dtype=np.float</em>, <em>strides=None</em>, <em>order='C'</em><big>)</big><a class="headerlink" href="#numba.cuda.api.pinned_array" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allocate a numpy.ndarray with a buffer that is pinned (pagelocked).
+Similar to numpy.empty().</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.api.select_device">
+<tt class="descclassname">numba.cuda.api.</tt><tt class="descname">select_device</tt><big>(</big><em>device_id</em><big>)</big><a class="headerlink" href="#numba.cuda.api.select_device" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new CUDA context with the selected device.
+The context is associated with the current thread.
+NumbaPro currently allows only one context per thread.</p>
+<p>Returns a device instance</p>
+<p>Raises exception on error.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.api.stream">
+<tt class="descclassname">numba.cuda.api.</tt><tt class="descname">stream</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.api.stream" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a CUDA stream that represents a command queue for the device.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.api.synchronize">
+<tt class="descclassname">numba.cuda.api.</tt><tt class="descname">synchronize</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.api.synchronize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Synchronize current context</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.api.to_device">
+<tt class="descclassname">numba.cuda.api.</tt><tt class="descname">to_device</tt><big>(</big><em>ary</em>, <em>stream=0</em>, <em>copy=True</em>, <em>to=None</em><big>)</big><a class="headerlink" href="#numba.cuda.api.to_device" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allocate and transfer a numpy ndarray to the device.</p>
+<p>To copy host-&gt;device a numpy array:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">ary</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">d_ary</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">to_device</span><span class="p">(</span><span class="n">ary</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>To enqueue the transfer to a stream:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">stream</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">stream</span><span class="p">()</span>
+<span class="n">d_ary</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">to_device</span><span class="p">(</span><span class="n">ary</span><span class="p">,</span> <span class="n">stream</span><span class="o">=</span><span class="n">stream</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The resulting <tt class="docutils literal"><span class="pre">d_ary</span></tt> is a <tt class="docutils literal"><span class="pre">DeviceNDArray</span></tt>.</p>
+<p>To copy device-&gt;host:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">hary</span> <span class="o">=</span> <span class="n">d_ary</span><span class="o">.</span><span class="n">copy_to_host</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>To copy device-&gt;host to an existing array:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">ary</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="n">d_ary</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">d_ary</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+<span class="n">d_ary</span><span class="o">.</span><span class="n">copy_to_host</span><span class="p">(</span><span class="n">ary</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>To enqueue the transfer to a stream:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">hary</span> <span class="o">=</span> <span class="n">d_ary</span><span class="o">.</span><span class="n">copy_to_host</span><span class="p">(</span><span class="n">stream</span><span class="o">=</span><span class="n">stream</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+<div class="section" id="module-numba.cuda.compiler">
+<span id="numba-cuda-compiler-module"></span><h2>numba.cuda.compiler module<a class="headerlink" href="#module-numba.cuda.compiler" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="numba.cuda.compiler.AutoJitCUDAKernel">
+<em class="property">class </em><tt class="descclassname">numba.cuda.compiler.</tt><tt class="descname">AutoJitCUDAKernel</tt><big>(</big><em>func</em>, <em>bind</em>, <em>targetoptions</em><big>)</big><a class="headerlink" href="#numba.cuda.compiler.AutoJitCUDAKernel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.cuda.compiler.CUDAKernelBase" title="numba.cuda.compiler.CUDAKernelBase"><tt class="xref py py-class docutils literal"><span class="pre">numba.cuda.compiler.CUDAKernelBase</span></tt></a></p>
+<dl class="method">
+<dt id="numba.cuda.compiler.AutoJitCUDAKernel.specialize">
+<tt class="descname">specialize</tt><big>(</big><em>*args</em><big>)</big><a class="headerlink" href="#numba.cuda.compiler.AutoJitCUDAKernel.specialize" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.compiler.CUDAKernel">
+<em class="property">class </em><tt class="descclassname">numba.cuda.compiler.</tt><tt class="descname">CUDAKernel</tt><big>(</big><em>llvm_module</em>, <em>name</em>, <em>argtypes</em>, <em>link=()</em>, <em>debug=False</em>, <em>exceptions={}</em><big>)</big><a class="headerlink" href="#numba.cuda.compiler.CUDAKernel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.cuda.compiler.CUDAKernelBase" title="numba.cuda.compiler.CUDAKernelBase"><tt class="xref py py-class docutils literal"><span class="pre">numba.cuda.compiler.CUDAKernelBase</span></tt></a></p>
+<dl class="method">
+<dt id="numba.cuda.compiler.CUDAKernel.bind">
+<tt class="descname">bind</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.compiler.CUDAKernel.bind" title="Permalink to this definition">¶</a></dt>
+<dd><p>Force binding to current CUDA context</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="numba.cuda.compiler.CUDAKernel.device">
+<tt class="descname">device</tt><a class="headerlink" href="#numba.cuda.compiler.CUDAKernel.device" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get current active context</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="numba.cuda.compiler.CUDAKernel.ptx">
+<tt class="descname">ptx</tt><a class="headerlink" href="#numba.cuda.compiler.CUDAKernel.ptx" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.compiler.CUDAKernelBase">
+<em class="property">class </em><tt class="descclassname">numba.cuda.compiler.</tt><tt class="descname">CUDAKernelBase</tt><a class="headerlink" href="#numba.cuda.compiler.CUDAKernelBase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Define interface for configurable kernels</p>
+<dl class="method">
+<dt id="numba.cuda.compiler.CUDAKernelBase.configure">
+<tt class="descname">configure</tt><big>(</big><em>griddim</em>, <em>blockdim</em>, <em>stream=0</em>, <em>sharedmem=0</em><big>)</big><a class="headerlink" href="#numba.cuda.compiler.CUDAKernelBase.configure" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.compiler.CUDAKernelBase.copy">
+<tt class="descname">copy</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.compiler.CUDAKernelBase.copy" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.compiler.CachedCUFunction">
+<em class="property">class </em><tt class="descclassname">numba.cuda.compiler.</tt><tt class="descname">CachedCUFunction</tt><big>(</big><em>entry_name</em>, <em>ptx</em>, <em>linking</em><big>)</big><a class="headerlink" href="#numba.cuda.compiler.CachedCUFunction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Get or compile CUDA function for the current active context</p>
+<p>Uses device ID as key for cache.</p>
+<dl class="method">
+<dt id="numba.cuda.compiler.CachedCUFunction.get">
+<tt class="descname">get</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.compiler.CachedCUFunction.get" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.compiler.CachedCUFunction.get_info">
+<tt class="descname">get_info</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.compiler.CachedCUFunction.get_info" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.compiler.CachedPTX">
+<em class="property">class </em><tt class="descclassname">numba.cuda.compiler.</tt><tt class="descname">CachedPTX</tt><big>(</big><em>llvmir</em><big>)</big><a class="headerlink" href="#numba.cuda.compiler.CachedPTX" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>A PTX cache that uses compute capability as a cache key</p>
+<dl class="method">
+<dt id="numba.cuda.compiler.CachedPTX.get">
+<tt class="descname">get</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.compiler.CachedPTX.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get PTX for the current active context.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.compiler.Complex">
+<em class="property">class </em><tt class="descclassname">numba.cuda.compiler.</tt><tt class="descname">Complex</tt><big>(</big><em>val</em><big>)</big><a class="headerlink" href="#numba.cuda.compiler.Complex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">_ctypes.Structure</span></tt></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.compiler.Complex128">
+<em class="property">class </em><tt class="descclassname">numba.cuda.compiler.</tt><tt class="descname">Complex128</tt><big>(</big><em>val</em><big>)</big><a class="headerlink" href="#numba.cuda.compiler.Complex128" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.cuda.compiler.Complex" title="numba.cuda.compiler.Complex"><tt class="xref py py-class docutils literal"><span class="pre">numba.cuda.compiler.Complex</span></tt></a></p>
+<dl class="attribute">
+<dt id="numba.cuda.compiler.Complex128.imag">
+<tt class="descname">imag</tt><a class="headerlink" href="#numba.cuda.compiler.Complex128.imag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Structure/Union member</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="numba.cuda.compiler.Complex128.real">
+<tt class="descname">real</tt><a class="headerlink" href="#numba.cuda.compiler.Complex128.real" title="Permalink to this definition">¶</a></dt>
+<dd><p>Structure/Union member</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.compiler.Complex64">
+<em class="property">class </em><tt class="descclassname">numba.cuda.compiler.</tt><tt class="descname">Complex64</tt><big>(</big><em>val</em><big>)</big><a class="headerlink" href="#numba.cuda.compiler.Complex64" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.cuda.compiler.Complex" title="numba.cuda.compiler.Complex"><tt class="xref py py-class docutils literal"><span class="pre">numba.cuda.compiler.Complex</span></tt></a></p>
+<dl class="attribute">
+<dt id="numba.cuda.compiler.Complex64.imag">
+<tt class="descname">imag</tt><a class="headerlink" href="#numba.cuda.compiler.Complex64.imag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Structure/Union member</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="numba.cuda.compiler.Complex64.real">
+<tt class="descname">real</tt><a class="headerlink" href="#numba.cuda.compiler.Complex64.real" title="Permalink to this definition">¶</a></dt>
+<dd><p>Structure/Union member</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.compiler.DeviceFunction">
+<em class="property">class </em><tt class="descclassname">numba.cuda.compiler.</tt><tt class="descname">DeviceFunction</tt><big>(</big><em>cres</em><big>)</big><a class="headerlink" href="#numba.cuda.compiler.DeviceFunction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.compiler.ExternFunction">
+<em class="property">class </em><tt class="descclassname">numba.cuda.compiler.</tt><tt class="descname">ExternFunction</tt><big>(</big><em>name</em>, <em>sig</em><big>)</big><a class="headerlink" href="#numba.cuda.compiler.ExternFunction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.compiler.compile_cuda">
+<tt class="descclassname">numba.cuda.compiler.</tt><tt class="descname">compile_cuda</tt><big>(</big><em>pyfunc</em>, <em>return_type</em>, <em>args</em>, <em>debug</em><big>)</big><a class="headerlink" href="#numba.cuda.compiler.compile_cuda" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.compiler.compile_device">
+<tt class="descclassname">numba.cuda.compiler.</tt><tt class="descname">compile_device</tt><big>(</big><em>pyfunc</em>, <em>return_type</em>, <em>args</em>, <em>inline=True</em>, <em>debug=False</em><big>)</big><a class="headerlink" href="#numba.cuda.compiler.compile_device" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.compiler.compile_kernel">
+<tt class="descclassname">numba.cuda.compiler.</tt><tt class="descname">compile_kernel</tt><big>(</big><em>pyfunc</em>, <em>args</em>, <em>link</em>, <em>debug=False</em><big>)</big><a class="headerlink" href="#numba.cuda.compiler.compile_kernel" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.compiler.declare_device_function">
+<tt class="descclassname">numba.cuda.compiler.</tt><tt class="descname">declare_device_function</tt><big>(</big><em>name</em>, <em>restype</em>, <em>argtypes</em><big>)</big><a class="headerlink" href="#numba.cuda.compiler.declare_device_function" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-numba.cuda.cudadecl">
+<span id="numba-cuda-cudadecl-module"></span><h2>numba.cuda.cudadecl module<a class="headerlink" href="#module-numba.cuda.cudadecl" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="numba.cuda.cudadecl.CudaAtomicTemplate">
+<em class="property">class </em><tt class="descclassname">numba.cuda.cudadecl.</tt><tt class="descname">CudaAtomicTemplate</tt><big>(</big><em>context</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadecl.CudaAtomicTemplate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="numba.typing.html#numba.typing.templates.AttributeTemplate" title="numba.typing.templates.AttributeTemplate"><tt class="xref py py-class docutils literal"><span class="pre">numba.typing.templates.AttributeTemplate</span></tt></a></p>
+<dl class="attribute">
+<dt id="numba.cuda.cudadecl.CudaAtomicTemplate.key">
+<tt class="descname">key</tt><em class="property"> = Module(&lt;class 'numba.cuda.stubs.atomic'&gt;)</em><a class="headerlink" href="#numba.cuda.cudadecl.CudaAtomicTemplate.key" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadecl.CudaAtomicTemplate.resolve_add">
+<tt class="descname">resolve_add</tt><big>(</big><em>mod</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadecl.CudaAtomicTemplate.resolve_add" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.cudadecl.CudaConstModuleTemplate">
+<em class="property">class </em><tt class="descclassname">numba.cuda.cudadecl.</tt><tt class="descname">CudaConstModuleTemplate</tt><big>(</big><em>context</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadecl.CudaConstModuleTemplate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="numba.typing.html#numba.typing.templates.AttributeTemplate" title="numba.typing.templates.AttributeTemplate"><tt class="xref py py-class docutils literal"><span class="pre">numba.typing.templates.AttributeTemplate</span></tt></a></p>
+<dl class="attribute">
+<dt id="numba.cuda.cudadecl.CudaConstModuleTemplate.key">
+<tt class="descname">key</tt><em class="property"> = Module(&lt;class 'numba.cuda.stubs.const'&gt;)</em><a class="headerlink" href="#numba.cuda.cudadecl.CudaConstModuleTemplate.key" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadecl.CudaConstModuleTemplate.resolve_array_like">
+<tt class="descname">resolve_array_like</tt><big>(</big><em>mod</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadecl.CudaConstModuleTemplate.resolve_array_like" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.cudadecl.CudaLocalModuleTemplate">
+<em class="property">class </em><tt class="descclassname">numba.cuda.cudadecl.</tt><tt class="descname">CudaLocalModuleTemplate</tt><big>(</big><em>context</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadecl.CudaLocalModuleTemplate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="numba.typing.html#numba.typing.templates.AttributeTemplate" title="numba.typing.templates.AttributeTemplate"><tt class="xref py py-class docutils literal"><span class="pre">numba.typing.templates.AttributeTemplate</span></tt></a></p>
+<dl class="attribute">
+<dt id="numba.cuda.cudadecl.CudaLocalModuleTemplate.key">
+<tt class="descname">key</tt><em class="property"> = Module(&lt;class 'numba.cuda.stubs.local'&gt;)</em><a class="headerlink" href="#numba.cuda.cudadecl.CudaLocalModuleTemplate.key" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadecl.CudaLocalModuleTemplate.resolve_array">
+<tt class="descname">resolve_array</tt><big>(</big><em>mod</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadecl.CudaLocalModuleTemplate.resolve_array" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.cudadecl.CudaModuleTemplate">
+<em class="property">class </em><tt class="descclassname">numba.cuda.cudadecl.</tt><tt class="descname">CudaModuleTemplate</tt><big>(</big><em>context</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadecl.CudaModuleTemplate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="numba.typing.html#numba.typing.templates.AttributeTemplate" title="numba.typing.templates.AttributeTemplate"><tt class="xref py py-class docutils literal"><span class="pre">numba.typing.templates.AttributeTemplate</span></tt></a></p>
+<dl class="attribute">
+<dt id="numba.cuda.cudadecl.CudaModuleTemplate.key">
+<tt class="descname">key</tt><em class="property"> = Module(&lt;module 'numba.cuda' from '/Users/stan/anaconda/envs/numba_dev/lib/python2.7/site-packages/numba/cuda/__init__.pyc'&gt;)</em><a class="headerlink" href="#numba.cuda.cudadecl.CudaModuleTemplate.key" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadecl.CudaModuleTemplate.resolve_atomic">
+<tt class="descname">resolve_atomic</tt><big>(</big><em>mod</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadecl.CudaModuleTemplate.resolve_atomic" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadecl.CudaModuleTemplate.resolve_blockDim">
+<tt class="descname">resolve_blockDim</tt><big>(</big><em>mod</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadecl.CudaModuleTemplate.resolve_blockDim" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadecl.CudaModuleTemplate.resolve_blockIdx">
+<tt class="descname">resolve_blockIdx</tt><big>(</big><em>mod</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadecl.CudaModuleTemplate.resolve_blockIdx" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadecl.CudaModuleTemplate.resolve_const">
+<tt class="descname">resolve_const</tt><big>(</big><em>mod</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadecl.CudaModuleTemplate.resolve_const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadecl.CudaModuleTemplate.resolve_grid">
+<tt class="descname">resolve_grid</tt><big>(</big><em>mod</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadecl.CudaModuleTemplate.resolve_grid" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadecl.CudaModuleTemplate.resolve_gridDim">
+<tt class="descname">resolve_gridDim</tt><big>(</big><em>mod</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadecl.CudaModuleTemplate.resolve_gridDim" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadecl.CudaModuleTemplate.resolve_gridsize">
+<tt class="descname">resolve_gridsize</tt><big>(</big><em>mod</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadecl.CudaModuleTemplate.resolve_gridsize" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadecl.CudaModuleTemplate.resolve_local">
+<tt class="descname">resolve_local</tt><big>(</big><em>mod</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadecl.CudaModuleTemplate.resolve_local" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadecl.CudaModuleTemplate.resolve_shared">
+<tt class="descname">resolve_shared</tt><big>(</big><em>mod</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadecl.CudaModuleTemplate.resolve_shared" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadecl.CudaModuleTemplate.resolve_syncthreads">
+<tt class="descname">resolve_syncthreads</tt><big>(</big><em>mod</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadecl.CudaModuleTemplate.resolve_syncthreads" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadecl.CudaModuleTemplate.resolve_threadIdx">
+<tt class="descname">resolve_threadIdx</tt><big>(</big><em>mod</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadecl.CudaModuleTemplate.resolve_threadIdx" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.cudadecl.CudaSharedModuleTemplate">
+<em class="property">class </em><tt class="descclassname">numba.cuda.cudadecl.</tt><tt class="descname">CudaSharedModuleTemplate</tt><big>(</big><em>context</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadecl.CudaSharedModuleTemplate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="numba.typing.html#numba.typing.templates.AttributeTemplate" title="numba.typing.templates.AttributeTemplate"><tt class="xref py py-class docutils literal"><span class="pre">numba.typing.templates.AttributeTemplate</span></tt></a></p>
+<dl class="attribute">
+<dt id="numba.cuda.cudadecl.CudaSharedModuleTemplate.key">
+<tt class="descname">key</tt><em class="property"> = Module(&lt;class 'numba.cuda.stubs.shared'&gt;)</em><a class="headerlink" href="#numba.cuda.cudadecl.CudaSharedModuleTemplate.key" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadecl.CudaSharedModuleTemplate.resolve_array">
+<tt class="descname">resolve_array</tt><big>(</big><em>mod</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadecl.CudaSharedModuleTemplate.resolve_array" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.cudadecl.Cuda_atomic_add">
+<em class="property">class </em><tt class="descclassname">numba.cuda.cudadecl.</tt><tt class="descname">Cuda_atomic_add</tt><big>(</big><em>context</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadecl.Cuda_atomic_add" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="numba.typing.html#numba.typing.templates.AbstractTemplate" title="numba.typing.templates.AbstractTemplate"><tt class="xref py py-class docutils literal"><span class="pre">numba.typing.templates.AbstractTemplate</span></tt></a></p>
+<dl class="method">
+<dt id="numba.cuda.cudadecl.Cuda_atomic_add.generic">
+<tt class="descname">generic</tt><big>(</big><em>args</em>, <em>kws</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadecl.Cuda_atomic_add.generic" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="numba.cuda.cudadecl.Cuda_atomic_add.key">
+<tt class="descname">key</tt><a class="headerlink" href="#numba.cuda.cudadecl.Cuda_atomic_add.key" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <tt class="xref py py-class docutils literal"><span class="pre">add</span></tt></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.cudadecl.Cuda_blockDim">
+<em class="property">class </em><tt class="descclassname">numba.cuda.cudadecl.</tt><tt class="descname">Cuda_blockDim</tt><big>(</big><em>context</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadecl.Cuda_blockDim" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="numba.typing.html#numba.typing.templates.AttributeTemplate" title="numba.typing.templates.AttributeTemplate"><tt class="xref py py-class docutils literal"><span class="pre">numba.typing.templates.AttributeTemplate</span></tt></a></p>
+<dl class="attribute">
+<dt id="numba.cuda.cudadecl.Cuda_blockDim.key">
+<tt class="descname">key</tt><em class="property"> = Module(&lt;class 'numba.cuda.stubs.blockDim'&gt;)</em><a class="headerlink" href="#numba.cuda.cudadecl.Cuda_blockDim.key" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadecl.Cuda_blockDim.resolve_x">
+<tt class="descname">resolve_x</tt><big>(</big><em>mod</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadecl.Cuda_blockDim.resolve_x" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadecl.Cuda_blockDim.resolve_y">
+<tt class="descname">resolve_y</tt><big>(</big><em>mod</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadecl.Cuda_blockDim.resolve_y" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadecl.Cuda_blockDim.resolve_z">
+<tt class="descname">resolve_z</tt><big>(</big><em>mod</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadecl.Cuda_blockDim.resolve_z" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.cudadecl.Cuda_blockDim_x">
+<em class="property">class </em><tt class="descclassname">numba.cuda.cudadecl.</tt><tt class="descname">Cuda_blockDim_x</tt><a class="headerlink" href="#numba.cuda.cudadecl.Cuda_blockDim_x" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="numba.typing.html#numba.typing.templates.MacroTemplate" title="numba.typing.templates.MacroTemplate"><tt class="xref py py-class docutils literal"><span class="pre">numba.typing.templates.MacroTemplate</span></tt></a></p>
+<dl class="attribute">
+<dt id="numba.cuda.cudadecl.Cuda_blockDim_x.key">
+<tt class="descname">key</tt><em class="property"> = &lt;macro ntid.x -&gt; () -&gt; int32&gt;</em><a class="headerlink" href="#numba.cuda.cudadecl.Cuda_blockDim_x.key" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.cudadecl.Cuda_blockDim_y">
+<em class="property">class </em><tt class="descclassname">numba.cuda.cudadecl.</tt><tt class="descname">Cuda_blockDim_y</tt><a class="headerlink" href="#numba.cuda.cudadecl.Cuda_blockDim_y" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="numba.typing.html#numba.typing.templates.MacroTemplate" title="numba.typing.templates.MacroTemplate"><tt class="xref py py-class docutils literal"><span class="pre">numba.typing.templates.MacroTemplate</span></tt></a></p>
+<dl class="attribute">
+<dt id="numba.cuda.cudadecl.Cuda_blockDim_y.key">
+<tt class="descname">key</tt><em class="property"> = &lt;macro ntid.y -&gt; () -&gt; int32&gt;</em><a class="headerlink" href="#numba.cuda.cudadecl.Cuda_blockDim_y.key" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.cudadecl.Cuda_blockDim_z">
+<em class="property">class </em><tt class="descclassname">numba.cuda.cudadecl.</tt><tt class="descname">Cuda_blockDim_z</tt><a class="headerlink" href="#numba.cuda.cudadecl.Cuda_blockDim_z" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="numba.typing.html#numba.typing.templates.MacroTemplate" title="numba.typing.templates.MacroTemplate"><tt class="xref py py-class docutils literal"><span class="pre">numba.typing.templates.MacroTemplate</span></tt></a></p>
+<dl class="attribute">
+<dt id="numba.cuda.cudadecl.Cuda_blockDim_z.key">
+<tt class="descname">key</tt><em class="property"> = &lt;macro ntid.z -&gt; () -&gt; int32&gt;</em><a class="headerlink" href="#numba.cuda.cudadecl.Cuda_blockDim_z.key" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.cudadecl.Cuda_blockIdx">
+<em class="property">class </em><tt class="descclassname">numba.cuda.cudadecl.</tt><tt class="descname">Cuda_blockIdx</tt><big>(</big><em>context</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadecl.Cuda_blockIdx" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="numba.typing.html#numba.typing.templates.AttributeTemplate" title="numba.typing.templates.AttributeTemplate"><tt class="xref py py-class docutils literal"><span class="pre">numba.typing.templates.AttributeTemplate</span></tt></a></p>
+<dl class="attribute">
+<dt id="numba.cuda.cudadecl.Cuda_blockIdx.key">
+<tt class="descname">key</tt><em class="property"> = Module(&lt;class 'numba.cuda.stubs.blockIdx'&gt;)</em><a class="headerlink" href="#numba.cuda.cudadecl.Cuda_blockIdx.key" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadecl.Cuda_blockIdx.resolve_x">
+<tt class="descname">resolve_x</tt><big>(</big><em>mod</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadecl.Cuda_blockIdx.resolve_x" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadecl.Cuda_blockIdx.resolve_y">
+<tt class="descname">resolve_y</tt><big>(</big><em>mod</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadecl.Cuda_blockIdx.resolve_y" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadecl.Cuda_blockIdx.resolve_z">
+<tt class="descname">resolve_z</tt><big>(</big><em>mod</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadecl.Cuda_blockIdx.resolve_z" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.cudadecl.Cuda_blockIdx_x">
+<em class="property">class </em><tt class="descclassname">numba.cuda.cudadecl.</tt><tt class="descname">Cuda_blockIdx_x</tt><a class="headerlink" href="#numba.cuda.cudadecl.Cuda_blockIdx_x" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="numba.typing.html#numba.typing.templates.MacroTemplate" title="numba.typing.templates.MacroTemplate"><tt class="xref py py-class docutils literal"><span class="pre">numba.typing.templates.MacroTemplate</span></tt></a></p>
+<dl class="attribute">
+<dt id="numba.cuda.cudadecl.Cuda_blockIdx_x.key">
+<tt class="descname">key</tt><em class="property"> = &lt;macro ctaid.x -&gt; () -&gt; int32&gt;</em><a class="headerlink" href="#numba.cuda.cudadecl.Cuda_blockIdx_x.key" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.cudadecl.Cuda_blockIdx_y">
+<em class="property">class </em><tt class="descclassname">numba.cuda.cudadecl.</tt><tt class="descname">Cuda_blockIdx_y</tt><a class="headerlink" href="#numba.cuda.cudadecl.Cuda_blockIdx_y" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="numba.typing.html#numba.typing.templates.MacroTemplate" title="numba.typing.templates.MacroTemplate"><tt class="xref py py-class docutils literal"><span class="pre">numba.typing.templates.MacroTemplate</span></tt></a></p>
+<dl class="attribute">
+<dt id="numba.cuda.cudadecl.Cuda_blockIdx_y.key">
+<tt class="descname">key</tt><em class="property"> = &lt;macro ctaid.y -&gt; () -&gt; int32&gt;</em><a class="headerlink" href="#numba.cuda.cudadecl.Cuda_blockIdx_y.key" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.cudadecl.Cuda_blockIdx_z">
+<em class="property">class </em><tt class="descclassname">numba.cuda.cudadecl.</tt><tt class="descname">Cuda_blockIdx_z</tt><a class="headerlink" href="#numba.cuda.cudadecl.Cuda_blockIdx_z" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="numba.typing.html#numba.typing.templates.MacroTemplate" title="numba.typing.templates.MacroTemplate"><tt class="xref py py-class docutils literal"><span class="pre">numba.typing.templates.MacroTemplate</span></tt></a></p>
+<dl class="attribute">
+<dt id="numba.cuda.cudadecl.Cuda_blockIdx_z.key">
+<tt class="descname">key</tt><em class="property"> = &lt;macro ctaid.z -&gt; () -&gt; int32&gt;</em><a class="headerlink" href="#numba.cuda.cudadecl.Cuda_blockIdx_z.key" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.cudadecl.Cuda_const_arraylike">
+<em class="property">class </em><tt class="descclassname">numba.cuda.cudadecl.</tt><tt class="descname">Cuda_const_arraylike</tt><a class="headerlink" href="#numba.cuda.cudadecl.Cuda_const_arraylike" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="numba.typing.html#numba.typing.templates.MacroTemplate" title="numba.typing.templates.MacroTemplate"><tt class="xref py py-class docutils literal"><span class="pre">numba.typing.templates.MacroTemplate</span></tt></a></p>
+<dl class="attribute">
+<dt id="numba.cuda.cudadecl.Cuda_const_arraylike.key">
+<tt class="descname">key</tt><em class="property"> = &lt;macro const.array_like -&gt; &lt;function const_array_like at 0x10642f668&gt;&gt;</em><a class="headerlink" href="#numba.cuda.cudadecl.Cuda_const_arraylike.key" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.cudadecl.Cuda_grid">
+<em class="property">class </em><tt class="descclassname">numba.cuda.cudadecl.</tt><tt class="descname">Cuda_grid</tt><a class="headerlink" href="#numba.cuda.cudadecl.Cuda_grid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="numba.typing.html#numba.typing.templates.MacroTemplate" title="numba.typing.templates.MacroTemplate"><tt class="xref py py-class docutils literal"><span class="pre">numba.typing.templates.MacroTemplate</span></tt></a></p>
+<dl class="attribute">
+<dt id="numba.cuda.cudadecl.Cuda_grid.key">
+<tt class="descname">key</tt><em class="property"> = &lt;macro ptx.grid -&gt; &lt;function grid_expand at 0x10642f488&gt;&gt;</em><a class="headerlink" href="#numba.cuda.cudadecl.Cuda_grid.key" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.cudadecl.Cuda_gridDim">
+<em class="property">class </em><tt class="descclassname">numba.cuda.cudadecl.</tt><tt class="descname">Cuda_gridDim</tt><big>(</big><em>context</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadecl.Cuda_gridDim" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="numba.typing.html#numba.typing.templates.AttributeTemplate" title="numba.typing.templates.AttributeTemplate"><tt class="xref py py-class docutils literal"><span class="pre">numba.typing.templates.AttributeTemplate</span></tt></a></p>
+<dl class="attribute">
+<dt id="numba.cuda.cudadecl.Cuda_gridDim.key">
+<tt class="descname">key</tt><em class="property"> = Module(&lt;class 'numba.cuda.stubs.gridDim'&gt;)</em><a class="headerlink" href="#numba.cuda.cudadecl.Cuda_gridDim.key" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadecl.Cuda_gridDim.resolve_x">
+<tt class="descname">resolve_x</tt><big>(</big><em>mod</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadecl.Cuda_gridDim.resolve_x" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadecl.Cuda_gridDim.resolve_y">
+<tt class="descname">resolve_y</tt><big>(</big><em>mod</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadecl.Cuda_gridDim.resolve_y" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadecl.Cuda_gridDim.resolve_z">
+<tt class="descname">resolve_z</tt><big>(</big><em>mod</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadecl.Cuda_gridDim.resolve_z" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.cudadecl.Cuda_gridDim_x">
+<em class="property">class </em><tt class="descclassname">numba.cuda.cudadecl.</tt><tt class="descname">Cuda_gridDim_x</tt><a class="headerlink" href="#numba.cuda.cudadecl.Cuda_gridDim_x" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="numba.typing.html#numba.typing.templates.MacroTemplate" title="numba.typing.templates.MacroTemplate"><tt class="xref py py-class docutils literal"><span class="pre">numba.typing.templates.MacroTemplate</span></tt></a></p>
+<dl class="attribute">
+<dt id="numba.cuda.cudadecl.Cuda_gridDim_x.key">
+<tt class="descname">key</tt><em class="property"> = &lt;macro nctaid.x -&gt; () -&gt; int32&gt;</em><a class="headerlink" href="#numba.cuda.cudadecl.Cuda_gridDim_x.key" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.cudadecl.Cuda_gridDim_y">
+<em class="property">class </em><tt class="descclassname">numba.cuda.cudadecl.</tt><tt class="descname">Cuda_gridDim_y</tt><a class="headerlink" href="#numba.cuda.cudadecl.Cuda_gridDim_y" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="numba.typing.html#numba.typing.templates.MacroTemplate" title="numba.typing.templates.MacroTemplate"><tt class="xref py py-class docutils literal"><span class="pre">numba.typing.templates.MacroTemplate</span></tt></a></p>
+<dl class="attribute">
+<dt id="numba.cuda.cudadecl.Cuda_gridDim_y.key">
+<tt class="descname">key</tt><em class="property"> = &lt;macro nctaid.y -&gt; () -&gt; int32&gt;</em><a class="headerlink" href="#numba.cuda.cudadecl.Cuda_gridDim_y.key" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.cudadecl.Cuda_gridDim_z">
+<em class="property">class </em><tt class="descclassname">numba.cuda.cudadecl.</tt><tt class="descname">Cuda_gridDim_z</tt><a class="headerlink" href="#numba.cuda.cudadecl.Cuda_gridDim_z" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="numba.typing.html#numba.typing.templates.MacroTemplate" title="numba.typing.templates.MacroTemplate"><tt class="xref py py-class docutils literal"><span class="pre">numba.typing.templates.MacroTemplate</span></tt></a></p>
+<dl class="attribute">
+<dt id="numba.cuda.cudadecl.Cuda_gridDim_z.key">
+<tt class="descname">key</tt><em class="property"> = &lt;macro nctaid.z -&gt; () -&gt; int32&gt;</em><a class="headerlink" href="#numba.cuda.cudadecl.Cuda_gridDim_z.key" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.cudadecl.Cuda_gridsize">
+<em class="property">class </em><tt class="descclassname">numba.cuda.cudadecl.</tt><tt class="descname">Cuda_gridsize</tt><a class="headerlink" href="#numba.cuda.cudadecl.Cuda_gridsize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="numba.typing.html#numba.typing.templates.MacroTemplate" title="numba.typing.templates.MacroTemplate"><tt class="xref py py-class docutils literal"><span class="pre">numba.typing.templates.MacroTemplate</span></tt></a></p>
+<dl class="attribute">
+<dt id="numba.cuda.cudadecl.Cuda_gridsize.key">
+<tt class="descname">key</tt><em class="property"> = &lt;macro ptx.gridsize -&gt; &lt;function gridsize_expand at 0x10642f500&gt;&gt;</em><a class="headerlink" href="#numba.cuda.cudadecl.Cuda_gridsize.key" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.cudadecl.Cuda_local_array">
+<em class="property">class </em><tt class="descclassname">numba.cuda.cudadecl.</tt><tt class="descname">Cuda_local_array</tt><a class="headerlink" href="#numba.cuda.cudadecl.Cuda_local_array" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="numba.typing.html#numba.typing.templates.MacroTemplate" title="numba.typing.templates.MacroTemplate"><tt class="xref py py-class docutils literal"><span class="pre">numba.typing.templates.MacroTemplate</span></tt></a></p>
+<dl class="attribute">
+<dt id="numba.cuda.cudadecl.Cuda_local_array.key">
+<tt class="descname">key</tt><em class="property"> = &lt;macro local.array -&gt; &lt;function local_array at 0x10642f5f0&gt;&gt;</em><a class="headerlink" href="#numba.cuda.cudadecl.Cuda_local_array.key" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.cudadecl.Cuda_shared_array">
+<em class="property">class </em><tt class="descclassname">numba.cuda.cudadecl.</tt><tt class="descname">Cuda_shared_array</tt><a class="headerlink" href="#numba.cuda.cudadecl.Cuda_shared_array" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="numba.typing.html#numba.typing.templates.MacroTemplate" title="numba.typing.templates.MacroTemplate"><tt class="xref py py-class docutils literal"><span class="pre">numba.typing.templates.MacroTemplate</span></tt></a></p>
+<dl class="attribute">
+<dt id="numba.cuda.cudadecl.Cuda_shared_array.key">
+<tt class="descname">key</tt><em class="property"> = &lt;macro shared.array -&gt; &lt;function shared_array at 0x10642f578&gt;&gt;</em><a class="headerlink" href="#numba.cuda.cudadecl.Cuda_shared_array.key" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.cudadecl.Cuda_syncthreads">
+<em class="property">class </em><tt class="descclassname">numba.cuda.cudadecl.</tt><tt class="descname">Cuda_syncthreads</tt><big>(</big><em>context</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadecl.Cuda_syncthreads" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="numba.typing.html#numba.typing.templates.ConcreteTemplate" title="numba.typing.templates.ConcreteTemplate"><tt class="xref py py-class docutils literal"><span class="pre">numba.typing.templates.ConcreteTemplate</span></tt></a></p>
+<dl class="attribute">
+<dt id="numba.cuda.cudadecl.Cuda_syncthreads.cases">
+<tt class="descname">cases</tt><em class="property"> = [() -&gt; none]</em><a class="headerlink" href="#numba.cuda.cudadecl.Cuda_syncthreads.cases" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="numba.cuda.cudadecl.Cuda_syncthreads.key">
+<tt class="descname">key</tt><a class="headerlink" href="#numba.cuda.cudadecl.Cuda_syncthreads.key" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <tt class="xref py py-class docutils literal"><span class="pre">syncthreads</span></tt></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.cudadecl.Cuda_threadIdx">
+<em class="property">class </em><tt class="descclassname">numba.cuda.cudadecl.</tt><tt class="descname">Cuda_threadIdx</tt><big>(</big><em>context</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadecl.Cuda_threadIdx" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="numba.typing.html#numba.typing.templates.AttributeTemplate" title="numba.typing.templates.AttributeTemplate"><tt class="xref py py-class docutils literal"><span class="pre">numba.typing.templates.AttributeTemplate</span></tt></a></p>
+<dl class="attribute">
+<dt id="numba.cuda.cudadecl.Cuda_threadIdx.key">
+<tt class="descname">key</tt><em class="property"> = Module(&lt;class 'numba.cuda.stubs.threadIdx'&gt;)</em><a class="headerlink" href="#numba.cuda.cudadecl.Cuda_threadIdx.key" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadecl.Cuda_threadIdx.resolve_x">
+<tt class="descname">resolve_x</tt><big>(</big><em>mod</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadecl.Cuda_threadIdx.resolve_x" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadecl.Cuda_threadIdx.resolve_y">
+<tt class="descname">resolve_y</tt><big>(</big><em>mod</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadecl.Cuda_threadIdx.resolve_y" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadecl.Cuda_threadIdx.resolve_z">
+<tt class="descname">resolve_z</tt><big>(</big><em>mod</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadecl.Cuda_threadIdx.resolve_z" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.cudadecl.Cuda_threadIdx_x">
+<em class="property">class </em><tt class="descclassname">numba.cuda.cudadecl.</tt><tt class="descname">Cuda_threadIdx_x</tt><a class="headerlink" href="#numba.cuda.cudadecl.Cuda_threadIdx_x" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="numba.typing.html#numba.typing.templates.MacroTemplate" title="numba.typing.templates.MacroTemplate"><tt class="xref py py-class docutils literal"><span class="pre">numba.typing.templates.MacroTemplate</span></tt></a></p>
+<dl class="attribute">
+<dt id="numba.cuda.cudadecl.Cuda_threadIdx_x.key">
+<tt class="descname">key</tt><em class="property"> = &lt;macro tid.x -&gt; () -&gt; int32&gt;</em><a class="headerlink" href="#numba.cuda.cudadecl.Cuda_threadIdx_x.key" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.cudadecl.Cuda_threadIdx_y">
+<em class="property">class </em><tt class="descclassname">numba.cuda.cudadecl.</tt><tt class="descname">Cuda_threadIdx_y</tt><a class="headerlink" href="#numba.cuda.cudadecl.Cuda_threadIdx_y" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="numba.typing.html#numba.typing.templates.MacroTemplate" title="numba.typing.templates.MacroTemplate"><tt class="xref py py-class docutils literal"><span class="pre">numba.typing.templates.MacroTemplate</span></tt></a></p>
+<dl class="attribute">
+<dt id="numba.cuda.cudadecl.Cuda_threadIdx_y.key">
+<tt class="descname">key</tt><em class="property"> = &lt;macro tid.y -&gt; () -&gt; int32&gt;</em><a class="headerlink" href="#numba.cuda.cudadecl.Cuda_threadIdx_y.key" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.cudadecl.Cuda_threadIdx_z">
+<em class="property">class </em><tt class="descclassname">numba.cuda.cudadecl.</tt><tt class="descname">Cuda_threadIdx_z</tt><a class="headerlink" href="#numba.cuda.cudadecl.Cuda_threadIdx_z" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="numba.typing.html#numba.typing.templates.MacroTemplate" title="numba.typing.templates.MacroTemplate"><tt class="xref py py-class docutils literal"><span class="pre">numba.typing.templates.MacroTemplate</span></tt></a></p>
+<dl class="attribute">
+<dt id="numba.cuda.cudadecl.Cuda_threadIdx_z.key">
+<tt class="descname">key</tt><em class="property"> = &lt;macro tid.z -&gt; () -&gt; int32&gt;</em><a class="headerlink" href="#numba.cuda.cudadecl.Cuda_threadIdx_z.key" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-numba.cuda.cudaimpl">
+<span id="numba-cuda-cudaimpl-module"></span><h2>numba.cuda.cudaimpl module<a class="headerlink" href="#module-numba.cuda.cudaimpl" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="numba.cuda.cudaimpl.ptx_atomic_add_intp">
+<tt class="descclassname">numba.cuda.cudaimpl.</tt><tt class="descname">ptx_atomic_add_intp</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.cuda.cudaimpl.ptx_atomic_add_intp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.cudaimpl.ptx_atomic_add_tuple">
+<tt class="descclassname">numba.cuda.cudaimpl.</tt><tt class="descname">ptx_atomic_add_tuple</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.cuda.cudaimpl.ptx_atomic_add_tuple" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.cudaimpl.ptx_atomic_add_unituple">
+<tt class="descclassname">numba.cuda.cudaimpl.</tt><tt class="descname">ptx_atomic_add_unituple</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.cuda.cudaimpl.ptx_atomic_add_unituple" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.cudaimpl.ptx_cmem_arylike">
+<tt class="descclassname">numba.cuda.cudaimpl.</tt><tt class="descname">ptx_cmem_arylike</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.cuda.cudaimpl.ptx_cmem_arylike" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.cudaimpl.ptx_grid1d">
+<tt class="descclassname">numba.cuda.cudaimpl.</tt><tt class="descname">ptx_grid1d</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.cuda.cudaimpl.ptx_grid1d" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.cudaimpl.ptx_grid2d">
+<tt class="descclassname">numba.cuda.cudaimpl.</tt><tt class="descname">ptx_grid2d</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.cuda.cudaimpl.ptx_grid2d" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.cudaimpl.ptx_gridsize1d">
+<tt class="descclassname">numba.cuda.cudaimpl.</tt><tt class="descname">ptx_gridsize1d</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.cuda.cudaimpl.ptx_gridsize1d" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.cudaimpl.ptx_gridsize2d">
+<tt class="descclassname">numba.cuda.cudaimpl.</tt><tt class="descname">ptx_gridsize2d</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.cuda.cudaimpl.ptx_gridsize2d" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.cudaimpl.ptx_lmem_alloc_array">
+<tt class="descclassname">numba.cuda.cudaimpl.</tt><tt class="descname">ptx_lmem_alloc_array</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.cuda.cudaimpl.ptx_lmem_alloc_array" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.cudaimpl.ptx_lmem_alloc_intp">
+<tt class="descclassname">numba.cuda.cudaimpl.</tt><tt class="descname">ptx_lmem_alloc_intp</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.cuda.cudaimpl.ptx_lmem_alloc_intp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.cudaimpl.ptx_smem_alloc_array">
+<tt class="descclassname">numba.cuda.cudaimpl.</tt><tt class="descname">ptx_smem_alloc_array</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.cuda.cudaimpl.ptx_smem_alloc_array" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.cudaimpl.ptx_smem_alloc_intp">
+<tt class="descclassname">numba.cuda.cudaimpl.</tt><tt class="descname">ptx_smem_alloc_intp</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.cuda.cudaimpl.ptx_smem_alloc_intp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.cudaimpl.ptx_sreg_template">
+<tt class="descclassname">numba.cuda.cudaimpl.</tt><tt class="descname">ptx_sreg_template</tt><big>(</big><em>sreg</em><big>)</big><a class="headerlink" href="#numba.cuda.cudaimpl.ptx_sreg_template" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.cudaimpl.ptx_syncthreads">
+<tt class="descclassname">numba.cuda.cudaimpl.</tt><tt class="descname">ptx_syncthreads</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.cuda.cudaimpl.ptx_syncthreads" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-numba.cuda.cudamath">
+<span id="numba-cuda-cudamath-module"></span><h2>numba.cuda.cudamath module<a class="headerlink" href="#module-numba.cuda.cudamath" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="numba.cuda.cudamath.MathModuleAttribute">
+<em class="property">class </em><tt class="descclassname">numba.cuda.cudamath.</tt><tt class="descname">MathModuleAttribute</tt><big>(</big><em>context</em><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.MathModuleAttribute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="numba.typing.html#numba.typing.templates.AttributeTemplate" title="numba.typing.templates.AttributeTemplate"><tt class="xref py py-class docutils literal"><span class="pre">numba.typing.templates.AttributeTemplate</span></tt></a></p>
+<dl class="attribute">
+<dt id="numba.cuda.cudamath.MathModuleAttribute.key">
+<tt class="descname">key</tt><em class="property"> = Module(&lt;module 'math' from '/Users/stan/anaconda/envs/numba_dev/lib/python2.7/lib-dynload/math.so'&gt;)</em><a class="headerlink" href="#numba.cuda.cudamath.MathModuleAttribute.key" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudamath.MathModuleAttribute.resolve_acos">
+<tt class="descname">resolve_acos</tt><big>(</big><em>mod</em><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.MathModuleAttribute.resolve_acos" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudamath.MathModuleAttribute.resolve_acosh">
+<tt class="descname">resolve_acosh</tt><big>(</big><em>mod</em><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.MathModuleAttribute.resolve_acosh" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudamath.MathModuleAttribute.resolve_asin">
+<tt class="descname">resolve_asin</tt><big>(</big><em>mod</em><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.MathModuleAttribute.resolve_asin" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudamath.MathModuleAttribute.resolve_asinh">
+<tt class="descname">resolve_asinh</tt><big>(</big><em>mod</em><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.MathModuleAttribute.resolve_asinh" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudamath.MathModuleAttribute.resolve_atan">
+<tt class="descname">resolve_atan</tt><big>(</big><em>mod</em><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.MathModuleAttribute.resolve_atan" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudamath.MathModuleAttribute.resolve_atan2">
+<tt class="descname">resolve_atan2</tt><big>(</big><em>mod</em><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.MathModuleAttribute.resolve_atan2" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudamath.MathModuleAttribute.resolve_atanh">
+<tt class="descname">resolve_atanh</tt><big>(</big><em>mod</em><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.MathModuleAttribute.resolve_atanh" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudamath.MathModuleAttribute.resolve_ceil">
+<tt class="descname">resolve_ceil</tt><big>(</big><em>mod</em><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.MathModuleAttribute.resolve_ceil" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudamath.MathModuleAttribute.resolve_copysign">
+<tt class="descname">resolve_copysign</tt><big>(</big><em>mod</em><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.MathModuleAttribute.resolve_copysign" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudamath.MathModuleAttribute.resolve_cos">
+<tt class="descname">resolve_cos</tt><big>(</big><em>mod</em><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.MathModuleAttribute.resolve_cos" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudamath.MathModuleAttribute.resolve_cosh">
+<tt class="descname">resolve_cosh</tt><big>(</big><em>mod</em><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.MathModuleAttribute.resolve_cosh" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudamath.MathModuleAttribute.resolve_degrees">
+<tt class="descname">resolve_degrees</tt><big>(</big><em>mod</em><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.MathModuleAttribute.resolve_degrees" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudamath.MathModuleAttribute.resolve_e">
+<tt class="descname">resolve_e</tt><big>(</big><em>mod</em><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.MathModuleAttribute.resolve_e" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudamath.MathModuleAttribute.resolve_exp">
+<tt class="descname">resolve_exp</tt><big>(</big><em>mod</em><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.MathModuleAttribute.resolve_exp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudamath.MathModuleAttribute.resolve_expm1">
+<tt class="descname">resolve_expm1</tt><big>(</big><em>mod</em><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.MathModuleAttribute.resolve_expm1" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudamath.MathModuleAttribute.resolve_fabs">
+<tt class="descname">resolve_fabs</tt><big>(</big><em>mod</em><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.MathModuleAttribute.resolve_fabs" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudamath.MathModuleAttribute.resolve_floor">
+<tt class="descname">resolve_floor</tt><big>(</big><em>mod</em><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.MathModuleAttribute.resolve_floor" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudamath.MathModuleAttribute.resolve_fmod">
+<tt class="descname">resolve_fmod</tt><big>(</big><em>mod</em><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.MathModuleAttribute.resolve_fmod" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudamath.MathModuleAttribute.resolve_isinf">
+<tt class="descname">resolve_isinf</tt><big>(</big><em>mod</em><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.MathModuleAttribute.resolve_isinf" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudamath.MathModuleAttribute.resolve_isnan">
+<tt class="descname">resolve_isnan</tt><big>(</big><em>mod</em><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.MathModuleAttribute.resolve_isnan" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudamath.MathModuleAttribute.resolve_log">
+<tt class="descname">resolve_log</tt><big>(</big><em>mod</em><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.MathModuleAttribute.resolve_log" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudamath.MathModuleAttribute.resolve_log10">
+<tt class="descname">resolve_log10</tt><big>(</big><em>mod</em><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.MathModuleAttribute.resolve_log10" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudamath.MathModuleAttribute.resolve_log1p">
+<tt class="descname">resolve_log1p</tt><big>(</big><em>mod</em><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.MathModuleAttribute.resolve_log1p" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudamath.MathModuleAttribute.resolve_pi">
+<tt class="descname">resolve_pi</tt><big>(</big><em>mod</em><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.MathModuleAttribute.resolve_pi" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudamath.MathModuleAttribute.resolve_pow">
+<tt class="descname">resolve_pow</tt><big>(</big><em>mod</em><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.MathModuleAttribute.resolve_pow" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudamath.MathModuleAttribute.resolve_radians">
+<tt class="descname">resolve_radians</tt><big>(</big><em>mod</em><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.MathModuleAttribute.resolve_radians" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudamath.MathModuleAttribute.resolve_sin">
+<tt class="descname">resolve_sin</tt><big>(</big><em>mod</em><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.MathModuleAttribute.resolve_sin" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudamath.MathModuleAttribute.resolve_sinh">
+<tt class="descname">resolve_sinh</tt><big>(</big><em>mod</em><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.MathModuleAttribute.resolve_sinh" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudamath.MathModuleAttribute.resolve_sqrt">
+<tt class="descname">resolve_sqrt</tt><big>(</big><em>mod</em><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.MathModuleAttribute.resolve_sqrt" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudamath.MathModuleAttribute.resolve_tan">
+<tt class="descname">resolve_tan</tt><big>(</big><em>mod</em><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.MathModuleAttribute.resolve_tan" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudamath.MathModuleAttribute.resolve_tanh">
+<tt class="descname">resolve_tanh</tt><big>(</big><em>mod</em><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.MathModuleAttribute.resolve_tanh" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudamath.MathModuleAttribute.resolve_trunc">
+<tt class="descname">resolve_trunc</tt><big>(</big><em>mod</em><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.MathModuleAttribute.resolve_trunc" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.cudamath.Math_acos">
+<em class="property">class </em><tt class="descclassname">numba.cuda.cudamath.</tt><tt class="descname">Math_acos</tt><big>(</big><em>context</em><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.Math_acos" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.cuda.cudamath.Math_unary" title="numba.cuda.cudamath.Math_unary"><tt class="xref py py-class docutils literal"><span class="pre">numba.cuda.cudamath.Math_unary</span></tt></a></p>
+<dl class="method">
+<dt id="numba.cuda.cudamath.Math_acos.key">
+<tt class="descname">key</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.Math_acos.key" title="Permalink to this definition">¶</a></dt>
+<dd><p>acos(x)</p>
+<p>Return the arc cosine (measured in radians) of x.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.cudamath.Math_acosh">
+<em class="property">class </em><tt class="descclassname">numba.cuda.cudamath.</tt><tt class="descname">Math_acosh</tt><big>(</big><em>context</em><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.Math_acosh" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.cuda.cudamath.Math_unary" title="numba.cuda.cudamath.Math_unary"><tt class="xref py py-class docutils literal"><span class="pre">numba.cuda.cudamath.Math_unary</span></tt></a></p>
+<dl class="method">
+<dt id="numba.cuda.cudamath.Math_acosh.key">
+<tt class="descname">key</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.Math_acosh.key" title="Permalink to this definition">¶</a></dt>
+<dd><p>acosh(x)</p>
+<p>Return the hyperbolic arc cosine (measured in radians) of x.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.cudamath.Math_asin">
+<em class="property">class </em><tt class="descclassname">numba.cuda.cudamath.</tt><tt class="descname">Math_asin</tt><big>(</big><em>context</em><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.Math_asin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.cuda.cudamath.Math_unary" title="numba.cuda.cudamath.Math_unary"><tt class="xref py py-class docutils literal"><span class="pre">numba.cuda.cudamath.Math_unary</span></tt></a></p>
+<dl class="method">
+<dt id="numba.cuda.cudamath.Math_asin.key">
+<tt class="descname">key</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.Math_asin.key" title="Permalink to this definition">¶</a></dt>
+<dd><p>asin(x)</p>
+<p>Return the arc sine (measured in radians) of x.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.cudamath.Math_asinh">
+<em class="property">class </em><tt class="descclassname">numba.cuda.cudamath.</tt><tt class="descname">Math_asinh</tt><big>(</big><em>context</em><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.Math_asinh" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.cuda.cudamath.Math_unary" title="numba.cuda.cudamath.Math_unary"><tt class="xref py py-class docutils literal"><span class="pre">numba.cuda.cudamath.Math_unary</span></tt></a></p>
+<dl class="method">
+<dt id="numba.cuda.cudamath.Math_asinh.key">
+<tt class="descname">key</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.Math_asinh.key" title="Permalink to this definition">¶</a></dt>
+<dd><p>asinh(x)</p>
+<p>Return the hyperbolic arc sine (measured in radians) of x.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.cudamath.Math_atan">
+<em class="property">class </em><tt class="descclassname">numba.cuda.cudamath.</tt><tt class="descname">Math_atan</tt><big>(</big><em>context</em><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.Math_atan" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.cuda.cudamath.Math_unary" title="numba.cuda.cudamath.Math_unary"><tt class="xref py py-class docutils literal"><span class="pre">numba.cuda.cudamath.Math_unary</span></tt></a></p>
+<dl class="method">
+<dt id="numba.cuda.cudamath.Math_atan.key">
+<tt class="descname">key</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.Math_atan.key" title="Permalink to this definition">¶</a></dt>
+<dd><p>atan(x)</p>
+<p>Return the arc tangent (measured in radians) of x.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.cudamath.Math_atan2">
+<em class="property">class </em><tt class="descclassname">numba.cuda.cudamath.</tt><tt class="descname">Math_atan2</tt><big>(</big><em>context</em><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.Math_atan2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="numba.typing.html#numba.typing.templates.ConcreteTemplate" title="numba.typing.templates.ConcreteTemplate"><tt class="xref py py-class docutils literal"><span class="pre">numba.typing.templates.ConcreteTemplate</span></tt></a></p>
+<dl class="attribute">
+<dt id="numba.cuda.cudamath.Math_atan2.cases">
+<tt class="descname">cases</tt><em class="property"> = [(int64, int64) -&gt; float64, (uint64, uint64) -&gt; float64, (float32, float32) -&gt; float32, (float64, float64) -&gt; float64]</em><a class="headerlink" href="#numba.cuda.cudamath.Math_atan2.cases" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudamath.Math_atan2.key">
+<tt class="descname">key</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.Math_atan2.key" title="Permalink to this definition">¶</a></dt>
+<dd><p>atan2(y, x)</p>
+<p>Return the arc tangent (measured in radians) of y/x.
+Unlike atan(y/x), the signs of both x and y are considered.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.cudamath.Math_atanh">
+<em class="property">class </em><tt class="descclassname">numba.cuda.cudamath.</tt><tt class="descname">Math_atanh</tt><big>(</big><em>context</em><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.Math_atanh" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.cuda.cudamath.Math_unary" title="numba.cuda.cudamath.Math_unary"><tt class="xref py py-class docutils literal"><span class="pre">numba.cuda.cudamath.Math_unary</span></tt></a></p>
+<dl class="method">
+<dt id="numba.cuda.cudamath.Math_atanh.key">
+<tt class="descname">key</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.Math_atanh.key" title="Permalink to this definition">¶</a></dt>
+<dd><p>atanh(x)</p>
+<p>Return the hyperbolic arc tangent (measured in radians) of x.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.cudamath.Math_binary">
+<em class="property">class </em><tt class="descclassname">numba.cuda.cudamath.</tt><tt class="descname">Math_binary</tt><big>(</big><em>context</em><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.Math_binary" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="numba.typing.html#numba.typing.templates.ConcreteTemplate" title="numba.typing.templates.ConcreteTemplate"><tt class="xref py py-class docutils literal"><span class="pre">numba.typing.templates.ConcreteTemplate</span></tt></a></p>
+<dl class="attribute">
+<dt id="numba.cuda.cudamath.Math_binary.cases">
+<tt class="descname">cases</tt><em class="property"> = [(float32, float32) -&gt; float32, (float64, float64) -&gt; float64]</em><a class="headerlink" href="#numba.cuda.cudamath.Math_binary.cases" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.cudamath.Math_ceil">
+<em class="property">class </em><tt class="descclassname">numba.cuda.cudamath.</tt><tt class="descname">Math_ceil</tt><big>(</big><em>context</em><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.Math_ceil" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.cuda.cudamath.Math_unary" title="numba.cuda.cudamath.Math_unary"><tt class="xref py py-class docutils literal"><span class="pre">numba.cuda.cudamath.Math_unary</span></tt></a></p>
+<dl class="method">
+<dt id="numba.cuda.cudamath.Math_ceil.key">
+<tt class="descname">key</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.Math_ceil.key" title="Permalink to this definition">¶</a></dt>
+<dd><p>ceil(x)</p>
+<p>Return the ceiling of x as a float.
+This is the smallest integral value &gt;= x.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.cudamath.Math_copysign">
+<em class="property">class </em><tt class="descclassname">numba.cuda.cudamath.</tt><tt class="descname">Math_copysign</tt><big>(</big><em>context</em><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.Math_copysign" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.cuda.cudamath.Math_binary" title="numba.cuda.cudamath.Math_binary"><tt class="xref py py-class docutils literal"><span class="pre">numba.cuda.cudamath.Math_binary</span></tt></a></p>
+<dl class="method">
+<dt id="numba.cuda.cudamath.Math_copysign.key">
+<tt class="descname">key</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.Math_copysign.key" title="Permalink to this definition">¶</a></dt>
+<dd><p>copysign(x, y)</p>
+<p>Return x with the sign of y.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.cudamath.Math_cos">
+<em class="property">class </em><tt class="descclassname">numba.cuda.cudamath.</tt><tt class="descname">Math_cos</tt><big>(</big><em>context</em><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.Math_cos" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.cuda.cudamath.Math_unary" title="numba.cuda.cudamath.Math_unary"><tt class="xref py py-class docutils literal"><span class="pre">numba.cuda.cudamath.Math_unary</span></tt></a></p>
+<dl class="method">
+<dt id="numba.cuda.cudamath.Math_cos.key">
+<tt class="descname">key</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.Math_cos.key" title="Permalink to this definition">¶</a></dt>
+<dd><p>cos(x)</p>
+<p>Return the cosine of x (measured in radians).</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.cudamath.Math_cosh">
+<em class="property">class </em><tt class="descclassname">numba.cuda.cudamath.</tt><tt class="descname">Math_cosh</tt><big>(</big><em>context</em><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.Math_cosh" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.cuda.cudamath.Math_unary" title="numba.cuda.cudamath.Math_unary"><tt class="xref py py-class docutils literal"><span class="pre">numba.cuda.cudamath.Math_unary</span></tt></a></p>
+<dl class="method">
+<dt id="numba.cuda.cudamath.Math_cosh.key">
+<tt class="descname">key</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.Math_cosh.key" title="Permalink to this definition">¶</a></dt>
+<dd><p>cosh(x)</p>
+<p>Return the hyperbolic cosine of x.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.cudamath.Math_degrees">
+<em class="property">class </em><tt class="descclassname">numba.cuda.cudamath.</tt><tt class="descname">Math_degrees</tt><big>(</big><em>context</em><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.Math_degrees" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.cuda.cudamath.Math_unary" title="numba.cuda.cudamath.Math_unary"><tt class="xref py py-class docutils literal"><span class="pre">numba.cuda.cudamath.Math_unary</span></tt></a></p>
+<dl class="method">
+<dt id="numba.cuda.cudamath.Math_degrees.key">
+<tt class="descname">key</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.Math_degrees.key" title="Permalink to this definition">¶</a></dt>
+<dd><p>degrees(x)</p>
+<p>Convert angle x from radians to degrees.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.cudamath.Math_exp">
+<em class="property">class </em><tt class="descclassname">numba.cuda.cudamath.</tt><tt class="descname">Math_exp</tt><big>(</big><em>context</em><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.Math_exp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.cuda.cudamath.Math_unary" title="numba.cuda.cudamath.Math_unary"><tt class="xref py py-class docutils literal"><span class="pre">numba.cuda.cudamath.Math_unary</span></tt></a></p>
+<dl class="method">
+<dt id="numba.cuda.cudamath.Math_exp.key">
+<tt class="descname">key</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.Math_exp.key" title="Permalink to this definition">¶</a></dt>
+<dd><p>exp(x)</p>
+<p>Return e raised to the power of x.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.cudamath.Math_expm1">
+<em class="property">class </em><tt class="descclassname">numba.cuda.cudamath.</tt><tt class="descname">Math_expm1</tt><big>(</big><em>context</em><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.Math_expm1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.cuda.cudamath.Math_unary" title="numba.cuda.cudamath.Math_unary"><tt class="xref py py-class docutils literal"><span class="pre">numba.cuda.cudamath.Math_unary</span></tt></a></p>
+<dl class="method">
+<dt id="numba.cuda.cudamath.Math_expm1.key">
+<tt class="descname">key</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.Math_expm1.key" title="Permalink to this definition">¶</a></dt>
+<dd><p>expm1(x)</p>
+<p>Return exp(x)-1.
+This function avoids the loss of precision involved in the direct evaluation of exp(x)-1 for small x.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.cudamath.Math_fabs">
+<em class="property">class </em><tt class="descclassname">numba.cuda.cudamath.</tt><tt class="descname">Math_fabs</tt><big>(</big><em>context</em><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.Math_fabs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.cuda.cudamath.Math_unary" title="numba.cuda.cudamath.Math_unary"><tt class="xref py py-class docutils literal"><span class="pre">numba.cuda.cudamath.Math_unary</span></tt></a></p>
+<dl class="method">
+<dt id="numba.cuda.cudamath.Math_fabs.key">
+<tt class="descname">key</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.Math_fabs.key" title="Permalink to this definition">¶</a></dt>
+<dd><p>fabs(x)</p>
+<p>Return the absolute value of the float x.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.cudamath.Math_floor">
+<em class="property">class </em><tt class="descclassname">numba.cuda.cudamath.</tt><tt class="descname">Math_floor</tt><big>(</big><em>context</em><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.Math_floor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.cuda.cudamath.Math_unary" title="numba.cuda.cudamath.Math_unary"><tt class="xref py py-class docutils literal"><span class="pre">numba.cuda.cudamath.Math_unary</span></tt></a></p>
+<dl class="method">
+<dt id="numba.cuda.cudamath.Math_floor.key">
+<tt class="descname">key</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.Math_floor.key" title="Permalink to this definition">¶</a></dt>
+<dd><p>floor(x)</p>
+<p>Return the floor of x as a float.
+This is the largest integral value &lt;= x.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.cudamath.Math_fmod">
+<em class="property">class </em><tt class="descclassname">numba.cuda.cudamath.</tt><tt class="descname">Math_fmod</tt><big>(</big><em>context</em><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.Math_fmod" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.cuda.cudamath.Math_binary" title="numba.cuda.cudamath.Math_binary"><tt class="xref py py-class docutils literal"><span class="pre">numba.cuda.cudamath.Math_binary</span></tt></a></p>
+<dl class="method">
+<dt id="numba.cuda.cudamath.Math_fmod.key">
+<tt class="descname">key</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.Math_fmod.key" title="Permalink to this definition">¶</a></dt>
+<dd><p>fmod(x, y)</p>
+<p>Return fmod(x, y), according to platform C.  x % y may differ.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.cudamath.Math_isinf">
+<em class="property">class </em><tt class="descclassname">numba.cuda.cudamath.</tt><tt class="descname">Math_isinf</tt><big>(</big><em>context</em><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.Math_isinf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="numba.typing.html#numba.typing.templates.ConcreteTemplate" title="numba.typing.templates.ConcreteTemplate"><tt class="xref py py-class docutils literal"><span class="pre">numba.typing.templates.ConcreteTemplate</span></tt></a></p>
+<dl class="attribute">
+<dt id="numba.cuda.cudamath.Math_isinf.cases">
+<tt class="descname">cases</tt><em class="property"> = [(int64,) -&gt; bool, (uint64,) -&gt; bool, (float32,) -&gt; bool, (float64,) -&gt; bool]</em><a class="headerlink" href="#numba.cuda.cudamath.Math_isinf.cases" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudamath.Math_isinf.key">
+<tt class="descname">key</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.Math_isinf.key" title="Permalink to this definition">¶</a></dt>
+<dd><p>isinf(x) -&gt; bool</p>
+<p>Check if float x is infinite (positive or negative).</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.cudamath.Math_isnan">
+<em class="property">class </em><tt class="descclassname">numba.cuda.cudamath.</tt><tt class="descname">Math_isnan</tt><big>(</big><em>context</em><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.Math_isnan" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="numba.typing.html#numba.typing.templates.ConcreteTemplate" title="numba.typing.templates.ConcreteTemplate"><tt class="xref py py-class docutils literal"><span class="pre">numba.typing.templates.ConcreteTemplate</span></tt></a></p>
+<dl class="attribute">
+<dt id="numba.cuda.cudamath.Math_isnan.cases">
+<tt class="descname">cases</tt><em class="property"> = [(int64,) -&gt; bool, (uint64,) -&gt; bool, (float32,) -&gt; bool, (float64,) -&gt; bool]</em><a class="headerlink" href="#numba.cuda.cudamath.Math_isnan.cases" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudamath.Math_isnan.key">
+<tt class="descname">key</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.Math_isnan.key" title="Permalink to this definition">¶</a></dt>
+<dd><p>isnan(x) -&gt; bool</p>
+<p>Check if float x is not a number (NaN).</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.cudamath.Math_log">
+<em class="property">class </em><tt class="descclassname">numba.cuda.cudamath.</tt><tt class="descname">Math_log</tt><big>(</big><em>context</em><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.Math_log" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.cuda.cudamath.Math_unary" title="numba.cuda.cudamath.Math_unary"><tt class="xref py py-class docutils literal"><span class="pre">numba.cuda.cudamath.Math_unary</span></tt></a></p>
+<dl class="method">
+<dt id="numba.cuda.cudamath.Math_log.key">
+<tt class="descname">key</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.Math_log.key" title="Permalink to this definition">¶</a></dt>
+<dd><p>log(x[, base])</p>
+<p>Return the logarithm of x to the given base.
+If the base not specified, returns the natural logarithm (base e) of x.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.cudamath.Math_log10">
+<em class="property">class </em><tt class="descclassname">numba.cuda.cudamath.</tt><tt class="descname">Math_log10</tt><big>(</big><em>context</em><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.Math_log10" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.cuda.cudamath.Math_unary" title="numba.cuda.cudamath.Math_unary"><tt class="xref py py-class docutils literal"><span class="pre">numba.cuda.cudamath.Math_unary</span></tt></a></p>
+<dl class="method">
+<dt id="numba.cuda.cudamath.Math_log10.key">
+<tt class="descname">key</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.Math_log10.key" title="Permalink to this definition">¶</a></dt>
+<dd><p>log10(x)</p>
+<p>Return the base 10 logarithm of x.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.cudamath.Math_log1p">
+<em class="property">class </em><tt class="descclassname">numba.cuda.cudamath.</tt><tt class="descname">Math_log1p</tt><big>(</big><em>context</em><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.Math_log1p" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.cuda.cudamath.Math_unary" title="numba.cuda.cudamath.Math_unary"><tt class="xref py py-class docutils literal"><span class="pre">numba.cuda.cudamath.Math_unary</span></tt></a></p>
+<dl class="method">
+<dt id="numba.cuda.cudamath.Math_log1p.key">
+<tt class="descname">key</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.Math_log1p.key" title="Permalink to this definition">¶</a></dt>
+<dd><p>log1p(x)</p>
+<p>Return the natural logarithm of 1+x (base e).
+The result is computed in a way which is accurate for x near zero.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.cudamath.Math_pow">
+<em class="property">class </em><tt class="descclassname">numba.cuda.cudamath.</tt><tt class="descname">Math_pow</tt><big>(</big><em>context</em><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.Math_pow" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="numba.typing.html#numba.typing.templates.ConcreteTemplate" title="numba.typing.templates.ConcreteTemplate"><tt class="xref py py-class docutils literal"><span class="pre">numba.typing.templates.ConcreteTemplate</span></tt></a></p>
+<dl class="attribute">
+<dt id="numba.cuda.cudamath.Math_pow.cases">
+<tt class="descname">cases</tt><em class="property"> = [(float32, float32) -&gt; float32, (float64, float64) -&gt; float64, (float32, int32) -&gt; float32, (float64, int32) -&gt; float64]</em><a class="headerlink" href="#numba.cuda.cudamath.Math_pow.cases" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudamath.Math_pow.key">
+<tt class="descname">key</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.Math_pow.key" title="Permalink to this definition">¶</a></dt>
+<dd><p>pow(x, y)</p>
+<p>Return x**y (x to the power of y).</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.cudamath.Math_radians">
+<em class="property">class </em><tt class="descclassname">numba.cuda.cudamath.</tt><tt class="descname">Math_radians</tt><big>(</big><em>context</em><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.Math_radians" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.cuda.cudamath.Math_unary" title="numba.cuda.cudamath.Math_unary"><tt class="xref py py-class docutils literal"><span class="pre">numba.cuda.cudamath.Math_unary</span></tt></a></p>
+<dl class="method">
+<dt id="numba.cuda.cudamath.Math_radians.key">
+<tt class="descname">key</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.Math_radians.key" title="Permalink to this definition">¶</a></dt>
+<dd><p>radians(x)</p>
+<p>Convert angle x from degrees to radians.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.cudamath.Math_sin">
+<em class="property">class </em><tt class="descclassname">numba.cuda.cudamath.</tt><tt class="descname">Math_sin</tt><big>(</big><em>context</em><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.Math_sin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.cuda.cudamath.Math_unary" title="numba.cuda.cudamath.Math_unary"><tt class="xref py py-class docutils literal"><span class="pre">numba.cuda.cudamath.Math_unary</span></tt></a></p>
+<dl class="method">
+<dt id="numba.cuda.cudamath.Math_sin.key">
+<tt class="descname">key</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.Math_sin.key" title="Permalink to this definition">¶</a></dt>
+<dd><p>sin(x)</p>
+<p>Return the sine of x (measured in radians).</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.cudamath.Math_sinh">
+<em class="property">class </em><tt class="descclassname">numba.cuda.cudamath.</tt><tt class="descname">Math_sinh</tt><big>(</big><em>context</em><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.Math_sinh" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.cuda.cudamath.Math_unary" title="numba.cuda.cudamath.Math_unary"><tt class="xref py py-class docutils literal"><span class="pre">numba.cuda.cudamath.Math_unary</span></tt></a></p>
+<dl class="method">
+<dt id="numba.cuda.cudamath.Math_sinh.key">
+<tt class="descname">key</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.Math_sinh.key" title="Permalink to this definition">¶</a></dt>
+<dd><p>sinh(x)</p>
+<p>Return the hyperbolic sine of x.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.cudamath.Math_sqrt">
+<em class="property">class </em><tt class="descclassname">numba.cuda.cudamath.</tt><tt class="descname">Math_sqrt</tt><big>(</big><em>context</em><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.Math_sqrt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.cuda.cudamath.Math_unary" title="numba.cuda.cudamath.Math_unary"><tt class="xref py py-class docutils literal"><span class="pre">numba.cuda.cudamath.Math_unary</span></tt></a></p>
+<dl class="method">
+<dt id="numba.cuda.cudamath.Math_sqrt.key">
+<tt class="descname">key</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.Math_sqrt.key" title="Permalink to this definition">¶</a></dt>
+<dd><p>sqrt(x)</p>
+<p>Return the square root of x.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.cudamath.Math_tan">
+<em class="property">class </em><tt class="descclassname">numba.cuda.cudamath.</tt><tt class="descname">Math_tan</tt><big>(</big><em>context</em><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.Math_tan" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.cuda.cudamath.Math_unary" title="numba.cuda.cudamath.Math_unary"><tt class="xref py py-class docutils literal"><span class="pre">numba.cuda.cudamath.Math_unary</span></tt></a></p>
+<dl class="method">
+<dt id="numba.cuda.cudamath.Math_tan.key">
+<tt class="descname">key</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.Math_tan.key" title="Permalink to this definition">¶</a></dt>
+<dd><p>tan(x)</p>
+<p>Return the tangent of x (measured in radians).</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.cudamath.Math_tanh">
+<em class="property">class </em><tt class="descclassname">numba.cuda.cudamath.</tt><tt class="descname">Math_tanh</tt><big>(</big><em>context</em><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.Math_tanh" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.cuda.cudamath.Math_unary" title="numba.cuda.cudamath.Math_unary"><tt class="xref py py-class docutils literal"><span class="pre">numba.cuda.cudamath.Math_unary</span></tt></a></p>
+<dl class="method">
+<dt id="numba.cuda.cudamath.Math_tanh.key">
+<tt class="descname">key</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.Math_tanh.key" title="Permalink to this definition">¶</a></dt>
+<dd><p>tanh(x)</p>
+<p>Return the hyperbolic tangent of x.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.cudamath.Math_trunc">
+<em class="property">class </em><tt class="descclassname">numba.cuda.cudamath.</tt><tt class="descname">Math_trunc</tt><big>(</big><em>context</em><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.Math_trunc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.cuda.cudamath.Math_unary" title="numba.cuda.cudamath.Math_unary"><tt class="xref py py-class docutils literal"><span class="pre">numba.cuda.cudamath.Math_unary</span></tt></a></p>
+<dl class="method">
+<dt id="numba.cuda.cudamath.Math_trunc.key">
+<tt class="descname">key</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.Math_trunc.key" title="Permalink to this definition">¶</a></dt>
+<dd><p>trunc(x:Real) -&gt; Integral</p>
+<p>Truncates x to the nearest Integral toward 0. Uses the __trunc__ magic method.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.cudamath.Math_unary">
+<em class="property">class </em><tt class="descclassname">numba.cuda.cudamath.</tt><tt class="descname">Math_unary</tt><big>(</big><em>context</em><big>)</big><a class="headerlink" href="#numba.cuda.cudamath.Math_unary" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="numba.typing.html#numba.typing.templates.ConcreteTemplate" title="numba.typing.templates.ConcreteTemplate"><tt class="xref py py-class docutils literal"><span class="pre">numba.typing.templates.ConcreteTemplate</span></tt></a></p>
+<dl class="attribute">
+<dt id="numba.cuda.cudamath.Math_unary.cases">
+<tt class="descname">cases</tt><em class="property"> = [(int64,) -&gt; float64, (uint64,) -&gt; float64, (float32,) -&gt; float32, (float64,) -&gt; float64]</em><a class="headerlink" href="#numba.cuda.cudamath.Math_unary.cases" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-numba.cuda.decorators">
+<span id="numba-cuda-decorators-module"></span><h2>numba.cuda.decorators module<a class="headerlink" href="#module-numba.cuda.decorators" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="numba.cuda.decorators.autojit">
+<tt class="descclassname">numba.cuda.decorators.</tt><tt class="descname">autojit</tt><big>(</big><em>func</em>, <em>**kws</em><big>)</big><a class="headerlink" href="#numba.cuda.decorators.autojit" title="Permalink to this definition">¶</a></dt>
+<dd><p>JIT at callsite.  Function signature is not needed as this
+will capture the type at call time.  Each signature of the kernel
+is cached for future use.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Can only compile CUDA kernel.</p>
+</div>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">numpy</span>
+
+<span class="nd">@cuda.autojit</span>
+<span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">aryA</span><span class="p">,</span> <span class="n">aryB</span><span class="p">):</span>
+    <span class="o">...</span>
+
+<span class="n">aryA</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+<span class="n">aryB</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+<span class="n">foo</span><span class="p">[</span><span class="n">griddim</span><span class="p">,</span> <span class="n">blockdim</span><span class="p">](</span><span class="n">aryA</span><span class="p">,</span> <span class="n">aryB</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>In the above code, a version of foo with the signature
+&#8220;void(int32[:], float32[:])&#8221; is compiled.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.decorators.convert_types">
+<tt class="descclassname">numba.cuda.decorators.</tt><tt class="descname">convert_types</tt><big>(</big><em>restype</em>, <em>argtypes</em><big>)</big><a class="headerlink" href="#numba.cuda.decorators.convert_types" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.decorators.declare_device">
+<tt class="descclassname">numba.cuda.decorators.</tt><tt class="descname">declare_device</tt><big>(</big><em>name</em>, <em>restype=None</em>, <em>argtypes=None</em><big>)</big><a class="headerlink" href="#numba.cuda.decorators.declare_device" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.decorators.jit">
+<tt class="descclassname">numba.cuda.decorators.</tt><tt class="descname">jit</tt><big>(</big><em>restype=None</em>, <em>argtypes=None</em>, <em>device=False</em>, <em>inline=False</em>, <em>bind=True</em>, <em>link=[]</em>, <em>debug=False</em>, <em>**kws</em><big>)</big><a class="headerlink" href="#numba.cuda.decorators.jit" title="Permalink to this definition">¶</a></dt>
+<dd><p>JIT compile a python function conforming to
+the CUDA-Python specification.</p>
+<p>To define a CUDA kernel that takes two int 1D-arrays:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@cuda.jit</span><span class="p">(</span><span class="s">&#39;void(int32[:], int32[:])&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">aryA</span><span class="p">,</span> <span class="n">aryB</span><span class="p">):</span>
+    <span class="o">...</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">A kernel cannot have any return value.</p>
+</div>
+<p>To launch the cuda kernel:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">griddim</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span>
+<span class="n">blockdim</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span>
+<span class="n">foo</span><span class="p">[</span><span class="n">griddim</span><span class="p">,</span> <span class="n">blockdim</span><span class="p">](</span><span class="n">aryA</span><span class="p">,</span> <span class="n">aryB</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><tt class="docutils literal"><span class="pre">griddim</span></tt> is the number of thread-block per grid.
+It can be:</p>
+<ul class="simple">
+<li>an int;</li>
+<li>tuple-1 of ints;</li>
+<li>tuple-2 of ints.</li>
+</ul>
+<p><tt class="docutils literal"><span class="pre">blockdim</span></tt> is the number of threads per block.
+It can be:</p>
+<ul class="simple">
+<li>an int;</li>
+<li>tuple-1 of ints;</li>
+<li>tuple-2 of ints;</li>
+<li>tuple-3 of ints.</li>
+</ul>
+<p>The above code is equaivalent to the following CUDA-C.</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">dim3</span> <span class="nf">griddim</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
+<span class="n">dim3</span> <span class="nf">blockdim</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">);</span>
+<span class="n">foo</span><span class="o">&lt;&lt;&lt;</span><span class="n">griddim</span><span class="p">,</span> <span class="n">blockdim</span><span class="o">&gt;&gt;&gt;</span><span class="p">(</span><span class="n">aryA</span><span class="p">,</span> <span class="n">aryB</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>To access the compiled PTX code:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">print</span> <span class="n">foo</span><span class="o">.</span><span class="n">ptx</span>
+</pre></div>
+</div>
+<p>To define a CUDA device function that takes two ints and returns a int:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@cuda.jit</span><span class="p">(</span><span class="s">&#39;int32(int32, int32)&#39;</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">bar</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="o">...</span>
+</pre></div>
+</div>
+<p>To force inline the device function:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@cuda.jit</span><span class="p">(</span><span class="s">&#39;int32(int32, int32)&#39;</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">inline</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">bar_forced_inline</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="o">...</span>
+</pre></div>
+</div>
+<p>A device function can only be used inside another kernel.
+It cannot be called from the host.</p>
+<p>Using <tt class="docutils literal"><span class="pre">bar</span></tt> in a CUDA kernel:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@cuda.jit</span><span class="p">(</span><span class="s">&#39;void(int32[:], int32[:], int32[:])&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">use_bar</span><span class="p">(</span><span class="n">aryA</span><span class="p">,</span> <span class="n">aryB</span><span class="p">,</span> <span class="n">aryOut</span><span class="p">):</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="c"># global position of the thread for a 1D grid.</span>
+    <span class="n">aryOut</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">bar</span><span class="p">(</span><span class="n">aryA</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">aryB</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+<div class="section" id="module-numba.cuda.descriptor">
+<span id="numba-cuda-descriptor-module"></span><h2>numba.cuda.descriptor module<a class="headerlink" href="#module-numba.cuda.descriptor" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="numba.cuda.descriptor.CPUTargetOptions">
+<em class="property">class </em><tt class="descclassname">numba.cuda.descriptor.</tt><tt class="descname">CPUTargetOptions</tt><a class="headerlink" href="#numba.cuda.descriptor.CPUTargetOptions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="numba.targets.html#numba.targets.options.TargetOptions" title="numba.targets.options.TargetOptions"><tt class="xref py py-class docutils literal"><span class="pre">numba.targets.options.TargetOptions</span></tt></a></p>
+<dl class="attribute">
+<dt id="numba.cuda.descriptor.CPUTargetOptions.OPTIONS">
+<tt class="descname">OPTIONS</tt><em class="property"> = {}</em><a class="headerlink" href="#numba.cuda.descriptor.CPUTargetOptions.OPTIONS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.descriptor.CUDATargetDesc">
+<em class="property">class </em><tt class="descclassname">numba.cuda.descriptor.</tt><tt class="descname">CUDATargetDesc</tt><a class="headerlink" href="#numba.cuda.descriptor.CUDATargetDesc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="numba.targets.html#numba.targets.descriptors.TargetDescriptor" title="numba.targets.descriptors.TargetDescriptor"><tt class="xref py py-class docutils literal"><span class="pre">numba.targets.descriptors.TargetDescriptor</span></tt></a></p>
+<dl class="attribute">
+<dt id="numba.cuda.descriptor.CUDATargetDesc.options">
+<tt class="descname">options</tt><a class="headerlink" href="#numba.cuda.descriptor.CUDATargetDesc.options" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#numba.cuda.descriptor.CPUTargetOptions" title="numba.cuda.descriptor.CPUTargetOptions"><tt class="xref py py-class docutils literal"><span class="pre">CPUTargetOptions</span></tt></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="numba.cuda.descriptor.CUDATargetDesc.targetctx">
+<tt class="descname">targetctx</tt><em class="property"> = &lt;numba.cuda.target.CUDATargetContext object at 0x10f83e990&gt;</em><a class="headerlink" href="#numba.cuda.descriptor.CUDATargetDesc.targetctx" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="numba.cuda.descriptor.CUDATargetDesc.typingctx">
+<tt class="descname">typingctx</tt><em class="property"> = &lt;numba.cuda.target.CUDATypingContext object at 0x10f83eb50&gt;</em><a class="headerlink" href="#numba.cuda.descriptor.CUDATargetDesc.typingctx" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-numba.cuda.dispatcher">
+<span id="numba-cuda-dispatcher-module"></span><h2>numba.cuda.dispatcher module<a class="headerlink" href="#module-numba.cuda.dispatcher" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="numba.cuda.dispatcher.CUDADispatcher">
+<em class="property">class </em><tt class="descclassname">numba.cuda.dispatcher.</tt><tt class="descname">CUDADispatcher</tt><big>(</big><em>py_func</em>, <em>locals={}</em>, <em>targetoptions={}</em><big>)</big><a class="headerlink" href="#numba.cuda.dispatcher.CUDADispatcher" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<dl class="method">
+<dt id="numba.cuda.dispatcher.CUDADispatcher.compile">
+<tt class="descname">compile</tt><big>(</big><em>sig</em>, <em>locals={}</em>, <em>**targetoptions</em><big>)</big><a class="headerlink" href="#numba.cuda.dispatcher.CUDADispatcher.compile" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="numba.cuda.dispatcher.CUDADispatcher.compiled">
+<tt class="descname">compiled</tt><a class="headerlink" href="#numba.cuda.dispatcher.CUDADispatcher.compiled" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.dispatcher.CUDADispatcher.configure">
+<tt class="descname">configure</tt><big>(</big><em>*args</em>, <em>**kws</em><big>)</big><a class="headerlink" href="#numba.cuda.dispatcher.CUDADispatcher.configure" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.dispatcher.CUDADispatcher.disable_compile">
+<tt class="descname">disable_compile</tt><big>(</big><em>val=True</em><big>)</big><a class="headerlink" href="#numba.cuda.dispatcher.CUDADispatcher.disable_compile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Disable the compilation of new signatures at call time.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="numba.cuda.dispatcher.CUDADispatcher.targetdescr">
+<tt class="descname">targetdescr</tt><a class="headerlink" href="#numba.cuda.dispatcher.CUDADispatcher.targetdescr" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#numba.cuda.dispatcher.CUDATarget" title="numba.cuda.dispatcher.CUDATarget"><tt class="xref py py-class docutils literal"><span class="pre">CUDATarget</span></tt></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.dispatcher.CUDATarget">
+<em class="property">class </em><tt class="descclassname">numba.cuda.dispatcher.</tt><tt class="descname">CUDATarget</tt><a class="headerlink" href="#numba.cuda.dispatcher.CUDATarget" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="numba.targets.html#numba.targets.descriptors.TargetDescriptor" title="numba.targets.descriptors.TargetDescriptor"><tt class="xref py py-class docutils literal"><span class="pre">numba.targets.descriptors.TargetDescriptor</span></tt></a></p>
+<dl class="attribute">
+<dt id="numba.cuda.dispatcher.CUDATarget.options">
+<tt class="descname">options</tt><a class="headerlink" href="#numba.cuda.dispatcher.CUDATarget.options" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#numba.cuda.dispatcher.CUDATargetOptions" title="numba.cuda.dispatcher.CUDATargetOptions"><tt class="xref py py-class docutils literal"><span class="pre">CUDATargetOptions</span></tt></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.dispatcher.CUDATargetOptions">
+<em class="property">class </em><tt class="descclassname">numba.cuda.dispatcher.</tt><tt class="descname">CUDATargetOptions</tt><a class="headerlink" href="#numba.cuda.dispatcher.CUDATargetOptions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="numba.targets.html#numba.targets.options.TargetOptions" title="numba.targets.options.TargetOptions"><tt class="xref py py-class docutils literal"><span class="pre">numba.targets.options.TargetOptions</span></tt></a></p>
+<dl class="attribute">
+<dt id="numba.cuda.dispatcher.CUDATargetOptions.OPTIONS">
+<tt class="descname">OPTIONS</tt><em class="property"> = {}</em><a class="headerlink" href="#numba.cuda.dispatcher.CUDATargetOptions.OPTIONS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-numba.cuda.errors">
+<span id="numba-cuda-errors-module"></span><h2>numba.cuda.errors module<a class="headerlink" href="#module-numba.cuda.errors" title="Permalink to this headline">¶</a></h2>
+<dl class="exception">
+<dt id="numba.cuda.errors.KernelRuntimeError">
+<em class="property">exception </em><tt class="descclassname">numba.cuda.errors.</tt><tt class="descname">KernelRuntimeError</tt><big>(</big><em>msg</em>, <em>tid=None</em>, <em>ctaid=None</em><big>)</big><a class="headerlink" href="#numba.cuda.errors.KernelRuntimeError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">exceptions.RuntimeError</span></tt></p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-numba.cuda.initialize">
+<span id="numba-cuda-initialize-module"></span><h2>numba.cuda.initialize module<a class="headerlink" href="#module-numba.cuda.initialize" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="numba.cuda.initialize.init_jit">
+<tt class="descclassname">numba.cuda.initialize.</tt><tt class="descname">init_jit</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.initialize.init_jit" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.initialize.initialize_all">
+<tt class="descclassname">numba.cuda.initialize.</tt><tt class="descname">initialize_all</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.initialize.initialize_all" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-numba.cuda.libdevice">
+<span id="numba-cuda-libdevice-module"></span><h2>numba.cuda.libdevice module<a class="headerlink" href="#module-numba.cuda.libdevice" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="numba.cuda.libdevice.binary_implement">
+<tt class="descclassname">numba.cuda.libdevice.</tt><tt class="descname">binary_implement</tt><big>(</big><em>nvname</em>, <em>ty</em><big>)</big><a class="headerlink" href="#numba.cuda.libdevice.binary_implement" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.libdevice.bool_implement">
+<tt class="descclassname">numba.cuda.libdevice.</tt><tt class="descname">bool_implement</tt><big>(</big><em>nvname</em>, <em>ty</em><big>)</big><a class="headerlink" href="#numba.cuda.libdevice.bool_implement" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.libdevice.impl32">
+<tt class="descclassname">numba.cuda.libdevice.</tt><tt class="descname">impl32</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.cuda.libdevice.impl32" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.libdevice.impl64">
+<tt class="descclassname">numba.cuda.libdevice.</tt><tt class="descname">impl64</tt><big>(</big><em>context</em>, <em>builder</em>, <em>sig</em>, <em>args</em><big>)</big><a class="headerlink" href="#numba.cuda.libdevice.impl64" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.libdevice.powi_implement">
+<tt class="descclassname">numba.cuda.libdevice.</tt><tt class="descname">powi_implement</tt><big>(</big><em>nvname</em><big>)</big><a class="headerlink" href="#numba.cuda.libdevice.powi_implement" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.libdevice.unary_implement">
+<tt class="descclassname">numba.cuda.libdevice.</tt><tt class="descname">unary_implement</tt><big>(</big><em>nvname</em>, <em>ty</em><big>)</big><a class="headerlink" href="#numba.cuda.libdevice.unary_implement" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-numba.cuda.nvvmutils">
+<span id="numba-cuda-nvvmutils-module"></span><h2>numba.cuda.nvvmutils module<a class="headerlink" href="#module-numba.cuda.nvvmutils" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="numba.cuda.nvvmutils.SRegBuilder">
+<em class="property">class </em><tt class="descclassname">numba.cuda.nvvmutils.</tt><tt class="descname">SRegBuilder</tt><big>(</big><em>builder</em><big>)</big><a class="headerlink" href="#numba.cuda.nvvmutils.SRegBuilder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<dl class="method">
+<dt id="numba.cuda.nvvmutils.SRegBuilder.ctaid">
+<tt class="descname">ctaid</tt><big>(</big><em>xyz</em><big>)</big><a class="headerlink" href="#numba.cuda.nvvmutils.SRegBuilder.ctaid" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.nvvmutils.SRegBuilder.getdim">
+<tt class="descname">getdim</tt><big>(</big><em>xyz</em><big>)</big><a class="headerlink" href="#numba.cuda.nvvmutils.SRegBuilder.getdim" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.nvvmutils.SRegBuilder.nctaid">
+<tt class="descname">nctaid</tt><big>(</big><em>xyz</em><big>)</big><a class="headerlink" href="#numba.cuda.nvvmutils.SRegBuilder.nctaid" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.nvvmutils.SRegBuilder.ntid">
+<tt class="descname">ntid</tt><big>(</big><em>xyz</em><big>)</big><a class="headerlink" href="#numba.cuda.nvvmutils.SRegBuilder.ntid" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.nvvmutils.SRegBuilder.tid">
+<tt class="descname">tid</tt><big>(</big><em>xyz</em><big>)</big><a class="headerlink" href="#numba.cuda.nvvmutils.SRegBuilder.tid" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.nvvmutils.call_sreg">
+<tt class="descclassname">numba.cuda.nvvmutils.</tt><tt class="descname">call_sreg</tt><big>(</big><em>builder</em>, <em>name</em><big>)</big><a class="headerlink" href="#numba.cuda.nvvmutils.call_sreg" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.nvvmutils.declare_atomic_add_float32">
+<tt class="descclassname">numba.cuda.nvvmutils.</tt><tt class="descname">declare_atomic_add_float32</tt><big>(</big><em>lmod</em><big>)</big><a class="headerlink" href="#numba.cuda.nvvmutils.declare_atomic_add_float32" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.nvvmutils.declare_string">
+<tt class="descclassname">numba.cuda.nvvmutils.</tt><tt class="descname">declare_string</tt><big>(</big><em>builder</em>, <em>value</em><big>)</big><a class="headerlink" href="#numba.cuda.nvvmutils.declare_string" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.nvvmutils.get_global_id">
+<tt class="descclassname">numba.cuda.nvvmutils.</tt><tt class="descname">get_global_id</tt><big>(</big><em>builder</em>, <em>dim</em><big>)</big><a class="headerlink" href="#numba.cuda.nvvmutils.get_global_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.nvvmutils.insert_addrspace_conv">
+<tt class="descclassname">numba.cuda.nvvmutils.</tt><tt class="descname">insert_addrspace_conv</tt><big>(</big><em>lmod</em>, <em>elemtype</em>, <em>addrspace</em><big>)</big><a class="headerlink" href="#numba.cuda.nvvmutils.insert_addrspace_conv" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-numba.cuda.stubs">
+<span id="numba-cuda-stubs-module"></span><h2>numba.cuda.stubs module<a class="headerlink" href="#module-numba.cuda.stubs" title="Permalink to this headline">¶</a></h2>
+<p>This scripts specifies all PTX special objects.</p>
+<dl class="class">
+<dt id="numba.cuda.stubs.Stub">
+<em class="property">class </em><tt class="descclassname">numba.cuda.stubs.</tt><tt class="descname">Stub</tt><a class="headerlink" href="#numba.cuda.stubs.Stub" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>A stub object to represent special objects which is meaningless
+outside the context of CUDA-python.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.stubs.atomic">
+<em class="property">class </em><tt class="descclassname">numba.cuda.stubs.</tt><tt class="descname">atomic</tt><a class="headerlink" href="#numba.cuda.stubs.atomic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.cuda.stubs.Stub" title="numba.cuda.stubs.Stub"><tt class="xref py py-class docutils literal"><span class="pre">numba.cuda.stubs.Stub</span></tt></a></p>
+<p>atomic namespace</p>
+<dl class="class">
+<dt id="numba.cuda.stubs.atomic.add">
+<em class="property">class </em><tt class="descname">add</tt><a class="headerlink" href="#numba.cuda.stubs.atomic.add" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.cuda.stubs.Stub" title="numba.cuda.stubs.Stub"><tt class="xref py py-class docutils literal"><span class="pre">numba.cuda.stubs.Stub</span></tt></a></p>
+<p>add(ary, idx, val)</p>
+<p>Perform atomic ary[idx] += val</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.stubs.blockDim">
+<em class="property">class </em><tt class="descclassname">numba.cuda.stubs.</tt><tt class="descname">blockDim</tt><a class="headerlink" href="#numba.cuda.stubs.blockDim" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.cuda.stubs.Stub" title="numba.cuda.stubs.Stub"><tt class="xref py py-class docutils literal"><span class="pre">numba.cuda.stubs.Stub</span></tt></a></p>
+<p>blockDim.{x, y, z}</p>
+<dl class="attribute">
+<dt id="numba.cuda.stubs.blockDim.x">
+<tt class="descname">x</tt><em class="property"> = &lt;macro ntid.x -&gt; () -&gt; int32&gt;</em><a class="headerlink" href="#numba.cuda.stubs.blockDim.x" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="numba.cuda.stubs.blockDim.y">
+<tt class="descname">y</tt><em class="property"> = &lt;macro ntid.y -&gt; () -&gt; int32&gt;</em><a class="headerlink" href="#numba.cuda.stubs.blockDim.y" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="numba.cuda.stubs.blockDim.z">
+<tt class="descname">z</tt><em class="property"> = &lt;macro ntid.z -&gt; () -&gt; int32&gt;</em><a class="headerlink" href="#numba.cuda.stubs.blockDim.z" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.stubs.blockIdx">
+<em class="property">class </em><tt class="descclassname">numba.cuda.stubs.</tt><tt class="descname">blockIdx</tt><a class="headerlink" href="#numba.cuda.stubs.blockIdx" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.cuda.stubs.Stub" title="numba.cuda.stubs.Stub"><tt class="xref py py-class docutils literal"><span class="pre">numba.cuda.stubs.Stub</span></tt></a></p>
+<p>blockIdx.{x, y}</p>
+<dl class="attribute">
+<dt id="numba.cuda.stubs.blockIdx.x">
+<tt class="descname">x</tt><em class="property"> = &lt;macro ctaid.x -&gt; () -&gt; int32&gt;</em><a class="headerlink" href="#numba.cuda.stubs.blockIdx.x" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="numba.cuda.stubs.blockIdx.y">
+<tt class="descname">y</tt><em class="property"> = &lt;macro ctaid.y -&gt; () -&gt; int32&gt;</em><a class="headerlink" href="#numba.cuda.stubs.blockIdx.y" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="numba.cuda.stubs.blockIdx.z">
+<tt class="descname">z</tt><em class="property"> = &lt;macro ctaid.z -&gt; () -&gt; int32&gt;</em><a class="headerlink" href="#numba.cuda.stubs.blockIdx.z" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.stubs.const">
+<em class="property">class </em><tt class="descclassname">numba.cuda.stubs.</tt><tt class="descname">const</tt><a class="headerlink" href="#numba.cuda.stubs.const" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.cuda.stubs.Stub" title="numba.cuda.stubs.Stub"><tt class="xref py py-class docutils literal"><span class="pre">numba.cuda.stubs.Stub</span></tt></a></p>
+<p>shared namespace</p>
+<dl class="attribute">
+<dt id="numba.cuda.stubs.const.array_like">
+<tt class="descname">array_like</tt><em class="property"> = &lt;macro const.array_like -&gt; &lt;function const_array_like at 0x10642f668&gt;&gt;</em><a class="headerlink" href="#numba.cuda.stubs.const.array_like" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.stubs.const_array_like">
+<tt class="descclassname">numba.cuda.stubs.</tt><tt class="descname">const_array_like</tt><big>(</big><em>ndarray</em><big>)</big><a class="headerlink" href="#numba.cuda.stubs.const_array_like" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.stubs.gridDim">
+<em class="property">class </em><tt class="descclassname">numba.cuda.stubs.</tt><tt class="descname">gridDim</tt><a class="headerlink" href="#numba.cuda.stubs.gridDim" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.cuda.stubs.Stub" title="numba.cuda.stubs.Stub"><tt class="xref py py-class docutils literal"><span class="pre">numba.cuda.stubs.Stub</span></tt></a></p>
+<p>gridDim.{x, y}</p>
+<dl class="attribute">
+<dt id="numba.cuda.stubs.gridDim.x">
+<tt class="descname">x</tt><em class="property"> = &lt;macro nctaid.x -&gt; () -&gt; int32&gt;</em><a class="headerlink" href="#numba.cuda.stubs.gridDim.x" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="numba.cuda.stubs.gridDim.y">
+<tt class="descname">y</tt><em class="property"> = &lt;macro nctaid.y -&gt; () -&gt; int32&gt;</em><a class="headerlink" href="#numba.cuda.stubs.gridDim.y" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="numba.cuda.stubs.gridDim.z">
+<tt class="descname">z</tt><em class="property"> = &lt;macro nctaid.z -&gt; () -&gt; int32&gt;</em><a class="headerlink" href="#numba.cuda.stubs.gridDim.z" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.stubs.grid_expand">
+<tt class="descclassname">numba.cuda.stubs.</tt><tt class="descname">grid_expand</tt><big>(</big><em>ndim</em><big>)</big><a class="headerlink" href="#numba.cuda.stubs.grid_expand" title="Permalink to this definition">¶</a></dt>
+<dd><p>grid(ndim)</p>
+<p>ndim: [int] 1 or 2</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>if ndim == 1:</dt>
+<dd>return cuda.threadIdx.x + cuda.blockIdx.x * cuda.blockDim.x</dd>
+<dt>elif ndim == 2:</dt>
+<dd>x = cuda.threadIdx.x + cuda.blockIdx.x * cuda.blockDim.x
+y = cuda.threadIdx.y + cuda.blockIdx.y * cuda.blockDim.y
+return x, y</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.stubs.gridsize_expand">
+<tt class="descclassname">numba.cuda.stubs.</tt><tt class="descname">gridsize_expand</tt><big>(</big><em>ndim</em><big>)</big><a class="headerlink" href="#numba.cuda.stubs.gridsize_expand" title="Permalink to this definition">¶</a></dt>
+<dd><p>gridsize(ndim)</p>
+<p>ndim: [int] 1 or 2</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>if ndim == 1:</dt>
+<dd>return cuda.blockDim.x * cuda.gridDim.x</dd>
+<dt>elif ndim == 2:</dt>
+<dd>x = cuda.blockDim.x * cuda.gridDim.x
+y = cuda.blockDim.y * cuda.gridDim.y
+return x, y</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.stubs.local">
+<em class="property">class </em><tt class="descclassname">numba.cuda.stubs.</tt><tt class="descname">local</tt><a class="headerlink" href="#numba.cuda.stubs.local" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.cuda.stubs.Stub" title="numba.cuda.stubs.Stub"><tt class="xref py py-class docutils literal"><span class="pre">numba.cuda.stubs.Stub</span></tt></a></p>
+<p>shared namespace</p>
+<dl class="attribute">
+<dt id="numba.cuda.stubs.local.array">
+<tt class="descname">array</tt><em class="property"> = &lt;macro local.array -&gt; &lt;function local_array at 0x10642f5f0&gt;&gt;</em><a class="headerlink" href="#numba.cuda.stubs.local.array" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.stubs.local_array">
+<tt class="descclassname">numba.cuda.stubs.</tt><tt class="descname">local_array</tt><big>(</big><em>shape</em>, <em>dtype</em><big>)</big><a class="headerlink" href="#numba.cuda.stubs.local_array" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.stubs.shared">
+<em class="property">class </em><tt class="descclassname">numba.cuda.stubs.</tt><tt class="descname">shared</tt><a class="headerlink" href="#numba.cuda.stubs.shared" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.cuda.stubs.Stub" title="numba.cuda.stubs.Stub"><tt class="xref py py-class docutils literal"><span class="pre">numba.cuda.stubs.Stub</span></tt></a></p>
+<p>shared namespace</p>
+<dl class="attribute">
+<dt id="numba.cuda.stubs.shared.array">
+<tt class="descname">array</tt><em class="property"> = &lt;macro shared.array -&gt; &lt;function shared_array at 0x10642f578&gt;&gt;</em><a class="headerlink" href="#numba.cuda.stubs.shared.array" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.stubs.shared_array">
+<tt class="descclassname">numba.cuda.stubs.</tt><tt class="descname">shared_array</tt><big>(</big><em>shape</em>, <em>dtype</em><big>)</big><a class="headerlink" href="#numba.cuda.stubs.shared_array" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.stubs.syncthreads">
+<em class="property">class </em><tt class="descclassname">numba.cuda.stubs.</tt><tt class="descname">syncthreads</tt><a class="headerlink" href="#numba.cuda.stubs.syncthreads" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.cuda.stubs.Stub" title="numba.cuda.stubs.Stub"><tt class="xref py py-class docutils literal"><span class="pre">numba.cuda.stubs.Stub</span></tt></a></p>
+<p>syncthreads()</p>
+<p>Synchronizes all threads in the thread block.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.stubs.threadIdx">
+<em class="property">class </em><tt class="descclassname">numba.cuda.stubs.</tt><tt class="descname">threadIdx</tt><a class="headerlink" href="#numba.cuda.stubs.threadIdx" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#numba.cuda.stubs.Stub" title="numba.cuda.stubs.Stub"><tt class="xref py py-class docutils literal"><span class="pre">numba.cuda.stubs.Stub</span></tt></a></p>
+<p>threadIdx.{x, y, z}</p>
+<dl class="attribute">
+<dt id="numba.cuda.stubs.threadIdx.x">
+<tt class="descname">x</tt><em class="property"> = &lt;macro tid.x -&gt; () -&gt; int32&gt;</em><a class="headerlink" href="#numba.cuda.stubs.threadIdx.x" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="numba.cuda.stubs.threadIdx.y">
+<tt class="descname">y</tt><em class="property"> = &lt;macro tid.y -&gt; () -&gt; int32&gt;</em><a class="headerlink" href="#numba.cuda.stubs.threadIdx.y" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="numba.cuda.stubs.threadIdx.z">
+<tt class="descname">z</tt><em class="property"> = &lt;macro tid.z -&gt; () -&gt; int32&gt;</em><a class="headerlink" href="#numba.cuda.stubs.threadIdx.z" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-numba.cuda.target">
+<span id="numba-cuda-target-module"></span><h2>numba.cuda.target module<a class="headerlink" href="#module-numba.cuda.target" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="numba.cuda.target.CUDATargetContext">
+<em class="property">class </em><tt class="descclassname">numba.cuda.target.</tt><tt class="descname">CUDATargetContext</tt><big>(</big><em>typing_context</em><big>)</big><a class="headerlink" href="#numba.cuda.target.CUDATargetContext" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="numba.targets.html#numba.targets.base.BaseContext" title="numba.targets.base.BaseContext"><tt class="xref py py-class docutils literal"><span class="pre">numba.targets.base.BaseContext</span></tt></a></p>
+<dl class="method">
+<dt id="numba.cuda.target.CUDATargetContext.generate_kernel_wrapper">
+<tt class="descname">generate_kernel_wrapper</tt><big>(</big><em>func</em>, <em>argtypes</em><big>)</big><a class="headerlink" href="#numba.cuda.target.CUDATargetContext.generate_kernel_wrapper" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.target.CUDATargetContext.get_abi_sizeof">
+<tt class="descname">get_abi_sizeof</tt><big>(</big><em>lty</em><big>)</big><a class="headerlink" href="#numba.cuda.target.CUDATargetContext.get_abi_sizeof" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="numba.cuda.target.CUDATargetContext.implement_powi_as_math_call">
+<tt class="descname">implement_powi_as_math_call</tt><em class="property"> = True</em><a class="headerlink" href="#numba.cuda.target.CUDATargetContext.implement_powi_as_math_call" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.target.CUDATargetContext.init">
+<tt class="descname">init</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.target.CUDATargetContext.init" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.target.CUDATargetContext.insert_string_const_addrspace">
+<tt class="descname">insert_string_const_addrspace</tt><big>(</big><em>builder</em>, <em>string</em><big>)</big><a class="headerlink" href="#numba.cuda.target.CUDATargetContext.insert_string_const_addrspace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Insert a constant string in the constant addresspace and return a
+generic i8 pointer to the data.</p>
+<p>This function attempts to deduplicate.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.target.CUDATargetContext.make_constant_array">
+<tt class="descname">make_constant_array</tt><big>(</big><em>builder</em>, <em>typ</em>, <em>ary</em><big>)</big><a class="headerlink" href="#numba.cuda.target.CUDATargetContext.make_constant_array" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return dummy value.</p>
+<p>XXX: We should be able to move cuda.const.array_like into here.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.target.CUDATargetContext.mangler">
+<tt class="descname">mangler</tt><big>(</big><em>name</em>, <em>argtypes</em><big>)</big><a class="headerlink" href="#numba.cuda.target.CUDATargetContext.mangler" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.target.CUDATargetContext.optimize_function">
+<tt class="descname">optimize_function</tt><big>(</big><em>func</em><big>)</big><a class="headerlink" href="#numba.cuda.target.CUDATargetContext.optimize_function" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run O1 function passes</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.target.CUDATargetContext.prepare_cuda_kernel">
+<tt class="descname">prepare_cuda_kernel</tt><big>(</big><em>func</em>, <em>argtypes</em><big>)</big><a class="headerlink" href="#numba.cuda.target.CUDATargetContext.prepare_cuda_kernel" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="numba.cuda.target.CUDATargetContext.strict_alignment">
+<tt class="descname">strict_alignment</tt><em class="property"> = True</em><a class="headerlink" href="#numba.cuda.target.CUDATargetContext.strict_alignment" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.target.CUDATypingContext">
+<em class="property">class </em><tt class="descclassname">numba.cuda.target.</tt><tt class="descname">CUDATypingContext</tt><a class="headerlink" href="#numba.cuda.target.CUDATypingContext" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="numba.typing.html#numba.typing.context.BaseContext" title="numba.typing.context.BaseContext"><tt class="xref py py-class docutils literal"><span class="pre">numba.typing.context.BaseContext</span></tt></a></p>
+<dl class="method">
+<dt id="numba.cuda.target.CUDATypingContext.init">
+<tt class="descname">init</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.target.CUDATypingContext.init" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-numba.cuda.testing">
+<span id="numba-cuda-testing-module"></span><h2>numba.cuda.testing module<a class="headerlink" href="#module-numba.cuda.testing" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="numba.cuda.testing.CUDATestCase">
+<em class="property">class </em><tt class="descclassname">numba.cuda.testing.</tt><tt class="descname">CUDATestCase</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#numba.cuda.testing.CUDATestCase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">unittest.case.TestCase</span></tt></p>
+<dl class="method">
+<dt id="numba.cuda.testing.CUDATestCase.tearDown">
+<tt class="descname">tearDown</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.testing.CUDATestCase.tearDown" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-numba.cuda">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-numba.cuda" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="numba.cuda.cuda_error">
+<tt class="descclassname">numba.cuda.</tt><tt class="descname">cuda_error</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.cuda_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns None or an exception if the CUDA driver fails to initialize.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.is_available">
+<tt class="descclassname">numba.cuda.</tt><tt class="descname">is_available</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.is_available" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a boolean to indicate the availability of a CUDA GPU.</p>
+<p>This will initialize the driver if it hasn&#8217;t been initialized.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.test">
+<tt class="descclassname">numba.cuda.</tt><tt class="descname">test</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.test" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+</div>
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        
+      </div><!-- /row -->
+
+      <!-- row -->
+      <div class="row footer-relbar">
+<div id="navbar-related" class=" related navbar navbar-default" role="navigation" aria-label="related navigation">
+  <div class="navbar-inner">
+    <ul class="nav navbar-nav">
+        <li><a href="../index.html">numba 0.15.1 documentation</a></li>
+    </ul>
+    <ul class="nav navbar-nav pull-right hidden-xs hidden-sm">
+      
+        <li><a href="../py-modindex.html" title="Python Module Index" >modules</a></li>
+        <li><a href="../genindex.html" title="General Index" >index</a></li> 
+      
+    </ul>
+  </div>
+</div>
+      </div><!-- /row -->
+
+      <!-- footer -->
+      <footer role="contentinfo">
+          &copy; Copyright 2012-2014, Continuum Analytics.
+        Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.3.
+      </footer>
+      <!-- /footer -->
+
+    </div>
+    <!-- /container -->
+
+  </body>
+</html>
