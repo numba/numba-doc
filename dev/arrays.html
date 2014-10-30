@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     
-    <title>Arrays &mdash; numba 0.14.0-63-ge5ceea5 documentation</title>
+    <title>Arrays &mdash; numba 0.15.1_28_g2f5d025-py2.7-linux-x86_64.egg documentation</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
@@ -34,7 +34,7 @@
 <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
             URL_ROOT:    './',
-            VERSION:     '0.14.0-63-ge5ceea5',
+            VERSION:     '0.15.1_28_g2f5d025-py2.7-linux-x86_64.egg',
             COLLAPSE_INDEX: false,
             FILE_SUFFIX: '.html',
             HAS_SOURCE:  true
@@ -58,7 +58,7 @@
     });
   });
 </script>
-    <link rel="top" title="numba 0.14.0-63-ge5ceea5 documentation" href="index.html" />
+    <link rel="top" title="numba 0.15.1_28_g2f5d025-py2.7-linux-x86_64.egg documentation" href="index.html" />
     <link rel="next" title="UFuncs" href="ufuncs.html" />
     <link rel="prev" title="Types" href="types.html" /> 
   </head>
@@ -71,7 +71,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="index.html">numba 0.14.0-63-ge5ceea5 documentation</a>
+          <a class="brand" href="index.html">numba 0.15.1_28_g2f5d025-py2.7-linux-x86_64.egg documentation</a>
           <div class="nav-collapse collapse">
             <ul class="nav pull-right">
               
@@ -196,9 +196,9 @@
   <div class="section" id="arrays">
 <h1>Arrays<a class="headerlink" href="#arrays" title="Permalink to this headline">¶</a></h1>
 <p>Support for NumPy arrays is a key focus of Numba development and is currently
-undergoing extensive refactorization and improvement. Most capabilities of NumPy
-arrays are supported by Numba in object mode, and a few features are supported in
-nopython mode too (with much more to come).</p>
+undergoing extensive refactorization and improvement. Most capabilities of
+NumPy arrays are supported by Numba in <a class="reference internal" href="glossary.html#term-object-mode"><em class="xref std std-term">object mode</em></a>, and a few features
+are supported in <a class="reference internal" href="glossary.html#term-nopython-mode"><em class="xref std std-term">nopython mode</em></a> too (with much more to come).</p>
 <p>A few noteworthy limitations of arrays at this time:</p>
 <ul class="simple">
 <li>Arrays can be passed in to a function in nopython mode, but not returned.
@@ -206,14 +206,14 @@ Arrays can only be returned in object mode.</li>
 <li>New arrays can only be created in object mode.</li>
 <li>Currently there are no bounds checking for array indexing and slicing,
 although negative indices will wrap around correctly.</li>
-<li>NumPy array ufunc support in nopython node is incomplete at this time. Most
-if not all ufuncs should work in object mode though.</li>
+<li>A small number of NumPy array ufuncs are only supported in object mode, but
+the vast majority work in nopython mode.</li>
 <li>Array slicing only works in object mode.</li>
 </ul>
 <div class="section" id="array-creation-loop-jitting">
 <h2>Array Creation &amp; Loop-Jitting<a class="headerlink" href="#array-creation-loop-jitting" title="Permalink to this headline">¶</a></h2>
 <p>NumPy array creation is not supported in nopython mode. Numba mitigates this by
-automatically trying to jit loops in nopython mode. This allows for array
+automatically trying to JIT loops in nopython mode. This allows for array
 creation at the top of a function while still getting almost all the performance
 of nopython mode. For example, the following simple function:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="c"># compiled in object mode</span>
@@ -228,8 +228,8 @@ of nopython mode. For example, the following simple function:</p>
 </pre></div>
 </div>
 <p>looks like the equivalent of the following after being compiled by Numba:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="c"># compiled in nopython mode</span>
-<span class="nd">@njit</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># force compilation in nopython mode</span>
+<span class="nd">@jit</span><span class="p">(</span><span class="n">nopython</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">jitted_loop</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
     <span class="nb">sum</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
@@ -279,9 +279,9 @@ relaxed in further development.</p>
 <p>Currently, a loop is rejected if:</p>
 <ul class="simple">
 <li>the loop contains return statements;</li>
-<li>the loop binds a value to a variable that is read outside of the loop.</li>
 </ul>
-<p>The following is rejected due to a return statement in the loop:</p>
+<p>Loop-jitting will not be used by the compiler in this case because of the
+return statement in the loop:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="nd">@jit</span>
 <span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
     <span class="n">result</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
@@ -295,50 +295,28 @@ relaxed in further development.</p>
     <span class="k">return</span> <span class="n">result</span>
 </pre></div>
 </div>
-<p>The following is rejected due to an assigning to a variable read outside of
-the loop:</p>
+<p>User can inspect the loop-jitting by running <cite>foo.inspect_types()</cite>.  For
+example, this:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="nd">@jit</span>
 <span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
 
     <span class="n">x</span> <span class="o">=</span> <span class="mi">1</span>
-    <span class="c"># Rejected loop-jitting candidate</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
         <span class="n">x</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>           <span class="c"># assign to variable &#39;x&#39;</span>
 
     <span class="n">result</span> <span class="o">+=</span> <span class="n">x</span>                 <span class="c"># reading variable &#39;x&#39;</span>
     <span class="k">return</span> <span class="n">result</span>
-</pre></div>
-</div>
-<p>The following is accepted:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="nd">@jit</span>
-<span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
-    <span class="n">x</span> <span class="o">=</span> <span class="mi">1</span>
-    <span class="c"># Accepted loop-jitting candidate</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
-        <span class="n">x</span> <span class="o">=</span> <span class="mi">2</span>
-    <span class="n">x</span> <span class="o">=</span> <span class="mi">3</span>               <span class="c"># &#39;x&#39; is only written to</span>
 
-    <span class="k">return</span> <span class="n">result</span>
-</pre></div>
-</div>
-<p>The following is accepted:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="nd">@jit</span>
-<span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
-    <span class="n">x</span> <span class="o">=</span> <span class="mi">1</span>
-    <span class="c"># Accepted loop-jitting candidate</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
-        <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span>
 
-    <span class="k">return</span> <span class="n">result</span>
+<span class="n">foo</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="c"># trigger autojit</span>
+<span class="n">foo</span><span class="o">.</span><span class="n">inspect_types</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>User can inspect the loop-jitting by running <cite>foo.inspect_types()</cite>:</p>
-<div class="highlight-python"><div class="highlight"><pre>foo (int32,) -&gt; pyobject
+<p>prints the following output, indicating a lifted loop:</p>
+<div class="highlight-python"><div class="highlight"><pre>foo (int64,)
 --------------------------------------------------------------------------------
-# File: somefile.py
+# File: &lt;ipython-input-11-ffbcb34ecc02&gt;
 # --- LINE 1 ---
 
 @jit
@@ -347,43 +325,78 @@ the loop:</p>
 
 def foo(n):
 
-    # --- LINE 3 ---
-    # label 0
-    #   $0.1 = global(numpy: &lt;module &#39;numpy&#39; from &#39;.../numpy/__init__.py&#39;&gt;)
-      :: pyobject
-    #   $0.2 = getattr(value=$0.1, attr=zeros)  :: pyobject
-    #   result = call $0.2(n, )  :: pyobject
+# --- LINE 3 ---
+# label 0
+#   n.1 = n  :: pyobject
+#   del n
+#   $0.1 = global(np: &lt;module &#39;numpy&#39; from &#39;/Users/stan/anaconda/envs/numba_dev/lib/python2.7/site-packages/numpy/__init__.pyc&#39;&gt;)  :: pyobject
+#   $0.2 = getattr(attr=arange, value=$0.1)  :: pyobject
+#   del $0.1
+#   $0.4 = call $0.2(n.1, )  :: pyobject
+#   del $0.2
+#   result = $0.4  :: pyobject
+#   del $0.4
 
-    result = numpy.zeros(n)
+result = np.arange(n)
 
-    # --- LINE 4 ---
-    #   x = const(&lt;class &#39;int&#39;&gt;, 1)  :: pyobject
+# --- LINE 4 ---
 
-    x = 1
 
-    # --- LINE 5 ---
-    #   jump 58
-    # label 58
-    #   $58.1 = global(foo__numba__loop21__: LiftedLoop(&lt;function foo at 0x107781710&gt;))  :: pyobject
-    #   $58.2 = call $58.1(n, result, x, )  :: pyobject
-    #   jump 54
 
-    for i in range(n):
+# --- LINE 5 ---
+#   $const0.5 = const(int, 1)  :: pyobject
+#   x = $const0.5  :: pyobject
+#   del x
+#   del $const0.5
 
-        # --- LINE 6 ---
+x = 1
 
-        result[i] = x
+# --- LINE 6 ---
+#   jump 24.1
+# label 24.1
+#   $const24.1.1 = const(LiftedLoop, LiftedLoop(&lt;function foo at 0x10ae43410&gt;))  :: pyobject
+#   $24.1.4 = call $const24.1.1(result, n.1, )  :: pyobject
+#   del n.1
+#   del $const24.1.1
+#   $24.1.6 = exhaust_iter(count=1, value=$24.1.4)  :: pyobject
+#   del $24.1.4
+#   $24.1.5 = static_getitem(index=0, value=$24.1.6)  :: pyobject
+#   del $24.1.6
+#   x.1 = $24.1.5  :: pyobject
+#   del $24.1.5
+#   jump 54
+
+for i in range(n):
 
     # --- LINE 7 ---
-    # label 54
-    #   return result
 
-    return result
+    x = result[i]           # assign to variable &#39;x&#39;
+
+# --- LINE 8 ---
+
+
+
+# --- LINE 9 ---
+# label 54
+#   $54.3 = inplace_binop(rhs=x.1, lhs=result, fn=+)  :: pyobject
+#   del x.1
+#   del result
+#   result.1 = $54.3  :: pyobject
+#   del $54.3
+
+result += x                 # reading variable &#39;x&#39;
+
+# --- LINE 10 ---
+#   $54.5 = cast(value=result.1)  :: pyobject
+#   del result.1
+#   return $54.5
+
+return result
 
 # The function contains lifted loops
-# Loop at line 5
+# Loop at line 6
 # Has 1 overloads
-# File: somefile.py
+# File: &lt;ipython-input-11-ffbcb34ecc02&gt;
 # --- LINE 1 ---
 
 @jit
@@ -392,46 +405,79 @@ def foo(n):
 
 def foo(n):
 
-    # --- LINE 3 ---
+# --- LINE 3 ---
 
-    result = numpy.zeros(n)
+result = np.arange(n)
 
-    # --- LINE 4 ---
+# --- LINE 4 ---
 
-    x = 1
 
-    # --- LINE 5 ---
-    # label 34
-    #   $34.1 = iternext(value=$21.3)  :: int32
-    #   $34.2 = itervalid(value=$21.3)  :: bool
-    #   branch $34.2, 37, 53
-    # label 21
-    #   $21.1 = global(range: &lt;class &#39;range&#39;&gt;)  :: range
-    #   $21.2 = call $21.1(n, )  :: (int32,) -&gt; range_state32
-    #   $21.3 = getiter(value=$21.2)  :: range_iter32
-    #   jump 34
-    # label 37
-    #   $37.1 = $34.1  :: int32
-    #   i = $37.1  :: int32
 
-    for i in range(n):
+# --- LINE 5 ---
 
-        # --- LINE 6 ---
-        # label 53
-        #   del $21.3
-        #   jump 54
-        # label 54
-        #   $54.1 = const(&lt;class &#39;NoneType&#39;&gt;, None)  :: none
-        #   return $54.1
-        #   result[i] = x  :: (array(float64, 1d, C), int64, float64) -&gt; none
-        #   jump 34
+x = 1
 
-        result[i] = x
+# --- LINE 6 ---
+# label 34
+#   $34.2 = iternext(value=$phi34.1)  :: pair&lt;int64, bool&gt;
+#   $34.3 = pair_first(value=$34.2)  :: int64
+#   $34.4 = pair_second(value=$34.2)  :: bool
+#   del $34.2
+#   $phi37.1 = $34.3  :: int64
+#   del $34.3
+#   branch $34.4, 37, 53
+# label 21
+#   result.1 = result  :: array(int64, 1d, C, nonconst)
+#   del result
+#   n.1 = n  :: int64
+#   del n
+#   $21.1 = global(range: &lt;built-in function range&gt;)  :: range
+#   $21.3 = call $21.1(n.1, )  :: (int64,) -&gt; range_state64
+#   del n.1
+#   del $21.1
+#   $21.4 = getiter(value=$21.3)  :: range_iter64
+#   del $21.3
+#   $phi34.1 = $21.4  :: range_iter64
+#   del $21.4
+#   jump 34
+# label 37
+#   i = $phi37.1  :: int64
+#   del $phi37.1
+
+for i in range(n):
 
     # --- LINE 7 ---
+    # label 53
+    #   del result.1
+    #   del $phi37.1
+    #   del $phi34.1
+    #   del $34.4
+    #   jump 54
+    # label 54
+    #   $54.2 = build_tuple(items=[Var(x, &lt;ipython-input-11-ffbcb34ecc02&gt; (7))])  :: (int64 x 1)
+    #   del x
+    #   $54.3 = cast(value=$54.2)  :: (int64 x 1)
+    #   del $54.2
+    #   return $54.3
+    #   $37.4 = getitem(index=i, value=result.1)  :: int64
+    #   del i
+    #   x = $37.4  :: int64
+    #   del $37.4
+    #   jump 34
 
-    return result
+    x = result[i]           # assign to variable &#39;x&#39;
 
+# --- LINE 8 ---
+
+
+
+# --- LINE 9 ---
+
+result += x                 # reading variable &#39;x&#39;
+
+# --- LINE 10 ---
+
+return result
 
 
 ================================================================================
@@ -460,7 +506,7 @@ def foo(n):
         <li><a href="py-modindex.html" title="Python Module Index" >modules</a></li>
         <li><a href="ufuncs.html" title="UFuncs" >next</a></li>
         <li><a href="types.html" title="Types" >previous</a></li>
-        <li><a href="index.html">numba 0.14.0-63-ge5ceea5 documentation</a></li> 
+        <li><a href="index.html">numba 0.15.1_28_g2f5d025-py2.7-linux-x86_64.egg documentation</a></li> 
       
     </ul>
   </div>

@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     
-    <title>Numba Debugging Tips &mdash; numba 0.15.1_28_g2f5d025-py2.7-linux-x86_64.egg documentation</title>
+    <title>Glossary &mdash; numba 0.15.1_28_g2f5d025-py2.7-linux-x86_64.egg documentation</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
@@ -59,8 +59,8 @@
   });
 </script>
     <link rel="top" title="numba 0.15.1_28_g2f5d025-py2.7-linux-x86_64.egg documentation" href="index.html" />
-    <link rel="next" title="Release Notes" href="releases.html" />
-    <link rel="prev" title="Static Compilation (pycc)" href="pycc.html" /> 
+    <link rel="next" title="Contributing to Numba" href="developer/contributing.html" />
+    <link rel="prev" title="Release Notes" href="releases.html" /> 
   </head>
   <body>
     <div class="navbar navbar-fixed-top ">
@@ -82,10 +82,10 @@
                 <a href="py-modindex.html" title="Python Module Index" >modules</a>
                 </li>
                 <li>
-                <a href="releases.html" title="Release Notes" accesskey="N">next</a>
+                <a href="developer/contributing.html" title="Contributing to Numba" accesskey="N">next</a>
                 </li>
                 <li>
-                <a href="pycc.html" title="Static Compilation (pycc)" accesskey="P">previous</a>
+                <a href="releases.html" title="Release Notes" accesskey="P">previous</a>
                 </li>
               
             </ul>
@@ -106,14 +106,14 @@
   <a class="visible-phone btn btn-small show-sidebar" data-toggle="collapse" data-target=".for-mobile">Open Table Of Contents</a>
   <div class="for-mobile sidebar hidden-phone">
   <h4>Previous topic</h4>
-  <p class="topless"><a href="pycc.html"
-                        title="previous chapter">Static Compilation (pycc)</a></p>
-  <h4>Next topic</h4>
   <p class="topless"><a href="releases.html"
-                        title="next chapter">Release Notes</a></p>
+                        title="previous chapter">Release Notes</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="developer/contributing.html"
+                        title="next chapter">Contributing to Numba</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
-    <li><a href="_sources/debugging.txt"
+    <li><a href="_sources/glossary.txt"
            rel="nofollow">Show Source</a></li>
   </ul>
 <div id="searchbox">
@@ -141,14 +141,14 @@
 <div class="span3 visible-desktop visible-tablet">
   <div class=" sidebar hidden-phone">
   <h4>Previous topic</h4>
-  <p class="topless"><a href="pycc.html"
-                        title="previous chapter">Static Compilation (pycc)</a></p>
-  <h4>Next topic</h4>
   <p class="topless"><a href="releases.html"
-                        title="next chapter">Release Notes</a></p>
+                        title="previous chapter">Release Notes</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="developer/contributing.html"
+                        title="next chapter">Contributing to Numba</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
-    <li><a href="_sources/debugging.txt"
+    <li><a href="_sources/glossary.txt"
            rel="nofollow">Show Source</a></li>
   </ul>
 <div id="searchbox">
@@ -175,63 +175,43 @@
               <div class="bodywrapper">
                 <div class="body">
                   
-  <div class="section" id="numba-debugging-tips">
-<h1>Numba Debugging Tips<a class="headerlink" href="#numba-debugging-tips" title="Permalink to this headline">¶</a></h1>
-<p>The most common problem users run into is slower than expected performance.
-Usually this is because Numba is having trouble inferring a type or doesn&#8217;t
-have a compiled version of a function to call. An easy way to pinpoint the
-source of this problem is to use the nopython flag. By default, Numba tries
-to compile everything down to low level types, but if it runs into trouble it
-will fall back to using Python objects. Setting nopython=True in the jit
-decorator will tell Numba to never use objects, and instead bail out if it
-runs into trouble:</p>
-<div class="highlight-python"><div class="highlight"><pre>@jit(nopython=True)
-def foo()
-    ...
-</pre></div>
-</div>
-<p>which will result in an error if Numba can&#8217;t figure out the type of a variable
-or function.</p>
-<p>Another more advanced method for figuring out what&#8217;s going on is using the
-inspect_types method. Calling inspect_types for a function compiled with Numba
-like so:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="nd">@jit</span>
-<span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-
-<span class="n">foo</span><span class="o">.</span><span class="n">inspect_types</span><span class="p">()</span>
-</pre></div>
-</div>
-<p>will result in output similar to the following:</p>
-<div class="highlight-python"><div class="highlight"><pre>foo (pyobject,) -&gt; pyobject
-
----------------------------
-
-# --- LINE 25 ---
-
-@jit(nopython=False)
-
-# --- LINE 26 ---
-
-def foo(x):
-
-    # --- LINE 27 ---
-    # label 0
-    #   $0.1 = global(np: &lt;module &#39;numpy&#39; from &#39;/Users/jayvius/anaconda/envs/dev/lib/python2.7/site-packages/numpy/__init__.pyc&#39;&gt;)  :: pyobject
-    #   $0.2 = getattr(attr=sin, value=$0.1)  :: pyobject
-    #   $0.3 = call $0.2(x, )  :: pyobject
-    #   return $0.3
-
-    return np.sin(x)
-</pre></div>
-</div>
-<p>A few things to take note of here: First, every line of Python code is preceded
-by several lines of Numba IR code that gives a glimpse into what Numba is doing
-to your Python code behind the scenes. More helpful though, at the end of most
-lines there are type annotations that show how Numba is treating variables and
-function calls. In the example above, the &#8216;pyobject&#8217; annotation indicates that
-Numba doesn&#8217;t know about the np.sin function so it has to fall back to the
-Python object layer to call it.</p>
+  <div class="section" id="glossary">
+<h1>Glossary<a class="headerlink" href="#glossary" title="Permalink to this headline">¶</a></h1>
+<dl class="glossary docutils">
+<dt id="term-jit-function">JIT function</dt>
+<dd>Shorthand for &#8220;a function compiled with Numba.&#8221;</dd>
+<dt id="term-loop-lifting">loop-lifting</dt>
+<dd>See <a class="reference internal" href="#term-loop-jitting"><em class="xref std std-term">loop-jitting</em></a>.</dd>
+<dt id="term-loop-jitting">loop-jitting</dt>
+<dd>A feature of compilation in <a class="reference internal" href="#term-object-mode"><em class="xref std std-term">object mode</em></a> where a loop can be
+automatically extracted and compiled in <a class="reference internal" href="#term-nopython-mode"><em class="xref std std-term">nopython mode</em></a>.  This
+allows functions with operations unsupported in nopython mode (such as
+array creation) to see significant performance improvements if they
+contain loops with only nopython-supported operations.</dd>
+<dt id="term-nopython-mode">nopython mode</dt>
+<dd>A Numba compilation mode that generates code that does not access the
+Python C API.  This compilation mode produces the highest performance
+code, but requires that the native types of all values in the function
+can be inferred, and that no new objects are allocated.  Unless
+otherwise instructed, the <tt class="docutils literal"><span class="pre">&#64;jit</span></tt> decorator will automatically fall
+back to <a class="reference internal" href="#term-object-mode"><em class="xref std std-term">object mode</em></a> if nopython mode cannot be used.</dd>
+<dt id="term-object-mode">object mode</dt>
+<dd>A Numba compilation mode that generates code that handles all values
+as Python objects and uses the Python C API to perform all operations
+on those objects.  Code compiled in object mode will often run
+no faster than Python interpreted code, unless the Numba compiler can
+take advantage of <a class="reference internal" href="#term-loop-jitting"><em class="xref std std-term">loop-jitting</em></a>.</dd>
+<dt id="term-type-inference">type inference</dt>
+<dd>The process by which Numba determines the specialized types of all
+values within a function being compiled.  Type inference can fail
+if arguments or globals have Python types unknown to Numba, or if
+functions are used that are not recognized by Numba.  Sucessful
+type inference is a prerequisite for compilation in
+<a class="reference internal" href="#term-nopython-mode"><em class="xref std std-term">nopython mode</em></a>.</dd>
+<dt id="term-ufunc">ufunc</dt>
+<dd>A NumPy <a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/ufuncs.html">universal function</a>.
+Numba can create new compiled ufuncs with the <cite>&#64;vectorize</cite> decorator.</dd>
+</dl>
 </div>
 
 
@@ -252,8 +232,8 @@ Python object layer to call it.</p>
       
         <li><a href="genindex.html" title="General Index" >index</a></li>
         <li><a href="py-modindex.html" title="Python Module Index" >modules</a></li>
-        <li><a href="releases.html" title="Release Notes" >next</a></li>
-        <li><a href="pycc.html" title="Static Compilation (pycc)" >previous</a></li>
+        <li><a href="developer/contributing.html" title="Contributing to Numba" >next</a></li>
+        <li><a href="releases.html" title="Release Notes" >previous</a></li>
         <li><a href="index.html">numba 0.15.1_28_g2f5d025-py2.7-linux-x86_64.egg documentation</a></li> 
       
     </ul>
