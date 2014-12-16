@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+
+
+
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+    <title>CUDA Support &mdash; numba 0.16.0 documentation</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    
+
+<link rel="stylesheet" href="_static/css/basicstrap-base.css" type="text/css" />
+<link rel="stylesheet" id="current-theme" href="_static/css/bootstrap3/bootstrap.min.css" type="text/css" />
+<link rel="stylesheet" id="current-adjust-theme" type="text/css" />
+
+<link rel="stylesheet" href="_static/css/font-awesome.min.css">
+
+<style type="text/css">
+  body {
+    padding-top: 60px;
+    padding-bottom: 40px;
+  }
+}
+</style>
+
+<link rel="stylesheet" href="_static/css/basicstrap.css" type="text/css" />
+<link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+<script type="text/javascript">
+  var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:    './',
+            VERSION:     '0.16.0',
+            COLLAPSE_INDEX: false,
+            FILE_SUFFIX: '.html',
+            HAS_SOURCE:  true
+  };
+</script>
+    <script type="text/javascript" src="_static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="_static/js/bootstrap3.min.js"></script>
+<script type="text/javascript" src="_static/js/jquery.cookie.min.js"></script>
+<script type="text/javascript" src="_static/js/basicstrap.js"></script>
+<script type="text/javascript">
+</script>
+    <link rel="top" title="numba 0.16.0 documentation" href="index.html" />
+    <link rel="next" title="Static Compilation (pycc)" href="pycc.html" />
+    <link rel="prev" title="CUDA Device Management" href="CUDADevice.html" /> 
+  </head>
+  <body role="document">
+    <div id="navbar-top" class="navbar navbar-fixed-top navbar-default" role="navigation" aria-label="top navigation">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="index.html">numba 0.16.0 documentation</a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+
+            
+              <li><a href="CUDADevice.html" title="CUDA Device Management" accesskey="P">previous </a></li>
+              <li><a href="pycc.html" title="Static Compilation (pycc)" accesskey="N">next </a></li>
+              <li><a href="py-modindex.html" title="Python Module Index" >modules </a></li>
+              <li><a href="genindex.html" title="General Index" accesskey="I">index </a></li>
+            
+            <li class="visible-xs"><a href="_sources/CUDASupport.txt" rel="nofollow">Show Source</a></li>
+
+            <li class="visible-xs">
+                <form class="search form-search form-inline navbar-form navbar-right sp-searchbox" action="search.html" method="get">
+                  <div class="input-append input-group">
+                    <input type="text" class="search-query form-control" name="q" placeholder="Search...">
+                    <span class="input-group-btn">
+                    <input type="submit" class="btn" value="Go" />
+                    </span>
+                  </div>
+                  <input type="hidden" name="check_keywords" value="yes" />
+                  <input type="hidden" name="area" value="default" />
+                </form>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    
+
+    <!-- container -->
+    <div class="container-fluid">
+
+      <!-- row -->
+      <div class="row">
+         
+<div class="col-md-3 hidden-xs">
+  <div class="sidebar hidden-xs" role="navigation" aria-label="main navigation">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="CUDADevice.html"
+                        title="previous chapter">CUDA Device Management</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="pycc.html"
+                        title="next chapter">Static Compilation (pycc)</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/CUDASupport.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" role="search">
+  <h3>Quick search</h3>
+  <form class="search form-inline" action="search.html" method="get">
+      <div class="input-append input-group">
+        <input type="text" class="search-query form-control" name="q" placeholder="Search...">
+        <span class="input-group-btn">
+        <input type="submit" class="btn" value="Go" />
+        </span>
+      </div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+  </div>
+</div> 
+        
+
+        <div class="col-md-9">
+          <div class="document" role="main">
+            <div class="documentwrapper">
+              <div class="bodywrapper">
+                <div class="body">
+                  
+  <div class="section" id="cuda-support">
+<h1>CUDA Support<a class="headerlink" href="#cuda-support" title="Permalink to this headline">¶</a></h1>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Platforms supported: Linux, Windows and Mac OSX 32/64-bit.
+Only support CUDA devices with <strong>compute capability 2.0 and above</strong>.
+Please see <a class="reference external" href="https://developer.nvidia.com/cuda-gpus">CUDA GPUs</a> for
+a list of CUDA GPUs and their compute capability.</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">As of version 0.12.2, <a class="reference external" href="https://store.continuum.io/cshop/anaconda/">Anaconda</a> is distributing a subset of CUDA
+toolkit 5.5 libraries.
+The following information is no longer necessary for most users.</p>
+</div>
+<p>Numba searches in the system shared library path for the CUDA drivers and CUDA libraries (e.g. cuRAND, cuBLAS).  Users can set environment variable <strong>LD_LIBRARY_PATH</strong> to the directory of the CUDA drivers to ensure that Numba can find them.  The instruction to do so is printed at the end of the CUDA SDK installation.</p>
+<p>User can override the search path with the following environment variables:</p>
+<ul>
+<li><dl class="first docutils">
+<dt><strong>NUMBAPRO_CUDA_DRIVER</strong></dt>
+<dd><p class="first last">path to CUDA driver shared library file</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><strong>NUMBAPRO_NVVM</strong></dt>
+<dd><p class="first last">path to CUDA libNVVM shared library file</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><strong>NUMBAPRO_LIBDEVICE</strong></dt>
+<dd><p class="first last">path to CUDA libNVVM libdevice directory which contains .bc files.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</div>
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        
+      </div><!-- /row -->
+
+      <!-- row -->
+      <div class="row footer-relbar">
+<div id="navbar-related" class=" related navbar navbar-default" role="navigation" aria-label="related navigation">
+  <div class="navbar-inner">
+    <ul class="nav navbar-nav">
+        <li><a href="index.html">numba 0.16.0 documentation</a></li>
+    </ul>
+    <ul class="nav navbar-nav pull-right hidden-xs hidden-sm">
+      
+        <li><a href="CUDADevice.html" title="CUDA Device Management" >previous</a></li>
+        <li><a href="pycc.html" title="Static Compilation (pycc)" >next</a></li>
+        <li><a href="py-modindex.html" title="Python Module Index" >modules</a></li>
+        <li><a href="genindex.html" title="General Index" >index</a></li> 
+      
+    </ul>
+  </div>
+</div>
+      </div><!-- /row -->
+
+      <!-- footer -->
+      <footer role="contentinfo">
+          &copy; Copyright 2012-2014, Continuum Analytics.
+        Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.3.
+      </footer>
+      <!-- /footer -->
+
+    </div>
+    <!-- /container -->
+
+  </body>
+</html>
