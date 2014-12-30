@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     
-    <title>Examples &mdash; numba 0.16.0_83_gf58982a-py2.7-linux-x86_64.egg documentation</title>
+    <title>Examples &mdash; numba 0.16.0_99_ge09ee8a-py2.7-linux-x86_64.egg documentation</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
@@ -34,7 +34,7 @@
 <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
             URL_ROOT:    './',
-            VERSION:     '0.16.0_83_gf58982a-py2.7-linux-x86_64.egg',
+            VERSION:     '0.16.0_99_ge09ee8a-py2.7-linux-x86_64.egg',
             COLLAPSE_INDEX: false,
             FILE_SUFFIX: '.html',
             HAS_SOURCE:  true
@@ -58,7 +58,7 @@
     });
   });
 </script>
-    <link rel="top" title="numba 0.16.0_83_gf58982a-py2.7-linux-x86_64.egg documentation" href="index.html" />
+    <link rel="top" title="numba 0.16.0_99_ge09ee8a-py2.7-linux-x86_64.egg documentation" href="index.html" />
     <link rel="next" title="First Steps with numba" href="tutorial_firststeps.html" />
     <link rel="prev" title="UFuncs" href="ufuncs.html" /> 
   </head>
@@ -71,7 +71,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="index.html">numba 0.16.0_83_gf58982a-py2.7-linux-x86_64.egg documentation</a>
+          <a class="brand" href="index.html">numba 0.16.0_99_ge09ee8a-py2.7-linux-x86_64.egg documentation</a>
           <div class="nav-collapse collapse">
             <ul class="nav pull-right">
               
@@ -113,6 +113,7 @@
 <li><a class="reference internal" href="#ufuncs">UFuncs</a></li>
 <li><a class="reference internal" href="#mandelbrot">Mandelbrot</a></li>
 <li><a class="reference internal" href="#filterbank-correlation">Filterbank Correlation</a></li>
+<li><a class="reference internal" href="#multi-threading">Multi-threading</a></li>
 </ul>
 </li>
 </ul>
@@ -160,6 +161,7 @@
 <li><a class="reference internal" href="#ufuncs">UFuncs</a></li>
 <li><a class="reference internal" href="#mandelbrot">Mandelbrot</a></li>
 <li><a class="reference internal" href="#filterbank-correlation">Filterbank Correlation</a></li>
+<li><a class="reference internal" href="#multi-threading">Multi-threading</a></li>
 </ul>
 </li>
 </ul>
@@ -504,6 +506,114 @@ numba functions to eliminate all python overhead in function calling.</p>
 </pre></div>
 </div>
 </div>
+<div class="section" id="multi-threading">
+<h2>Multi-threading<a class="headerlink" href="#multi-threading" title="Permalink to this headline">¶</a></h2>
+<p>The Python interpreter typically runs code serialized by the
+<a class="reference external" href="https://docs.python.org/3/glossary.html#term-global-interpreter-lock">Global interpreter Lock</a>.
+Numba functions by default also run serialized, but you can use
+the <tt class="docutils literal"><span class="pre">nogil</span></tt> parameter to the <tt class="docutils literal"><span class="pre">&#64;jit</span></tt> decorator to specify that a Numba
+function must release the GIL, and can therefore run in parallel to
+any other code.</p>
+<p>The code below showcases the potential performance improvement when
+using this feature.  For example, on a 4-core machine, I get the following
+results printed out:</p>
+<div class="highlight-python"><div class="highlight"><pre>numpy (1 thread)       145 ms
+numba (1 thread)       128 ms
+numba (4 threads)       35 ms
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Under Python 3, you can use the standard <a class="reference external" href="https://docs.python.org/3/library/concurrent.futures.html">concurrent.futures</a> module
+rather than spawn threads and dispatch tasks by hand.</p>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">absolute_import</span>
+
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">threading</span>
+<span class="kn">from</span> <span class="nn">timeit</span> <span class="kn">import</span> <span class="n">repeat</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">jit</span>
+
+<span class="n">nthreads</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">size</span> <span class="o">=</span> <span class="mf">1e6</span>
+
+<span class="k">def</span> <span class="nf">func_np</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Control function using Numpy.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mf">2.1</span> <span class="o">*</span> <span class="n">a</span> <span class="o">+</span> <span class="mf">3.2</span> <span class="o">*</span> <span class="n">b</span><span class="p">)</span>
+
+<span class="nd">@jit</span><span class="p">(</span><span class="s">&#39;void(double[:], double[:], double[:])&#39;</span><span class="p">,</span> <span class="n">nopython</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">nogil</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">inner_func_nb</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function under test.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">)):</span>
+        <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mf">2.1</span> <span class="o">*</span> <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="mf">3.2</span> <span class="o">*</span> <span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+<span class="k">def</span> <span class="nf">timefunc</span><span class="p">(</span><span class="n">correct</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Benchmark *func* and print out its runtime.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="mi">20</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="s">&quot; &quot;</span><span class="p">)</span>
+    <span class="c"># Make sure the function is compiled before we start the benchmark</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">correct</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">correct</span><span class="p">),</span> <span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">correct</span><span class="p">)</span>
+    <span class="c"># time it</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">&#39;{:&gt;5.0f} ms&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">repeat</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">),</span>
+                                          <span class="n">number</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">res</span>
+
+<span class="k">def</span> <span class="nf">make_singlethread</span><span class="p">(</span><span class="n">inner_func</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Run the given function inside a single thread.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
+        <span class="n">length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">length</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+        <span class="n">inner_func</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span>
+    <span class="k">return</span> <span class="n">func</span>
+
+<span class="k">def</span> <span class="nf">make_multithread</span><span class="p">(</span><span class="n">inner_func</span><span class="p">,</span> <span class="n">numthreads</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Run the given function inside *numthreads* threads, splitting its</span>
+<span class="sd">    arguments into equal-sized chunks.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">func_mt</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
+        <span class="n">length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">length</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="p">(</span><span class="n">result</span><span class="p">,)</span> <span class="o">+</span> <span class="n">args</span>
+        <span class="n">chunklen</span> <span class="o">=</span> <span class="p">(</span><span class="n">length</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">//</span> <span class="n">numthreads</span>
+        <span class="c"># Create argument tuples for each input chunk</span>
+        <span class="n">chunks</span> <span class="o">=</span> <span class="p">[[</span><span class="n">arg</span><span class="p">[</span><span class="n">i</span> <span class="o">*</span> <span class="n">chunklen</span><span class="p">:(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">chunklen</span><span class="p">]</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">]</span>
+                  <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">numthreads</span><span class="p">)]</span>
+        <span class="c"># Spawn one thread per chunk</span>
+        <span class="n">threads</span> <span class="o">=</span> <span class="p">[</span><span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">inner_func</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="n">chunk</span><span class="p">)</span>
+                   <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">chunks</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">thread</span> <span class="ow">in</span> <span class="n">threads</span><span class="p">:</span>
+            <span class="n">thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">thread</span> <span class="ow">in</span> <span class="n">threads</span><span class="p">:</span>
+            <span class="n">thread</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">result</span>
+    <span class="k">return</span> <span class="n">func_mt</span>
+
+
+<span class="n">func_nb</span> <span class="o">=</span> <span class="n">make_singlethread</span><span class="p">(</span><span class="n">inner_func_nb</span><span class="p">)</span>
+<span class="n">func_nb_mt</span> <span class="o">=</span> <span class="n">make_multithread</span><span class="p">(</span><span class="n">inner_func_nb</span><span class="p">,</span> <span class="n">nthreads</span><span class="p">)</span>
+
+<span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">size</span><span class="p">)</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">size</span><span class="p">)</span>
+
+<span class="n">correct</span> <span class="o">=</span> <span class="n">timefunc</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="s">&quot;numpy (1 thread)&quot;</span><span class="p">,</span> <span class="n">func_np</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+<span class="n">timefunc</span><span class="p">(</span><span class="n">correct</span><span class="p">,</span> <span class="s">&quot;numba (1 thread)&quot;</span><span class="p">,</span> <span class="n">func_nb</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+<span class="n">timefunc</span><span class="p">(</span><span class="n">correct</span><span class="p">,</span> <span class="s">&quot;numba (</span><span class="si">%d</span><span class="s"> threads)&quot;</span> <span class="o">%</span> <span class="n">nthreads</span><span class="p">,</span> <span class="n">func_nb_mt</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
 </div>
 
 
@@ -526,7 +636,7 @@ numba functions to eliminate all python overhead in function calling.</p>
         <li><a href="py-modindex.html" title="Python Module Index" >modules</a></li>
         <li><a href="tutorial_firststeps.html" title="First Steps with numba" >next</a></li>
         <li><a href="ufuncs.html" title="UFuncs" >previous</a></li>
-        <li><a href="index.html">numba 0.16.0_83_gf58982a-py2.7-linux-x86_64.egg documentation</a></li> 
+        <li><a href="index.html">numba 0.16.0_99_ge09ee8a-py2.7-linux-x86_64.egg documentation</a></li> 
       
     </ul>
   </div>
