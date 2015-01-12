@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     
-    <title>numba package &mdash; numba 0.16.0_125_g88eed42-py2.7-linux-x86_64.egg documentation</title>
+    <title>numba package &mdash; numba 0.16.0_134_ge2a56c3-py2.7-linux-x86_64.egg documentation</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
@@ -34,7 +34,7 @@
 <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
             URL_ROOT:    '../',
-            VERSION:     '0.16.0_125_g88eed42-py2.7-linux-x86_64.egg',
+            VERSION:     '0.16.0_134_ge2a56c3-py2.7-linux-x86_64.egg',
             COLLAPSE_INDEX: false,
             FILE_SUFFIX: '.html',
             HAS_SOURCE:  true
@@ -58,7 +58,7 @@
     });
   });
 </script>
-    <link rel="top" title="numba 0.16.0_125_g88eed42-py2.7-linux-x86_64.egg documentation" href="../index.html" /> 
+    <link rel="top" title="numba 0.16.0_134_ge2a56c3-py2.7-linux-x86_64.egg documentation" href="../index.html" /> 
   </head>
   <body>
     <div class="navbar navbar-fixed-top ">
@@ -69,7 +69,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="../index.html">numba 0.16.0_125_g88eed42-py2.7-linux-x86_64.egg documentation</a>
+          <a class="brand" href="../index.html">numba 0.16.0_134_ge2a56c3-py2.7-linux-x86_64.egg documentation</a>
           <div class="nav-collapse collapse">
             <ul class="nav pull-right">
               
@@ -3058,7 +3058,7 @@ the each element.</p>
 
 <dl class="method">
 <dt id="numba.ir.Block.dump">
-<tt class="descname">dump</tt><big>(</big><em>file=&lt;open file '&lt;stdout&gt;'</em>, <em>mode 'w' at 0x2b92aa97a150&gt;</em><big>)</big><a class="headerlink" href="#numba.ir.Block.dump" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">dump</tt><big>(</big><em>file=&lt;open file '&lt;stdout&gt;'</em>, <em>mode 'w' at 0x2ab619f5d150&gt;</em><big>)</big><a class="headerlink" href="#numba.ir.Block.dump" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -5733,7 +5733,7 @@ def foo(x, y):</p>
 
 <dl class="function">
 <dt id="numba.vectorize">
-<tt class="descclassname">numba.</tt><tt class="descname">vectorize</tt><big>(</big><em>ftylist</em><span class="optional">[</span>, <em>target='cpu'</em><span class="optional">[</span>, <em>**kws</em><span class="optional">]</span><span class="optional">]</span><big>)</big><a class="headerlink" href="#numba.vectorize" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">numba.</tt><tt class="descname">vectorize</tt><big>(</big><em>ftylist</em>, <em>target='cpu'</em>, <em>identity=None</em>, <em>**kws</em><big>)</big><a class="headerlink" href="#numba.vectorize" title="Permalink to this definition">¶</a></dt>
 <dd><p>A decorator to create numpy ufunc object from Numba compiled code.</p>
 <dl class="docutils">
 <dt>ftylist: iterable</dt>
@@ -5742,12 +5742,16 @@ function type object or a string describing the
 function type.</dd>
 <dt>target: str</dt>
 <dd>A string for code generation target.  Default to &#8220;cpu&#8221;.</dd>
+<dt>identity: int, str, or None</dt>
+<dd>The identity (or unit) value for the element-wise function
+being implemented.  Allowed values are None (the default), 0, 1,
+and &#8220;reorderable&#8221;.</dd>
 </dl>
 <p>A NumPy universal function</p>
 <blockquote>
 <div><dl class="docutils">
 <dt>&#64;vectorize([&#8216;float32(float32, float32)&#8217;,</dt>
-<dd>&#8216;float64(float64, float64)&#8217;])</dd>
+<dd>&#8216;float64(float64, float64)&#8217;], identity=1)</dd>
 <dt>def sum(a, b):</dt>
 <dd>return a + b</dd>
 </dl>
@@ -5756,7 +5760,7 @@ function type.</dd>
 
 <dl class="function">
 <dt id="numba.guvectorize">
-<tt class="descclassname">numba.</tt><tt class="descname">guvectorize</tt><big>(</big><em>ftylist</em>, <em>signature</em><span class="optional">[</span>, <em>target='cpu'</em><span class="optional">[</span>, <em>**kws</em><span class="optional">]</span><span class="optional">]</span><big>)</big><a class="headerlink" href="#numba.guvectorize" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">numba.</tt><tt class="descname">guvectorize</tt><big>(</big><em>ftylist</em>, <em>signature</em>, <em>target='cpu'</em>, <em>identity=None</em>, <em>**kws</em><big>)</big><a class="headerlink" href="#numba.guvectorize" title="Permalink to this definition">¶</a></dt>
 <dd><p>A decorator to create numpy generialized-ufunc object from Numba compiled
 code.</p>
 <dl class="docutils">
@@ -5767,6 +5771,10 @@ function type.</dd>
 <dt>signature: str</dt>
 <dd>A NumPy generialized-ufunc signature.
 e.g. &#8220;(m, n), (n, p)-&gt;(m, p)&#8221;</dd>
+<dt>identity: int, str, or None</dt>
+<dd>The identity (or unit) value for the element-wise function
+being implemented.  Allowed values are None (the default), 0, 1,
+and &#8220;reorderable&#8221;.</dd>
 <dt>target: str</dt>
 <dd>A string for code generation target.  Defaults to &#8220;cpu&#8221;.</dd>
 </dl>
@@ -5841,7 +5849,7 @@ NotImplementedError is raised on unsupported Numpy dtypes.</p>
       
         <li><a href="../genindex.html" title="General Index" >index</a></li>
         <li><a href="../py-modindex.html" title="Python Module Index" >modules</a></li>
-        <li><a href="../index.html">numba 0.16.0_125_g88eed42-py2.7-linux-x86_64.egg documentation</a></li> 
+        <li><a href="../index.html">numba 0.16.0_134_ge2a56c3-py2.7-linux-x86_64.egg documentation</a></li> 
       
     </ul>
   </div>

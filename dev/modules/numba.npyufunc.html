@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     
-    <title>numba.npyufunc package &mdash; numba 0.16.0_125_g88eed42-py2.7-linux-x86_64.egg documentation</title>
+    <title>numba.npyufunc package &mdash; numba 0.16.0_134_ge2a56c3-py2.7-linux-x86_64.egg documentation</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
@@ -34,7 +34,7 @@
 <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
             URL_ROOT:    '../',
-            VERSION:     '0.16.0_125_g88eed42-py2.7-linux-x86_64.egg',
+            VERSION:     '0.16.0_134_ge2a56c3-py2.7-linux-x86_64.egg',
             COLLAPSE_INDEX: false,
             FILE_SUFFIX: '.html',
             HAS_SOURCE:  true
@@ -58,7 +58,7 @@
     });
   });
 </script>
-    <link rel="top" title="numba 0.16.0_125_g88eed42-py2.7-linux-x86_64.egg documentation" href="../index.html" /> 
+    <link rel="top" title="numba 0.16.0_134_ge2a56c3-py2.7-linux-x86_64.egg documentation" href="../index.html" /> 
   </head>
   <body>
     <div class="navbar navbar-fixed-top ">
@@ -69,7 +69,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="../index.html">numba 0.16.0_125_g88eed42-py2.7-linux-x86_64.egg documentation</a>
+          <a class="brand" href="../index.html">numba 0.16.0_134_ge2a56c3-py2.7-linux-x86_64.egg documentation</a>
           <div class="nav-collapse collapse">
             <ul class="nav pull-right">
               
@@ -191,7 +191,7 @@
 <dl class="class">
 <dt id="numba.npyufunc.decorators.GUVectorize">
 <em class="property">class </em><tt class="descclassname">numba.npyufunc.decorators.</tt><tt class="descname">GUVectorize</tt><a class="headerlink" href="#numba.npyufunc.decorators.GUVectorize" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">numba.npyufunc.decorators._BaseVectorize</span></tt></p>
 <dl class="attribute">
 <dt id="numba.npyufunc.decorators.GUVectorize.target_registry">
 <tt class="descname">target_registry</tt><em class="property"> = {'cpu': &lt;class 'numba.npyufunc.ufuncbuilder.GUFuncBuilder'&gt;}</em><a class="headerlink" href="#numba.npyufunc.decorators.GUVectorize.target_registry" title="Permalink to this definition">¶</a></dt>
@@ -202,7 +202,7 @@
 <dl class="class">
 <dt id="numba.npyufunc.decorators.Vectorize">
 <em class="property">class </em><tt class="descclassname">numba.npyufunc.decorators.</tt><tt class="descname">Vectorize</tt><a class="headerlink" href="#numba.npyufunc.decorators.Vectorize" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">numba.npyufunc.decorators._BaseVectorize</span></tt></p>
 <dl class="attribute">
 <dt id="numba.npyufunc.decorators.Vectorize.target_registry">
 <tt class="descname">target_registry</tt><em class="property"> = {'cpu': &lt;class 'numba.npyufunc.ufuncbuilder.UFuncBuilder'&gt;}</em><a class="headerlink" href="#numba.npyufunc.decorators.Vectorize.target_registry" title="Permalink to this definition">¶</a></dt>
@@ -212,7 +212,7 @@
 
 <dl class="function">
 <dt id="numba.npyufunc.decorators.guvectorize">
-<tt class="descclassname">numba.npyufunc.decorators.</tt><tt class="descname">guvectorize</tt><big>(</big><em>ftylist</em>, <em>signature</em><span class="optional">[</span>, <em>target='cpu'</em><span class="optional">[</span>, <em>**kws</em><span class="optional">]</span><span class="optional">]</span><big>)</big><a class="headerlink" href="#numba.npyufunc.decorators.guvectorize" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">numba.npyufunc.decorators.</tt><tt class="descname">guvectorize</tt><big>(</big><em>ftylist</em>, <em>signature</em>, <em>target='cpu'</em>, <em>identity=None</em>, <em>**kws</em><big>)</big><a class="headerlink" href="#numba.npyufunc.decorators.guvectorize" title="Permalink to this definition">¶</a></dt>
 <dd><p>A decorator to create numpy generialized-ufunc object from Numba compiled
 code.</p>
 <dl class="docutils">
@@ -223,6 +223,10 @@ function type.</dd>
 <dt>signature: str</dt>
 <dd>A NumPy generialized-ufunc signature.
 e.g. &#8220;(m, n), (n, p)-&gt;(m, p)&#8221;</dd>
+<dt>identity: int, str, or None</dt>
+<dd>The identity (or unit) value for the element-wise function
+being implemented.  Allowed values are None (the default), 0, 1,
+and &#8220;reorderable&#8221;.</dd>
 <dt>target: str</dt>
 <dd>A string for code generation target.  Defaults to &#8220;cpu&#8221;.</dd>
 </dl>
@@ -248,7 +252,7 @@ e.g. &#8220;(m, n), (n, p)-&gt;(m, p)&#8221;</dd>
 
 <dl class="function">
 <dt id="numba.npyufunc.decorators.vectorize">
-<tt class="descclassname">numba.npyufunc.decorators.</tt><tt class="descname">vectorize</tt><big>(</big><em>ftylist</em><span class="optional">[</span>, <em>target='cpu'</em><span class="optional">[</span>, <em>**kws</em><span class="optional">]</span><span class="optional">]</span><big>)</big><a class="headerlink" href="#numba.npyufunc.decorators.vectorize" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">numba.npyufunc.decorators.</tt><tt class="descname">vectorize</tt><big>(</big><em>ftylist</em>, <em>target='cpu'</em>, <em>identity=None</em>, <em>**kws</em><big>)</big><a class="headerlink" href="#numba.npyufunc.decorators.vectorize" title="Permalink to this definition">¶</a></dt>
 <dd><p>A decorator to create numpy ufunc object from Numba compiled code.</p>
 <dl class="docutils">
 <dt>ftylist: iterable</dt>
@@ -257,12 +261,16 @@ function type object or a string describing the
 function type.</dd>
 <dt>target: str</dt>
 <dd>A string for code generation target.  Default to &#8220;cpu&#8221;.</dd>
+<dt>identity: int, str, or None</dt>
+<dd>The identity (or unit) value for the element-wise function
+being implemented.  Allowed values are None (the default), 0, 1,
+and &#8220;reorderable&#8221;.</dd>
 </dl>
 <p>A NumPy universal function</p>
 <blockquote>
 <div><dl class="docutils">
 <dt>&#64;vectorize([&#8216;float32(float32, float32)&#8217;,</dt>
-<dd>&#8216;float64(float64, float64)&#8217;])</dd>
+<dd>&#8216;float64(float64, float64)&#8217;], identity=1)</dd>
 <dt>def sum(a, b):</dt>
 <dd>return a + b</dd>
 </dl>
@@ -287,8 +295,8 @@ function type.</dd>
 <span id="numba-npyufunc-ufuncbuilder-module"></span><h2>numba.npyufunc.ufuncbuilder module<a class="headerlink" href="#module-numba.npyufunc.ufuncbuilder" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="numba.npyufunc.ufuncbuilder.GUFuncBuilder">
-<em class="property">class </em><tt class="descclassname">numba.npyufunc.ufuncbuilder.</tt><tt class="descname">GUFuncBuilder</tt><big>(</big><em>py_func</em>, <em>signature</em>, <em>targetoptions={}</em><big>)</big><a class="headerlink" href="#numba.npyufunc.ufuncbuilder.GUFuncBuilder" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<em class="property">class </em><tt class="descclassname">numba.npyufunc.ufuncbuilder.</tt><tt class="descname">GUFuncBuilder</tt><big>(</big><em>py_func</em>, <em>signature</em>, <em>identity=None</em>, <em>targetoptions={}</em><big>)</big><a class="headerlink" href="#numba.npyufunc.ufuncbuilder.GUFuncBuilder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">numba.npyufunc.ufuncbuilder._BaseUFuncBuilder</span></tt></p>
 <dl class="method">
 <dt id="numba.npyufunc.ufuncbuilder.GUFuncBuilder.add">
 <tt class="descname">add</tt><big>(</big><em>sig=None</em>, <em>argtypes=None</em>, <em>restype=None</em><big>)</big><a class="headerlink" href="#numba.npyufunc.ufuncbuilder.GUFuncBuilder.add" title="Permalink to this definition">¶</a></dt>
@@ -309,8 +317,8 @@ function type.</dd>
 
 <dl class="class">
 <dt id="numba.npyufunc.ufuncbuilder.UFuncBuilder">
-<em class="property">class </em><tt class="descclassname">numba.npyufunc.ufuncbuilder.</tt><tt class="descname">UFuncBuilder</tt><big>(</big><em>py_func</em>, <em>targetoptions={}</em><big>)</big><a class="headerlink" href="#numba.npyufunc.ufuncbuilder.UFuncBuilder" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<em class="property">class </em><tt class="descclassname">numba.npyufunc.ufuncbuilder.</tt><tt class="descname">UFuncBuilder</tt><big>(</big><em>py_func</em>, <em>identity=None</em>, <em>targetoptions={}</em><big>)</big><a class="headerlink" href="#numba.npyufunc.ufuncbuilder.UFuncBuilder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">numba.npyufunc.ufuncbuilder._BaseUFuncBuilder</span></tt></p>
 <dl class="method">
 <dt id="numba.npyufunc.ufuncbuilder.UFuncBuilder.add">
 <tt class="descname">add</tt><big>(</big><em>sig=None</em>, <em>argtypes=None</em>, <em>restype=None</em><big>)</big><a class="headerlink" href="#numba.npyufunc.ufuncbuilder.UFuncBuilder.add" title="Permalink to this definition">¶</a></dt>
@@ -339,7 +347,7 @@ function type.</dd>
 
 <dl class="attribute">
 <dt id="numba.npyufunc.ufuncbuilder.UFuncDispatcher.targetdescr">
-<tt class="descname">targetdescr</tt><em class="property"> = &lt;numba.npyufunc.ufuncbuilder.UFuncTarget object at 0x2b92b6cc9350&gt;</em><a class="headerlink" href="#numba.npyufunc.ufuncbuilder.UFuncDispatcher.targetdescr" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">targetdescr</tt><em class="property"> = &lt;numba.npyufunc.ufuncbuilder.UFuncTarget object at 0x2ab6262ab450&gt;</em><a class="headerlink" href="#numba.npyufunc.ufuncbuilder.UFuncDispatcher.targetdescr" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -467,7 +475,7 @@ function type.</dd>
       
         <li><a href="../genindex.html" title="General Index" >index</a></li>
         <li><a href="../py-modindex.html" title="Python Module Index" >modules</a></li>
-        <li><a href="../index.html">numba 0.16.0_125_g88eed42-py2.7-linux-x86_64.egg documentation</a></li> 
+        <li><a href="../index.html">numba 0.16.0_134_ge2a56c3-py2.7-linux-x86_64.egg documentation</a></li> 
       
     </ul>
   </div>
