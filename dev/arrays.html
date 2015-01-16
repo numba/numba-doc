@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+
+
+
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+    <title>Arrays &mdash; numba 0.16.0_160_ge97cf93-py2.7-linux-x86_64.egg documentation</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    
+<link rel="stylesheet" href="_static/css/basicstrap-base.css" type="text/css" />
+<link rel="stylesheet" href="_static/css/bootstrap.min.css" type="text/css" />
+<link rel="stylesheet" href="_static/css/font-awesome.min.css">
+<!--[if IE 7]>
+<link rel="stylesheet" href="_static/css/font-awesome-ie7.min.css">
+<![endif]-->
+<style type="text/css">
+  body {
+    padding-top: 60px;
+    padding-bottom: 40px;
+  }
+}
+</style>
+<link rel="stylesheet" href="_static/basicstrap.css" type="text/css" />
+<link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+<link rel="stylesheet" href="_static/css/bootstrap-responsive.min.css" type="text/css" />
+    
+<script type="text/javascript">
+  var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:    './',
+            VERSION:     '0.16.0_160_ge97cf93-py2.7-linux-x86_64.egg',
+            COLLAPSE_INDEX: false,
+            FILE_SUFFIX: '.html',
+            HAS_SOURCE:  true
+  };
+</script>
+<script type="text/javascript" src="_static/js/jquery.min.js"></script>
+<script type="text/javascript" src="_static/underscore.js"></script>
+<script type="text/javascript" src="_static/doctools.js"></script>
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/javascript" src="_static/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+  $(document).ready(function(){
+    $('.show-sidebar').click(function(e) {
+       e.preventDefault();
+       if ($(".show-sidebar").html() == "Open Table Of Contents") {
+          $('.for-mobile').removeClass('hidden-phone');
+          $(".show-sidebar").html("Close Table Of Contents");
+       } else {
+          $(".show-sidebar").html("Open Table Of Contents");
+       }
+    });
+  });
+</script>
+    <link rel="top" title="numba 0.16.0_160_ge97cf93-py2.7-linux-x86_64.egg documentation" href="index.html" />
+    <link rel="next" title="UFuncs" href="ufuncs.html" />
+    <link rel="prev" title="Types" href="types.html" /> 
+  </head>
+  <body>
+    <div class="navbar navbar-fixed-top ">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="index.html">numba 0.16.0_160_ge97cf93-py2.7-linux-x86_64.egg documentation</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav pull-right">
+              
+                <li>
+                <a href="genindex.html" title="General Index" accesskey="I">index</a>
+                </li>
+                <li>
+                <a href="py-modindex.html" title="Python Module Index" >modules</a>
+                </li>
+                <li>
+                <a href="ufuncs.html" title="UFuncs" accesskey="N">next</a>
+                </li>
+                <li>
+                <a href="types.html" title="Types" accesskey="P">previous</a>
+                </li>
+              
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <!-- container -->
+    <div class="container-fluid">
+
+
+      
+      <div class="row-fluid hidden-desktop hidden-tablet">
+      
+<div class="span3 ">
+  <a class="visible-phone btn btn-small show-sidebar" data-toggle="collapse" data-target=".for-mobile">Open Table Of Contents</a>
+  <div class="for-mobile sidebar hidden-phone">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Arrays</a><ul>
+<li><a class="reference internal" href="#array-creation-loop-jitting">Array Creation &amp; Loop-Jitting</a></li>
+<li><a class="reference internal" href="#loop-jitting-constraints">Loop Jitting Constraints</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="types.html"
+                        title="previous chapter">Types</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="ufuncs.html"
+                        title="next chapter">UFuncs</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/arrays.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox">
+  <h3>Quick search</h3>
+  <form class="search form-search" action="search.html" method="get">
+      <div class="input-append">
+        <input type="text" class="search-query" name="q">
+        <input type="submit" class="btn" value="Go" />
+      </div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+  </div>
+</div>
+      </div>
+      
+
+      <!-- row -->
+      <div class="row-fluid">
+         
+<div class="span3 visible-desktop visible-tablet">
+  <div class=" sidebar hidden-phone">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Arrays</a><ul>
+<li><a class="reference internal" href="#array-creation-loop-jitting">Array Creation &amp; Loop-Jitting</a></li>
+<li><a class="reference internal" href="#loop-jitting-constraints">Loop Jitting Constraints</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="types.html"
+                        title="previous chapter">Types</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="ufuncs.html"
+                        title="next chapter">UFuncs</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/arrays.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox">
+  <h3>Quick search</h3>
+  <form class="search form-search" action="search.html" method="get">
+      <div class="input-append">
+        <input type="text" class="search-query" name="q">
+        <input type="submit" class="btn" value="Go" />
+      </div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+  </div>
+</div> 
+        
+
+        <div class="span9">
+          <div class="document">
+            <div class="documentwrapper">
+              <div class="bodywrapper">
+                <div class="body">
+                  
+  <div class="section" id="arrays">
+<h1>Arrays<a class="headerlink" href="#arrays" title="Permalink to this headline">¶</a></h1>
+<p>Support for NumPy arrays is a key focus of Numba development and is currently
+undergoing extensive refactorization and improvement. Most capabilities of
+NumPy arrays are supported by Numba in <a class="reference internal" href="glossary.html#term-object-mode"><em class="xref std std-term">object mode</em></a>, and a few features
+are supported in <a class="reference internal" href="glossary.html#term-nopython-mode"><em class="xref std std-term">nopython mode</em></a> too (with much more to come).</p>
+<p>A few noteworthy limitations of arrays at this time:</p>
+<ul class="simple">
+<li>Arrays can be passed in to a function in nopython mode, but not returned.
+Arrays can only be returned in object mode.</li>
+<li>New arrays can only be created in object mode.</li>
+<li>Currently there are no bounds checking for array indexing and slicing,
+although negative indices will wrap around correctly.</li>
+<li>A small number of NumPy array ufuncs are only supported in object mode, but
+the vast majority work in nopython mode.</li>
+<li>Array slicing only works in object mode.</li>
+</ul>
+<div class="section" id="array-creation-loop-jitting">
+<h2>Array Creation &amp; Loop-Jitting<a class="headerlink" href="#array-creation-loop-jitting" title="Permalink to this headline">¶</a></h2>
+<p>NumPy array creation is not supported in nopython mode. Numba mitigates this by
+automatically trying to JIT loops in nopython mode. This allows for array
+creation at the top of a function while still getting almost all the performance
+of nopython mode. For example, the following simple function:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># compiled in object mode</span>
+<span class="nd">@jit</span>
+<span class="k">def</span> <span class="nf">sum</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="n">array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+    <span class="nb">sum</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">y</span><span class="p">):</span>
+            <span class="nb">sum</span> <span class="o">+=</span> <span class="n">array</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span>
+    <span class="k">return</span> <span class="nb">sum</span>
+</pre></div>
+</div>
+<p>looks like the equivalent of the following after being compiled by Numba:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># force compilation in nopython mode</span>
+<span class="nd">@jit</span><span class="p">(</span><span class="n">nopython</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">jitted_loop</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="nb">sum</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">y</span><span class="p">):</span>
+            <span class="nb">sum</span> <span class="o">+=</span> <span class="n">array</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span>
+    <span class="k">return</span> <span class="nb">sum</span>
+
+<span class="c"># compiled in object mode</span>
+<span class="nd">@jit</span>
+<span class="k">def</span> <span class="nf">sum</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="n">array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">jitted_loop</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Another consequence of array creation being restricted to object mode is that
+NumPy ufuncs that return the result as a new array are not allowed in nopython
+mode. Fortunately we can declare an output array at the top of our function and
+pass that in to the ufunc to store our result. For example, the following:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@jit</span>
+<span class="k">def</span> <span class="nf">foo</span><span class="p">():</span>
+    <span class="c"># initialize stuff</span>
+
+    <span class="c"># slow loop in object mode</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>should be rewritten like the following to take advantage of loop jitting:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@jit</span>
+<span class="k">def</span> <span class="nf">foo</span><span class="p">():</span>
+    <span class="c"># initialize stuff</span>
+
+    <span class="c"># create output array</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+
+    <span class="c"># jitted loop in nopython mode</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="loop-jitting-constraints">
+<h2>Loop Jitting Constraints<a class="headerlink" href="#loop-jitting-constraints" title="Permalink to this headline">¶</a></h2>
+<p>The current loop-jitting mechanism is very conservative.  A loop must satisfy
+a set of constraints for loop-jitting to trigger. These constraints will be
+relaxed in further development.</p>
+<p>Currently, a loop is rejected if:</p>
+<ul class="simple">
+<li>the loop contains return statements;</li>
+</ul>
+<p>Loop-jitting will not be used by the compiler in this case because of the
+return statement in the loop:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@jit</span>
+<span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+
+    <span class="c"># Rejected loop-jitting candidate</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span>   <span class="c"># setitem is accepted</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">10</span><span class="p">:</span>
+            <span class="k">return</span>      <span class="c"># return is not accepted</span>
+
+    <span class="k">return</span> <span class="n">result</span>
+</pre></div>
+</div>
+<p>User can inspect the loop-jitting by running <cite>foo.inspect_types()</cite>.  For
+example, this:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@jit</span>
+<span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+
+    <span class="n">x</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>           <span class="c"># assign to variable &#39;x&#39;</span>
+
+    <span class="n">result</span> <span class="o">+=</span> <span class="n">x</span>                 <span class="c"># reading variable &#39;x&#39;</span>
+    <span class="k">return</span> <span class="n">result</span>
+
+
+<span class="n">foo</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="c"># trigger autojit</span>
+<span class="n">foo</span><span class="o">.</span><span class="n">inspect_types</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>prints the following output, indicating a lifted loop:</p>
+<div class="highlight-python"><div class="highlight"><pre>foo (int64,)
+--------------------------------------------------------------------------------
+# File: &lt;ipython-input-11-ffbcb34ecc02&gt;
+# --- LINE 1 ---
+
+@jit
+
+# --- LINE 2 ---
+
+def foo(n):
+
+# --- LINE 3 ---
+# label 0
+#   n.1 = n  :: pyobject
+#   del n
+#   $0.1 = global(np: &lt;module &#39;numpy&#39; from &#39;/Users/stan/anaconda/envs/numba_dev/lib/python2.7/site-packages/numpy/__init__.pyc&#39;&gt;)  :: pyobject
+#   $0.2 = getattr(attr=arange, value=$0.1)  :: pyobject
+#   del $0.1
+#   $0.4 = call $0.2(n.1, )  :: pyobject
+#   del $0.2
+#   result = $0.4  :: pyobject
+#   del $0.4
+
+result = np.arange(n)
+
+# --- LINE 4 ---
+
+
+
+# --- LINE 5 ---
+#   $const0.5 = const(int, 1)  :: pyobject
+#   x = $const0.5  :: pyobject
+#   del x
+#   del $const0.5
+
+x = 1
+
+# --- LINE 6 ---
+#   jump 24.1
+# label 24.1
+#   $const24.1.1 = const(LiftedLoop, LiftedLoop(&lt;function foo at 0x10ae43410&gt;))  :: pyobject
+#   $24.1.4 = call $const24.1.1(result, n.1, )  :: pyobject
+#   del n.1
+#   del $const24.1.1
+#   $24.1.6 = exhaust_iter(count=1, value=$24.1.4)  :: pyobject
+#   del $24.1.4
+#   $24.1.5 = static_getitem(index=0, value=$24.1.6)  :: pyobject
+#   del $24.1.6
+#   x.1 = $24.1.5  :: pyobject
+#   del $24.1.5
+#   jump 54
+
+for i in range(n):
+
+    # --- LINE 7 ---
+
+    x = result[i]           # assign to variable &#39;x&#39;
+
+# --- LINE 8 ---
+
+
+
+# --- LINE 9 ---
+# label 54
+#   $54.3 = inplace_binop(rhs=x.1, lhs=result, fn=+)  :: pyobject
+#   del x.1
+#   del result
+#   result.1 = $54.3  :: pyobject
+#   del $54.3
+
+result += x                 # reading variable &#39;x&#39;
+
+# --- LINE 10 ---
+#   $54.5 = cast(value=result.1)  :: pyobject
+#   del result.1
+#   return $54.5
+
+return result
+
+# The function contains lifted loops
+# Loop at line 6
+# Has 1 overloads
+# File: &lt;ipython-input-11-ffbcb34ecc02&gt;
+# --- LINE 1 ---
+
+@jit
+
+# --- LINE 2 ---
+
+def foo(n):
+
+# --- LINE 3 ---
+
+result = np.arange(n)
+
+# --- LINE 4 ---
+
+
+
+# --- LINE 5 ---
+
+x = 1
+
+# --- LINE 6 ---
+# label 34
+#   $34.2 = iternext(value=$phi34.1)  :: pair&lt;int64, bool&gt;
+#   $34.3 = pair_first(value=$34.2)  :: int64
+#   $34.4 = pair_second(value=$34.2)  :: bool
+#   del $34.2
+#   $phi37.1 = $34.3  :: int64
+#   del $34.3
+#   branch $34.4, 37, 53
+# label 21
+#   result.1 = result  :: array(int64, 1d, C, nonconst)
+#   del result
+#   n.1 = n  :: int64
+#   del n
+#   $21.1 = global(range: &lt;built-in function range&gt;)  :: range
+#   $21.3 = call $21.1(n.1, )  :: (int64,) -&gt; range_state64
+#   del n.1
+#   del $21.1
+#   $21.4 = getiter(value=$21.3)  :: range_iter64
+#   del $21.3
+#   $phi34.1 = $21.4  :: range_iter64
+#   del $21.4
+#   jump 34
+# label 37
+#   i = $phi37.1  :: int64
+#   del $phi37.1
+
+for i in range(n):
+
+    # --- LINE 7 ---
+    # label 53
+    #   del result.1
+    #   del $phi37.1
+    #   del $phi34.1
+    #   del $34.4
+    #   jump 54
+    # label 54
+    #   $54.2 = build_tuple(items=[Var(x, &lt;ipython-input-11-ffbcb34ecc02&gt; (7))])  :: (int64 x 1)
+    #   del x
+    #   $54.3 = cast(value=$54.2)  :: (int64 x 1)
+    #   del $54.2
+    #   return $54.3
+    #   $37.4 = getitem(index=i, value=result.1)  :: int64
+    #   del i
+    #   x = $37.4  :: int64
+    #   del $37.4
+    #   jump 34
+
+    x = result[i]           # assign to variable &#39;x&#39;
+
+# --- LINE 8 ---
+
+
+
+# --- LINE 9 ---
+
+result += x                 # reading variable &#39;x&#39;
+
+# --- LINE 10 ---
+
+return result
+
+
+================================================================================
+</pre></div>
+</div>
+</div>
+</div>
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        
+      </div><!-- /row -->
+
+      <!-- row -->
+      <div class="row-fluid">
+<div class="related navbar ">
+  <div class="navbar-inner">
+    <ul class="nav pull-right">
+      
+        <li><a href="genindex.html" title="General Index" >index</a></li>
+        <li><a href="py-modindex.html" title="Python Module Index" >modules</a></li>
+        <li><a href="ufuncs.html" title="UFuncs" >next</a></li>
+        <li><a href="types.html" title="Types" >previous</a></li>
+        <li><a href="index.html">numba 0.16.0_160_ge97cf93-py2.7-linux-x86_64.egg documentation</a></li> 
+      
+    </ul>
+  </div>
+</div>
+      </div><!-- /row -->
+
+      <!-- footer -->
+      <footer>
+          &copy; Copyright 2012-2014, Continuum Analytics.
+        Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.2.
+      </footer>
+      <!-- /footer -->
+
+    </div>
+    <!-- /container -->
+
+  </body>
+</html>

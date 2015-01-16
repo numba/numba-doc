@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+
+
+
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+    <title>CUDA Device Management &mdash; numba 0.16.0_160_ge97cf93-py2.7-linux-x86_64.egg documentation</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    
+<link rel="stylesheet" href="_static/css/basicstrap-base.css" type="text/css" />
+<link rel="stylesheet" href="_static/css/bootstrap.min.css" type="text/css" />
+<link rel="stylesheet" href="_static/css/font-awesome.min.css">
+<!--[if IE 7]>
+<link rel="stylesheet" href="_static/css/font-awesome-ie7.min.css">
+<![endif]-->
+<style type="text/css">
+  body {
+    padding-top: 60px;
+    padding-bottom: 40px;
+  }
+}
+</style>
+<link rel="stylesheet" href="_static/basicstrap.css" type="text/css" />
+<link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+<link rel="stylesheet" href="_static/css/bootstrap-responsive.min.css" type="text/css" />
+    
+<script type="text/javascript">
+  var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:    './',
+            VERSION:     '0.16.0_160_ge97cf93-py2.7-linux-x86_64.egg',
+            COLLAPSE_INDEX: false,
+            FILE_SUFFIX: '.html',
+            HAS_SOURCE:  true
+  };
+</script>
+<script type="text/javascript" src="_static/js/jquery.min.js"></script>
+<script type="text/javascript" src="_static/underscore.js"></script>
+<script type="text/javascript" src="_static/doctools.js"></script>
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/javascript" src="_static/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+  $(document).ready(function(){
+    $('.show-sidebar').click(function(e) {
+       e.preventDefault();
+       if ($(".show-sidebar").html() == "Open Table Of Contents") {
+          $('.for-mobile').removeClass('hidden-phone');
+          $(".show-sidebar").html("Close Table Of Contents");
+       } else {
+          $(".show-sidebar").html("Open Table Of Contents");
+       }
+    });
+  });
+</script>
+    <link rel="top" title="numba 0.16.0_160_ge97cf93-py2.7-linux-x86_64.egg documentation" href="index.html" />
+    <link rel="next" title="CUDA Support" href="CUDASupport.html" />
+    <link rel="prev" title="Writing CUDA-Python" href="CUDAJit.html" /> 
+  </head>
+  <body>
+    <div class="navbar navbar-fixed-top ">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="index.html">numba 0.16.0_160_ge97cf93-py2.7-linux-x86_64.egg documentation</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav pull-right">
+              
+                <li>
+                <a href="genindex.html" title="General Index" accesskey="I">index</a>
+                </li>
+                <li>
+                <a href="py-modindex.html" title="Python Module Index" >modules</a>
+                </li>
+                <li>
+                <a href="CUDASupport.html" title="CUDA Support" accesskey="N">next</a>
+                </li>
+                <li>
+                <a href="CUDAJit.html" title="Writing CUDA-Python" accesskey="P">previous</a>
+                </li>
+              
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <!-- container -->
+    <div class="container-fluid">
+
+
+      
+      <div class="row-fluid hidden-desktop hidden-tablet">
+      
+<div class="span3 ">
+  <a class="visible-phone btn btn-small show-sidebar" data-toggle="collapse" data-target=".for-mobile">Open Table Of Contents</a>
+  <div class="for-mobile sidebar hidden-phone">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">CUDA Device Management</a><ul>
+<li><a class="reference internal" href="#device-selection">Device Selection</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="CUDAJit.html"
+                        title="previous chapter">Writing CUDA-Python</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="CUDASupport.html"
+                        title="next chapter">CUDA Support</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/CUDADevice.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox">
+  <h3>Quick search</h3>
+  <form class="search form-search" action="search.html" method="get">
+      <div class="input-append">
+        <input type="text" class="search-query" name="q">
+        <input type="submit" class="btn" value="Go" />
+      </div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+  </div>
+</div>
+      </div>
+      
+
+      <!-- row -->
+      <div class="row-fluid">
+         
+<div class="span3 visible-desktop visible-tablet">
+  <div class=" sidebar hidden-phone">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">CUDA Device Management</a><ul>
+<li><a class="reference internal" href="#device-selection">Device Selection</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="CUDAJit.html"
+                        title="previous chapter">Writing CUDA-Python</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="CUDASupport.html"
+                        title="next chapter">CUDA Support</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/CUDADevice.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox">
+  <h3>Quick search</h3>
+  <form class="search form-search" action="search.html" method="get">
+      <div class="input-append">
+        <input type="text" class="search-query" name="q">
+        <input type="submit" class="btn" value="Go" />
+      </div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+  </div>
+</div> 
+        
+
+        <div class="span9">
+          <div class="document">
+            <div class="documentwrapper">
+              <div class="bodywrapper">
+                <div class="body">
+                  
+  <div class="section" id="cuda-device-management">
+<h1>CUDA Device Management<a class="headerlink" href="#cuda-device-management" title="Permalink to this headline">¶</a></h1>
+<p>For multi-GPU machines, users may want to select which GPU to use.
+By default the CUDA driver selects the fastest GPU as the device 0,
+which is the default device used by Numba.</p>
+<p>The features introduced on this page are generally not of interest
+unless working with systems hosting/offering more than one
+CUDA-capable GPU.</p>
+<div class="section" id="device-selection">
+<h2>Device Selection<a class="headerlink" href="#device-selection" title="Permalink to this headline">¶</a></h2>
+<p>Device selection must be done before any CUDA feature is used.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">cuda</span>
+<span class="n">cuda</span><span class="o">.</span><span class="n">select_device</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="function">
+<dt id="numba.cuda.select_device">
+<tt class="descclassname">numba.cuda.</tt><tt class="descname">select_device</tt><big>(</big><em>device_id</em><big>)</big><a class="headerlink" href="#numba.cuda.select_device" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new CUDA context with the selected device.
+The context is associated with the current thread.
+NumbaPro currently allows only one context per thread.</p>
+<p>Returns a device instance</p>
+<p>Raises exception on error.</p>
+</dd></dl>
+
+<p>The device can be closed by:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">cuda</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+<dl class="function">
+<dt id="numba.cuda.close">
+<tt class="descclassname">numba.cuda.</tt><tt class="descname">close</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.close" title="Permalink to this definition">¶</a></dt>
+<dd><p>Explicitly closes the context.</p>
+<p>Destroy the current context of the current thread</p>
+</dd></dl>
+
+<p>Users can then create a new context with another device.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">cuda</span><span class="o">.</span><span class="n">select_device</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>  <span class="c"># assuming we have 2 GPUs</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Compiled functions are associated with the CUDA context.
+This makes it not very useful to close and create new devices,
+though it is certainly useful for choosing which device to use when the machine
+has multiple GPUs.</p>
+</div>
+</div>
+</div>
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        
+      </div><!-- /row -->
+
+      <!-- row -->
+      <div class="row-fluid">
+<div class="related navbar ">
+  <div class="navbar-inner">
+    <ul class="nav pull-right">
+      
+        <li><a href="genindex.html" title="General Index" >index</a></li>
+        <li><a href="py-modindex.html" title="Python Module Index" >modules</a></li>
+        <li><a href="CUDASupport.html" title="CUDA Support" >next</a></li>
+        <li><a href="CUDAJit.html" title="Writing CUDA-Python" >previous</a></li>
+        <li><a href="index.html">numba 0.16.0_160_ge97cf93-py2.7-linux-x86_64.egg documentation</a></li> 
+      
+    </ul>
+  </div>
+</div>
+      </div><!-- /row -->
+
+      <!-- footer -->
+      <footer>
+          &copy; Copyright 2012-2014, Continuum Analytics.
+        Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.2.
+      </footer>
+      <!-- /footer -->
+
+    </div>
+    <!-- /container -->
+
+  </body>
+</html>
