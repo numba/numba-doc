@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     
-    <title>numba.cuda.cudadrv package &mdash; numba 0.16.0_174_g5fdd973-py2.7-linux-x86_64.egg documentation</title>
+    <title>numba.cuda.cudadrv package &mdash; numba 0.16.0_182_ga91a848-py2.7-linux-x86_64.egg documentation</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
@@ -34,7 +34,7 @@
 <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
             URL_ROOT:    '../',
-            VERSION:     '0.16.0_174_g5fdd973-py2.7-linux-x86_64.egg',
+            VERSION:     '0.16.0_182_ga91a848-py2.7-linux-x86_64.egg',
             COLLAPSE_INDEX: false,
             FILE_SUFFIX: '.html',
             HAS_SOURCE:  true
@@ -58,7 +58,7 @@
     });
   });
 </script>
-    <link rel="top" title="numba 0.16.0_174_g5fdd973-py2.7-linux-x86_64.egg documentation" href="../index.html" /> 
+    <link rel="top" title="numba 0.16.0_182_ga91a848-py2.7-linux-x86_64.egg documentation" href="../index.html" /> 
   </head>
   <body>
     <div class="navbar navbar-fixed-top ">
@@ -69,7 +69,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="../index.html">numba 0.16.0_174_g5fdd973-py2.7-linux-x86_64.egg documentation</a>
+          <a class="brand" href="../index.html">numba 0.16.0_182_ga91a848-py2.7-linux-x86_64.egg documentation</a>
           <div class="nav-collapse collapse">
             <ul class="nav pull-right">
               
@@ -339,42 +339,19 @@ smaller.</p>
 </div>
 <div class="section" id="module-numba.cuda.cudadrv.devices">
 <span id="numba-cuda-cudadrv-devices-module"></span><h2>numba.cuda.cudadrv.devices module<a class="headerlink" href="#module-numba.cuda.cudadrv.devices" title="Permalink to this headline">¶</a></h2>
-<p>Expose each GPU devices directly</p>
-<dl class="class">
-<dt id="numba.cuda.cudadrv.devices.GPU">
-<em class="property">class </em><tt class="descclassname">numba.cuda.cudadrv.devices.</tt><tt class="descname">GPU</tt><big>(</big><em>gpu</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.devices.GPU" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
-<p>Proxy into driver.Device.  Provides a CUDA runtime like layer.
-All threads see the same GPU list and shared the same CUDA context.</p>
-<dl class="attribute">
-<dt id="numba.cuda.cudadrv.devices.GPU.active_contexts">
-<tt class="descname">active_contexts</tt><a class="headerlink" href="#numba.cuda.cudadrv.devices.GPU.active_contexts" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="numba.cuda.cudadrv.devices.GPU.associate_context">
-<tt class="descname">associate_context</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.devices.GPU.associate_context" title="Permalink to this definition">¶</a></dt>
-<dd><p>Associate the context of this GPU to the running thread</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="numba.cuda.cudadrv.devices.GPU.reset">
-<tt class="descname">reset</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.devices.GPU.reset" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
+<p>Expose each GPU devices directly.</p>
+<p>This module implements a API that is like the &#8220;CUDA runtime&#8221; context manager
+for managing CUDA context stack and clean up.  It relies on thread-local globals
+to separate the context stack management of each thread. Contexts are also
+sharable among threads.  Only the main thread can destroy Contexts.</p>
+<p>Note:
+- This module must be imported by the main-thread.</p>
 <dl class="function">
 <dt id="numba.cuda.cudadrv.devices.get_context">
 <tt class="descclassname">numba.cuda.cudadrv.devices.</tt><tt class="descname">get_context</tt><big>(</big><em>devnum=0</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.devices.get_context" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the current device or use a device by device number, and
 return the CUDA context.</p>
 </dd></dl>
-
-<dl class="function">
-<dt id="numba.cuda.cudadrv.devices.get_gpu">
-<tt class="descclassname">numba.cuda.cudadrv.devices.</tt><tt class="descname">get_gpu</tt><big>(</big><em>i</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.devices.get_gpu" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
 
 <dl class="function">
 <dt id="numba.cuda.cudadrv.devices.require_context">
@@ -385,9 +362,12 @@ return the CUDA context.</p>
 <dl class="function">
 <dt id="numba.cuda.cudadrv.devices.reset">
 <tt class="descclassname">numba.cuda.cudadrv.devices.</tt><tt class="descname">reset</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.devices.reset" title="Permalink to this definition">¶</a></dt>
-<dd><p>Reset the CUDA subsystem.</p>
-<p>This removes all CUDA contexts.  Only use this at shutdown or for
+<dd><p>Reset the CUDA subsystem for the current thread.</p>
+<p>In the main thread:
+This removes all CUDA contexts.  Only use this at shutdown or for
 cleaning up between tests.</p>
+<p>In non-main threads:
+This clear the CUDA context stack only.</p>
 </dd></dl>
 
 </div>
@@ -514,28 +494,10 @@ object.  User should not construct devices directly.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="numba.cuda.cudadrv.driver.Device.close_all_context">
-<tt class="descname">close_all_context</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.Device.close_all_context" title="Permalink to this definition">¶</a></dt>
-<dd><p>Pop all contexts.</p>
-<p>We assume we own all cuda contexts.</p>
-</dd></dl>
-
-<dl class="method">
 <dt id="numba.cuda.cudadrv.driver.Device.create_context">
 <tt class="descname">create_context</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.Device.create_context" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a CUDA context.</p>
 </dd></dl>
-
-<dl class="method">
-<dt id="numba.cuda.cudadrv.driver.Device.get_context">
-<tt class="descname">get_context</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.Device.get_context" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get current active context in CUDA driver runtime.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="numba.cuda.cudadrv.driver.Device.get_or_create_context">
-<tt class="descname">get_or_create_context</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.Device.get_or_create_context" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
 
 <dl class="method">
 <dt id="numba.cuda.cudadrv.driver.Device.reset">
@@ -549,6 +511,13 @@ object.  User should not construct devices directly.</p>
 <em class="property">class </em><tt class="descclassname">numba.cuda.cudadrv.driver.</tt><tt class="descname">Driver</tt><a class="headerlink" href="#numba.cuda.cudadrv.driver.Driver" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
 <p>Driver API functions are lazily bound.</p>
+<dl class="method">
+<dt id="numba.cuda.cudadrv.driver.Driver.get_context">
+<tt class="descname">get_context</tt><big>(</big><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.Driver.get_context" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get current active context in CUDA driver runtime.
+Note: Lowlevel calls that returns the handle.</p>
+</dd></dl>
+
 <dl class="method">
 <dt id="numba.cuda.cudadrv.driver.Driver.get_device">
 <tt class="descname">get_device</tt><big>(</big><em>devnum=0</em><big>)</big><a class="headerlink" href="#numba.cuda.cudadrv.driver.Driver.get_device" title="Permalink to this definition">¶</a></dt>
@@ -1390,7 +1359,7 @@ allocation.</p>
       
         <li><a href="../genindex.html" title="General Index" >index</a></li>
         <li><a href="../py-modindex.html" title="Python Module Index" >modules</a></li>
-        <li><a href="../index.html">numba 0.16.0_174_g5fdd973-py2.7-linux-x86_64.egg documentation</a></li> 
+        <li><a href="../index.html">numba 0.16.0_182_ga91a848-py2.7-linux-x86_64.egg documentation</a></li> 
       
     </ul>
   </div>
