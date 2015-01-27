@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+
+
+
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+    <title>4.4. Extending the Numba backend &mdash; Numba 0.16.0_288_g39b602d-py2.7-linux-x86_64.egg documentation</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    
+<link rel="stylesheet" href="../_static/css/basicstrap-base.css" type="text/css" />
+<link rel="stylesheet" href="../_static/css/bootstrap.min.css" type="text/css" />
+<link rel="stylesheet" href="../_static/css/font-awesome.min.css">
+<!--[if IE 7]>
+<link rel="stylesheet" href="../_static/css/font-awesome-ie7.min.css">
+<![endif]-->
+<style type="text/css">
+  body {
+    padding-top: 60px;
+    padding-bottom: 40px;
+  }
+}
+</style>
+<link rel="stylesheet" href="../_static/basicstrap.css" type="text/css" />
+<link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+<link rel="stylesheet" href="../_static/css/bootstrap-responsive.min.css" type="text/css" />
+    
+<script type="text/javascript">
+  var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:    '../',
+            VERSION:     '0.16.0_288_g39b602d-py2.7-linux-x86_64.egg',
+            COLLAPSE_INDEX: false,
+            FILE_SUFFIX: '.html',
+            HAS_SOURCE:  true
+  };
+</script>
+<script type="text/javascript" src="../_static/js/jquery.min.js"></script>
+<script type="text/javascript" src="../_static/underscore.js"></script>
+<script type="text/javascript" src="../_static/doctools.js"></script>
+<script type="text/javascript" src="../_static/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+  $(document).ready(function(){
+    $('.show-sidebar').click(function(e) {
+       e.preventDefault();
+       if ($(".show-sidebar").html() == "Open Table Of Contents") {
+          $('.for-mobile').removeClass('hidden-phone');
+          $(".show-sidebar").html("Close Table Of Contents");
+       } else {
+          $(".show-sidebar").html("Open Table Of Contents");
+       }
+    });
+  });
+</script>
+    <link rel="top" title="Numba 0.16.0_288_g39b602d-py2.7-linux-x86_64.egg documentation" href="../index.html" />
+    <link rel="up" title="4. Developer Manual" href="index.html" />
+    <link rel="next" title="5. Glossary" href="../glossary.html" />
+    <link rel="prev" title="4.3. Extending the Numba Frontend" href="extending-frontend.html" /> 
+  </head>
+  <body>
+    <div class="navbar navbar-fixed-top ">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="../index.html">Numba 0.16.0_288_g39b602d-py2.7-linux-x86_64.egg documentation</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav pull-right">
+              
+                <li>
+                <a href="../genindex.html" title="General Index" accesskey="I">index</a>
+                </li>
+                <li>
+                <a href="../glossary.html" title="5. Glossary" accesskey="N">next</a>
+                </li>
+                <li>
+                <a href="extending-frontend.html" title="4.3. Extending the Numba Frontend" accesskey="P">previous</a>
+                </li>
+                <li>
+                <a href="index.html" accesskey="U">4. Developer Manual</a>
+                </li>
+              
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <!-- container -->
+    <div class="container-fluid">
+
+
+      
+      <div class="row-fluid hidden-desktop hidden-tablet">
+      
+<div class="span3 ">
+  <a class="visible-phone btn btn-small show-sidebar" data-toggle="collapse" data-target=".for-mobile">Open Table Of Contents</a>
+  <div class="for-mobile sidebar hidden-phone">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">4.4. Extending the Numba backend</a><ul>
+<li><a class="reference internal" href="#helper-lib">4.4.1. Helper Lib</a></li>
+<li><a class="reference internal" href="#python-api">4.4.2. Python API</a></li>
+<li><a class="reference internal" href="#target-interval-objects">4.4.3. Target Interval Objects</a></li>
+<li><a class="reference internal" href="#base-target">4.4.4. Base Target</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="extending-frontend.html"
+                        title="previous chapter">4.3. Extending the Numba Frontend</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../glossary.html"
+                        title="next chapter">5. Glossary</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/developer/extending-backend.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox">
+  <h3>Quick search</h3>
+  <form class="search form-search" action="../search.html" method="get">
+      <div class="input-append">
+        <input type="text" class="search-query" name="q">
+        <input type="submit" class="btn" value="Go" />
+      </div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+  </div>
+</div>
+      </div>
+      
+
+      <!-- row -->
+      <div class="row-fluid">
+         
+<div class="span3 visible-desktop visible-tablet">
+  <div class=" sidebar hidden-phone">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">4.4. Extending the Numba backend</a><ul>
+<li><a class="reference internal" href="#helper-lib">4.4.1. Helper Lib</a></li>
+<li><a class="reference internal" href="#python-api">4.4.2. Python API</a></li>
+<li><a class="reference internal" href="#target-interval-objects">4.4.3. Target Interval Objects</a></li>
+<li><a class="reference internal" href="#base-target">4.4.4. Base Target</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="extending-frontend.html"
+                        title="previous chapter">4.3. Extending the Numba Frontend</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../glossary.html"
+                        title="next chapter">5. Glossary</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/developer/extending-backend.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox">
+  <h3>Quick search</h3>
+  <form class="search form-search" action="../search.html" method="get">
+      <div class="input-append">
+        <input type="text" class="search-query" name="q">
+        <input type="submit" class="btn" value="Go" />
+      </div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+  </div>
+</div> 
+        
+
+        <div class="span9">
+          <div class="document">
+            <div class="documentwrapper">
+              <div class="bodywrapper">
+                <div class="body">
+                  
+  <div class="section" id="extending-the-numba-backend">
+<h1>4.4. Extending the Numba backend<a class="headerlink" href="#extending-the-numba-backend" title="Permalink to this headline">¶</a></h1>
+<div class="admonition-todo admonition" id="index-0">
+<p class="first admonition-title">Todo</p>
+<p class="last">write this</p>
+</div>
+<div class="section" id="helper-lib">
+<h2>4.4.1. Helper Lib<a class="headerlink" href="#helper-lib" title="Permalink to this headline">¶</a></h2>
+<p><tt class="docutils literal"><span class="pre">numba/_helperlib.c</span></tt> addition of struct and adapter function:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="k">typedef</span> <span class="k">struct</span> <span class="p">{</span>
+    <span class="kt">double</span> <span class="n">lo</span><span class="p">;</span>
+    <span class="kt">double</span> <span class="n">hi</span><span class="p">;</span>
+<span class="p">}</span> <span class="kt">intervalstruct_t</span><span class="p">;</span>
+
+<span class="k">static</span>
+<span class="kt">int</span> <span class="nf">Numba_adapt_interval</span><span class="p">(</span><span class="n">PyObject</span> <span class="o">*</span><span class="n">obj</span><span class="p">,</span> <span class="kt">intervalstruct_t</span><span class="o">*</span> <span class="n">ivstruct</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">PyObject</span><span class="o">*</span> <span class="n">lodata</span> <span class="o">=</span> <span class="n">PyObject_GetAttrString</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="s">&quot;lo&quot;</span><span class="p">);</span>
+    <span class="n">ivstruct</span><span class="o">-&gt;</span><span class="n">lo</span> <span class="o">=</span> <span class="n">PyFloat_AsDouble</span><span class="p">(</span><span class="n">lodata</span><span class="p">);</span>
+    <span class="n">PyObject</span><span class="o">*</span> <span class="n">hidata</span> <span class="o">=</span> <span class="n">PyObject_GetAttrString</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="s">&quot;hi&quot;</span><span class="p">);</span>
+    <span class="n">ivstruct</span><span class="o">-&gt;</span><span class="n">hi</span> <span class="o">=</span> <span class="n">PyFloat_AsDouble</span><span class="p">(</span><span class="n">hidata</span><span class="p">);</span>
+
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Building C Helpers dict:</p>
+<div class="highlight-c"><div class="highlight"><pre>static PyObject *
+build_c_helpers_dict(void)
+{
+    PyObject *dct = PyDict_New();
+    if (dct == NULL)
+        goto error;
+
+#define declmethod(func) do {                          \
+    PyObject *val = PyLong_FromVoidPtr(&amp;Numba_##func); \
+    if (val == NULL) goto error;                       \
+    if (PyDict_SetItemString(dct, #func, val)) {       \
+        Py_DECREF(val);                                \
+        goto error;                                    \
+    }                                                  \
+    Py_DECREF(val);                                    \
+} while (0)
+
+    declmethod(sdiv);
+    declmethod(srem);
+    declmethod(udiv);
+    declmethod(urem);
+    declmethod(cpow);
+    declmethod(complex_adaptor);
+    declmethod(extract_record_data);
+    declmethod(release_record_buffer);
+    declmethod(adapt_ndarray);
+    declmethod(ndarray_new);
+    declmethod(extract_np_datetime);
+    declmethod(create_np_datetime);
+    declmethod(extract_np_timedelta);
+    declmethod(create_np_timedelta);
+    declmethod(recreate_record);
+    declmethod(round_even);
+    declmethod(roundf_even);
+    declmethod(fptoui);
+    declmethod(fptouif);
+    declmethod(gil_ensure);
+    declmethod(gil_release);
+    declmethod(adapt_interval);
+#define MATH_UNARY(F, R, A) declmethod(F);
+#define MATH_BINARY(F, R, A, B) declmethod(F);
+    #include &quot;mathnames.inc&quot;
+#undef MATH_UNARY
+#undef MATH_BINARY
+
+#undef declmethod
+    return dct;
+error:
+    Py_XDECREF(dct);
+    return NULL;
+}
+</pre></div>
+</div>
+</div>
+<div class="section" id="python-api">
+<h2>4.4.2. Python API<a class="headerlink" href="#python-api" title="Permalink to this headline">¶</a></h2>
+<p>In <tt class="docutils literal"><span class="pre">numba.pythonapi</span></tt>. Add to <tt class="docutils literal"><span class="pre">to_native_value</span></tt>:</p>
+<div class="highlight-python"><div class="highlight"><pre>elif isinstance(typ, types.IntervalType):
+    return self.to_native_interval(obj)
+</pre></div>
+</div>
+<p>Add methods:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">to_native_interval</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">interval</span><span class="p">):</span>
+    <span class="n">voidptr</span> <span class="o">=</span> <span class="n">Type</span><span class="o">.</span><span class="n">pointer</span><span class="p">(</span><span class="n">Type</span><span class="o">.</span><span class="n">int</span><span class="p">(</span><span class="mi">8</span><span class="p">))</span>
+    <span class="n">nativeivcls</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">make_interval</span><span class="p">()</span>
+    <span class="n">nativeiv</span> <span class="o">=</span> <span class="n">nativeivcls</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">builder</span><span class="p">)</span>
+    <span class="n">ivptr</span> <span class="o">=</span> <span class="n">nativeiv</span><span class="o">.</span><span class="n">_getpointer</span><span class="p">()</span>
+    <span class="n">ptr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">bitcast</span><span class="p">(</span><span class="n">ivptr</span><span class="p">,</span> <span class="n">voidptr</span><span class="p">)</span>
+    <span class="n">errcode</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">interval_adaptor</span><span class="p">(</span><span class="n">interval</span><span class="p">,</span> <span class="n">ptr</span><span class="p">)</span>
+    <span class="n">failed</span> <span class="o">=</span> <span class="n">cgutils</span><span class="o">.</span><span class="n">is_not_null</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">builder</span><span class="p">,</span> <span class="n">errcode</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">cgutils</span><span class="o">.</span><span class="n">if_unlikely</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">builder</span><span class="p">,</span> <span class="n">failed</span><span class="p">):</span>
+        <span class="c"># TODO</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">unreachable</span><span class="p">()</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">ivptr</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">interval_adaptor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">interval</span><span class="p">,</span> <span class="n">ptr</span><span class="p">):</span>
+    <span class="n">voidptr</span> <span class="o">=</span> <span class="n">Type</span><span class="o">.</span><span class="n">pointer</span><span class="p">(</span><span class="n">Type</span><span class="o">.</span><span class="n">int</span><span class="p">(</span><span class="mi">8</span><span class="p">))</span>
+    <span class="n">fnty</span> <span class="o">=</span> <span class="n">Type</span><span class="o">.</span><span class="n">function</span><span class="p">(</span><span class="n">Type</span><span class="o">.</span><span class="n">int</span><span class="p">(),</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">pyobj</span><span class="p">,</span> <span class="n">voidptr</span><span class="p">])</span>
+    <span class="n">fn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_function</span><span class="p">(</span><span class="n">fnty</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s">&quot;numba_adapt_interval&quot;</span><span class="p">)</span>
+    <span class="n">fn</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">add_attribute</span><span class="p">(</span><span class="n">lc</span><span class="o">.</span><span class="n">ATTR_NO_CAPTURE</span><span class="p">)</span>
+    <span class="n">fn</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">add_attribute</span><span class="p">(</span><span class="n">lc</span><span class="o">.</span><span class="n">ATTR_NO_CAPTURE</span><span class="p">)</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="p">(</span><span class="n">interval</span><span class="p">,</span> <span class="n">ptr</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="target-interval-objects">
+<h2>4.4.3. Target Interval Objects<a class="headerlink" href="#target-interval-objects" title="Permalink to this headline">¶</a></h2>
+<p><tt class="docutils literal"><span class="pre">numba.targets.intervalobj.py</span></tt>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">cgutils</span><span class="p">,</span> <span class="n">types</span>
+<span class="kn">from</span> <span class="nn">numba.targets.imputils</span> <span class="kn">import</span> <span class="n">builtin_attr</span><span class="p">,</span> <span class="n">impl_attribute</span>
+
+<span class="k">def</span> <span class="nf">make_interval</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return the Structure representation of an interval</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c"># This structure should be kept in sync with Numba_adapt_interval()</span>
+    <span class="c"># in _helperlib.c.</span>
+    <span class="k">class</span> <span class="nc">IntervalTemplate</span><span class="p">(</span><span class="n">cgutils</span><span class="o">.</span><span class="n">Structure</span><span class="p">):</span>
+        <span class="n">_fields</span> <span class="o">=</span> <span class="p">[(</span><span class="s">&#39;lo&#39;</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">float64</span><span class="p">),</span>
+                   <span class="p">(</span><span class="s">&#39;hi&#39;</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">float64</span><span class="p">),</span>
+                  <span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">IntervalTemplate</span>
+
+<span class="nd">@builtin_attr</span>
+<span class="nd">@impl_attribute</span><span class="p">(</span><span class="n">types</span><span class="o">.</span><span class="n">Kind</span><span class="p">(</span><span class="n">types</span><span class="o">.</span><span class="n">IntervalType</span><span class="p">),</span> <span class="s">&#39;lo&#39;</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">interval_lo</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">builder</span><span class="p">,</span> <span class="n">typ</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="n">ivty</span> <span class="o">=</span> <span class="n">make_interval</span><span class="p">()</span>
+    <span class="n">iv</span> <span class="o">=</span> <span class="n">ivty</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">builder</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">iv</span><span class="o">.</span><span class="n">lo</span>
+
+<span class="nd">@builtin_attr</span>
+<span class="nd">@impl_attribute</span><span class="p">(</span><span class="n">types</span><span class="o">.</span><span class="n">Kind</span><span class="p">(</span><span class="n">types</span><span class="o">.</span><span class="n">IntervalType</span><span class="p">),</span> <span class="s">&#39;hi&#39;</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">interval_hi</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">builder</span><span class="p">,</span> <span class="n">typ</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="n">ivty</span> <span class="o">=</span> <span class="n">make_interval</span><span class="p">()</span>
+    <span class="n">iv</span> <span class="o">=</span> <span class="n">ivty</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">builder</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">iv</span><span class="o">.</span><span class="n">hi</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="base-target">
+<h2>4.4.4. Base Target<a class="headerlink" href="#base-target" title="Permalink to this headline">¶</a></h2>
+<p>Add <tt class="docutils literal"><span class="pre">get_data_type</span></tt> handling for interval type and <tt class="docutils literal"><span class="pre">make_interval</span></tt> method.</p>
+</div>
+</div>
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        
+      </div><!-- /row -->
+
+      <!-- row -->
+      <div class="row-fluid">
+<div class="related navbar ">
+  <div class="navbar-inner">
+    <ul class="nav pull-right">
+      
+        <li><a href="../genindex.html" title="General Index" >index</a></li>
+        <li><a href="../glossary.html" title="5. Glossary" >next</a></li>
+        <li><a href="extending-frontend.html" title="4.3. Extending the Numba Frontend" >previous</a></li>
+        <li><a href="../index.html">Numba 0.16.0_288_g39b602d-py2.7-linux-x86_64.egg documentation</a></li>
+        <li><a href="index.html" >4. Developer Manual</a></li> 
+      
+    </ul>
+  </div>
+</div>
+      </div><!-- /row -->
+
+      <!-- footer -->
+      <footer>
+          &copy; Copyright 2012-2014, Continuum Analytics.
+        Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.2.
+      </footer>
+      <!-- /footer -->
+
+    </div>
+    <!-- /container -->
+
+  </body>
+</html>

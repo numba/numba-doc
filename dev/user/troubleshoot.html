@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+
+
+
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+    <title>1.6. Troubleshooting and tips &mdash; Numba 0.16.0_288_g39b602d-py2.7-linux-x86_64.egg documentation</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    
+<link rel="stylesheet" href="../_static/css/basicstrap-base.css" type="text/css" />
+<link rel="stylesheet" href="../_static/css/bootstrap.min.css" type="text/css" />
+<link rel="stylesheet" href="../_static/css/font-awesome.min.css">
+<!--[if IE 7]>
+<link rel="stylesheet" href="../_static/css/font-awesome-ie7.min.css">
+<![endif]-->
+<style type="text/css">
+  body {
+    padding-top: 60px;
+    padding-bottom: 40px;
+  }
+}
+</style>
+<link rel="stylesheet" href="../_static/basicstrap.css" type="text/css" />
+<link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+<link rel="stylesheet" href="../_static/css/bootstrap-responsive.min.css" type="text/css" />
+    
+<script type="text/javascript">
+  var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:    '../',
+            VERSION:     '0.16.0_288_g39b602d-py2.7-linux-x86_64.egg',
+            COLLAPSE_INDEX: false,
+            FILE_SUFFIX: '.html',
+            HAS_SOURCE:  true
+  };
+</script>
+<script type="text/javascript" src="../_static/js/jquery.min.js"></script>
+<script type="text/javascript" src="../_static/underscore.js"></script>
+<script type="text/javascript" src="../_static/doctools.js"></script>
+<script type="text/javascript" src="../_static/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+  $(document).ready(function(){
+    $('.show-sidebar').click(function(e) {
+       e.preventDefault();
+       if ($(".show-sidebar").html() == "Open Table Of Contents") {
+          $('.for-mobile').removeClass('hidden-phone');
+          $(".show-sidebar").html("Close Table Of Contents");
+       } else {
+          $(".show-sidebar").html("Open Table Of Contents");
+       }
+    });
+  });
+</script>
+    <link rel="top" title="Numba 0.16.0_288_g39b602d-py2.7-linux-x86_64.egg documentation" href="../index.html" />
+    <link rel="up" title="1. User Manual" href="index.html" />
+    <link rel="next" title="1.7. Examples" href="examples.html" />
+    <link rel="prev" title="1.5. Compiling code ahead of time" href="pycc.html" /> 
+  </head>
+  <body>
+    <div class="navbar navbar-fixed-top ">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="../index.html">Numba 0.16.0_288_g39b602d-py2.7-linux-x86_64.egg documentation</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav pull-right">
+              
+                <li>
+                <a href="../genindex.html" title="General Index" accesskey="I">index</a>
+                </li>
+                <li>
+                <a href="examples.html" title="1.7. Examples" accesskey="N">next</a>
+                </li>
+                <li>
+                <a href="pycc.html" title="1.5. Compiling code ahead of time" accesskey="P">previous</a>
+                </li>
+                <li>
+                <a href="index.html" accesskey="U">1. User Manual</a>
+                </li>
+              
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <!-- container -->
+    <div class="container-fluid">
+
+
+      
+      <div class="row-fluid hidden-desktop hidden-tablet">
+      
+<div class="span3 ">
+  <a class="visible-phone btn btn-small show-sidebar" data-toggle="collapse" data-target=".for-mobile">Open Table Of Contents</a>
+  <div class="for-mobile sidebar hidden-phone">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">1.6. Troubleshooting and tips</a><ul>
+<li><a class="reference internal" href="#what-to-compile">1.6.1. What to compile</a></li>
+<li><a class="reference internal" href="#my-code-doesn-t-compile">1.6.2. My code doesn&#8217;t compile</a></li>
+<li><a class="reference internal" href="#the-compiled-code-is-too-slow">1.6.3. The compiled code is too slow</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="pycc.html"
+                        title="previous chapter">1.5. Compiling code ahead of time</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="examples.html"
+                        title="next chapter">1.7. Examples</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/user/troubleshoot.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox">
+  <h3>Quick search</h3>
+  <form class="search form-search" action="../search.html" method="get">
+      <div class="input-append">
+        <input type="text" class="search-query" name="q">
+        <input type="submit" class="btn" value="Go" />
+      </div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+  </div>
+</div>
+      </div>
+      
+
+      <!-- row -->
+      <div class="row-fluid">
+         
+<div class="span3 visible-desktop visible-tablet">
+  <div class=" sidebar hidden-phone">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">1.6. Troubleshooting and tips</a><ul>
+<li><a class="reference internal" href="#what-to-compile">1.6.1. What to compile</a></li>
+<li><a class="reference internal" href="#my-code-doesn-t-compile">1.6.2. My code doesn&#8217;t compile</a></li>
+<li><a class="reference internal" href="#the-compiled-code-is-too-slow">1.6.3. The compiled code is too slow</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="pycc.html"
+                        title="previous chapter">1.5. Compiling code ahead of time</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="examples.html"
+                        title="next chapter">1.7. Examples</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/user/troubleshoot.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox">
+  <h3>Quick search</h3>
+  <form class="search form-search" action="../search.html" method="get">
+      <div class="input-append">
+        <input type="text" class="search-query" name="q">
+        <input type="submit" class="btn" value="Go" />
+      </div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+  </div>
+</div> 
+        
+
+        <div class="span9">
+          <div class="document">
+            <div class="documentwrapper">
+              <div class="bodywrapper">
+                <div class="body">
+                  
+  <div class="section" id="troubleshooting-and-tips">
+<span id="troubleshooting"></span><h1>1.6. Troubleshooting and tips<a class="headerlink" href="#troubleshooting-and-tips" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="what-to-compile">
+<span id="id1"></span><h2>1.6.1. What to compile<a class="headerlink" href="#what-to-compile" title="Permalink to this headline">¶</a></h2>
+<p>The general recommendation is that you should only try to compile the
+critical paths in your code.  If you have a piece of performance-critical
+computational code amongst some higher-level code, you may factor out
+the performance-critical code in a separate function and compile the
+separate function with Numba.  Letting Numba focus on that small piece
+of performance-critical code has several advantages:</p>
+<ul class="simple">
+<li>it reduces the risk of hitting unsupported features;</li>
+<li>it reduces the compilation times;</li>
+<li>it allows you to evolve the higher-level code which is outside of the
+compiled function much easier.</li>
+</ul>
+</div>
+<div class="section" id="my-code-doesn-t-compile">
+<span id="code-doesnt-compile"></span><h2>1.6.2. My code doesn&#8217;t compile<a class="headerlink" href="#my-code-doesn-t-compile" title="Permalink to this headline">¶</a></h2>
+<p>There can be various reasons why Numba cannot compile your code, and raises
+an error instead.  One common reason is that your code relies on an
+unsupported Python feature, especially in <a class="reference internal" href="../glossary.html#term-nopython-mode"><em class="xref std std-term">nopython mode</em></a>.
+Please see the list of <a class="reference internal" href="../reference/pysupported.html#pysupported"><em>Supported Python features</em></a>.  If you find something that
+is listed there and still fails compiling, please <a class="reference internal" href="../developer/contributing.html#report-bugs"><em>report a bug</em></a>.</p>
+<p>The other reason is that you asked for <a class="reference internal" href="../glossary.html#term-nopython-mode"><em class="xref std std-term">nopython mode</em></a>, and type
+inference has failed on some piece of your code.  For example, let&#8217;s
+consider this trivial function:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@jit</span><span class="p">(</span><span class="n">nopython</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
+</pre></div>
+</div>
+<p>If you call it with two numbers, Numba is able to infer the types properly:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="go">3</span>
+</pre></div>
+</div>
+<p>If however you call it with a tuple and a number, Numba is unable to say
+what the result of adding a tuple and number is, and therefore compilation
+errors out:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,))</span>
+<span class="gt">Traceback (most recent call last):</span>
+  File <span class="nb">&quot;&lt;stdin&gt;&quot;</span>, line <span class="m">1</span>, in <span class="n">&lt;module&gt;</span>
+    <span class="p">[</span><span class="o">...</span><span class="p">]</span>
+  File <span class="nb">&quot;/home/antoine/numba/numba/typeinfer.py&quot;</span>, line <span class="m">242</span>, in <span class="n">resolve</span>
+    <span class="k">raise</span> <span class="n">TypingError</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">loc</span><span class="p">)</span>
+<span class="gr">numba.typeinfer.TypingError</span>: <span class="n">Failed at nopython frontend</span>
+<span class="go">Undeclared +(int64, (int32 x 1))</span>
+<span class="go">File &quot;&lt;stdin&gt;&quot;, line 2</span>
+</pre></div>
+</div>
+<p>The error message helps you find out what went wrong:
+&#8220;Undeclared +(int64, (int32 x 1))&#8221; is to be interpreted as &#8220;Numba encountered
+an addition of variables typed as integer and 1-tuple of integer, respectively,
+and doesn&#8217;t know about any such operation&#8221;.</p>
+<p>Note that if you allow object mode, compilation will succeed and the
+compiled function will raise at runtime as Python would do:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">g</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,))</span>
+<span class="gt">Traceback (most recent call last):</span>
+  File <span class="nb">&quot;&lt;stdin&gt;&quot;</span>, line <span class="m">1</span>, in <span class="n">&lt;module&gt;</span>
+<span class="gr">TypeError</span>: <span class="n">unsupported operand type(s) for +: &#39;int&#39; and &#39;tuple&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="the-compiled-code-is-too-slow">
+<h2>1.6.3. The compiled code is too slow<a class="headerlink" href="#the-compiled-code-is-too-slow" title="Permalink to this headline">¶</a></h2>
+<p>The most common reason for slowness of a compiled JIT function is that
+compiling in <a class="reference internal" href="../glossary.html#term-nopython-mode"><em class="xref std std-term">nopython mode</em></a> has failed and the Numba compiler has
+fallen back to <a class="reference internal" href="../glossary.html#term-object-mode"><em class="xref std std-term">object mode</em></a>.  <a class="reference internal" href="../glossary.html#term-object-mode"><em class="xref std std-term">object mode</em></a> currently provides
+little to no speedup compared to regular Python interpretation, and its
+main point is to allow an internal optimization known as
+<a class="reference internal" href="../glossary.html#term-loop-lifting"><em class="xref std std-term">loop-lifting</em></a>: this optimization will allow to compile inner
+loops in <a class="reference internal" href="../glossary.html#term-nopython-mode"><em class="xref std std-term">nopython mode</em></a> regardless of what code surrounds those
+inner loops.</p>
+<p>To find out if type inference succeeded on your function, you can use
+the <a class="reference internal" href="../reference/compilation.html#Dispatcher.inspect_types" title="Dispatcher.inspect_types"><tt class="xref py py-meth docutils literal"><span class="pre">inspect_types()</span></tt></a> method on the compiled function.</p>
+<p>For example, let&#8217;s take the following function:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@jit</span>
+<span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">a</span> <span class="o">+</span> <span class="nb">float</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">s</span>
+</pre></div>
+</div>
+<p>When called with numbers, this function should be fast as Numba is able
+to convert number types to floating-point numbers.  Let&#8217;s see:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="go">3.0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="o">.</span><span class="n">inspect_types</span><span class="p">()</span>
+<span class="go">f (int64, int64)</span>
+<span class="go">--------------------------------------------------------------------------------</span>
+<span class="go"># --- LINE 7 ---</span>
+
+<span class="go">@jit</span>
+
+<span class="go"># --- LINE 8 ---</span>
+
+<span class="go">def f(a, b):</span>
+
+<span class="go">    # --- LINE 9 ---</span>
+<span class="go">    # label 0</span>
+<span class="go">    #   a.1 = a  :: int64</span>
+<span class="go">    #   del a</span>
+<span class="go">    #   b.1 = b  :: int64</span>
+<span class="go">    #   del b</span>
+<span class="go">    #   $0.2 = global(float: &lt;class &#39;float&#39;&gt;)  :: Function(&lt;class &#39;float&#39;&gt;)</span>
+<span class="go">    #   $0.4 = call $0.2(b.1, )  :: (int64,) -&gt; float64</span>
+<span class="go">    #   del b.1</span>
+<span class="go">    #   del $0.2</span>
+<span class="go">    #   $0.5 = a.1 + $0.4  :: float64</span>
+<span class="go">    #   del a.1</span>
+<span class="go">    #   del $0.4</span>
+<span class="go">    #   s = $0.5  :: float64</span>
+<span class="go">    #   del $0.5</span>
+
+<span class="go">    s = a + float(b)</span>
+
+<span class="go">    # --- LINE 10 ---</span>
+<span class="go">    #   $0.7 = cast(value=s)  :: float64</span>
+<span class="go">    #   del s</span>
+<span class="go">    #   return $0.7</span>
+
+<span class="go">    return s</span>
+</pre></div>
+</div>
+<p>Without trying to understand too much of the Numba intermediate representation,
+it is still visible that all variables and temporary values have had their
+types inferred properly: for example <em>a</em> has the type <tt class="docutils literal"><span class="pre">int64</span></tt>, <em>$0.5</em> has
+the type <tt class="docutils literal"><span class="pre">float64</span></tt>, etc.</p>
+<p>However, if <em>b</em> is passed as a string, compilation will fall back on object
+mode as the float() constructor with a string is currently not supported
+by Numba:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s">&quot;2&quot;</span><span class="p">)</span>
+<span class="go">3.0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="o">.</span><span class="n">inspect_types</span><span class="p">()</span>
+<span class="go">[... snip annotations for other signatures, see above ...]</span>
+<span class="go">================================================================================</span>
+<span class="go">f (int64, str)</span>
+<span class="go">--------------------------------------------------------------------------------</span>
+<span class="go"># --- LINE 7 ---</span>
+
+<span class="go">@jit</span>
+
+<span class="go"># --- LINE 8 ---</span>
+
+<span class="go">def f(a, b):</span>
+
+<span class="go">    # --- LINE 9 ---</span>
+<span class="go">    # label 0</span>
+<span class="go">    #   a.1 = a  :: pyobject</span>
+<span class="go">    #   del a</span>
+<span class="go">    #   b.1 = b  :: pyobject</span>
+<span class="go">    #   del b</span>
+<span class="go">    #   $0.2 = global(float: &lt;class &#39;float&#39;&gt;)  :: pyobject</span>
+<span class="go">    #   $0.4 = call $0.2(b.1, )  :: pyobject</span>
+<span class="go">    #   del b.1</span>
+<span class="go">    #   del $0.2</span>
+<span class="go">    #   $0.5 = a.1 + $0.4  :: pyobject</span>
+<span class="go">    #   del a.1</span>
+<span class="go">    #   del $0.4</span>
+<span class="go">    #   s = $0.5  :: pyobject</span>
+<span class="go">    #   del $0.5</span>
+
+<span class="go">    s = a + float(b)</span>
+
+<span class="go">    # --- LINE 10 ---</span>
+<span class="go">    #   $0.7 = cast(value=s)  :: pyobject</span>
+<span class="go">    #   del s</span>
+<span class="go">    #   return $0.7</span>
+
+<span class="go">    return s</span>
+</pre></div>
+</div>
+<p>Here we see that all variables end up typed as <tt class="docutils literal"><span class="pre">pyobject</span></tt>.  This means
+that the function was compiled in object mode and values are passed
+around as generic Python objects, without Numba trying to look into them
+to reason about their raw values.  This is a situation you want to avoid
+when caring about the speed of your code.</p>
+<p>There are several ways of understanding why a function fails to
+compile in nopython mode:</p>
+<ul>
+<li><p class="first">pass <em>nopython=True</em>, which will raise an error indicating what went wrong
+(see above <a class="reference internal" href="#code-doesnt-compile"><em>My code doesn&#8217;t compile</em></a>);</p>
+</li>
+<li><p class="first">enable warnings by setting the <span class="target" id="index-0"></span><a class="reference internal" href="../reference/envvars.html#envvar-NUMBA_WARNINGS"><tt class="xref std std-envvar docutils literal"><span class="pre">NUMBA_WARNINGS</span></tt></a> environment
+variable; for example with the <tt class="docutils literal"><span class="pre">f()</span></tt> function above:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="go">3.0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s">&quot;2&quot;</span><span class="p">)</span>
+<span class="go">example.py:7: NumbaWarning: Function &quot;f&quot; failed type inference: Internal error at &lt;numba.typeinfer.CallConstrain object at 0x7f6b8dd24550&gt;:</span>
+<span class="go">float() only support for numbers</span>
+<span class="go">File &quot;example.py&quot;, line 9</span>
+<span class="go">  @jit</span>
+<span class="go">example.py:7: NumbaWarning: Function &quot;f&quot; was compiled in object mode without forceobj=True.</span>
+<span class="go">  @jit</span>
+<span class="go">3.0</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+</div>
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        
+      </div><!-- /row -->
+
+      <!-- row -->
+      <div class="row-fluid">
+<div class="related navbar ">
+  <div class="navbar-inner">
+    <ul class="nav pull-right">
+      
+        <li><a href="../genindex.html" title="General Index" >index</a></li>
+        <li><a href="examples.html" title="1.7. Examples" >next</a></li>
+        <li><a href="pycc.html" title="1.5. Compiling code ahead of time" >previous</a></li>
+        <li><a href="../index.html">Numba 0.16.0_288_g39b602d-py2.7-linux-x86_64.egg documentation</a></li>
+        <li><a href="index.html" >1. User Manual</a></li> 
+      
+    </ul>
+  </div>
+</div>
+      </div><!-- /row -->
+
+      <!-- footer -->
+      <footer>
+          &copy; Copyright 2012-2014, Continuum Analytics.
+        Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.2.
+      </footer>
+      <!-- /footer -->
+
+    </div>
+    <!-- /container -->
+
+  </body>
+</html>
