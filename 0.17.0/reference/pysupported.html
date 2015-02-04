@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+
+
+
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+    <title>2.4. Supported Python features &mdash; Numba 0.17.0-py2.7-linux-x86_64.egg documentation</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    
+<link rel="stylesheet" href="../_static/css/basicstrap-base.css" type="text/css" />
+<link rel="stylesheet" href="../_static/css/bootstrap.min.css" type="text/css" />
+<link rel="stylesheet" href="../_static/css/font-awesome.min.css">
+<!--[if IE 7]>
+<link rel="stylesheet" href="../_static/css/font-awesome-ie7.min.css">
+<![endif]-->
+<style type="text/css">
+  body {
+    padding-top: 60px;
+    padding-bottom: 40px;
+  }
+}
+</style>
+<link rel="stylesheet" href="../_static/basicstrap.css" type="text/css" />
+<link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+<link rel="stylesheet" href="../_static/css/bootstrap-responsive.min.css" type="text/css" />
+    
+<script type="text/javascript">
+  var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:    '../',
+            VERSION:     '0.17.0-py2.7-linux-x86_64.egg',
+            COLLAPSE_INDEX: false,
+            FILE_SUFFIX: '.html',
+            HAS_SOURCE:  true
+  };
+</script>
+<script type="text/javascript" src="../_static/js/jquery.min.js"></script>
+<script type="text/javascript" src="../_static/underscore.js"></script>
+<script type="text/javascript" src="../_static/doctools.js"></script>
+<script type="text/javascript" src="../_static/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+  $(document).ready(function(){
+    $('.show-sidebar').click(function(e) {
+       e.preventDefault();
+       if ($(".show-sidebar").html() == "Open Table Of Contents") {
+          $('.for-mobile').removeClass('hidden-phone');
+          $(".show-sidebar").html("Close Table Of Contents");
+       } else {
+          $(".show-sidebar").html("Open Table Of Contents");
+       }
+    });
+  });
+</script>
+    <link rel="top" title="Numba 0.17.0-py2.7-linux-x86_64.egg documentation" href="../index.html" />
+    <link rel="up" title="2. Reference Manual" href="index.html" />
+    <link rel="next" title="2.5. Supported Numpy features" href="numpysupported.html" />
+    <link rel="prev" title="2.3. Environment variables" href="envvars.html" /> 
+  </head>
+  <body>
+    <div class="navbar navbar-fixed-top ">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="../index.html">Numba 0.17.0-py2.7-linux-x86_64.egg documentation</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav pull-right">
+              
+                <li>
+                <a href="../genindex.html" title="General Index" accesskey="I">index</a>
+                </li>
+                <li>
+                <a href="numpysupported.html" title="2.5. Supported Numpy features" accesskey="N">next</a>
+                </li>
+                <li>
+                <a href="envvars.html" title="2.3. Environment variables" accesskey="P">previous</a>
+                </li>
+                <li>
+                <a href="index.html" accesskey="U">2. Reference Manual</a>
+                </li>
+              
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <!-- container -->
+    <div class="container-fluid">
+
+
+      
+      <div class="row-fluid hidden-desktop hidden-tablet">
+      
+<div class="span3 ">
+  <a class="visible-phone btn btn-small show-sidebar" data-toggle="collapse" data-target=".for-mobile">Open Table Of Contents</a>
+  <div class="for-mobile sidebar hidden-phone">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">2.4. Supported Python features</a><ul>
+<li><a class="reference internal" href="#language">2.4.1. Language</a><ul>
+<li><a class="reference internal" href="#constructs">2.4.1.1. Constructs</a></li>
+<li><a class="reference internal" href="#function-calls">2.4.1.2. Function calls</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#built-in-types">2.4.2. Built-in types</a><ul>
+<li><a class="reference internal" href="#int-bool">2.4.2.1. int, bool</a></li>
+<li><a class="reference internal" href="#float-complex">2.4.2.2. float, complex</a></li>
+<li><a class="reference internal" href="#tuple">2.4.2.3. tuple</a></li>
+<li><a class="reference internal" href="#none">2.4.2.4. None</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#built-in-functions">2.4.3. Built-in functions</a></li>
+<li><a class="reference internal" href="#standard-library-modules">2.4.4. Standard library modules</a><ul>
+<li><a class="reference internal" href="#cmath">2.4.4.1. <tt class="docutils literal"><span class="pre">cmath</span></tt></a></li>
+<li><a class="reference internal" href="#ctypes">2.4.4.2. <tt class="docutils literal"><span class="pre">ctypes</span></tt></a></li>
+<li><a class="reference internal" href="#math">2.4.4.3. <tt class="docutils literal"><span class="pre">math</span></tt></a></li>
+<li><a class="reference internal" href="#operator">2.4.4.4. <tt class="docutils literal"><span class="pre">operator</span></tt></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#third-party-modules">2.4.5. Third-party modules</a><ul>
+<li><a class="reference internal" href="#cffi">2.4.5.1. <tt class="docutils literal"><span class="pre">cffi</span></tt></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="envvars.html"
+                        title="previous chapter">2.3. Environment variables</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="numpysupported.html"
+                        title="next chapter">2.5. Supported Numpy features</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/reference/pysupported.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox">
+  <h3>Quick search</h3>
+  <form class="search form-search" action="../search.html" method="get">
+      <div class="input-append">
+        <input type="text" class="search-query" name="q">
+        <input type="submit" class="btn" value="Go" />
+      </div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+  </div>
+</div>
+      </div>
+      
+
+      <!-- row -->
+      <div class="row-fluid">
+         
+<div class="span3 visible-desktop visible-tablet">
+  <div class=" sidebar hidden-phone">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">2.4. Supported Python features</a><ul>
+<li><a class="reference internal" href="#language">2.4.1. Language</a><ul>
+<li><a class="reference internal" href="#constructs">2.4.1.1. Constructs</a></li>
+<li><a class="reference internal" href="#function-calls">2.4.1.2. Function calls</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#built-in-types">2.4.2. Built-in types</a><ul>
+<li><a class="reference internal" href="#int-bool">2.4.2.1. int, bool</a></li>
+<li><a class="reference internal" href="#float-complex">2.4.2.2. float, complex</a></li>
+<li><a class="reference internal" href="#tuple">2.4.2.3. tuple</a></li>
+<li><a class="reference internal" href="#none">2.4.2.4. None</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#built-in-functions">2.4.3. Built-in functions</a></li>
+<li><a class="reference internal" href="#standard-library-modules">2.4.4. Standard library modules</a><ul>
+<li><a class="reference internal" href="#cmath">2.4.4.1. <tt class="docutils literal"><span class="pre">cmath</span></tt></a></li>
+<li><a class="reference internal" href="#ctypes">2.4.4.2. <tt class="docutils literal"><span class="pre">ctypes</span></tt></a></li>
+<li><a class="reference internal" href="#math">2.4.4.3. <tt class="docutils literal"><span class="pre">math</span></tt></a></li>
+<li><a class="reference internal" href="#operator">2.4.4.4. <tt class="docutils literal"><span class="pre">operator</span></tt></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#third-party-modules">2.4.5. Third-party modules</a><ul>
+<li><a class="reference internal" href="#cffi">2.4.5.1. <tt class="docutils literal"><span class="pre">cffi</span></tt></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="envvars.html"
+                        title="previous chapter">2.3. Environment variables</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="numpysupported.html"
+                        title="next chapter">2.5. Supported Numpy features</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/reference/pysupported.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox">
+  <h3>Quick search</h3>
+  <form class="search form-search" action="../search.html" method="get">
+      <div class="input-append">
+        <input type="text" class="search-query" name="q">
+        <input type="submit" class="btn" value="Go" />
+      </div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+  </div>
+</div> 
+        
+
+        <div class="span9">
+          <div class="document">
+            <div class="documentwrapper">
+              <div class="bodywrapper">
+                <div class="body">
+                  
+  <div class="section" id="supported-python-features">
+<span id="pysupported"></span><h1>2.4. Supported Python features<a class="headerlink" href="#supported-python-features" title="Permalink to this headline">¶</a></h1>
+<p>Apart from the <a class="reference internal" href="#pysupported-language"><em>Language</em></a> part below, which applies to both
+<a class="reference internal" href="../glossary.html#term-object-mode"><em class="xref std std-term">object mode</em></a> and <a class="reference internal" href="../glossary.html#term-nopython-mode"><em class="xref std std-term">nopython mode</em></a>, this page only lists the
+features supported in <a class="reference internal" href="../glossary.html#term-nopython-mode"><em class="xref std std-term">nopython mode</em></a>.</p>
+<div class="section" id="language">
+<span id="pysupported-language"></span><h2>2.4.1. Language<a class="headerlink" href="#language" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="constructs">
+<h3>2.4.1.1. Constructs<a class="headerlink" href="#constructs" title="Permalink to this headline">¶</a></h3>
+<p>Numba strives to support as much of the Python language as possible, but
+some language features are not available inside Numba-compiled functions:</p>
+<ul class="simple">
+<li>Function definition</li>
+<li>Class definition</li>
+<li>Exception handling (<tt class="docutils literal"><span class="pre">try</span> <span class="pre">..</span> <span class="pre">except</span></tt>, <tt class="docutils literal"><span class="pre">try</span> <span class="pre">..</span> <span class="pre">finally</span></tt>)</li>
+<li>Context management (the <tt class="docutils literal"><span class="pre">with</span></tt> statement)</li>
+</ul>
+<p>The <tt class="docutils literal"><span class="pre">raise</span></tt> statement is only supported in the simplest form of
+raising a type without explicitly creating an instance, i.e.
+<tt class="docutils literal"><span class="pre">raise</span> <span class="pre">TypeError</span></tt> is possible but not <tt class="docutils literal"><span class="pre">raise</span> <span class="pre">TypeError(&quot;some</span> <span class="pre">message&quot;)</span></tt>.</p>
+<p>Similarly, the <tt class="docutils literal"><span class="pre">assert</span></tt> statement is only supported without an explicit
+error message.</p>
+</div>
+<div class="section" id="function-calls">
+<h3>2.4.1.2. Function calls<a class="headerlink" href="#function-calls" title="Permalink to this headline">¶</a></h3>
+<p>Numba supports function calls using positional and named arguments.
+<tt class="docutils literal"><span class="pre">*args</span></tt> and <tt class="docutils literal"><span class="pre">**kwargs</span></tt> are not supported.</p>
+</div>
+</div>
+<div class="section" id="built-in-types">
+<h2>2.4.2. Built-in types<a class="headerlink" href="#built-in-types" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="int-bool">
+<h3>2.4.2.1. int, bool<a class="headerlink" href="#int-bool" title="Permalink to this headline">¶</a></h3>
+<p>Arithmetic operations as well as truth values are supported.</p>
+<p>The following attributes and methods are supported:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">.conjugate()</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">.real</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">.imag</span></tt></li>
+</ul>
+</div>
+<div class="section" id="float-complex">
+<h3>2.4.2.2. float, complex<a class="headerlink" href="#float-complex" title="Permalink to this headline">¶</a></h3>
+<p>Arithmetic operations as well as truth values are supported.</p>
+<p>The following attributes and methods are supported:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">.conjugate()</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">.real</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">.imag</span></tt></li>
+</ul>
+</div>
+<div class="section" id="tuple">
+<h3>2.4.2.3. tuple<a class="headerlink" href="#tuple" title="Permalink to this headline">¶</a></h3>
+<p>Tuple construction and unpacking is supported.</p>
+</div>
+<div class="section" id="none">
+<h3>2.4.2.4. None<a class="headerlink" href="#none" title="Permalink to this headline">¶</a></h3>
+<p>The <tt class="xref py py-const docutils literal"><span class="pre">None</span></tt> value is supported for identity testing (when using
+an <a class="reference internal" href="types.html#numba.optional" title="numba.optional"><tt class="xref py py-class docutils literal"><span class="pre">optional</span></tt></a> type).</p>
+</div>
+</div>
+<div class="section" id="built-in-functions">
+<h2>2.4.3. Built-in functions<a class="headerlink" href="#built-in-functions" title="Permalink to this headline">¶</a></h2>
+<p>The following built-in functions are supported:</p>
+<ul class="simple">
+<li><a class="reference external" href="https://docs.python.org/3/library/functions.html#abs" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">abs()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.4)"><tt class="xref py py-class docutils literal"><span class="pre">bool</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.4)"><tt class="xref py py-class docutils literal"><span class="pre">complex</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/functions.html#enumerate" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">enumerate()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.4)"><tt class="xref py py-class docutils literal"><span class="pre">float</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.4)"><tt class="xref py py-class docutils literal"><span class="pre">int</span></tt></a>: only the one-argument form</li>
+<li><a class="reference external" href="https://docs.python.org/3/library/functions.html#len" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">len()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/functions.html#min" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">min()</span></tt></a>: only the multiple-argument form</li>
+<li><a class="reference external" href="https://docs.python.org/3/library/functions.html#max" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">max()</span></tt></a>: only the multiple-argument form</li>
+<li><a class="reference external" href="https://docs.python.org/3/library/functions.html#print" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">print()</span></tt></a>: only numbers and strings; no <tt class="docutils literal"><span class="pre">file</span></tt> or <tt class="docutils literal"><span class="pre">sep</span></tt> argument</li>
+<li><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#range" title="(in Python v3.4)"><tt class="xref py py-class docutils literal"><span class="pre">range</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/functions.html#round" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">round()</span></tt></a>: only the two-argument form</li>
+<li><a class="reference external" href="https://docs.python.org/3/library/functions.html#zip" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">zip()</span></tt></a></li>
+</ul>
+</div>
+<div class="section" id="standard-library-modules">
+<h2>2.4.4. Standard library modules<a class="headerlink" href="#standard-library-modules" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="cmath">
+<h3>2.4.4.1. <tt class="docutils literal"><span class="pre">cmath</span></tt><a class="headerlink" href="#cmath" title="Permalink to this headline">¶</a></h3>
+<p>The following functions from the <a class="reference external" href="https://docs.python.org/3/library/cmath.html#module-cmath" title="(in Python v3.4)"><tt class="xref py py-mod docutils literal"><span class="pre">cmath</span></tt></a> module are supported:</p>
+<ul class="simple">
+<li><a class="reference external" href="https://docs.python.org/3/library/cmath.html#cmath.acos" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">cmath.acos()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/cmath.html#cmath.acosh" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">cmath.acosh()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/cmath.html#cmath.asin" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">cmath.asin()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/cmath.html#cmath.asinh" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">cmath.asinh()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/cmath.html#cmath.atan" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">cmath.atan()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/cmath.html#cmath.atanh" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">cmath.atanh()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/cmath.html#cmath.cos" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">cmath.cos()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/cmath.html#cmath.cosh" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">cmath.cosh()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/cmath.html#cmath.exp" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">cmath.exp()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/cmath.html#cmath.isfinite" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">cmath.isfinite()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/cmath.html#cmath.isinf" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">cmath.isinf()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/cmath.html#cmath.isnan" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">cmath.isnan()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/cmath.html#cmath.log" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">cmath.log()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/cmath.html#cmath.log10" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">cmath.log10()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/cmath.html#cmath.phase" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">cmath.phase()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/cmath.html#cmath.polar" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">cmath.polar()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/cmath.html#cmath.rect" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">cmath.rect()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/cmath.html#cmath.sin" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">cmath.sin()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/cmath.html#cmath.sinh" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">cmath.sinh()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/cmath.html#cmath.sqrt" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">cmath.sqrt()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/cmath.html#cmath.tan" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">cmath.tan()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/cmath.html#cmath.tanh" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">cmath.tanh()</span></tt></a></li>
+</ul>
+</div>
+<div class="section" id="ctypes">
+<h3>2.4.4.2. <tt class="docutils literal"><span class="pre">ctypes</span></tt><a class="headerlink" href="#ctypes" title="Permalink to this headline">¶</a></h3>
+<p>Numba is able to call ctypes-declared functions with the following argument
+and return types:</p>
+<ul class="simple">
+<li><a class="reference external" href="https://docs.python.org/3/library/ctypes.html#ctypes.c_int8" title="(in Python v3.4)"><tt class="xref py py-class docutils literal"><span class="pre">ctypes.c_int8</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/ctypes.html#ctypes.c_int16" title="(in Python v3.4)"><tt class="xref py py-class docutils literal"><span class="pre">ctypes.c_int16</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/ctypes.html#ctypes.c_int32" title="(in Python v3.4)"><tt class="xref py py-class docutils literal"><span class="pre">ctypes.c_int32</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/ctypes.html#ctypes.c_int64" title="(in Python v3.4)"><tt class="xref py py-class docutils literal"><span class="pre">ctypes.c_int64</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/ctypes.html#ctypes.c_uint8" title="(in Python v3.4)"><tt class="xref py py-class docutils literal"><span class="pre">ctypes.c_uint8</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/ctypes.html#ctypes.c_uint16" title="(in Python v3.4)"><tt class="xref py py-class docutils literal"><span class="pre">ctypes.c_uint16</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/ctypes.html#ctypes.c_uint32" title="(in Python v3.4)"><tt class="xref py py-class docutils literal"><span class="pre">ctypes.c_uint32</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/ctypes.html#ctypes.c_uint64" title="(in Python v3.4)"><tt class="xref py py-class docutils literal"><span class="pre">ctypes.c_uint64</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/ctypes.html#ctypes.c_float" title="(in Python v3.4)"><tt class="xref py py-class docutils literal"><span class="pre">ctypes.c_float</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/ctypes.html#ctypes.c_double" title="(in Python v3.4)"><tt class="xref py py-class docutils literal"><span class="pre">ctypes.c_double</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/ctypes.html#ctypes.c_void_p" title="(in Python v3.4)"><tt class="xref py py-class docutils literal"><span class="pre">ctypes.c_void_p</span></tt></a></li>
+</ul>
+</div>
+<div class="section" id="math">
+<h3>2.4.4.3. <tt class="docutils literal"><span class="pre">math</span></tt><a class="headerlink" href="#math" title="Permalink to this headline">¶</a></h3>
+<p>The following functions from the <a class="reference external" href="https://docs.python.org/3/library/math.html#module-math" title="(in Python v3.4)"><tt class="xref py py-mod docutils literal"><span class="pre">math</span></tt></a> module are supported:</p>
+<ul class="simple">
+<li><a class="reference external" href="https://docs.python.org/3/library/math.html#math.acos" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">math.acos()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/math.html#math.acosh" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">math.acosh()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/math.html#math.asin" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">math.asin()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/math.html#math.asinh" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">math.asinh()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/math.html#math.atan" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">math.atan()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/math.html#math.atan2" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">math.atan2()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/math.html#math.atanh" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">math.atanh()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/math.html#math.ceil" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">math.ceil()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/math.html#math.copysign" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">math.copysign()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/math.html#math.cos" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">math.cos()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/math.html#math.cosh" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">math.cosh()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/math.html#math.degrees" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">math.degrees()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/math.html#math.exp" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">math.exp()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/math.html#math.expm1" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">math.expm1()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/math.html#math.fabs" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">math.fabs()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/math.html#math.floor" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">math.floor()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/math.html#math.hypot" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">math.hypot()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/math.html#math.isfinite" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">math.isfinite()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/math.html#math.isinf" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">math.isinf()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/math.html#math.isnan" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">math.isnan()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/math.html#math.log" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">math.log()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/math.html#math.log10" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">math.log10()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/math.html#math.log1p" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">math.log1p()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/math.html#math.pow" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">math.pow()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/math.html#math.radians" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">math.radians()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/math.html#math.sin" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">math.sin()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/math.html#math.sinh" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">math.sinh()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/math.html#math.sqrt" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">math.sqrt()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/math.html#math.tan" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">math.tan()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/math.html#math.tanh" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">math.tanh()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/math.html#math.trunc" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">math.trunc()</span></tt></a></li>
+</ul>
+</div>
+<div class="section" id="operator">
+<h3>2.4.4.4. <tt class="docutils literal"><span class="pre">operator</span></tt><a class="headerlink" href="#operator" title="Permalink to this headline">¶</a></h3>
+<p>The following functions from the <a class="reference external" href="https://docs.python.org/3/library/operator.html#module-operator" title="(in Python v3.4)"><tt class="xref py py-mod docutils literal"><span class="pre">operator</span></tt></a> module are supported:</p>
+<ul class="simple">
+<li><a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.add" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">operator.add()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.and_" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">operator.and_()</span></tt></a></li>
+<li><tt class="xref py py-func docutils literal"><span class="pre">operator.div()</span></tt> (Python 2 only)</li>
+<li><a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.eq" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">operator.eq()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.floordiv" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">operator.floordiv()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.ge" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">operator.ge()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.gt" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">operator.gt()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.iadd" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">operator.iadd()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.iand" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">operator.iand()</span></tt></a></li>
+<li><tt class="xref py py-func docutils literal"><span class="pre">operator.idiv()</span></tt> (Python 2 only)</li>
+<li><a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.ifloordiv" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">operator.ifloordiv()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.ilshift" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">operator.ilshift()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.imod" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">operator.imod()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.imul" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">operator.imul()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.invert" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">operator.invert()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.ior" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">operator.ior()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.ipow" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">operator.ipow()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.irshift" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">operator.irshift()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.isub" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">operator.isub()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.itruediv" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">operator.itruediv()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.ixor" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">operator.ixor()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.le" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">operator.le()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.lshift" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">operator.lshift()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.lt" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">operator.lt()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.mod" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">operator.mod()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.mul" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">operator.mul()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.ne" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">operator.ne()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.neg" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">operator.neg()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.not_" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">operator.not_()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.or_" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">operator.or_()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.pos" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">operator.pos()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.pow" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">operator.pow()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.rshift" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">operator.rshift()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.sub" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">operator.sub()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.truediv" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">operator.truediv()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.xor" title="(in Python v3.4)"><tt class="xref py py-func docutils literal"><span class="pre">operator.xor()</span></tt></a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="third-party-modules">
+<h2>2.4.5. Third-party modules<a class="headerlink" href="#third-party-modules" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="cffi">
+<h3>2.4.5.1. <tt class="docutils literal"><span class="pre">cffi</span></tt><a class="headerlink" href="#cffi" title="Permalink to this headline">¶</a></h3>
+<p>Similarly to ctypes, Numba is able to call into <a class="reference external" href="https://cffi.readthedocs.org/">cffi</a>-declared external
+functions, using the following C types:</p>
+<ul class="simple">
+<li><tt class="xref c c-type docutils literal"><span class="pre">char</span></tt></li>
+<li><tt class="xref c c-type docutils literal"><span class="pre">short</span></tt></li>
+<li><tt class="xref c c-type docutils literal"><span class="pre">int</span></tt></li>
+<li><tt class="xref c c-type docutils literal"><span class="pre">long</span></tt></li>
+<li><tt class="xref c c-type docutils literal"><span class="pre">long</span> <span class="pre">long</span></tt></li>
+<li><tt class="xref c c-type docutils literal"><span class="pre">unsigned</span> <span class="pre">char</span></tt></li>
+<li><tt class="xref c c-type docutils literal"><span class="pre">unsigned</span> <span class="pre">short</span></tt></li>
+<li><tt class="xref c c-type docutils literal"><span class="pre">unsigned</span> <span class="pre">int</span></tt></li>
+<li><tt class="xref c c-type docutils literal"><span class="pre">unsigned</span> <span class="pre">long</span></tt></li>
+<li><tt class="xref c c-type docutils literal"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">long</span></tt></li>
+<li><tt class="xref c c-type docutils literal"><span class="pre">int8_t</span></tt></li>
+<li><tt class="xref c c-type docutils literal"><span class="pre">uint8_t</span></tt></li>
+<li><tt class="xref c c-type docutils literal"><span class="pre">int16_t</span></tt></li>
+<li><tt class="xref c c-type docutils literal"><span class="pre">uint16_t</span></tt></li>
+<li><tt class="xref c c-type docutils literal"><span class="pre">int32_t</span></tt></li>
+<li><tt class="xref c c-type docutils literal"><span class="pre">uint32_t</span></tt></li>
+<li><tt class="xref c c-type docutils literal"><span class="pre">int64_t</span></tt></li>
+<li><tt class="xref c c-type docutils literal"><span class="pre">uint64_t</span></tt></li>
+<li><tt class="xref c c-type docutils literal"><span class="pre">float</span></tt></li>
+<li><tt class="xref c c-type docutils literal"><span class="pre">double</span></tt></li>
+<li><tt class="xref c c-type docutils literal"><span class="pre">char</span> <span class="pre">*</span></tt></li>
+<li><tt class="xref c c-type docutils literal"><span class="pre">void</span> <span class="pre">*</span></tt></li>
+<li><tt class="xref c c-type docutils literal"><span class="pre">uint8_t</span> <span class="pre">*</span></tt></li>
+<li><tt class="xref c c-type docutils literal"><span class="pre">ssize_t</span></tt></li>
+<li><tt class="xref c c-type docutils literal"><span class="pre">size_t</span></tt></li>
+<li><tt class="xref c c-type docutils literal"><span class="pre">void</span></tt></li>
+</ul>
+</div>
+</div>
+</div>
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        
+      </div><!-- /row -->
+
+      <!-- row -->
+      <div class="row-fluid">
+<div class="related navbar ">
+  <div class="navbar-inner">
+    <ul class="nav pull-right">
+      
+        <li><a href="../genindex.html" title="General Index" >index</a></li>
+        <li><a href="numpysupported.html" title="2.5. Supported Numpy features" >next</a></li>
+        <li><a href="envvars.html" title="2.3. Environment variables" >previous</a></li>
+        <li><a href="../index.html">Numba 0.17.0-py2.7-linux-x86_64.egg documentation</a></li>
+        <li><a href="index.html" >2. Reference Manual</a></li> 
+      
+    </ul>
+  </div>
+</div>
+      </div><!-- /row -->
+
+      <!-- footer -->
+      <footer>
+          &copy; Copyright 2012-2014, Continuum Analytics.
+        Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.2.
+      </footer>
+      <!-- /footer -->
+
+    </div>
+    <!-- /container -->
+
+  </body>
+</html>
