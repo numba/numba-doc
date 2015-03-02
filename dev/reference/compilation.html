@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     
-    <title>2.2. Compilation &mdash; Numba 0.17.0_157_g905adde-py2.7-linux-x86_64.egg documentation</title>
+    <title>2.2. Compilation &mdash; Numba 0.17.0_177_gbce8567-py2.7-linux-x86_64.egg documentation</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
@@ -34,7 +34,7 @@
 <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
             URL_ROOT:    '../',
-            VERSION:     '0.17.0_157_g905adde-py2.7-linux-x86_64.egg',
+            VERSION:     '0.17.0_177_gbce8567-py2.7-linux-x86_64.egg',
             COLLAPSE_INDEX: false,
             FILE_SUFFIX: '.html',
             HAS_SOURCE:  true
@@ -57,7 +57,7 @@
     });
   });
 </script>
-    <link rel="top" title="Numba 0.17.0_157_g905adde-py2.7-linux-x86_64.egg documentation" href="../index.html" />
+    <link rel="top" title="Numba 0.17.0_177_gbce8567-py2.7-linux-x86_64.egg documentation" href="../index.html" />
     <link rel="up" title="2. Reference Manual" href="index.html" />
     <link rel="next" title="2.3. Environment variables" href="envvars.html" />
     <link rel="prev" title="2.1. Numba Types" href="types.html" /> 
@@ -71,7 +71,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="../index.html">Numba 0.17.0_157_g905adde-py2.7-linux-x86_64.egg documentation</a>
+          <a class="brand" href="../index.html">Numba 0.17.0_177_gbce8567-py2.7-linux-x86_64.egg documentation</a>
           <div class="nav-collapse collapse">
             <ul class="nav pull-right">
               
@@ -202,11 +202,13 @@
 <h2>2.2.1. JIT functions<a class="headerlink" href="#jit-functions" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="numba.jit">
-<tt class="descclassname">&#64;</tt><tt class="descclassname">numba.</tt><tt class="descname">jit</tt><big>(</big><span class="optional">[</span><em>signature</em>, <span class="optional">]</span><em>*</em>, <em>nopython=False</em>, <em>nogil=False</em>, <em>forceobj=False</em>, <em>locals={}</em><big>)</big><a class="headerlink" href="#numba.jit" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">&#64;</tt><tt class="descclassname">numba.</tt><tt class="descname">jit</tt><big>(</big><em>signature=None</em>, <em>nopython=False</em>, <em>nogil=False</em>, <em>forceobj=False</em>, <em>locals={}</em><big>)</big><a class="headerlink" href="#numba.jit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compile the decorated function on-the-fly to produce efficient machine
 code.  All parameters all optional.</p>
-<p><em>signature</em> represents the expected <a class="reference internal" href="types.html#numba-types"><em>Numba Types</em></a> of function arguments
-and return value.  It can be given in several forms:</p>
+<p>If present, the <em>signature</em> is either a single signature or a list of
+signatures representing the expected <a class="reference internal" href="types.html#numba-types"><em>Numba Types</em></a> of function
+arguments and return values.  Each signature can be given in several
+forms:</p>
 <ul class="simple">
 <li>A tuple of <a class="reference internal" href="types.html#numba-types"><em>Numba Types</em></a> arguments (for example
 <tt class="docutils literal"><span class="pre">(numba.int32,</span> <span class="pre">numba.double)</span></tt>) representing the types of the
@@ -223,20 +225,20 @@ to be defined in the <tt class="docutils literal"><span class="pre">numba.types<
 local variable names to <a class="reference internal" href="types.html#numba-types"><em>Numba Types</em></a>.</p>
 <p>This decorator has several modes of operation:</p>
 <ul class="simple">
-<li>If <em>signature</em> is given, a single specialization is compiled
-corresponding to this signature.  Calling the decorated function will
-then try to convert the arguments to this signature, and raise a
-<a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TypeError" title="(in Python v3.4)"><tt class="xref py py-class docutils literal"><span class="pre">TypeError</span></tt></a> if converting fails.  If converting succeeds, the
-compiled machine code is executed with the converted arguments and the
-return value is converted back according to the signature.</li>
-<li>If <em>signature</em> is not given, the decorated function implements
-multiple dispatch and lazy compilation.  Each call to the decorated
-function will try to re-use an existing specialization if it exists
-(for example, a call with two integer arguments may re-use a
-specialization for argument types <tt class="docutils literal"><span class="pre">(numba.int64,</span> <span class="pre">numba.int64)</span></tt>).
-If no suitable specialization exists, a new specialization is compiled
-on-the-fly, stored for later use, and executed with the converted
-arguments.</li>
+<li>If one more <em>signature</em> is given, a specialization is compiled
+for each signature.  Calling the decorated function will
+then try to choose the best matching signature, and raise a
+<a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TypeError" title="(in Python v3.4)"><tt class="xref py py-class docutils literal"><span class="pre">TypeError</span></tt></a> if no appropriate conversion is available for the
+funciton arguments.  If converting succeeds, the compiled machine code
+is executed with the converted arguments and the return value is
+converted back according to the signature.</li>
+<li>If no <em>signature</em> is given, the decorated function implements
+lazy compilation.  Each call to the decorated function will try to
+re-use an existing specialization if it exists (for example, a call
+with two integer arguments may re-use a specialization for argument
+types <tt class="docutils literal"><span class="pre">(numba.int64,</span> <span class="pre">numba.int64)</span></tt>).  If no suitable specialization
+exists, a new specialization is compiled on-the-fly, stored for later
+use, and executed with the converted arguments.</li>
 </ul>
 <p>If true, <em>nopython</em> forces the function to be compiled in <a class="reference internal" href="../glossary.html#term-nopython-mode"><em class="xref std std-term">nopython
 mode</em></a>. If not possible, compilation will raise an error.</p>
@@ -251,6 +253,11 @@ warning will be printed.</p>
 of particular local variables, for example if you want to force the
 use of single precision floats at some point.  In general, we recommend
 you let Numba&#8217;s compiler infer the types of local variables by itself.</p>
+<p>Here is an example with two signatures:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@jit</span><span class="p">([</span><span class="s">&quot;int32(int32)&quot;</span><span class="p">,</span> <span class="s">&quot;float32(float32)&quot;</span><span class="p">],</span> <span class="n">nopython</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">):</span> <span class="o">...</span>
+</pre></div>
+</div>
 <p>Not putting any parentheses after the decorator is equivalent to calling
 the decorator without any arguments, i.e.:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="nd">@jit</span>
@@ -424,7 +431,7 @@ which we unfortunately use for something else.</p>
         <li><a href="../py-modindex.html" title="Python Module Index" >modules</a></li>
         <li><a href="envvars.html" title="2.3. Environment variables" >next</a></li>
         <li><a href="types.html" title="2.1. Numba Types" >previous</a></li>
-        <li><a href="../index.html">Numba 0.17.0_157_g905adde-py2.7-linux-x86_64.egg documentation</a></li>
+        <li><a href="../index.html">Numba 0.17.0_177_gbce8567-py2.7-linux-x86_64.egg documentation</a></li>
         <li><a href="index.html" >2. Reference Manual</a></li> 
       
     </ul>
