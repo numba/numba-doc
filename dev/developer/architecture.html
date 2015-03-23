@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     
-    <title>4.2. Numba Architecture &mdash; Numba 0.17.0_281_g6161cba-py2.7-linux-x86_64.egg documentation</title>
+    <title>4.2. Numba Architecture &mdash; Numba 0.17.0_314_geb4ae4c-py2.7-linux-x86_64.egg documentation</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
@@ -34,7 +34,7 @@
 <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
             URL_ROOT:    '../',
-            VERSION:     '0.17.0_281_g6161cba-py2.7-linux-x86_64.egg',
+            VERSION:     '0.17.0_314_geb4ae4c-py2.7-linux-x86_64.egg',
             COLLAPSE_INDEX: false,
             FILE_SUFFIX: '.html',
             HAS_SOURCE:  true
@@ -57,9 +57,9 @@
     });
   });
 </script>
-    <link rel="top" title="Numba 0.17.0_281_g6161cba-py2.7-linux-x86_64.egg documentation" href="../index.html" />
+    <link rel="top" title="Numba 0.17.0_314_geb4ae4c-py2.7-linux-x86_64.egg documentation" href="../index.html" />
     <link rel="up" title="4. Developer Manual" href="index.html" />
-    <link rel="next" title="4.3. Extending the Numba Frontend" href="extending-frontend.html" />
+    <link rel="next" title="4.3. Notes on generators" href="generators.html" />
     <link rel="prev" title="4.1. Contributing to Numba" href="contributing.html" /> 
   </head>
   <body>
@@ -71,7 +71,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="../index.html">Numba 0.17.0_281_g6161cba-py2.7-linux-x86_64.egg documentation</a>
+          <a class="brand" href="../index.html">Numba 0.17.0_314_geb4ae4c-py2.7-linux-x86_64.egg documentation</a>
           <div class="nav-collapse collapse">
             <ul class="nav pull-right">
               
@@ -82,7 +82,7 @@
                 <a href="../py-modindex.html" title="Python Module Index" >modules</a>
                 </li>
                 <li>
-                <a href="extending-frontend.html" title="4.3. Extending the Numba Frontend" accesskey="N">next</a>
+                <a href="generators.html" title="4.3. Notes on generators" accesskey="N">next</a>
                 </li>
                 <li>
                 <a href="contributing.html" title="4.1. Contributing to Numba" accesskey="P">previous</a>
@@ -131,8 +131,8 @@
   <p class="topless"><a href="contributing.html"
                         title="previous chapter">4.1. Contributing to Numba</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="extending-frontend.html"
-                        title="next chapter">4.3. Extending the Numba Frontend</a></p>
+  <p class="topless"><a href="generators.html"
+                        title="next chapter">4.3. Notes on generators</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="../_sources/developer/architecture.txt"
@@ -185,8 +185,8 @@
   <p class="topless"><a href="contributing.html"
                         title="previous chapter">4.1. Contributing to Numba</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="extending-frontend.html"
-                        title="next chapter">4.3. Extending the Numba Frontend</a></p>
+  <p class="topless"><a href="generators.html"
+                        title="next chapter">4.3. Notes on generators</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="../_sources/developer/architecture.txt"
@@ -394,12 +394,20 @@ to a string for debugging.  If you set the environment variable
 <tt class="docutils literal"><span class="pre">NUMBA_DUMP_IR</span></tt> equal to 1, the Numba IR will be dumped to the screen.  For
 the <tt class="docutils literal"><span class="pre">add()</span></tt> function described above, the Numba IR looks like:</p>
 <div class="highlight-python"><div class="highlight"><pre>label 0:
-    a.1 = a
-    b.1 = b
-    $0.3 = a.1 + b.1
-    return $0.3
+    a = arg(0, name=a)                       [&#39;a&#39;]
+    b = arg(1, name=b)                       [&#39;b&#39;]
+    $0.3 = a + b                             [&#39;$0.3&#39;, &#39;a&#39;, &#39;b&#39;]
+    del b                                    []
+    del a                                    []
+    $0.4 = cast(value=$0.3)                  [&#39;$0.3&#39;, &#39;$0.4&#39;]
+    del $0.3                                 []
+    return $0.4                              [&#39;$0.4&#39;]
 </pre></div>
 </div>
+<p>The <tt class="docutils literal"><span class="pre">del</span></tt> instructions are produced by live variable analysis.  Those
+instructions ensure references are not leaked in <a class="reference internal" href="../glossary.html#term-object-mode"><em class="xref std std-term">object mode</em></a>,
+where each variable contains an owned reference to a PyObject.  They are
+no-ops in <a class="reference internal" href="../glossary.html#term-nopython-mode"><em class="xref std std-term">nopython mode</em></a>.</p>
 </div>
 <div class="section" id="stage-3-macro-expansion">
 <h3>4.2.3.3. Stage 3: Macro expansion<a class="headerlink" href="#stage-3-macro-expansion" title="Permalink to this headline">¶</a></h3>
@@ -443,29 +451,30 @@ the types of the actual function arguments if compilation is happening
 when the function is first called.</p>
 <p>The type inference engine is found in <tt class="docutils literal"><span class="pre">numba.typeinfer</span></tt>.  Its job is to
 assign a type to every intermediate variable in the Numba IR.  The result of
-this pass can be seen by setting the <tt class="docutils literal"><span class="pre">NUMBA_DUMP_ANNOTATION</span></tt> environment
-variable to 1:</p>
-<div class="highlight-python"><div class="highlight"><pre>-----------------------------------ANNOTATION-----------------------------------
-# File: test.py
-# --- LINE 3 ---
+this pass can be seen by setting the <span class="target" id="index-0"></span><a class="reference internal" href="../reference/envvars.html#envvar-NUMBA_DUMP_ANNOTATION"><tt class="xref std std-envvar docutils literal"><span class="pre">NUMBA_DUMP_ANNOTATION</span></tt></a>
+environment variable to 1:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="o">-----------------------------------</span><span class="n">ANNOTATION</span><span class="o">-----------------------------------</span>
+<span class="c"># File: archex.py</span>
+<span class="c"># --- LINE 4 ---</span>
 
-@numba.jit()
+<span class="nd">@jit</span><span class="p">(</span><span class="n">nopython</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 
-# --- LINE 4 ---
+<span class="c"># --- LINE 5 ---</span>
 
-def add(a, b):
+<span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
 
-    # --- LINE 5 ---
-    # label 0
-    #   a.1 = a  :: int64
-    #   b.1 = b  :: int64
-    #   $0.3 = a.1 + b.1  :: int64
-    #   return $0.3
+    <span class="c"># --- LINE 6 ---</span>
+    <span class="c"># label 0</span>
+    <span class="c">#   a = arg(0, name=a)  :: int64</span>
+    <span class="c">#   b = arg(1, name=b)  :: int64</span>
+    <span class="c">#   $0.3 = a + b  :: int64</span>
+    <span class="c">#   del b</span>
+    <span class="c">#   del a</span>
+    <span class="c">#   $0.4 = cast(value=$0.3)  :: int64</span>
+    <span class="c">#   del $0.3</span>
+    <span class="c">#   return $0.4</span>
 
-    return a + b
-
-
-================================================================================
+    <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
 </pre></div>
 </div>
 <p>If type inference fails to find a consistent type assignment for all the
@@ -485,45 +494,46 @@ toolchain is able to optimize it quite easily into compact, efficient code.</p>
 Numba IR nodes are translated to LLVM instructions is handled by the
 target context selected for compilation.  The default target context is
 the &#8220;cpu&#8221; context, defined in <tt class="docutils literal"><span class="pre">numba.targets.cpu</span></tt>.</p>
-<p>The LLVM IR can be displayed by setting the <tt class="docutils literal"><span class="pre">NUMBA_DUMP_LLVM</span></tt> environment
+<p>The LLVM IR can be displayed by setting the <span class="target" id="index-1"></span><a class="reference internal" href="../reference/envvars.html#envvar-NUMBA_DUMP_LLVM"><tt class="xref std std-envvar docutils literal"><span class="pre">NUMBA_DUMP_LLVM</span></tt></a> environment
 variable to 1.  For the &#8220;cpu&#8221; context, our <tt class="docutils literal"><span class="pre">add()</span></tt> example would look like:</p>
-<div class="highlight-llvm"><div class="highlight"><pre><span class="c">; ModuleID = &#39;module.add$3&#39;</span>
-
-<span class="k">define</span> <span class="k">i32</span> <span class="vg">@add.int64.int64</span><span class="p">(</span><span class="k">i64</span><span class="p">*,</span> <span class="k">i8</span><span class="p">*</span> <span class="nv">%env</span><span class="p">,</span> <span class="k">i64</span> <span class="nv">%arg.a</span><span class="p">,</span> <span class="k">i64</span> <span class="nv">%arg.b</span><span class="p">)</span> <span class="p">{</span>
-<span class="nl">entry:</span>
-  <span class="nv">%a</span> <span class="p">=</span> <span class="k">alloca</span> <span class="k">i64</span>
-  <span class="k">store</span> <span class="k">i64</span> <span class="nv">%arg.a</span><span class="p">,</span> <span class="k">i64</span><span class="p">*</span> <span class="nv">%a</span>
-  <span class="nv">%b</span> <span class="p">=</span> <span class="k">alloca</span> <span class="k">i64</span>
-  <span class="k">store</span> <span class="k">i64</span> <span class="nv">%arg.b</span><span class="p">,</span> <span class="k">i64</span><span class="p">*</span> <span class="nv">%b</span>
-  <span class="nv">%a.1</span> <span class="p">=</span> <span class="k">alloca</span> <span class="k">i64</span>
-  <span class="nv">%b.1</span> <span class="p">=</span> <span class="k">alloca</span> <span class="k">i64</span>
-  <span class="nv">%&quot;$0.3&quot;</span> <span class="p">=</span> <span class="k">alloca</span> <span class="k">i64</span>
-  <span class="k">br</span> <span class="kt">label</span> <span class="nv">%B0</span>
-
-<span class="nl">B0:</span>                                               <span class="c">; preds = %entry</span>
-  <span class="nv-Anonymous">%1</span> <span class="p">=</span> <span class="k">load</span> <span class="k">i64</span><span class="p">*</span> <span class="nv">%a</span>
-  <span class="k">store</span> <span class="k">i64</span> <span class="nv-Anonymous">%1</span><span class="p">,</span> <span class="k">i64</span><span class="p">*</span> <span class="nv">%a.1</span>
-  <span class="nv-Anonymous">%2</span> <span class="p">=</span> <span class="k">load</span> <span class="k">i64</span><span class="p">*</span> <span class="nv">%b</span>
-  <span class="k">store</span> <span class="k">i64</span> <span class="nv-Anonymous">%2</span><span class="p">,</span> <span class="k">i64</span><span class="p">*</span> <span class="nv">%b.1</span>
-  <span class="nv-Anonymous">%3</span> <span class="p">=</span> <span class="k">load</span> <span class="k">i64</span><span class="p">*</span> <span class="nv">%a.1</span>
-  <span class="nv-Anonymous">%4</span> <span class="p">=</span> <span class="k">load</span> <span class="k">i64</span><span class="p">*</span> <span class="nv">%b.1</span>
-  <span class="nv-Anonymous">%5</span> <span class="p">=</span> <span class="k">add</span> <span class="k">i64</span> <span class="nv-Anonymous">%3</span><span class="p">,</span> <span class="nv-Anonymous">%4</span>
-  <span class="k">store</span> <span class="k">i64</span> <span class="nv-Anonymous">%5</span><span class="p">,</span> <span class="k">i64</span><span class="p">*</span> <span class="nv">%&quot;$0.3&quot;</span>
-  <span class="nv-Anonymous">%6</span> <span class="p">=</span> <span class="k">load</span> <span class="k">i64</span><span class="p">*</span> <span class="nv">%&quot;$0.3&quot;</span>
-  <span class="k">store</span> <span class="k">i64</span> <span class="nv-Anonymous">%6</span><span class="p">,</span> <span class="k">i64</span><span class="p">*</span> <span class="nv-Anonymous">%0</span>
-  <span class="k">ret</span> <span class="k">i32</span> <span class="m">0</span>
+<div class="highlight-llvm"><div class="highlight"><pre><span class="k">define</span> <span class="k">i32</span> <span class="vg">@&quot;__main__.add$1.int64.int64&quot;</span><span class="p">(</span><span class="k">i64</span><span class="p">*</span> <span class="nv">%&quot;retptr&quot;</span><span class="p">,</span>
+                                         <span class="p">{</span><span class="k">i8</span><span class="p">*,</span> <span class="k">i32</span><span class="p">}**</span> <span class="nv">%&quot;excinfo&quot;</span><span class="p">,</span>
+                                         <span class="k">i8</span><span class="p">*</span> <span class="nv">%&quot;env&quot;</span><span class="p">,</span>
+                                         <span class="k">i64</span> <span class="nv">%&quot;arg.a&quot;</span><span class="p">,</span> <span class="k">i64</span> <span class="nv">%&quot;arg.b&quot;</span><span class="p">)</span>
+<span class="p">{</span>
+   <span class="nl">entry:</span>
+     <span class="nv">%&quot;a&quot;</span> <span class="p">=</span> <span class="k">alloca</span> <span class="k">i64</span>
+     <span class="nv">%&quot;b&quot;</span> <span class="p">=</span> <span class="k">alloca</span> <span class="k">i64</span>
+     <span class="nv">%&quot;$0.3&quot;</span> <span class="p">=</span> <span class="k">alloca</span> <span class="k">i64</span>
+     <span class="nv">%&quot;$0.4&quot;</span> <span class="p">=</span> <span class="k">alloca</span> <span class="k">i64</span>
+     <span class="k">br</span> <span class="kt">label</span> <span class="nv">%&quot;B0&quot;</span>
+   <span class="nl">B0:</span>
+     <span class="k">store</span> <span class="k">i64</span> <span class="nv">%&quot;arg.a&quot;</span><span class="p">,</span> <span class="k">i64</span><span class="p">*</span> <span class="nv">%&quot;a&quot;</span>
+     <span class="k">store</span> <span class="k">i64</span> <span class="nv">%&quot;arg.b&quot;</span><span class="p">,</span> <span class="k">i64</span><span class="p">*</span> <span class="nv">%&quot;b&quot;</span>
+     <span class="nv">%&quot;.8&quot;</span> <span class="p">=</span> <span class="k">load</span> <span class="k">i64</span><span class="p">*</span> <span class="nv">%&quot;a&quot;</span>
+     <span class="nv">%&quot;.9&quot;</span> <span class="p">=</span> <span class="k">load</span> <span class="k">i64</span><span class="p">*</span> <span class="nv">%&quot;b&quot;</span>
+     <span class="nv">%&quot;.10&quot;</span> <span class="p">=</span> <span class="k">add</span> <span class="k">i64</span> <span class="nv">%&quot;.8&quot;</span><span class="p">,</span> <span class="nv">%&quot;.9&quot;</span>
+     <span class="k">store</span> <span class="k">i64</span> <span class="nv">%&quot;.10&quot;</span><span class="p">,</span> <span class="k">i64</span><span class="p">*</span> <span class="nv">%&quot;$0.3&quot;</span>
+     <span class="nv">%&quot;.12&quot;</span> <span class="p">=</span> <span class="k">load</span> <span class="k">i64</span><span class="p">*</span> <span class="nv">%&quot;$0.3&quot;</span>
+     <span class="k">store</span> <span class="k">i64</span> <span class="nv">%&quot;.12&quot;</span><span class="p">,</span> <span class="k">i64</span><span class="p">*</span> <span class="nv">%&quot;$0.4&quot;</span>
+     <span class="nv">%&quot;.14&quot;</span> <span class="p">=</span> <span class="k">load</span> <span class="k">i64</span><span class="p">*</span> <span class="nv">%&quot;$0.4&quot;</span>
+     <span class="k">store</span> <span class="k">i64</span> <span class="nv">%&quot;.14&quot;</span><span class="p">,</span> <span class="k">i64</span><span class="p">*</span> <span class="nv">%&quot;retptr&quot;</span>
+     <span class="k">ret</span> <span class="k">i32</span> <span class="m">0</span>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>The post-optimization LLVM IR can be output by setting <tt class="docutils literal"><span class="pre">NUMBA_DUMP_FUNC_OPT</span></tt>
-to 1.  The optimizer shortens the code generated above quite significantly:</p>
-<div class="highlight-llvm"><div class="highlight"><pre><span class="c">; ModuleID = &#39;module.add$3&#39;</span>
-
-<span class="k">define</span> <span class="k">i32</span> <span class="vg">@add.int64.int64</span><span class="p">(</span><span class="k">i64</span><span class="p">*,</span> <span class="k">i8</span><span class="p">*</span> <span class="nv">%env</span><span class="p">,</span> <span class="k">i64</span> <span class="nv">%arg.a</span><span class="p">,</span> <span class="k">i64</span> <span class="nv">%arg.b</span><span class="p">)</span> <span class="p">{</span>
-<span class="nl">entry:</span>
-  <span class="nv-Anonymous">%1</span> <span class="p">=</span> <span class="k">add</span> <span class="k">i64</span> <span class="nv">%arg.a</span><span class="p">,</span> <span class="nv">%arg.b</span>
-  <span class="k">store</span> <span class="k">i64</span> <span class="nv-Anonymous">%1</span><span class="p">,</span> <span class="k">i64</span><span class="p">*</span> <span class="nv-Anonymous">%0</span>
-  <span class="k">ret</span> <span class="k">i32</span> <span class="m">0</span>
+<p>The post-optimization LLVM IR can be output by setting
+<span class="target" id="index-2"></span><a class="reference internal" href="../reference/envvars.html#envvar-NUMBA_DUMP_OPTIMIZED"><tt class="xref std std-envvar docutils literal"><span class="pre">NUMBA_DUMP_OPTIMIZED</span></tt></a> to 1.  The optimizer shortens the code
+generated above quite significantly:</p>
+<div class="highlight-llvm"><div class="highlight"><pre><span class="k">define</span> <span class="k">i32</span> <span class="vg">@&quot;__main__.add$1.int64.int64&quot;</span><span class="p">(</span><span class="k">i64</span><span class="p">*</span> <span class="k">nocapture</span> <span class="nv">%retptr</span><span class="p">,</span>
+                                         <span class="p">{</span> <span class="k">i8</span><span class="p">*,</span> <span class="k">i32</span> <span class="p">}**</span> <span class="k">nocapture</span> <span class="k">readnone</span> <span class="nv">%excinfo</span><span class="p">,</span>
+                                         <span class="k">i8</span><span class="p">*</span> <span class="k">nocapture</span> <span class="k">readnone</span> <span class="nv">%env</span><span class="p">,</span>
+                                         <span class="k">i64</span> <span class="nv">%arg.a</span><span class="p">,</span> <span class="k">i64</span> <span class="nv">%arg.b</span><span class="p">)</span>
+<span class="p">{</span>
+   <span class="nl">entry:</span>
+     <span class="nv">%.10</span> <span class="p">=</span> <span class="k">add</span> <span class="k">i64</span> <span class="nv">%arg.b</span><span class="p">,</span> <span class="nv">%arg.a</span>
+     <span class="k">store</span> <span class="k">i64</span> <span class="nv">%.10</span><span class="p">,</span> <span class="k">i64</span><span class="p">*</span> <span class="nv">%retptr</span><span class="p">,</span> <span class="k">align</span> <span class="m">8</span>
+     <span class="k">ret</span> <span class="k">i32</span> <span class="m">0</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -535,72 +545,74 @@ the function will be compiled in object mode.  The generated LLVM will be
 significantly longer, as the compiled code will need to make calls to the
 <a class="reference external" href="https://docs.python.org/3/c-api/">Python C API</a> to perform basically all
 operations.  The optimized LLVM for our example <tt class="docutils literal"><span class="pre">add()</span></tt> function is:</p>
-<div class="highlight-llvm"><div class="highlight"><pre><span class="c">; ModuleID = &#39;module.add$3&#39;</span>
+<div class="highlight-llvm"><div class="highlight"><pre><span class="vg">@PyExc_SystemError</span> <span class="p">=</span> <span class="k">external</span> <span class="k">global</span> <span class="k">i8</span>
+<span class="vg">@&quot;.const.Numba_internal_error:_object_mode_function_called_without_an_environment&quot;</span> <span class="p">=</span> <span class="k">internal</span> <span class="k">constant</span> <span class="p">[</span><span class="m">73</span> <span class="k">x</span> <span class="k">i8</span><span class="p">]</span> <span class="k">c</span><span class="s">&quot;Numba internal error: object mode function called without an environment\00&quot;</span>
+<span class="vg">@&quot;.const.name_&#39;a&#39;_is_not_defined&quot;</span> <span class="p">=</span> <span class="k">internal</span> <span class="k">constant</span> <span class="p">[</span><span class="m">24</span> <span class="k">x</span> <span class="k">i8</span><span class="p">]</span> <span class="k">c</span><span class="s">&quot;name &#39;a&#39; is not defined\00&quot;</span>
+<span class="vg">@PyExc_NameError</span> <span class="p">=</span> <span class="k">external</span> <span class="k">global</span> <span class="k">i8</span>
+<span class="vg">@&quot;.const.name_&#39;b&#39;_is_not_defined&quot;</span> <span class="p">=</span> <span class="k">internal</span> <span class="k">constant</span> <span class="p">[</span><span class="m">24</span> <span class="k">x</span> <span class="k">i8</span><span class="p">]</span> <span class="k">c</span><span class="s">&quot;name &#39;b&#39; is not defined\00&quot;</span>
 
-<span class="vg">@PyExc_SystemError</span> <span class="p">=</span> <span class="k">external</span> <span class="k">global</span> <span class="k">i8</span>
-<span class="vg">@&quot;.const.Numba internal error: object mode function called without an environment&quot;</span> <span class="p">=</span> <span class="k">internal</span> <span class="k">constant</span> <span class="p">[</span><span class="m">73</span> <span class="k">x</span> <span class="k">i8</span><span class="p">]</span> <span class="k">c</span><span class="s">&quot;Numba internal error: object mode function called without an environment\00&quot;</span>
-
-<span class="k">define</span> <span class="k">i32</span> <span class="vg">@add.pyobject.pyobject</span><span class="p">(</span><span class="k">i8</span><span class="p">**,</span> <span class="k">i8</span><span class="p">*</span> <span class="nv">%env</span><span class="p">,</span> <span class="k">i8</span><span class="p">*</span> <span class="nv">%arg.a</span><span class="p">,</span> <span class="k">i8</span><span class="p">*</span> <span class="nv">%arg.b</span><span class="p">)</span> <span class="p">{</span>
+<span class="k">define</span> <span class="k">i32</span> <span class="vg">@&quot;__main__.add$1.pyobject.pyobject&quot;</span><span class="p">(</span><span class="k">i8</span><span class="p">**</span> <span class="k">nocapture</span> <span class="nv">%retptr</span><span class="p">,</span> <span class="p">{</span> <span class="k">i8</span><span class="p">*,</span> <span class="k">i32</span> <span class="p">}**</span> <span class="k">nocapture</span> <span class="k">readnone</span> <span class="nv">%excinfo</span><span class="p">,</span> <span class="k">i8</span><span class="p">*</span> <span class="k">readnone</span> <span class="nv">%env</span><span class="p">,</span> <span class="k">i8</span><span class="p">*</span> <span class="nv">%arg.a</span><span class="p">,</span> <span class="k">i8</span><span class="p">*</span> <span class="nv">%arg.b</span><span class="p">)</span> <span class="p">{</span>
 <span class="nl">entry:</span>
-  <span class="k">call</span> <span class="kt">void</span> <span class="vg">@Py_IncRef</span><span class="p">(</span><span class="k">i8</span><span class="p">*</span> <span class="nv">%arg.a</span><span class="p">)</span>
-  <span class="k">call</span> <span class="kt">void</span> <span class="vg">@Py_DecRef</span><span class="p">(</span><span class="k">i8</span><span class="p">*</span> <span class="k">null</span><span class="p">)</span>
-  <span class="k">call</span> <span class="kt">void</span> <span class="vg">@Py_IncRef</span><span class="p">(</span><span class="k">i8</span><span class="p">*</span> <span class="nv">%arg.b</span><span class="p">)</span>
-  <span class="k">call</span> <span class="kt">void</span> <span class="vg">@Py_DecRef</span><span class="p">(</span><span class="k">i8</span><span class="p">*</span> <span class="k">null</span><span class="p">)</span>
-  <span class="nv-Anonymous">%1</span> <span class="p">=</span> <span class="k">icmp</span> <span class="k">eq</span> <span class="k">i8</span><span class="p">*</span> <span class="k">null</span><span class="p">,</span> <span class="nv">%env</span>
-  <span class="k">br</span> <span class="k">i1</span> <span class="nv-Anonymous">%1</span><span class="p">,</span> <span class="kt">label</span> <span class="nv">%entry.if</span><span class="p">,</span> <span class="kt">label</span> <span class="nv">%entry.endif</span><span class="p">,</span> <span class="nv">!prof</span> <span class="nv-Anonymous">!0</span>
-
-<span class="nl">error:</span>                                            <span class="c">; preds = %entry.endif, %entry.if</span>
-  <span class="nv">%a.1.0</span> <span class="p">=</span> <span class="k">phi</span> <span class="k">i8</span><span class="p">*</span> <span class="p">[</span> <span class="k">null</span><span class="p">,</span> <span class="nv">%entry.if</span> <span class="p">],</span> <span class="p">[</span> <span class="nv">%arg.a</span><span class="p">,</span> <span class="nv">%entry.endif</span> <span class="p">]</span>
-  <span class="nv">%b.1.0</span> <span class="p">=</span> <span class="k">phi</span> <span class="k">i8</span><span class="p">*</span> <span class="p">[</span> <span class="k">null</span><span class="p">,</span> <span class="nv">%entry.if</span> <span class="p">],</span> <span class="p">[</span> <span class="nv">%arg.b</span><span class="p">,</span> <span class="nv">%entry.endif</span> <span class="p">]</span>
-  <span class="k">call</span> <span class="kt">void</span> <span class="vg">@Py_DecRef</span><span class="p">(</span><span class="k">i8</span><span class="p">*</span> <span class="nv">%arg.a</span><span class="p">)</span>
-  <span class="k">call</span> <span class="kt">void</span> <span class="vg">@Py_DecRef</span><span class="p">(</span><span class="k">i8</span><span class="p">*</span> <span class="k">null</span><span class="p">)</span>
-  <span class="k">call</span> <span class="kt">void</span> <span class="vg">@Py_DecRef</span><span class="p">(</span><span class="k">i8</span><span class="p">*</span> <span class="nv">%b.1.0</span><span class="p">)</span>
-  <span class="k">call</span> <span class="kt">void</span> <span class="vg">@Py_DecRef</span><span class="p">(</span><span class="k">i8</span><span class="p">*</span> <span class="nv">%arg.b</span><span class="p">)</span>
-  <span class="k">call</span> <span class="kt">void</span> <span class="vg">@Py_DecRef</span><span class="p">(</span><span class="k">i8</span><span class="p">*</span> <span class="nv">%a.1.0</span><span class="p">)</span>
-  <span class="k">ret</span> <span class="k">i32</span> <span class="m">-1</span>
+  <span class="nv">%.6</span> <span class="p">=</span> <span class="k">icmp</span> <span class="k">eq</span> <span class="k">i8</span><span class="p">*</span> <span class="nv">%env</span><span class="p">,</span> <span class="k">null</span>
+  <span class="k">br</span> <span class="k">i1</span> <span class="nv">%.6</span><span class="p">,</span> <span class="kt">label</span> <span class="nv">%entry.if</span><span class="p">,</span> <span class="kt">label</span> <span class="nv">%entry.endif</span><span class="p">,</span> <span class="nv">!prof</span> <span class="nv-Anonymous">!0</span>
 
 <span class="nl">entry.if:</span>                                         <span class="c">; preds = %entry</span>
-  <span class="k">call</span> <span class="kt">void</span> <span class="vg">@PyErr_SetString</span><span class="p">(</span><span class="k">i8</span><span class="p">*</span> <span class="vg">@PyExc_SystemError</span><span class="p">,</span> <span class="k">i8</span><span class="p">*</span> <span class="k">getelementptr</span> <span class="k">inbounds</span> <span class="p">([</span><span class="m">73</span> <span class="k">x</span> <span class="k">i8</span><span class="p">]*</span> <span class="vg">@&quot;.const.Numba internal error: object mode function called without an environment&quot;</span><span class="p">,</span> <span class="k">i32</span> <span class="m">0</span><span class="p">,</span> <span class="k">i32</span> <span class="m">0</span><span class="p">))</span>
-  <span class="k">br</span> <span class="kt">label</span> <span class="nv">%error</span>
+  <span class="k">tail</span> <span class="k">call</span> <span class="kt">void</span> <span class="vg">@PyErr_SetString</span><span class="p">(</span><span class="k">i8</span><span class="p">*</span> <span class="vg">@PyExc_SystemError</span><span class="p">,</span> <span class="k">i8</span><span class="p">*</span> <span class="k">getelementptr</span> <span class="k">inbounds</span> <span class="p">([</span><span class="m">73</span> <span class="k">x</span> <span class="k">i8</span><span class="p">]*</span> <span class="vg">@&quot;.const.Numba_internal_error:_object_mode_function_called_without_an_environment&quot;</span><span class="p">,</span> <span class="k">i64</span> <span class="m">0</span><span class="p">,</span> <span class="k">i64</span> <span class="m">0</span><span class="p">))</span>
+  <span class="k">ret</span> <span class="k">i32</span> <span class="m">-1</span>
 
 <span class="nl">entry.endif:</span>                                      <span class="c">; preds = %entry</span>
-  <span class="nv-Anonymous">%2</span> <span class="p">=</span> <span class="k">ptrtoint</span> <span class="k">i8</span><span class="p">*</span> <span class="nv">%env</span> <span class="k">to</span> <span class="k">i64</span>
-  <span class="nv-Anonymous">%3</span> <span class="p">=</span> <span class="k">add</span> <span class="k">i64</span> <span class="nv-Anonymous">%2</span><span class="p">,</span> <span class="m">16</span>
-  <span class="nv-Anonymous">%4</span> <span class="p">=</span> <span class="k">inttoptr</span> <span class="k">i64</span> <span class="nv-Anonymous">%3</span> <span class="k">to</span> <span class="k">i8</span><span class="p">*</span>
-  <span class="k">call</span> <span class="kt">void</span> <span class="vg">@Py_IncRef</span><span class="p">(</span><span class="k">i8</span><span class="p">*</span> <span class="nv">%arg.a</span><span class="p">)</span>
-  <span class="k">call</span> <span class="kt">void</span> <span class="vg">@Py_DecRef</span><span class="p">(</span><span class="k">i8</span><span class="p">*</span> <span class="k">null</span><span class="p">)</span>
-  <span class="k">call</span> <span class="kt">void</span> <span class="vg">@Py_IncRef</span><span class="p">(</span><span class="k">i8</span><span class="p">*</span> <span class="nv">%arg.b</span><span class="p">)</span>
-  <span class="k">call</span> <span class="kt">void</span> <span class="vg">@Py_DecRef</span><span class="p">(</span><span class="k">i8</span><span class="p">*</span> <span class="k">null</span><span class="p">)</span>
-  <span class="nv-Anonymous">%5</span> <span class="p">=</span> <span class="k">call</span> <span class="k">i8</span><span class="p">*</span> <span class="vg">@PyNumber_Add</span><span class="p">(</span><span class="k">i8</span><span class="p">*</span> <span class="nv">%arg.a</span><span class="p">,</span> <span class="k">i8</span><span class="p">*</span> <span class="nv">%arg.b</span><span class="p">)</span>
-  <span class="nv-Anonymous">%6</span> <span class="p">=</span> <span class="k">icmp</span> <span class="k">eq</span> <span class="k">i8</span><span class="p">*</span> <span class="k">null</span><span class="p">,</span> <span class="nv-Anonymous">%5</span>
-  <span class="k">br</span> <span class="k">i1</span> <span class="nv-Anonymous">%6</span><span class="p">,</span> <span class="kt">label</span> <span class="nv">%error</span><span class="p">,</span> <span class="kt">label</span> <span class="nv">%B0.endif</span><span class="p">,</span> <span class="nv">!prof</span> <span class="nv-Anonymous">!0</span>
+  <span class="k">tail</span> <span class="k">call</span> <span class="kt">void</span> <span class="vg">@Py_IncRef</span><span class="p">(</span><span class="k">i8</span><span class="p">*</span> <span class="nv">%arg.a</span><span class="p">)</span>
+  <span class="k">tail</span> <span class="k">call</span> <span class="kt">void</span> <span class="vg">@Py_IncRef</span><span class="p">(</span><span class="k">i8</span><span class="p">*</span> <span class="nv">%arg.b</span><span class="p">)</span>
+  <span class="nv">%.21</span> <span class="p">=</span> <span class="k">icmp</span> <span class="k">eq</span> <span class="k">i8</span><span class="p">*</span> <span class="nv">%arg.a</span><span class="p">,</span> <span class="k">null</span>
+  <span class="k">br</span> <span class="k">i1</span> <span class="nv">%.21</span><span class="p">,</span> <span class="kt">label</span> <span class="nv">%B0.if</span><span class="p">,</span> <span class="kt">label</span> <span class="nv">%B0.endif</span><span class="p">,</span> <span class="nv">!prof</span> <span class="nv-Anonymous">!0</span>
+
+<span class="nl">B0.if:</span>                                            <span class="c">; preds = %entry.endif</span>
+  <span class="k">tail</span> <span class="k">call</span> <span class="kt">void</span> <span class="vg">@PyErr_SetString</span><span class="p">(</span><span class="k">i8</span><span class="p">*</span> <span class="vg">@PyExc_NameError</span><span class="p">,</span> <span class="k">i8</span><span class="p">*</span> <span class="k">getelementptr</span> <span class="k">inbounds</span> <span class="p">([</span><span class="m">24</span> <span class="k">x</span> <span class="k">i8</span><span class="p">]*</span> <span class="vg">@&quot;.const.name_&#39;a&#39;_is_not_defined&quot;</span><span class="p">,</span> <span class="k">i64</span> <span class="m">0</span><span class="p">,</span> <span class="k">i64</span> <span class="m">0</span><span class="p">))</span>
+  <span class="k">tail</span> <span class="k">call</span> <span class="kt">void</span> <span class="vg">@Py_DecRef</span><span class="p">(</span><span class="k">i8</span><span class="p">*</span> <span class="k">null</span><span class="p">)</span>
+  <span class="k">tail</span> <span class="k">call</span> <span class="kt">void</span> <span class="vg">@Py_DecRef</span><span class="p">(</span><span class="k">i8</span><span class="p">*</span> <span class="nv">%arg.b</span><span class="p">)</span>
+  <span class="k">ret</span> <span class="k">i32</span> <span class="m">-1</span>
 
 <span class="nl">B0.endif:</span>                                         <span class="c">; preds = %entry.endif</span>
-  <span class="k">call</span> <span class="kt">void</span> <span class="vg">@Py_DecRef</span><span class="p">(</span><span class="k">i8</span><span class="p">*</span> <span class="k">null</span><span class="p">)</span>
-  <span class="k">call</span> <span class="kt">void</span> <span class="vg">@Py_IncRef</span><span class="p">(</span><span class="k">i8</span><span class="p">*</span> <span class="nv-Anonymous">%5</span><span class="p">)</span>
-  <span class="k">call</span> <span class="kt">void</span> <span class="vg">@Py_DecRef</span><span class="p">(</span><span class="k">i8</span><span class="p">*</span> <span class="nv">%arg.a</span><span class="p">)</span>
-  <span class="k">call</span> <span class="kt">void</span> <span class="vg">@Py_DecRef</span><span class="p">(</span><span class="k">i8</span><span class="p">*</span> <span class="nv-Anonymous">%5</span><span class="p">)</span>
-  <span class="k">call</span> <span class="kt">void</span> <span class="vg">@Py_DecRef</span><span class="p">(</span><span class="k">i8</span><span class="p">*</span> <span class="nv">%arg.b</span><span class="p">)</span>
-  <span class="k">call</span> <span class="kt">void</span> <span class="vg">@Py_DecRef</span><span class="p">(</span><span class="k">i8</span><span class="p">*</span> <span class="nv">%arg.b</span><span class="p">)</span>
-  <span class="k">call</span> <span class="kt">void</span> <span class="vg">@Py_DecRef</span><span class="p">(</span><span class="k">i8</span><span class="p">*</span> <span class="nv">%arg.a</span><span class="p">)</span>
-  <span class="k">store</span> <span class="k">i8</span><span class="p">*</span> <span class="nv-Anonymous">%5</span><span class="p">,</span> <span class="k">i8</span><span class="p">**</span> <span class="nv-Anonymous">%0</span>
+  <span class="nv">%.30</span> <span class="p">=</span> <span class="k">icmp</span> <span class="k">eq</span> <span class="k">i8</span><span class="p">*</span> <span class="nv">%arg.b</span><span class="p">,</span> <span class="k">null</span>
+  <span class="k">br</span> <span class="k">i1</span> <span class="nv">%.30</span><span class="p">,</span> <span class="kt">label</span> <span class="nv">%B0.endif1</span><span class="p">,</span> <span class="kt">label</span> <span class="nv">%B0.endif1.1</span><span class="p">,</span> <span class="nv">!prof</span> <span class="nv-Anonymous">!0</span>
+
+<span class="nl">B0.endif1:</span>                                        <span class="c">; preds = %B0.endif</span>
+  <span class="k">tail</span> <span class="k">call</span> <span class="kt">void</span> <span class="vg">@PyErr_SetString</span><span class="p">(</span><span class="k">i8</span><span class="p">*</span> <span class="vg">@PyExc_NameError</span><span class="p">,</span> <span class="k">i8</span><span class="p">*</span> <span class="k">getelementptr</span> <span class="k">inbounds</span> <span class="p">([</span><span class="m">24</span> <span class="k">x</span> <span class="k">i8</span><span class="p">]*</span> <span class="vg">@&quot;.const.name_&#39;b&#39;_is_not_defined&quot;</span><span class="p">,</span> <span class="k">i64</span> <span class="m">0</span><span class="p">,</span> <span class="k">i64</span> <span class="m">0</span><span class="p">))</span>
+  <span class="k">tail</span> <span class="k">call</span> <span class="kt">void</span> <span class="vg">@Py_DecRef</span><span class="p">(</span><span class="k">i8</span><span class="p">*</span> <span class="nv">%arg.a</span><span class="p">)</span>
+  <span class="k">tail</span> <span class="k">call</span> <span class="kt">void</span> <span class="vg">@Py_DecRef</span><span class="p">(</span><span class="k">i8</span><span class="p">*</span> <span class="k">null</span><span class="p">)</span>
+  <span class="k">ret</span> <span class="k">i32</span> <span class="m">-1</span>
+
+<span class="nl">B0.endif1.1:</span>                                      <span class="c">; preds = %B0.endif</span>
+  <span class="nv">%.38</span> <span class="p">=</span> <span class="k">tail</span> <span class="k">call</span> <span class="k">i8</span><span class="p">*</span> <span class="vg">@PyNumber_Add</span><span class="p">(</span><span class="k">i8</span><span class="p">*</span> <span class="nv">%arg.a</span><span class="p">,</span> <span class="k">i8</span><span class="p">*</span> <span class="nv">%arg.b</span><span class="p">)</span>
+  <span class="nv">%.39</span> <span class="p">=</span> <span class="k">icmp</span> <span class="k">eq</span> <span class="k">i8</span><span class="p">*</span> <span class="nv">%.38</span><span class="p">,</span> <span class="k">null</span>
+  <span class="k">br</span> <span class="k">i1</span> <span class="nv">%.39</span><span class="p">,</span> <span class="kt">label</span> <span class="nv">%B0.endif1.1.if</span><span class="p">,</span> <span class="kt">label</span> <span class="nv">%B0.endif1.1.endif</span><span class="p">,</span> <span class="nv">!prof</span> <span class="nv-Anonymous">!0</span>
+
+<span class="nl">B0.endif1.1.if:</span>                                   <span class="c">; preds = %B0.endif1.1</span>
+  <span class="k">tail</span> <span class="k">call</span> <span class="kt">void</span> <span class="vg">@Py_DecRef</span><span class="p">(</span><span class="k">i8</span><span class="p">*</span> <span class="nv">%arg.a</span><span class="p">)</span>
+  <span class="k">tail</span> <span class="k">call</span> <span class="kt">void</span> <span class="vg">@Py_DecRef</span><span class="p">(</span><span class="k">i8</span><span class="p">*</span> <span class="nv">%arg.b</span><span class="p">)</span>
+  <span class="k">ret</span> <span class="k">i32</span> <span class="m">-1</span>
+
+<span class="nl">B0.endif1.1.endif:</span>                                <span class="c">; preds = %B0.endif1.1</span>
+  <span class="k">tail</span> <span class="k">call</span> <span class="kt">void</span> <span class="vg">@Py_DecRef</span><span class="p">(</span><span class="k">i8</span><span class="p">*</span> <span class="nv">%arg.b</span><span class="p">)</span>
+  <span class="k">tail</span> <span class="k">call</span> <span class="kt">void</span> <span class="vg">@Py_DecRef</span><span class="p">(</span><span class="k">i8</span><span class="p">*</span> <span class="nv">%arg.a</span><span class="p">)</span>
+  <span class="k">tail</span> <span class="k">call</span> <span class="kt">void</span> <span class="vg">@Py_IncRef</span><span class="p">(</span><span class="k">i8</span><span class="p">*</span> <span class="nv">%.38</span><span class="p">)</span>
+  <span class="k">tail</span> <span class="k">call</span> <span class="kt">void</span> <span class="vg">@Py_DecRef</span><span class="p">(</span><span class="k">i8</span><span class="p">*</span> <span class="nv">%.38</span><span class="p">)</span>
+  <span class="k">store</span> <span class="k">i8</span><span class="p">*</span> <span class="nv">%.38</span><span class="p">,</span> <span class="k">i8</span><span class="p">**</span> <span class="nv">%retptr</span><span class="p">,</span> <span class="k">align</span> <span class="m">8</span>
   <span class="k">ret</span> <span class="k">i32</span> <span class="m">0</span>
 <span class="p">}</span>
+
+<span class="k">declare</span> <span class="kt">void</span> <span class="vg">@PyErr_SetString</span><span class="p">(</span><span class="k">i8</span><span class="p">*,</span> <span class="k">i8</span><span class="p">*)</span>
 
 <span class="k">declare</span> <span class="kt">void</span> <span class="vg">@Py_IncRef</span><span class="p">(</span><span class="k">i8</span><span class="p">*)</span>
 
 <span class="k">declare</span> <span class="kt">void</span> <span class="vg">@Py_DecRef</span><span class="p">(</span><span class="k">i8</span><span class="p">*)</span>
 
-<span class="k">declare</span> <span class="kt">void</span> <span class="vg">@PyErr_SetString</span><span class="p">(</span><span class="k">i8</span><span class="p">*,</span> <span class="k">i8</span><span class="p">*)</span>
-
 <span class="k">declare</span> <span class="k">i8</span><span class="p">*</span> <span class="vg">@PyNumber_Add</span><span class="p">(</span><span class="k">i8</span><span class="p">*,</span> <span class="k">i8</span><span class="p">*)</span>
-
-<span class="nv-Anonymous">!0</span> <span class="p">=</span> <span class="kt">metadata</span> <span class="p">!{</span><span class="kt">metadata</span> <span class="nv">!&quot;branch_weights&quot;</span><span class="p">,</span> <span class="k">i32</span> <span class="m">1</span><span class="p">,</span> <span class="k">i32</span> <span class="m">99</span><span class="p">}</span>
 </pre></div>
 </div>
-<p>The careful reader might notice a lot of unnecessary calls to <tt class="docutils literal"><span class="pre">Py_IncRef</span></tt>
-and <tt class="docutils literal"><span class="pre">Py_DecRef</span></tt> in the generated code.  A special pass is run after the
-LLVM optimizer to identify and remove these extra reference count calls.</p>
+<p>The careful reader might notice several unnecessary calls to <tt class="docutils literal"><span class="pre">Py_IncRef</span></tt>
+and <tt class="docutils literal"><span class="pre">Py_DecRef</span></tt> in the generated code.  Currently Numba isn&#8217;t able to
+optimize those away.</p>
 <p>Object mode compilation will also attempt to identify loops which can be
 extracted and statically-typed for &#8220;nopython&#8221; compilation.  This process is
 called <em>loop-lifting</em>, and results in the creation of a hidden nopython mode
@@ -618,15 +630,15 @@ do the dynamic dispatch to the correct version of the compiled function if
 multiple type specializations were generated (for example, for both
 <tt class="docutils literal"><span class="pre">float32</span></tt> and <tt class="docutils literal"><span class="pre">float64</span></tt> versions of the same function).</p>
 <p>The machine assembly code generated by LLVM can be dumped to the screen by
-setting the <tt class="docutils literal"><span class="pre">NUMBA_DUMP_ASSEMBLY</span></tt> environment variable to 1:</p>
-<div class="highlight-gas"><div class="highlight"><pre>  <span class="na">.section</span>  <span class="no">__TEXT</span><span class="p">,</span><span class="no">__text</span><span class="p">,</span><span class="no">regular</span><span class="p">,</span><span class="no">pure_instructions</span>
-  <span class="na">.globl</span>  <span class="no">_add.int64.int64</span>
-  <span class="na">.align</span>  <span class="mi">4</span><span class="p">,</span> <span class="mi">0x90</span>
-<span class="nl">_add.int64.int64:</span>
-  <span class="nf">addq</span>  <span class="nv">%rcx</span><span class="p">,</span> <span class="nv">%rdx</span>
-  <span class="nf">movq</span>  <span class="nv">%rdx</span><span class="p">,</span> <span class="p">(</span><span class="nv">%rdi</span><span class="p">)</span>
-  <span class="nf">xorl</span>  <span class="nv">%eax</span><span class="p">,</span> <span class="nv">%eax</span>
-  <span class="nf">ret</span>
+setting the <span class="target" id="index-3"></span><a class="reference internal" href="../reference/envvars.html#envvar-NUMBA_DUMP_ASSEMBLY"><tt class="xref std std-envvar docutils literal"><span class="pre">NUMBA_DUMP_ASSEMBLY</span></tt></a> environment variable to 1:</p>
+<div class="highlight-gas"><div class="highlight"><pre>        <span class="na">.globl</span>  <span class="no">__main__.add$1.int64.int64</span>
+        <span class="na">.align</span>  <span class="mi">16</span><span class="p">,</span> <span class="mi">0x90</span>
+        <span class="na">.type</span>   <span class="no">__main__.add$1.int64.int64</span><span class="p">,</span><span class="na">@function</span>
+<span class="nl">__main__.add$1.int64.int64:</span>
+        <span class="nf">addq</span>    <span class="nv">%r8</span><span class="p">,</span> <span class="nv">%rcx</span>
+        <span class="nf">movq</span>    <span class="nv">%rcx</span><span class="p">,</span> <span class="p">(</span><span class="nv">%rdi</span><span class="p">)</span>
+        <span class="nf">xorl</span>    <span class="nv">%eax</span><span class="p">,</span> <span class="nv">%eax</span>
+        <span class="nf">retq</span>
 </pre></div>
 </div>
 <p>The assembly output will also include the generated wrapper function that
@@ -653,9 +665,9 @@ translates the Python arguments to native data types.</p>
       
         <li><a href="../genindex.html" title="General Index" >index</a></li>
         <li><a href="../py-modindex.html" title="Python Module Index" >modules</a></li>
-        <li><a href="extending-frontend.html" title="4.3. Extending the Numba Frontend" >next</a></li>
+        <li><a href="generators.html" title="4.3. Notes on generators" >next</a></li>
         <li><a href="contributing.html" title="4.1. Contributing to Numba" >previous</a></li>
-        <li><a href="../index.html">Numba 0.17.0_281_g6161cba-py2.7-linux-x86_64.egg documentation</a></li>
+        <li><a href="../index.html">Numba 0.17.0_314_geb4ae4c-py2.7-linux-x86_64.egg documentation</a></li>
         <li><a href="index.html" >4. Developer Manual</a></li> 
       
     </ul>
