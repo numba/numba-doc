@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+
+
+
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+    <title>4.4. Extending the Numba Frontend &mdash; Numba 0.18.1-py2.7-macosx-10.5-x86_64.egg documentation</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    
+
+<link rel="stylesheet" href="../_static/css/basicstrap-base.css" type="text/css" />
+<link rel="stylesheet" id="current-theme" href="../_static/css/bootstrap3/bootstrap.min.css" type="text/css" />
+<link rel="stylesheet" id="current-adjust-theme" type="text/css" />
+
+<link rel="stylesheet" href="../_static/css/font-awesome.min.css">
+
+<style type="text/css">
+  body {
+    padding-top: 60px;
+    padding-bottom: 40px;
+  }
+}
+</style>
+
+<link rel="stylesheet" href="../_static/css/basicstrap.css" type="text/css" />
+<link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+<script type="text/javascript">
+  var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:    '../',
+            VERSION:     '0.18.1-py2.7-macosx-10.5-x86_64.egg',
+            COLLAPSE_INDEX: false,
+            FILE_SUFFIX: '.html',
+            HAS_SOURCE:  true
+  };
+</script>
+    <script type="text/javascript" src="../_static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/bootstrap3.min.js"></script>
+<script type="text/javascript" src="../_static/js/jquery.cookie.min.js"></script>
+<script type="text/javascript" src="../_static/js/basicstrap.js"></script>
+<script type="text/javascript">
+</script>
+    <link rel="top" title="Numba 0.18.1-py2.7-macosx-10.5-x86_64.egg documentation" href="../index.html" />
+    <link rel="up" title="4. Developer Manual" href="index.html" />
+    <link rel="next" title="4.5. Extending the Numba backend" href="extending-backend.html" />
+    <link rel="prev" title="4.3. Notes on generators" href="generators.html" /> 
+  </head>
+  <body role="document">
+    <div id="navbar-top" class="navbar navbar-fixed-top navbar-default" role="navigation" aria-label="top navigation">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="../index.html">Numba 0.18.1-py2.7-macosx-10.5-x86_64.egg documentation</a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+              <li class="dropdown visible-xs">
+                <a role="button" id="localToc" data-toggle="dropdown" data-target="#" href="#">Table Of Contents <b class="caret"></b></a>
+                <ul class="dropdown-menu localtoc sp-localtoc" role="menu" aria-labelledby="localToc">
+                <ul>
+<li><a class="reference internal" href="#">4.4. Extending the Numba Frontend</a><ul>
+<li><a class="reference internal" href="#overview">4.4.1. Overview</a><ul>
+<li><a class="reference internal" href="#numba-types">4.4.1.1. Numba Types</a></li>
+<li><a class="reference internal" href="#type-inference-mechanism">4.4.1.2. Type Inference Mechanism</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#tutorial">4.4.2. Tutorial</a><ul>
+<li><a class="reference internal" href="#creating-a-new-numba-type">4.4.2.1. Creating a New Numba Type</a></li>
+<li><a class="reference internal" href="#organizing-type-signatures-with-a-registry">4.4.2.2. Organizing Type Signatures with a Registry</a></li>
+<li><a class="reference internal" href="#adding-an-attribute-value-type-signature">4.4.2.3. Adding an Attribute Value Type Signature</a></li>
+<li><a class="reference internal" href="#adding-a-function-type-signature">4.4.2.4. Adding a Function Type Signature</a></li>
+<li><a class="reference internal" href="#overloading-elementary-operations">4.4.2.5. Overloading Elementary Operations</a></li>
+<li><a class="reference internal" href="#installing-the-registry-in-a-typing-context">4.4.2.6. Installing the Registry in a Typing Context</a></li>
+<li><a class="reference internal" href="#enabling-type-inference-for-function-arguments-and-globals">4.4.2.7. Enabling Type Inference for Function Arguments and Globals</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#conclusion">4.4.3. Conclusion</a></li>
+</ul>
+</li>
+</ul>
+
+                </ul>
+              </li>
+
+            
+              <li><a href="generators.html" title="4.3. Notes on generators" accesskey="P">previous </a></li>
+              <li><a href="extending-backend.html" title="4.5. Extending the Numba backend" accesskey="N">next </a></li>
+              <li><a href="../py-modindex.html" title="Python Module Index" >modules </a></li>
+              <li><a href="../genindex.html" title="General Index" accesskey="I">index </a></li>
+              <li><a href="index.html" accesskey="U">4. Developer Manual</a></li>
+            
+            <li class="visible-xs"><a href="../_sources/developer/extending-frontend.txt" rel="nofollow">Show Source</a></li>
+
+            <li class="visible-xs">
+                <form class="search form-search form-inline navbar-form navbar-right sp-searchbox" action="../search.html" method="get">
+                  <div class="input-append input-group">
+                    <input type="text" class="search-query form-control" name="q" placeholder="Search...">
+                    <span class="input-group-btn">
+                    <input type="submit" class="btn" value="Go" />
+                    </span>
+                  </div>
+                  <input type="hidden" name="check_keywords" value="yes" />
+                  <input type="hidden" name="area" value="default" />
+                </form>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    
+
+    <!-- container -->
+    <div class="container-fluid">
+
+      <!-- row -->
+      <div class="row">
+         
+<div class="col-md-3 hidden-xs">
+  <div class="sidebar hidden-xs" role="navigation" aria-label="main navigation">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">4.4. Extending the Numba Frontend</a><ul>
+<li><a class="reference internal" href="#overview">4.4.1. Overview</a><ul>
+<li><a class="reference internal" href="#numba-types">4.4.1.1. Numba Types</a></li>
+<li><a class="reference internal" href="#type-inference-mechanism">4.4.1.2. Type Inference Mechanism</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#tutorial">4.4.2. Tutorial</a><ul>
+<li><a class="reference internal" href="#creating-a-new-numba-type">4.4.2.1. Creating a New Numba Type</a></li>
+<li><a class="reference internal" href="#organizing-type-signatures-with-a-registry">4.4.2.2. Organizing Type Signatures with a Registry</a></li>
+<li><a class="reference internal" href="#adding-an-attribute-value-type-signature">4.4.2.3. Adding an Attribute Value Type Signature</a></li>
+<li><a class="reference internal" href="#adding-a-function-type-signature">4.4.2.4. Adding a Function Type Signature</a></li>
+<li><a class="reference internal" href="#overloading-elementary-operations">4.4.2.5. Overloading Elementary Operations</a></li>
+<li><a class="reference internal" href="#installing-the-registry-in-a-typing-context">4.4.2.6. Installing the Registry in a Typing Context</a></li>
+<li><a class="reference internal" href="#enabling-type-inference-for-function-arguments-and-globals">4.4.2.7. Enabling Type Inference for Function Arguments and Globals</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#conclusion">4.4.3. Conclusion</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="generators.html"
+                        title="previous chapter">4.3. Notes on generators</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="extending-backend.html"
+                        title="next chapter">4.5. Extending the Numba backend</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/developer/extending-frontend.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" role="search">
+  <h3>Quick search</h3>
+  <form class="search form-inline" action="../search.html" method="get">
+      <div class="input-append input-group">
+        <input type="text" class="search-query form-control" name="q" placeholder="Search...">
+        <span class="input-group-btn">
+        <input type="submit" class="btn" value="Go" />
+        </span>
+      </div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+  </div>
+</div> 
+        
+
+        <div class="col-md-9">
+          <div class="document" role="main">
+            <div class="documentwrapper">
+              <div class="bodywrapper">
+                <div class="body">
+                  
+  <div class="section" id="extending-the-numba-frontend">
+<h1>4.4. Extending the Numba Frontend<a class="headerlink" href="#extending-the-numba-frontend" title="Permalink to this headline">¶</a></h1>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">The Numba APIs described in this document are not guaranteed to be stable.
+External packages that rely on these APIs may break with new Numba releases.
+Their description is mostly useful in the context of extending Numba
+withing the Numba codebase.</p>
+</div>
+<div class="section" id="overview">
+<h2>4.4.1. Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<p>The frontend of Numba first analyzes the control and data flow of a function.
+It then performs type inference to deduce the types of all intermediate values
+and identify points where types must be coerced. Type inference attempts to
+determine a single specific type for variable. When a variable&#8217;s type cannot be
+deduced, or it is determined to take on multiple specific types depending on the
+control flow, its type falls back to <tt class="docutils literal"><span class="pre">pyobject</span></tt>.</p>
+<p>The frontend must succeed in typing all variables unambiguously (i.e. they must
+not be typed as <tt class="docutils literal"><span class="pre">pyobject</span></tt>) in order for the backend to generate code in
+nopython mode, because the backend uses type information to match appropriate
+code generators with the values they operate on. Extending the frontend
+primarily consists of adding support for new types, to allow variables that hold
+instances of these types to be typed unambiguously.</p>
+<div class="section" id="numba-types">
+<h3>4.4.1.1. Numba Types<a class="headerlink" href="#numba-types" title="Permalink to this headline">¶</a></h3>
+<p>All Numba types are instances of classes that inherit from <tt class="docutils literal"><span class="pre">numba.types.Type</span></tt>.
+Numba types can be parameterized (for example, arrays and records), in which
+case their Type classes will take constructor arguments defining the parameters.
+Different instances of a parameterized type usually denote distinct types and
+can trigger different, specialized code generation in the backend.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">In the rest of this document, when we refer to a &#8220;type&#8221;, we mean the
+Numba type unless we explicitly write &#8220;Python type&#8221;.</p>
+</div>
+</div>
+<div class="section" id="type-inference-mechanism">
+<h3>4.4.1.2. Type Inference Mechanism<a class="headerlink" href="#type-inference-mechanism" title="Permalink to this headline">¶</a></h3>
+<p>Type inference is performed for variables in three cases:</p>
+<ul class="simple">
+<li>When automatic JIT compilation is used: the types of function arguments must
+be deduced from the values passed in.</li>
+<li>When global variables are accessed: the Numba types of those globals is
+deduced from their values at the time of compilation.</li>
+<li>Intermediate values: within a function, the type of every intermediate
+variable must be deduced.</li>
+</ul>
+<p>The types of intermediate values are determined by iteratively propagating type
+information through the data flow graph (DFG). Each iteration propagates type
+information along the edges of the DFG, until convergence is reached. When two
+edges flow into the same node and differing type information is propagated, the
+type of the node is resolved as <tt class="docutils literal"><span class="pre">pyobject</span></tt>.</p>
+<p>In order for the propagation to proceed through functions, operators, and
+attributes, Numba needs to make use of <em>Type Signatures</em>, which map input types
+to output types. Numba needs type signatures for:</p>
+<ul class="simple">
+<li>Object attributes: This can include the attributes of instances of Python
+classes, or modules.</li>
+<li>Global values: Objects (such as functions) accessed from the global
+namespace.</li>
+<li>Operators and other &#8220;implicit&#8221; functions: Certain Python syntax
+(like <tt class="docutils literal"><span class="pre">a</span> <span class="pre">+</span> <span class="pre">b</span></tt>, or  <tt class="docutils literal"><span class="pre">iter(o)</span></tt>) triggers special function calls.
+To overload these operations, a type signature for the appropriate function
+must be registered.</li>
+<li>Other entities not described in this document, such as builtin functions.</li>
+</ul>
+<p>All type inference happens with a <em>Typing Context</em>. Each target has its own
+Typing Context - presently there are two, for the CPU and CUDA backends. The
+majority of type signatures are common between these contexts, but the creation
+of a context for each target allows specialisation based on intrinsics or other
+specialised operations and types that a target may support.</p>
+</div>
+</div>
+<div class="section" id="tutorial">
+<h2>4.4.2. Tutorial<a class="headerlink" href="#tutorial" title="Permalink to this headline">¶</a></h2>
+<p>We will extend the Numba frontend to support typing a class that it does not
+currently support by:</p>
+<ul class="simple">
+<li>Adding a Numba Type corresponding to the class,</li>
+<li>Adding the relevant type signatures for a function and an attribute of the
+class, and</li>
+<li>Adding a type signature for overloading an elementary operation.</li>
+</ul>
+<p>The example will add support for a module named <tt class="docutils literal"><span class="pre">interval</span></tt>, which is assumed
+to be external to Numba and contains the following:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Interval</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;A half-open interval on the real number line.&#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lo</span><span class="p">,</span> <span class="n">hi</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lo</span> <span class="o">=</span> <span class="n">lo</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hi</span> <span class="o">=</span> <span class="n">hi</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s">&#39;Interval(</span><span class="si">%f</span><span class="s">, </span><span class="si">%f</span><span class="s">)&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lo</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">hi</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">valid_interval</span><span class="p">(</span><span class="n">interval</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Return True if interval.lo &lt;= interval.hi&#39;&#39;&#39;</span>
+    <span class="k">return</span> <span class="n">interval</span><span class="o">.</span><span class="n">lo</span> <span class="o">&lt;=</span> <span class="n">interval</span><span class="o">.</span><span class="n">hi</span>
+</pre></div>
+</div>
+<div class="section" id="creating-a-new-numba-type">
+<h3>4.4.2.1. Creating a New Numba Type<a class="headerlink" href="#creating-a-new-numba-type" title="Permalink to this headline">¶</a></h3>
+<p>Types are defined in the <tt class="docutils literal"><span class="pre">numba.types</span></tt> module.  To create a new Numba type,
+subclass <tt class="docutils literal"><span class="pre">numba.types.Type</span></tt> and make a single instance of it:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">IntervalType</span><span class="p">(</span><span class="n">numba</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">Type</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">IntervalType</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&#39;Interval&#39;</span><span class="p">)</span>
+
+<span class="n">interval_type</span> <span class="o">=</span> <span class="n">IntervalType</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>This enables <tt class="docutils literal"><span class="pre">interval_type</span></tt> to be used to declare argument and return types
+in <tt class="docutils literal"><span class="pre">&#64;jit</span></tt> decorations. For example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@jit</span><span class="p">(</span><span class="n">numba</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">bool_</span><span class="p">(</span><span class="n">interval_type</span><span class="p">,</span> <span class="n">numba</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">float32</span><span class="p">))</span>
+<span class="k">def</span> <span class="nf">inside</span><span class="p">(</span><span class="n">interval</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">interval</span><span class="o">.</span><span class="n">lo</span> <span class="o">&lt;=</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">interval</span><span class="o">.</span><span class="n">hi</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="organizing-type-signatures-with-a-registry">
+<h3>4.4.2.2. Organizing Type Signatures with a Registry<a class="headerlink" href="#organizing-type-signatures-with-a-registry" title="Permalink to this headline">¶</a></h3>
+<p>Numba uses a <em>Registry</em> (class <tt class="docutils literal"><span class="pre">numba.typing.templates.Registry</span></tt>) to hold
+collections of related type signatures for attributes, globals and operators.</p>
+<p>Examples of the use of a Registry can be found
+in <tt class="docutils literal"><span class="pre">numba.typing.cmathdecl</span></tt>, <tt class="docutils literal"><span class="pre">numba.typing.npydecl</span></tt>, and some other modules
+in <tt class="docutils literal"><span class="pre">numba.typing</span></tt>.</p>
+<p>For our <tt class="docutils literal"><span class="pre">interval</span></tt> example, we will create a new Registry. This is overkill
+for a small set of type signatures, but is representative of what would be
+required when adding type signatures for more complicated classes and modules.</p>
+<p>We will create the <tt class="docutils literal"><span class="pre">numba.typing.intervaldecl</span></tt> module and add the following:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">numba.typing.templates</span> <span class="kn">import</span> <span class="n">Registry</span>
+
+<span class="n">registry</span> <span class="o">=</span> <span class="n">Registry</span><span class="p">()</span>
+<span class="n">register</span> <span class="o">=</span> <span class="n">registry</span><span class="o">.</span><span class="n">register</span>
+<span class="n">register_attr</span> <span class="o">=</span> <span class="n">registry</span><span class="o">.</span><span class="n">register_attr</span>
+<span class="n">register_global</span> <span class="o">=</span> <span class="n">registry</span><span class="o">.</span><span class="n">register_global</span>
+</pre></div>
+</div>
+<p><tt class="docutils literal"><span class="pre">register</span></tt>, <tt class="docutils literal"><span class="pre">register_attr</span></tt>, and <tt class="docutils literal"><span class="pre">register_global</span></tt> may now be used later
+in the module as decorators to record functions that compute the type signatures
+of functions, attributes, and globals, respectively.</p>
+</div>
+<div class="section" id="adding-an-attribute-value-type-signature">
+<h3>4.4.2.3. Adding an Attribute Value Type Signature<a class="headerlink" href="#adding-an-attribute-value-type-signature" title="Permalink to this headline">¶</a></h3>
+<p>We can add type signatures for attributes of instances of <tt class="docutils literal"><span class="pre">Interval</span></tt>, so
+that <tt class="docutils literal"><span class="pre">lo</span></tt> and <tt class="docutils literal"><span class="pre">hi</span></tt> are recognized as returning <tt class="docutils literal"><span class="pre">float32</span></tt> types.  This
+requires creating a subclass of <tt class="docutils literal"><span class="pre">numba.typing.templates.AttributeTemplate</span></tt>
+(add the following to <tt class="docutils literal"><span class="pre">numba.typing.intervaldecl</span></tt>):</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">numba.types</span> <span class="kn">import</span> <span class="n">float32</span>
+<span class="kn">from</span> <span class="nn">numba.typing.templates</span> <span class="kn">import</span> <span class="n">AttributeTemplate</span>
+
+<span class="nd">@register_attr</span>
+<span class="k">class</span> <span class="nc">IntervalAttributes</span><span class="p">(</span><span class="n">AttributeTemplate</span><span class="p">):</span>
+    <span class="n">key</span> <span class="o">=</span> <span class="n">interval_type</span>
+
+    <span class="c"># We will store the interval bounds as 32-bit floats</span>
+    <span class="n">_attributes</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">lo</span><span class="o">=</span><span class="n">float32</span><span class="p">,</span> <span class="n">hi</span><span class="o">=</span><span class="n">float32</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">generic_resolve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">attr</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_attributes</span><span class="p">[</span><span class="n">attr</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>The <tt class="docutils literal"><span class="pre">key</span></tt> attribute of the template contains the Numba type that needs to be
+matched to use this template.  It can either be an instance of a <tt class="docutils literal"><span class="pre">Type</span></tt>
+subclass, or the subclass itself, for parametric types.</p>
+<p>The <tt class="docutils literal"><span class="pre">AttributeTemplate</span></tt> will first look for a method of the form
+<tt class="docutils literal"><span class="pre">resolve_&lt;attribute</span> <span class="pre">name&gt;</span></tt> to get the type of a specific attribute,
+otherwise it will delegate to the <tt class="docutils literal"><span class="pre">generic_resolve()</span></tt> method.  This call
+takes both the Numba type instance (useful for parametric types) of the value
+being accessed, and the name of the attribute.  The return value from
+<tt class="docutils literal"><span class="pre">generic_resolve()</span></tt> is the type of the value returned by the attribute
+access.</p>
+</div>
+<div class="section" id="adding-a-function-type-signature">
+<h3>4.4.2.4. Adding a Function Type Signature<a class="headerlink" href="#adding-a-function-type-signature" title="Permalink to this headline">¶</a></h3>
+<p>In order for the Numba type inference engine to recognize the
+<tt class="docutils literal"><span class="pre">valid_interval</span></tt> global function, we need to provide a function type signature
+for it.  This is done using a <tt class="docutils literal"><span class="pre">numba.typing.templates.ConcreteTemplate</span></tt>. Add
+the following to <tt class="docutils literal"><span class="pre">numba.typing.intervaldecl</span></tt>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">numba.types</span> <span class="kn">import</span> <span class="n">bool_</span><span class="p">,</span> <span class="n">Function</span>
+<span class="kn">from</span> <span class="nn">numba.typing.templates</span> <span class="kn">import</span> <span class="n">ConcreteTemplate</span><span class="p">,</span> <span class="n">signature</span>
+<span class="kn">from</span> <span class="nn">interval</span> <span class="kn">import</span> <span class="n">valid_interval</span>
+
+<span class="k">class</span> <span class="nc">ValidIntervalSignature</span><span class="p">(</span><span class="n">ConcreteTemplate</span><span class="p">):</span>
+    <span class="n">key</span> <span class="o">=</span> <span class="n">valid_interval</span>
+    <span class="n">cases</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">signature</span><span class="p">(</span><span class="n">bool_</span><span class="p">,</span> <span class="n">interval_type</span><span class="p">)</span>
+    <span class="p">]</span>
+
+<span class="n">register_global</span><span class="p">(</span><span class="n">valid_interval</span><span class="p">,</span> <span class="n">Function</span><span class="p">(</span><span class="n">ValidIntervalSignature</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>The <tt class="docutils literal"><span class="pre">key</span></tt> for looking up the function type is the Python function itself,
+<tt class="docutils literal"><span class="pre">valid_interval</span></tt> in this example.  The <tt class="docutils literal"><span class="pre">cases</span></tt> attribute lists all of the
+supported function signature combinations.  The first argument to
+<tt class="docutils literal"><span class="pre">signature</span></tt> is the return type, and the remaining arguments are the types of
+the function arguments.  Only positional arguments are supported for function
+types (i.e. no keyword arguments).</p>
+</div>
+<div class="section" id="overloading-elementary-operations">
+<h3>4.4.2.5. Overloading Elementary Operations<a class="headerlink" href="#overloading-elementary-operations" title="Permalink to this headline">¶</a></h3>
+<p>Next, suppose we want to add support for a <tt class="docutils literal"><span class="pre">+</span></tt> operation between two
+intervals.  We need to make a <tt class="docutils literal"><span class="pre">ConcreteTemplate</span></tt> where the key is the string
+<tt class="docutils literal"><span class="pre">&quot;+&quot;</span></tt>. Add to <tt class="docutils literal"><span class="pre">numba.typing.intervaldecl</span></tt>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">numba.typing.templates</span> <span class="kn">import</span> <span class="n">ConcreteTemplate</span>
+
+<span class="nd">@builtin</span>
+<span class="k">class</span> <span class="nc">AdditionSignature</span><span class="p">(</span><span class="n">ConcreteTemplate</span><span class="p">):</span>
+    <span class="n">key</span> <span class="o">=</span> <span class="s">&#39;+&#39;</span>
+    <span class="n">cases</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">signature</span><span class="p">(</span><span class="n">interval_type</span><span class="p">,</span> <span class="n">interval_type</span><span class="p">,</span> <span class="n">interval_type</span><span class="p">)</span>
+    <span class="p">]</span>
+</pre></div>
+</div>
+<p>Several templates with the same key can be inserted, and each will be checked
+for a matching function signatures in the order of insertion. This allows the
+same key to be overloaded with different numbers of arguments and different
+argument types.</p>
+<p>The list of special function keys includes:</p>
+<div class="admonition-todo admonition" id="index-0">
+<p class="first admonition-title">Todo</p>
+<p class="last">correct this list</p>
+</div>
+<table border="1" class="docutils">
+<colgroup>
+<col width="14%" />
+<col width="86%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Key</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">+</span></tt></td>
+<td>Addition (2 args) and unary positive (1 arg)</td>
+</tr>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">-</span></tt></td>
+<td>Subtraction (2 args) and unary negative (1 arg)</td>
+</tr>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">*</span></tt></td>
+<td>Multiplication</td>
+</tr>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">/?</span></tt></td>
+<td>Divide (only Python 2)</td>
+</tr>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">/</span></tt></td>
+<td>True divide</td>
+</tr>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">//</span></tt></td>
+<td>Floor divide</td>
+</tr>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">%</span></tt></td>
+<td>Modulo</td>
+</tr>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">**</span></tt></td>
+<td>Power</td>
+</tr>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">&lt;&lt;</span></tt></td>
+<td>Left shift</td>
+</tr>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">&gt;&gt;</span></tt></td>
+<td>Right shift</td>
+</tr>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">&amp;</span></tt></td>
+<td>Bitwise AND</td>
+</tr>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">|</span></tt></td>
+<td>Bitwise OR</td>
+</tr>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">^</span></tt></td>
+<td>Bitwise XOR</td>
+</tr>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">getiter</span></tt></td>
+<td>Get an iterator (equivalent to <tt class="docutils literal"><span class="pre">__iter__()</span></tt>)</td>
+</tr>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">iternext</span></tt></td>
+<td>Return the next element from an iterator (equivalent to <tt class="docutils literal"><span class="pre">__next__()</span></tt>)</td>
+</tr>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">getitem</span></tt></td>
+<td>Get an item (equivalent to <tt class="docutils literal"><span class="pre">__getitem__()</span></tt>)</td>
+</tr>
+</tbody>
+</table>
+<p>These keys come directly from operations in the Numba IR (see <a class="reference internal" href="architecture.html#arch-generate-numba-ir"><em>Stage 2: Generate the Numba IR</em></a>).</p>
+<p>In-place operations (like <tt class="docutils literal"><span class="pre">a</span> <span class="pre">+=</span> <span class="pre">b</span></tt>) are assumed to have the same signature
+as the right-hand side of the expanded form (<tt class="docutils literal"><span class="pre">a</span> <span class="pre">=</span> <span class="pre">a</span> <span class="pre">+</span> <span class="pre">b</span></tt>).</p>
+</div>
+<div class="section" id="installing-the-registry-in-a-typing-context">
+<h3>4.4.2.6. Installing the Registry in a Typing Context<a class="headerlink" href="#installing-the-registry-in-a-typing-context" title="Permalink to this headline">¶</a></h3>
+<p>Once all required type signatures have been added to a Registry, it can then be
+installed into a typing context. In this example, we will make the registry that
+we have created available to all typing contexts, so we will make sure that it
+is installed by modifying <tt class="docutils literal"><span class="pre">numba.typing.context.BaseContext</span></tt>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Context</span><span class="p">(</span><span class="n">BaseContext</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">init</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">install</span><span class="p">(</span><span class="n">cmathdecl</span><span class="o">.</span><span class="n">registry</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">install</span><span class="p">(</span><span class="n">intervaldecl</span><span class="o">.</span><span class="n">registry</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">install</span><span class="p">(</span><span class="n">mathdecl</span><span class="o">.</span><span class="n">registry</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">install</span><span class="p">(</span><span class="n">npydecl</span><span class="o">.</span><span class="n">registry</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">install</span><span class="p">(</span><span class="n">operatordecl</span><span class="o">.</span><span class="n">registry</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Note the addition of the installation of <tt class="docutils literal"><span class="pre">intervaldecl.registry</span></tt>.</p>
+</div>
+<div class="section" id="enabling-type-inference-for-function-arguments-and-globals">
+<h3>4.4.2.7. Enabling Type Inference for Function Arguments and Globals<a class="headerlink" href="#enabling-type-inference-for-function-arguments-and-globals" title="Permalink to this headline">¶</a></h3>
+<p>Numba is infers the types of arguments and global variables, using the
+<tt class="docutils literal"><span class="pre">BaseContext.resolve_data_type</span></tt> method. In order to add support for the
+<tt class="docutils literal"><span class="pre">Interval</span></tt> class, we must first create a function that detects <tt class="docutils literal"><span class="pre">Interval</span></tt>
+instances. Create a new module, <tt class="docutils literal"><span class="pre">numba.interval_support</span></tt>, containing:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">interval</span>
+
+<span class="k">def</span> <span class="nf">is_interval</span><span class="p">(</span><span class="n">typ</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">typ</span><span class="p">,</span> <span class="n">interval</span><span class="o">.</span><span class="n">Interval</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Then modify the <tt class="docutils literal"><span class="pre">BaseContext.get_data_type</span></tt> function in
+<tt class="docutils literal"><span class="pre">numba.typing.context</span></tt> so that just before the final <tt class="docutils literal"><span class="pre">return</span></tt> statement, the
+following check is added:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">if</span> <span class="n">interval_support</span><span class="o">.</span><span class="n">is_interval</span><span class="p">(</span><span class="n">val</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">types</span><span class="o">.</span><span class="n">interval_type</span>
+</pre></div>
+</div>
+<p>and add an import for <tt class="docutils literal"><span class="pre">numba.interval_support</span></tt> to the top of the file.</p>
+</div>
+</div>
+<div class="section" id="conclusion">
+<h2>4.4.3. Conclusion<a class="headerlink" href="#conclusion" title="Permalink to this headline">¶</a></h2>
+<p>So far we have added support for typing for an attribute, a function, an
+elementary operator, and have added type inference for function arguments and
+globals. However, this does not yet enable any change in the code generated by
+Numba, which requires the addition of backend support for the <tt class="docutils literal"><span class="pre">Interval</span></tt>
+class, described in the next section.</p>
+</div>
+</div>
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        
+      </div><!-- /row -->
+
+      <!-- row -->
+      <div class="row footer-relbar">
+<div id="navbar-related" class=" related navbar navbar-default" role="navigation" aria-label="related navigation">
+  <div class="navbar-inner">
+    <ul class="nav navbar-nav">
+        <li><a href="../index.html">Numba 0.18.1-py2.7-macosx-10.5-x86_64.egg documentation</a></li>
+    </ul>
+    <ul class="nav navbar-nav pull-right hidden-xs hidden-sm">
+      
+        <li><a href="generators.html" title="4.3. Notes on generators" >previous</a></li>
+        <li><a href="extending-backend.html" title="4.5. Extending the Numba backend" >next</a></li>
+        <li><a href="../py-modindex.html" title="Python Module Index" >modules</a></li>
+        <li><a href="../genindex.html" title="General Index" >index</a></li>
+        <li><a href="index.html" >4. Developer Manual</a></li> 
+      
+    </ul>
+  </div>
+</div>
+      </div><!-- /row -->
+
+      <!-- footer -->
+      <footer role="contentinfo">
+          &copy; Copyright 2012-2014, Continuum Analytics.
+        Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.3.
+      </footer>
+      <!-- /footer -->
+
+    </div>
+    <!-- /container -->
+
+  </body>
+</html>

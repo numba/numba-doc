@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+
+
+
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+    <title>1.4. Creating Numpy universal functions &mdash; Numba 0.18.1-py2.7-macosx-10.5-x86_64.egg documentation</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    
+
+<link rel="stylesheet" href="../_static/css/basicstrap-base.css" type="text/css" />
+<link rel="stylesheet" id="current-theme" href="../_static/css/bootstrap3/bootstrap.min.css" type="text/css" />
+<link rel="stylesheet" id="current-adjust-theme" type="text/css" />
+
+<link rel="stylesheet" href="../_static/css/font-awesome.min.css">
+
+<style type="text/css">
+  body {
+    padding-top: 60px;
+    padding-bottom: 40px;
+  }
+}
+</style>
+
+<link rel="stylesheet" href="../_static/css/basicstrap.css" type="text/css" />
+<link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+<script type="text/javascript">
+  var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:    '../',
+            VERSION:     '0.18.1-py2.7-macosx-10.5-x86_64.egg',
+            COLLAPSE_INDEX: false,
+            FILE_SUFFIX: '.html',
+            HAS_SOURCE:  true
+  };
+</script>
+    <script type="text/javascript" src="../_static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/bootstrap3.min.js"></script>
+<script type="text/javascript" src="../_static/js/jquery.cookie.min.js"></script>
+<script type="text/javascript" src="../_static/js/basicstrap.js"></script>
+<script type="text/javascript">
+</script>
+    <link rel="top" title="Numba 0.18.1-py2.7-macosx-10.5-x86_64.egg documentation" href="../index.html" />
+    <link rel="up" title="1. User Manual" href="index.html" />
+    <link rel="next" title="1.5. Compiling code ahead of time" href="pycc.html" />
+    <link rel="prev" title="1.3. Compiling Python code with @jit" href="jit.html" /> 
+  </head>
+  <body role="document">
+    <div id="navbar-top" class="navbar navbar-fixed-top navbar-default" role="navigation" aria-label="top navigation">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="../index.html">Numba 0.18.1-py2.7-macosx-10.5-x86_64.egg documentation</a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+              <li class="dropdown visible-xs">
+                <a role="button" id="localToc" data-toggle="dropdown" data-target="#" href="#">Table Of Contents <b class="caret"></b></a>
+                <ul class="dropdown-menu localtoc sp-localtoc" role="menu" aria-labelledby="localToc">
+                <ul>
+<li><a class="reference internal" href="#">1.4. Creating Numpy universal functions</a><ul>
+<li><a class="reference internal" href="#the-vectorize-decorator">1.4.1. The <tt class="docutils literal"><span class="pre">&#64;vectorize</span></tt> decorator</a></li>
+<li><a class="reference internal" href="#the-guvectorize-decorator">1.4.2. The <tt class="docutils literal"><span class="pre">&#64;guvectorize</span></tt> decorator</a></li>
+</ul>
+</li>
+</ul>
+
+                </ul>
+              </li>
+
+            
+              <li><a href="jit.html" title="1.3. Compiling Python code with @jit" accesskey="P">previous </a></li>
+              <li><a href="pycc.html" title="1.5. Compiling code ahead of time" accesskey="N">next </a></li>
+              <li><a href="../py-modindex.html" title="Python Module Index" >modules </a></li>
+              <li><a href="../genindex.html" title="General Index" accesskey="I">index </a></li>
+              <li><a href="index.html" accesskey="U">1. User Manual</a></li>
+            
+            <li class="visible-xs"><a href="../_sources/user/vectorize.txt" rel="nofollow">Show Source</a></li>
+
+            <li class="visible-xs">
+                <form class="search form-search form-inline navbar-form navbar-right sp-searchbox" action="../search.html" method="get">
+                  <div class="input-append input-group">
+                    <input type="text" class="search-query form-control" name="q" placeholder="Search...">
+                    <span class="input-group-btn">
+                    <input type="submit" class="btn" value="Go" />
+                    </span>
+                  </div>
+                  <input type="hidden" name="check_keywords" value="yes" />
+                  <input type="hidden" name="area" value="default" />
+                </form>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    
+
+    <!-- container -->
+    <div class="container-fluid">
+
+      <!-- row -->
+      <div class="row">
+         
+<div class="col-md-3 hidden-xs">
+  <div class="sidebar hidden-xs" role="navigation" aria-label="main navigation">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">1.4. Creating Numpy universal functions</a><ul>
+<li><a class="reference internal" href="#the-vectorize-decorator">1.4.1. The <tt class="docutils literal"><span class="pre">&#64;vectorize</span></tt> decorator</a></li>
+<li><a class="reference internal" href="#the-guvectorize-decorator">1.4.2. The <tt class="docutils literal"><span class="pre">&#64;guvectorize</span></tt> decorator</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="jit.html"
+                        title="previous chapter">1.3. Compiling Python code with <tt class="docutils literal"><span class="pre">&#64;jit</span></tt></a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="pycc.html"
+                        title="next chapter">1.5. Compiling code ahead of time</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/user/vectorize.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" role="search">
+  <h3>Quick search</h3>
+  <form class="search form-inline" action="../search.html" method="get">
+      <div class="input-append input-group">
+        <input type="text" class="search-query form-control" name="q" placeholder="Search...">
+        <span class="input-group-btn">
+        <input type="submit" class="btn" value="Go" />
+        </span>
+      </div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+  </div>
+</div> 
+        
+
+        <div class="col-md-9">
+          <div class="document" role="main">
+            <div class="documentwrapper">
+              <div class="bodywrapper">
+                <div class="body">
+                  
+  <div class="section" id="creating-numpy-universal-functions">
+<h1>1.4. Creating Numpy universal functions<a class="headerlink" href="#creating-numpy-universal-functions" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="the-vectorize-decorator">
+<h2>1.4.1. The <tt class="docutils literal"><span class="pre">&#64;vectorize</span></tt> decorator<a class="headerlink" href="#the-vectorize-decorator" title="Permalink to this headline">¶</a></h2>
+<p>Numba&#8217;s vectorize allows Python functions taking scalar input arguments to
+be used as NumPy <a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/ufuncs.html">ufuncs</a>.  Creating a traditional NumPy ufunc is not
+not the most straightforward process and involves writing some C code.
+Numba makes this easy.  Using the <a class="reference internal" href="../reference/compilation.html#numba.vectorize" title="numba.vectorize"><tt class="xref py py-func docutils literal"><span class="pre">vectorize()</span></tt></a> decorator, Numba
+can compile a pure Python function into a ufunc that operates over NumPy
+arrays as fast as traditional ufuncs written in C.</p>
+<p>Using <a class="reference internal" href="../reference/compilation.html#numba.vectorize" title="numba.vectorize"><tt class="xref py py-func docutils literal"><span class="pre">vectorize()</span></tt></a>, you write your function as operating over
+input scalars, rather than arrays.  Numba will generate the surrounding
+loop (or <em>kernel</em>) allowing efficient iteration over the actual inputs.</p>
+<p>The <a class="reference internal" href="../reference/compilation.html#numba.vectorize" title="numba.vectorize"><tt class="xref py py-func docutils literal"><span class="pre">vectorize()</span></tt></a> decorator needs you to pass a list of signatures
+you want to support.  In the basic case, only one signature will be passed:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">vectorize</span><span class="p">,</span> <span class="n">float64</span>
+
+<span class="nd">@vectorize</span><span class="p">([</span><span class="n">float64</span><span class="p">(</span><span class="n">float64</span><span class="p">,</span> <span class="n">float64</span><span class="p">)])</span>
+<span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
+</pre></div>
+</div>
+<p>If you pass several signatures, beware that you have to pass most specific
+signatures before least specific ones (e.g., single-precision floats
+before double-precision floats), otherwise type-based dispatching will not work
+as expected:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@vectorize</span><span class="p">([</span><span class="n">int32</span><span class="p">(</span><span class="n">int32</span><span class="p">,</span> <span class="n">int32</span><span class="p">),</span>
+            <span class="n">int64</span><span class="p">(</span><span class="n">int64</span><span class="p">,</span> <span class="n">int64</span><span class="p">),</span>
+            <span class="n">float32</span><span class="p">(</span><span class="n">float32</span><span class="p">,</span> <span class="n">float32</span><span class="p">),</span>
+            <span class="n">float64</span><span class="p">(</span><span class="n">float64</span><span class="p">,</span> <span class="n">float64</span><span class="p">)])</span>
+<span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
+</pre></div>
+</div>
+<p>The function will work as expected over the specified array types:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
+<span class="go">array([ 0,  2,  4,  6,  8, 10])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
+<span class="go">array([ 0. ,  0.4,  0.8,  1.2,  1.6,  2. ])</span>
+</pre></div>
+</div>
+<p>but it will fail working on other types:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="o">+</span><span class="mi">1j</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
+<span class="gt">Traceback (most recent call last):</span>
+  File <span class="nb">&quot;&lt;stdin&gt;&quot;</span>, line <span class="m">1</span>, in <span class="n">&lt;module&gt;</span>
+<span class="gr">TypeError</span>: <span class="n">ufunc &#39;ufunc&#39; not supported for the input types, and the inputs could not be safely coerced to any supported types according to the casting rule &#39;&#39;safe&#39;&#39;</span>
+</pre></div>
+</div>
+<p>You might ask yourself, &#8220;why would I go through this instead of compiling
+a simple iteration loop using the <a class="reference internal" href="jit.html#jit"><em>&#64;jit</em></a> decorator?&#8221;.  The
+answer is that NumPy ufuncs automatically get other features such as
+reduction, accumulation or broadcasting.  Using the example above:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span>
+<span class="go">array([[ 0,  1,  2,  3],</span>
+<span class="go">       [ 4,  5,  6,  7],</span>
+<span class="go">       [ 8,  9, 10, 11]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="o">.</span><span class="n">reduce</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="go">array([12, 15, 18, 21])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="o">.</span><span class="n">reduce</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="go">array([ 6, 22, 38])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="o">.</span><span class="n">accumulate</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+<span class="go">array([[ 0,  1,  2,  3],</span>
+<span class="go">       [ 4,  6,  8, 10],</span>
+<span class="go">       [12, 15, 18, 21]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="o">.</span><span class="n">accumulate</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="go">array([[ 0,  1,  3,  6],</span>
+<span class="go">       [ 4,  9, 15, 22],</span>
+<span class="go">       [ 8, 17, 27, 38]])</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/ufuncs.html#ufunc">Standard features of ufuncs</a> (NumPy documentation).</p>
+</div>
+</div>
+<div class="section" id="the-guvectorize-decorator">
+<h2>1.4.2. The <tt class="docutils literal"><span class="pre">&#64;guvectorize</span></tt> decorator<a class="headerlink" href="#the-guvectorize-decorator" title="Permalink to this headline">¶</a></h2>
+<p>While <a class="reference internal" href="../reference/compilation.html#numba.vectorize" title="numba.vectorize"><tt class="xref py py-func docutils literal"><span class="pre">vectorize()</span></tt></a> allows you to write ufuncs that work on one
+element at a time, the <a class="reference internal" href="../reference/compilation.html#numba.guvectorize" title="numba.guvectorize"><tt class="xref py py-func docutils literal"><span class="pre">guvectorize()</span></tt></a> decorator takes the concept
+one step further and allows you to write ufuncs that will work on an
+arbitrary number of elements of input arrays, and take and return arrays of
+differing dimensions.  The typical example is a running median or a
+convolution filter.</p>
+<p>Contrary to <a class="reference internal" href="../reference/compilation.html#numba.vectorize" title="numba.vectorize"><tt class="xref py py-func docutils literal"><span class="pre">vectorize()</span></tt></a> functions, <a class="reference internal" href="../reference/compilation.html#numba.guvectorize" title="numba.guvectorize"><tt class="xref py py-func docutils literal"><span class="pre">guvectorize()</span></tt></a>
+functions don&#8217;t return their result value: their take it as an array
+argument, which must be filled in by the function.  This is because the
+array is actually allocated by NumPy&#8217;s dispatch mechanism, which calls into
+the Numba-generated code.</p>
+<p>Here is a very simple example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@guvectorize</span><span class="p">([(</span><span class="n">int64</span><span class="p">[:],</span> <span class="n">int64</span><span class="p">[:],</span> <span class="n">int64</span><span class="p">[:])],</span> <span class="s">&#39;(n),()-&gt;(n)&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">g</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">res</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+        <span class="n">res</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>The underlying Python function simply adds a given scalar (<tt class="docutils literal"><span class="pre">y</span></tt>) to all
+elements of a 1-dimension array.  What&#8217;s more interesting is the declaration.
+There are two things there:</p>
+<ul class="simple">
+<li>the declaration of input and output <em>layouts</em>, in symbolic form:
+<tt class="docutils literal"><span class="pre">(n),()-&gt;(n)</span></tt> tells NumPy that the function takes a <em>n</em>-element one-dimension
+array, a scalar (symbolically denoted by the empty tuple <tt class="docutils literal"><span class="pre">()</span></tt>) and
+returns a <em>n</em>-element one-dimension array;</li>
+<li>the list of supported concrete <em>signatures</em> as in <tt class="docutils literal"><span class="pre">&#64;vectorize</span></tt>; here we
+only support <tt class="docutils literal"><span class="pre">int64</span></tt> arrays.</li>
+</ul>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The concrete signature does not allow for scalar values, even though
+the layout may mention them.  In this example, the second argument is
+declared as <tt class="docutils literal"><span class="pre">int64[:]</span></tt>, not <tt class="docutils literal"><span class="pre">int64</span></tt>.
+This is why it must be dereferenced by fetching <tt class="docutils literal"><span class="pre">y[0]</span></tt>.</p>
+</div>
+<p>We can now check what the compiled ufunc does, over a simple example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span>
+<span class="go">array([0, 1, 2, 3, 4])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">g</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="go">array([2, 3, 4, 5, 6])</span>
+</pre></div>
+</div>
+<p>The nice thing is that NumPy will automatically dispatch over more
+complicated inputs, depending on their shapes:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span>
+<span class="go">array([[0, 1, 2],</span>
+<span class="go">       [3, 4, 5]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">g</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="go">array([[10, 11, 12],</span>
+<span class="go">       [13, 14, 15]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">g</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">]))</span>
+<span class="go">array([[10, 11, 12],</span>
+<span class="go">       [23, 24, 25]])</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Both <a class="reference internal" href="../reference/compilation.html#numba.vectorize" title="numba.vectorize"><tt class="xref py py-func docutils literal"><span class="pre">vectorize()</span></tt></a> and <a class="reference internal" href="../reference/compilation.html#numba.guvectorize" title="numba.guvectorize"><tt class="xref py py-func docutils literal"><span class="pre">guvectorize()</span></tt></a> support
+passing <tt class="docutils literal"><span class="pre">nopython=True</span></tt> <a class="reference internal" href="jit.html#jit-nopython"><em>as in the &#64;jit decorator</em></a>.
+Use it to ensure the generated code does not fallback to
+<a class="reference internal" href="../glossary.html#term-object-mode"><em class="xref std std-term">object mode</em></a>.</p>
+</div>
+</div>
+</div>
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        
+      </div><!-- /row -->
+
+      <!-- row -->
+      <div class="row footer-relbar">
+<div id="navbar-related" class=" related navbar navbar-default" role="navigation" aria-label="related navigation">
+  <div class="navbar-inner">
+    <ul class="nav navbar-nav">
+        <li><a href="../index.html">Numba 0.18.1-py2.7-macosx-10.5-x86_64.egg documentation</a></li>
+    </ul>
+    <ul class="nav navbar-nav pull-right hidden-xs hidden-sm">
+      
+        <li><a href="jit.html" title="1.3. Compiling Python code with @jit" >previous</a></li>
+        <li><a href="pycc.html" title="1.5. Compiling code ahead of time" >next</a></li>
+        <li><a href="../py-modindex.html" title="Python Module Index" >modules</a></li>
+        <li><a href="../genindex.html" title="General Index" >index</a></li>
+        <li><a href="index.html" >1. User Manual</a></li> 
+      
+    </ul>
+  </div>
+</div>
+      </div><!-- /row -->
+
+      <!-- footer -->
+      <footer role="contentinfo">
+          &copy; Copyright 2012-2014, Continuum Analytics.
+        Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.3.
+      </footer>
+      <!-- /footer -->
+
+    </div>
+    <!-- /container -->
+
+  </body>
+</html>
