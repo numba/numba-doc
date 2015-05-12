@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     
-    <title>3.9. Debugging CUDA Python with the the CUDA Simulator &mdash; Numba 0.18.2_370_gd06fdd0-py2.7-linux-x86_64.egg documentation</title>
+    <title>3.9. Debugging CUDA Python with the the CUDA Simulator &mdash; Numba 0.18.2_377_g6d14b28-py2.7-linux-x86_64.egg documentation</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
@@ -34,7 +34,7 @@
 <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
             URL_ROOT:    '../',
-            VERSION:     '0.18.2_370_gd06fdd0-py2.7-linux-x86_64.egg',
+            VERSION:     '0.18.2_377_g6d14b28-py2.7-linux-x86_64.egg',
             COLLAPSE_INDEX: false,
             FILE_SUFFIX: '.html',
             HAS_SOURCE:  true
@@ -57,9 +57,9 @@
     });
   });
 </script>
-    <link rel="top" title="Numba 0.18.2_370_gd06fdd0-py2.7-linux-x86_64.egg documentation" href="../index.html" />
+    <link rel="top" title="Numba 0.18.2_377_g6d14b28-py2.7-linux-x86_64.egg documentation" href="../index.html" />
     <link rel="up" title="3. Numba for CUDA GPUs" href="index.html" />
-    <link rel="next" title="4. Developer Manual" href="../developer/index.html" />
+    <link rel="next" title="4. CUDA Python Reference" href="../cuda-reference/index.html" />
     <link rel="prev" title="3.8. Examples" href="examples.html" /> 
   </head>
   <body>
@@ -71,7 +71,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="../index.html">Numba 0.18.2_370_gd06fdd0-py2.7-linux-x86_64.egg documentation</a>
+          <a class="brand" href="../index.html">Numba 0.18.2_377_g6d14b28-py2.7-linux-x86_64.egg documentation</a>
           <div class="nav-collapse collapse">
             <ul class="nav pull-right">
               
@@ -79,10 +79,7 @@
                 <a href="../genindex.html" title="General Index" accesskey="I">index</a>
                 </li>
                 <li>
-                <a href="../py-modindex.html" title="Python Module Index" >modules</a>
-                </li>
-                <li>
-                <a href="../developer/index.html" title="4. Developer Manual" accesskey="N">next</a>
+                <a href="../cuda-reference/index.html" title="4. CUDA Python Reference" accesskey="N">next</a>
                 </li>
                 <li>
                 <a href="examples.html" title="3.8. Examples" accesskey="P">previous</a>
@@ -121,8 +118,8 @@
   <p class="topless"><a href="examples.html"
                         title="previous chapter">3.8. Examples</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="../developer/index.html"
-                        title="next chapter">4. Developer Manual</a></p>
+  <p class="topless"><a href="../cuda-reference/index.html"
+                        title="next chapter">4. CUDA Python Reference</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="../_sources/cuda/simulator.txt"
@@ -165,8 +162,8 @@
   <p class="topless"><a href="examples.html"
                         title="previous chapter">3.8. Examples</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="../developer/index.html"
-                        title="next chapter">4. Developer Manual</a></p>
+  <p class="topless"><a href="../cuda-reference/index.html"
+                        title="next chapter">4. CUDA Python Reference</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="../_sources/cuda/simulator.txt"
@@ -238,8 +235,8 @@ GPU as possible - in particular, the following are supported:</p>
 <li>Shared memory: declarations of shared memory arrays must be on separate source
 lines, since the simulator uses source line information to keep track of
 allocations of shared memory across threads.</li>
-<li><a class="reference internal" href="memory.html#numba.cuda.syncthreads" title="numba.cuda.syncthreads"><tt class="xref py py-func docutils literal"><span class="pre">syncthreads()</span></tt></a> is supported - however, in the case where divergent
-threads enter different <a class="reference internal" href="memory.html#numba.cuda.syncthreads" title="numba.cuda.syncthreads"><tt class="xref py py-func docutils literal"><span class="pre">syncthreads()</span></tt></a> calls, the launch will not fail,
+<li><a class="reference internal" href="../cuda-reference/kernel.html#numba.cuda.syncthreads" title="numba.cuda.syncthreads"><tt class="xref py py-func docutils literal"><span class="pre">syncthreads()</span></tt></a> is supported - however, in the case where divergent
+threads enter different <a class="reference internal" href="../cuda-reference/kernel.html#numba.cuda.syncthreads" title="numba.cuda.syncthreads"><tt class="xref py py-func docutils literal"><span class="pre">syncthreads()</span></tt></a> calls, the launch will not fail,
 but unexpected behaviour will occur. A future version of the simulator may
 detect this condition.</li>
 <li>The stream API is supported, but all operations occur sequentially and
@@ -248,13 +245,13 @@ a no-op.</li>
 <li>The event API is also supported, but provides no meaningful timing
 information.</li>
 <li>Data transfer to and from the GPU - in particular, creating array objects with
-<a class="reference internal" href="memory.html#numba.cuda.device_array" title="numba.cuda.device_array"><tt class="xref py py-func docutils literal"><span class="pre">device_array()</span></tt></a> and <a class="reference internal" href="memory.html#numba.cuda.device_array_like" title="numba.cuda.device_array_like"><tt class="xref py py-func docutils literal"><span class="pre">device_array_like()</span></tt></a>. The APIs for pinned memory
-<a class="reference internal" href="memory.html#numba.cuda.pinned" title="numba.cuda.pinned"><tt class="xref py py-func docutils literal"><span class="pre">pinned()</span></tt></a> and <a class="reference internal" href="memory.html#numba.cuda.pinned_array" title="numba.cuda.pinned_array"><tt class="xref py py-func docutils literal"><span class="pre">pinned_array()</span></tt></a> are also supported, but no pinning
+<a class="reference internal" href="../cuda-reference/memory.html#numba.cuda.device_array" title="numba.cuda.device_array"><tt class="xref py py-func docutils literal"><span class="pre">device_array()</span></tt></a> and <a class="reference internal" href="../cuda-reference/memory.html#numba.cuda.device_array_like" title="numba.cuda.device_array_like"><tt class="xref py py-func docutils literal"><span class="pre">device_array_like()</span></tt></a>. The APIs for pinned memory
+<a class="reference internal" href="../cuda-reference/memory.html#numba.cuda.pinned" title="numba.cuda.pinned"><tt class="xref py py-func docutils literal"><span class="pre">pinned()</span></tt></a> and <a class="reference internal" href="../cuda-reference/memory.html#numba.cuda.pinned_array" title="numba.cuda.pinned_array"><tt class="xref py py-func docutils literal"><span class="pre">pinned_array()</span></tt></a> are also supported, but no pinning
 takes place.</li>
 <li>The driver API implementation of the list of GPU contexts (<tt class="docutils literal"><span class="pre">cuda.gpus</span></tt> and
 <tt class="docutils literal"><span class="pre">cuda.cudadrv.devices.gpus</span></tt>) is supported, and reports a single GPU context.
 This context can be closed and reset as the real one would.</li>
-<li>The <tt class="xref py py-func docutils literal"><span class="pre">detect()</span></tt> function is supported, and reports one device called
+<li>The <a class="reference internal" href="../cuda-reference/host.html#numba.cuda.detect" title="numba.cuda.detect"><tt class="xref py py-func docutils literal"><span class="pre">detect()</span></tt></a> function is supported, and reports one device called
 <cite>SIMULATOR</cite>.</li>
 </ul>
 <p>Some limitations of the simulator include:</p>
@@ -291,10 +288,9 @@ CUDA grid in order to make debugging with the simulator tractable.</p>
     <ul class="nav pull-right">
       
         <li><a href="../genindex.html" title="General Index" >index</a></li>
-        <li><a href="../py-modindex.html" title="Python Module Index" >modules</a></li>
-        <li><a href="../developer/index.html" title="4. Developer Manual" >next</a></li>
+        <li><a href="../cuda-reference/index.html" title="4. CUDA Python Reference" >next</a></li>
         <li><a href="examples.html" title="3.8. Examples" >previous</a></li>
-        <li><a href="../index.html">Numba 0.18.2_370_gd06fdd0-py2.7-linux-x86_64.egg documentation</a></li>
+        <li><a href="../index.html">Numba 0.18.2_377_g6d14b28-py2.7-linux-x86_64.egg documentation</a></li>
         <li><a href="index.html" >3. Numba for CUDA GPUs</a></li> 
       
     </ul>
