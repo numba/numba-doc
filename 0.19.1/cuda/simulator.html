@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+
+
+
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+    <title>3.9. Debugging CUDA Python with the the CUDA Simulator &mdash; Numba 0.19.1-py2.7-macosx-10.5-x86_64.egg documentation</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    
+
+<link rel="stylesheet" href="../_static/css/basicstrap-base.css" type="text/css" />
+<link rel="stylesheet" id="current-theme" href="../_static/css/bootstrap3/bootstrap.min.css" type="text/css" />
+<link rel="stylesheet" id="current-adjust-theme" type="text/css" />
+
+<link rel="stylesheet" href="../_static/css/font-awesome.min.css">
+
+<style type="text/css">
+  body {
+    padding-top: 60px;
+    padding-bottom: 40px;
+  }
+}
+</style>
+
+<link rel="stylesheet" href="../_static/css/basicstrap.css" type="text/css" />
+<link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+<script type="text/javascript">
+  var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:    '../',
+            VERSION:     '0.19.1-py2.7-macosx-10.5-x86_64.egg',
+            COLLAPSE_INDEX: false,
+            FILE_SUFFIX: '.html',
+            HAS_SOURCE:  true
+  };
+</script>
+    <script type="text/javascript" src="../_static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/bootstrap3.min.js"></script>
+<script type="text/javascript" src="../_static/js/jquery.cookie.min.js"></script>
+<script type="text/javascript" src="../_static/js/basicstrap.js"></script>
+<script type="text/javascript">
+</script>
+    <link rel="top" title="Numba 0.19.1-py2.7-macosx-10.5-x86_64.egg documentation" href="../index.html" />
+    <link rel="up" title="3. Numba for CUDA GPUs" href="index.html" />
+    <link rel="next" title="4. CUDA Python Reference" href="../cuda-reference/index.html" />
+    <link rel="prev" title="3.8. Examples" href="examples.html" /> 
+  </head>
+  <body role="document">
+    <div id="navbar-top" class="navbar navbar-fixed-top navbar-default" role="navigation" aria-label="top navigation">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="../index.html">Numba 0.19.1-py2.7-macosx-10.5-x86_64.egg documentation</a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+              <li class="dropdown visible-xs">
+                <a role="button" id="localToc" data-toggle="dropdown" data-target="#" href="#">Table Of Contents <b class="caret"></b></a>
+                <ul class="dropdown-menu localtoc sp-localtoc" role="menu" aria-labelledby="localToc">
+                <ul>
+<li><a class="reference internal" href="#">3.9. Debugging CUDA Python with the the CUDA Simulator</a><ul>
+<li><a class="reference internal" href="#using-the-simulator">3.9.1. Using the simulator</a></li>
+<li><a class="reference internal" href="#supported-features">3.9.2. Supported features</a></li>
+</ul>
+</li>
+</ul>
+
+                </ul>
+              </li>
+
+            
+              <li><a href="examples.html" title="3.8. Examples" accesskey="P">previous </a></li>
+              <li><a href="../cuda-reference/index.html" title="4. CUDA Python Reference" accesskey="N">next </a></li>
+              <li><a href="../genindex.html" title="General Index" accesskey="I">index </a></li>
+              <li><a href="index.html" accesskey="U">3. Numba for CUDA GPUs</a></li>
+            
+            <li class="visible-xs"><a href="../_sources/cuda/simulator.txt" rel="nofollow">Show Source</a></li>
+
+            <li class="visible-xs">
+                <form class="search form-search form-inline navbar-form navbar-right sp-searchbox" action="../search.html" method="get">
+                  <div class="input-append input-group">
+                    <input type="text" class="search-query form-control" name="q" placeholder="Search...">
+                    <span class="input-group-btn">
+                    <input type="submit" class="btn" value="Go" />
+                    </span>
+                  </div>
+                  <input type="hidden" name="check_keywords" value="yes" />
+                  <input type="hidden" name="area" value="default" />
+                </form>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    
+
+    <!-- container -->
+    <div class="container-fluid">
+
+      <!-- row -->
+      <div class="row">
+         
+<div class="col-md-3 hidden-xs">
+  <div class="sidebar hidden-xs" role="navigation" aria-label="main navigation">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">3.9. Debugging CUDA Python with the the CUDA Simulator</a><ul>
+<li><a class="reference internal" href="#using-the-simulator">3.9.1. Using the simulator</a></li>
+<li><a class="reference internal" href="#supported-features">3.9.2. Supported features</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="examples.html"
+                        title="previous chapter">3.8. Examples</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../cuda-reference/index.html"
+                        title="next chapter">4. CUDA Python Reference</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/cuda/simulator.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" role="search">
+  <h3>Quick search</h3>
+  <form class="search form-inline" action="../search.html" method="get">
+      <div class="input-append input-group">
+        <input type="text" class="search-query form-control" name="q" placeholder="Search...">
+        <span class="input-group-btn">
+        <input type="submit" class="btn" value="Go" />
+        </span>
+      </div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+  </div>
+</div> 
+        
+
+        <div class="col-md-9">
+          <div class="document" role="main">
+            <div class="documentwrapper">
+              <div class="bodywrapper">
+                <div class="body">
+                  
+  <div class="section" id="debugging-cuda-python-with-the-the-cuda-simulator">
+<span id="simulator"></span><h1>3.9. Debugging CUDA Python with the the CUDA Simulator<a class="headerlink" href="#debugging-cuda-python-with-the-the-cuda-simulator" title="Permalink to this headline">¶</a></h1>
+<p>Numba includes a CUDA Simulator that implements most of the semantics in CUDA
+Python using the Python interpreter and some additional Python code. This can
+be used to debug CUDA Python code, either by adding print statements to your
+code, or by using the debugger to step through the execution of an individual
+thread.</p>
+<p>Execution of kernels is performed by the simulator one block at a time. One
+thread is spawned for each thread in the block, and scheduling of the execution
+of these threads is left up to the operating system.</p>
+<div class="section" id="using-the-simulator">
+<h2>3.9.1. Using the simulator<a class="headerlink" href="#using-the-simulator" title="Permalink to this headline">¶</a></h2>
+<p>The simulator is enabled by setting the environment variable
+<span class="target" id="index-0"></span><a class="reference internal" href="../reference/envvars.html#envvar-NUMBA_ENABLE_CUDASIM"><tt class="xref std std-envvar docutils literal"><span class="pre">NUMBA_ENABLE_CUDASIM</span></tt></a> to 1. CUDA Python code may then be executed as
+normal. The easiest way to use the debugger inside a kernel is to only stop a
+single thread, otherwise the interaction with the debugger is difficult to
+handle. For example, the kernel below will  stop in the thread <tt class="docutils literal"><span class="pre">&lt;&lt;&lt;(3,0,0),</span> <span class="pre">(1,</span>
+<span class="pre">0,</span> <span class="pre">0)&gt;&gt;&gt;</span></tt>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@cuda.jit</span>
+<span class="k">def</span> <span class="nf">vec_add</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">out</span><span class="p">):</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">threadIdx</span><span class="o">.</span><span class="n">x</span>
+    <span class="n">bx</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">blockIdx</span><span class="o">.</span><span class="n">x</span>
+    <span class="n">bdx</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">blockDim</span><span class="o">.</span><span class="n">x</span>
+    <span class="k">if</span> <span class="n">x</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">bx</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="kn">from</span> <span class="nn">pdb</span> <span class="kn">import</span> <span class="n">set_trace</span><span class="p">;</span> <span class="n">set_trace</span><span class="p">()</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="n">bx</span> <span class="o">*</span> <span class="n">bdx</span> <span class="o">+</span> <span class="n">x</span>
+    <span class="n">out</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">B</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>when invoked with a one-dimensional grid and one-dimensional blocks.</p>
+</div>
+<div class="section" id="supported-features">
+<h2>3.9.2. Supported features<a class="headerlink" href="#supported-features" title="Permalink to this headline">¶</a></h2>
+<p>The simulator aims to provide as complete a simulation of execution on a real
+GPU as possible - in particular, the following are supported:</p>
+<ul class="simple">
+<li>Atomic operations</li>
+<li>Constant memory</li>
+<li>Local memory</li>
+<li>Shared memory: declarations of shared memory arrays must be on separate source
+lines, since the simulator uses source line information to keep track of
+allocations of shared memory across threads.</li>
+<li><a class="reference internal" href="../cuda-reference/kernel.html#numba.cuda.syncthreads" title="numba.cuda.syncthreads"><tt class="xref py py-func docutils literal"><span class="pre">syncthreads()</span></tt></a> is supported - however, in the case where divergent
+threads enter different <a class="reference internal" href="../cuda-reference/kernel.html#numba.cuda.syncthreads" title="numba.cuda.syncthreads"><tt class="xref py py-func docutils literal"><span class="pre">syncthreads()</span></tt></a> calls, the launch will not fail,
+but unexpected behaviour will occur. A future version of the simulator may
+detect this condition.</li>
+<li>The stream API is supported, but all operations occur sequentially and
+synchronously, unlike on a real device. Synchronising on a stream is therefore
+a no-op.</li>
+<li>The event API is also supported, but provides no meaningful timing
+information.</li>
+<li>Data transfer to and from the GPU - in particular, creating array objects with
+<a class="reference internal" href="../cuda-reference/memory.html#numba.cuda.device_array" title="numba.cuda.device_array"><tt class="xref py py-func docutils literal"><span class="pre">device_array()</span></tt></a> and <a class="reference internal" href="../cuda-reference/memory.html#numba.cuda.device_array_like" title="numba.cuda.device_array_like"><tt class="xref py py-func docutils literal"><span class="pre">device_array_like()</span></tt></a>. The APIs for pinned memory
+<a class="reference internal" href="../cuda-reference/memory.html#numba.cuda.pinned" title="numba.cuda.pinned"><tt class="xref py py-func docutils literal"><span class="pre">pinned()</span></tt></a> and <a class="reference internal" href="../cuda-reference/memory.html#numba.cuda.pinned_array" title="numba.cuda.pinned_array"><tt class="xref py py-func docutils literal"><span class="pre">pinned_array()</span></tt></a> are also supported, but no pinning
+takes place.</li>
+<li>The driver API implementation of the list of GPU contexts (<tt class="docutils literal"><span class="pre">cuda.gpus</span></tt> and
+<tt class="docutils literal"><span class="pre">cuda.cudadrv.devices.gpus</span></tt>) is supported, and reports a single GPU context.
+This context can be closed and reset as the real one would.</li>
+<li>The <a class="reference internal" href="../cuda-reference/host.html#numba.cuda.detect" title="numba.cuda.detect"><tt class="xref py py-func docutils literal"><span class="pre">detect()</span></tt></a> function is supported, and reports one device called
+<cite>SIMULATOR</cite>.</li>
+</ul>
+<p>Some limitations of the simulator include:</p>
+<ul class="simple">
+<li>It does not perform type checking/type inference. If any argument types to a
+jitted function are incorrect, or if the specification of the type of any
+local variables are incorrect, this will not be detected by the simulator.</li>
+<li>Only one GPU is simulated.</li>
+<li>Multithreaded accesses to a single GPU are not supported, and will result in
+unexpected behaviour.</li>
+<li>Most of the driver API is unimplemented.</li>
+<li>It is not possible to link PTX code with CUDA Python functions.</li>
+</ul>
+<p>Obviously, the speed of the simulator is also much lower than that of a real
+device. It may be necessary to reduce the size of input data and the size of the
+CUDA grid in order to make debugging with the simulator tractable.</p>
+</div>
+</div>
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        
+      </div><!-- /row -->
+
+      <!-- row -->
+      <div class="row footer-relbar">
+<div id="navbar-related" class=" related navbar navbar-default" role="navigation" aria-label="related navigation">
+  <div class="navbar-inner">
+    <ul class="nav navbar-nav">
+        <li><a href="../index.html">Numba 0.19.1-py2.7-macosx-10.5-x86_64.egg documentation</a></li>
+    </ul>
+    <ul class="nav navbar-nav pull-right hidden-xs hidden-sm">
+      
+        <li><a href="examples.html" title="3.8. Examples" >previous</a></li>
+        <li><a href="../cuda-reference/index.html" title="4. CUDA Python Reference" >next</a></li>
+        <li><a href="../genindex.html" title="General Index" >index</a></li>
+        <li><a href="index.html" >3. Numba for CUDA GPUs</a></li> 
+      
+    </ul>
+  </div>
+</div>
+      </div><!-- /row -->
+
+      <!-- footer -->
+      <footer role="contentinfo">
+          &copy; Copyright 2012-2015, Continuum Analytics.
+        Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.3.
+      </footer>
+      <!-- /footer -->
+
+    </div>
+    <!-- /container -->
+
+  </body>
+</html>
