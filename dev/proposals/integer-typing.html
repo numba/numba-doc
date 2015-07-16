@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     
-    <title>6.2.1. Changes in integer typing &mdash; Numba 0.20.0+120.g377299d-py2.7-linux-x86_64.egg documentation</title>
+    <title>6.2.1. Changes in integer typing &mdash; Numba 0.20.0+122.g747ab84-py2.7-linux-x86_64.egg documentation</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
@@ -34,7 +34,7 @@
 <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
             URL_ROOT:    '../',
-            VERSION:     '0.20.0+120.g377299d-py2.7-linux-x86_64.egg',
+            VERSION:     '0.20.0+122.g747ab84-py2.7-linux-x86_64.egg',
             COLLAPSE_INDEX: false,
             FILE_SUFFIX: '.html',
             HAS_SOURCE:  true
@@ -57,7 +57,7 @@
     });
   });
 </script>
-    <link rel="top" title="Numba 0.20.0+120.g377299d-py2.7-linux-x86_64.egg documentation" href="../index.html" />
+    <link rel="top" title="Numba 0.20.0+122.g747ab84-py2.7-linux-x86_64.egg documentation" href="../index.html" />
     <link rel="up" title="6. Numba Enhancement Proposals" href="index.html" />
     <link rel="next" title="7. Glossary" href="../glossary.html" />
     <link rel="prev" title="6. Numba Enhancement Proposals" href="index.html" /> 
@@ -71,7 +71,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="../index.html">Numba 0.20.0+120.g377299d-py2.7-linux-x86_64.egg documentation</a>
+          <a class="brand" href="../index.html">Numba 0.20.0+122.g747ab84-py2.7-linux-x86_64.egg documentation</a>
           <div class="nav-collapse collapse">
             <ul class="nav pull-right">
               
@@ -313,28 +313,32 @@ the typing of integer arguments.  That is, every non-explicitly typed
 integer constant is typed <code class="docutils literal"><span class="pre">intp</span></code>, the pointer-sized integer; except for
 the rare cases where <code class="docutils literal"><span class="pre">int64</span></code> (on 32-bit systems) or <code class="docutils literal"><span class="pre">uint64</span></code> is
 required.</li>
-<li>Operations on integers don&#8217;t promote bitwidth, potentially losing
-magnitude information.  For example, <code class="docutils literal"><span class="pre">int32</span> <span class="pre">+</span> <span class="pre">int32</span></code> is typed <code class="docutils literal"><span class="pre">int32</span></code>
-(as is <code class="docutils literal"><span class="pre">int32</span> <span class="pre">+</span> <span class="pre">int16</span></code>, <code class="docutils literal"><span class="pre">int16</span> <span class="pre">+</span> <span class="pre">int32</span></code>, etc.).</li>
-<li>Mixed operations between signed and unsigned fall back to signed without
-increasing bitwidth (so <code class="docutils literal"><span class="pre">int32</span> <span class="pre">+</span> <span class="pre">uint32</span></code> returns <code class="docutils literal"><span class="pre">int32</span></code> and
-<code class="docutils literal"><span class="pre">int64</span> <span class="pre">+</span> <span class="pre">uint64</span></code> returns <code class="docutils literal"><span class="pre">int64</span></code>).</li>
+<li>Operations on integers promote bitwidth to <code class="docutils literal"><span class="pre">intp</span></code>, if smaller, otherwise
+they don&#8217;t promote.  For example, on a 32-bit machine, <code class="docutils literal"><span class="pre">int8</span> <span class="pre">+</span> <span class="pre">int8</span></code>
+is typed <code class="docutils literal"><span class="pre">int32</span></code>, as is <code class="docutils literal"><span class="pre">int32</span> <span class="pre">+</span> <span class="pre">int32</span></code>.  However, <code class="docutils literal"><span class="pre">int64</span> <span class="pre">+</span> <span class="pre">int64</span></code>
+is typed <code class="docutils literal"><span class="pre">int64</span></code>.</li>
+<li>Furthermore, mixed operations between signed and unsigned fall back to
+signed, while following the same bitwidth rule.  For example, on a
+32-bit machine, <code class="docutils literal"><span class="pre">int8</span> <span class="pre">+</span> <span class="pre">uint16</span></code> is typed <code class="docutils literal"><span class="pre">int32</span></code>, as is
+<code class="docutils literal"><span class="pre">uint32</span> <span class="pre">+</span> <span class="pre">int32</span></code>.</li>
 </ol>
 </div>
 <div class="section" id="proposal-impact">
 <h2>6.2.1.3. Proposal impact<a class="headerlink" href="#proposal-impact" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="semantics">
 <h3>6.2.1.3.1. Semantics<a class="headerlink" href="#semantics" title="Permalink to this headline">¶</a></h3>
-<p>With this proposal, the semantics become much clearer.  Regardless of
-whether the arguments and constants of a function were explicitly typed
-or not, the results of various expressions at any point in the function
-have easily predictable types.  When using built-in Python <code class="docutils literal"><span class="pre">int</span></code>, the
-user gets acceptable magnitude (32 or 64 bits depending on the system&#8217;s
-bitness).  If they want a custom bitwidth, they can ask for it using
-the appropriate scalar type and it will be kept accross most operations.</p>
-<p>There is also much less potential for annoyances with the type unification
-system as demonstrated above.  The user would have to force several different
-types to be faced with such an error.</p>
+<p>With this proposal, the semantics become clearer.  Regardless of whether
+the arguments and constants of a function were explicitly typed or not,
+the results of various expressions at any point in the function have
+easily predictable types.</p>
+<p>When using built-in Python <code class="docutils literal"><span class="pre">int</span></code>, the user gets acceptable magnitude
+(32 or 64 bits depending on the system&#8217;s bitness), and the type remains
+the same accross all computations.</p>
+<p>When explicitly using smaller bitwidths, intermediate results don&#8217;t
+suffer from magnitude loss, since their bitwidth is promoted to <code class="docutils literal"><span class="pre">intp</span></code>.</p>
+<p>There is also less potential for annoyances with the type unification
+system as demonstrated above.  The user would have to force several
+different types to be faced with such an error.</p>
 <p>One potential cause for concern is the discrepancy with Numpy&#8217;s scalar
 semantics; but at the same time this brings Numba scalar semantics closer
 to array semantics (both Numba&#8217;s and Numpy&#8217;s), which seems a desirable
@@ -401,7 +405,7 @@ any truncation issues.</p>
         <li><a href="../genindex.html" title="General Index" >index</a></li>
         <li><a href="../glossary.html" title="7. Glossary" >next</a></li>
         <li><a href="index.html" title="6. Numba Enhancement Proposals" >previous</a></li>
-        <li><a href="../index.html">Numba 0.20.0+120.g377299d-py2.7-linux-x86_64.egg documentation</a></li>
+        <li><a href="../index.html">Numba 0.20.0+122.g747ab84-py2.7-linux-x86_64.egg documentation</a></li>
         <li><a href="index.html" >6. Numba Enhancement Proposals</a></li> 
       
     </ul>
