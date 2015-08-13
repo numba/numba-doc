@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     
-    <title>2.4. Supported Python features &mdash; Numba 0.20.0+532.geea9231-py2.7-linux-x86_64.egg documentation</title>
+    <title>2.4. Supported Python features &mdash; Numba 0.20.0+581.gabc09e1-py2.7-linux-x86_64.egg documentation</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
@@ -34,7 +34,7 @@
 <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
             URL_ROOT:    '../',
-            VERSION:     '0.20.0+532.geea9231-py2.7-linux-x86_64.egg',
+            VERSION:     '0.20.0+581.gabc09e1-py2.7-linux-x86_64.egg',
             COLLAPSE_INDEX: false,
             FILE_SUFFIX: '.html',
             HAS_SOURCE:  true
@@ -57,7 +57,7 @@
     });
   });
 </script>
-    <link rel="top" title="Numba 0.20.0+532.geea9231-py2.7-linux-x86_64.egg documentation" href="../index.html" />
+    <link rel="top" title="Numba 0.20.0+581.gabc09e1-py2.7-linux-x86_64.egg documentation" href="../index.html" />
     <link rel="up" title="2. Reference Manual" href="index.html" />
     <link rel="next" title="2.5. Supported NumPy features" href="numpysupported.html" />
     <link rel="prev" title="2.3. Environment variables" href="envvars.html" /> 
@@ -71,7 +71,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="../index.html">Numba 0.20.0+532.geea9231-py2.7-linux-x86_64.egg documentation</a>
+          <a class="brand" href="../index.html">Numba 0.20.0+581.gabc09e1-py2.7-linux-x86_64.egg documentation</a>
           <div class="nav-collapse collapse">
             <ul class="nav pull-right">
               
@@ -118,8 +118,9 @@
 <li><a class="reference internal" href="#int-bool">2.4.2.1. int, bool</a></li>
 <li><a class="reference internal" href="#float-complex">2.4.2.2. float, complex</a></li>
 <li><a class="reference internal" href="#tuple">2.4.2.3. tuple</a></li>
-<li><a class="reference internal" href="#none">2.4.2.4. None</a></li>
-<li><a class="reference internal" href="#bytes-bytearray-memoryview">2.4.2.5. bytes, bytearray, memoryview</a></li>
+<li><a class="reference internal" href="#list">2.4.2.4. list</a></li>
+<li><a class="reference internal" href="#none">2.4.2.5. None</a></li>
+<li><a class="reference internal" href="#bytes-bytearray-memoryview">2.4.2.6. bytes, bytearray, memoryview</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#built-in-functions">2.4.3. Built-in functions</a></li>
@@ -190,8 +191,9 @@
 <li><a class="reference internal" href="#int-bool">2.4.2.1. int, bool</a></li>
 <li><a class="reference internal" href="#float-complex">2.4.2.2. float, complex</a></li>
 <li><a class="reference internal" href="#tuple">2.4.2.3. tuple</a></li>
-<li><a class="reference internal" href="#none">2.4.2.4. None</a></li>
-<li><a class="reference internal" href="#bytes-bytearray-memoryview">2.4.2.5. bytes, bytearray, memoryview</a></li>
+<li><a class="reference internal" href="#list">2.4.2.4. list</a></li>
+<li><a class="reference internal" href="#none">2.4.2.5. None</a></li>
+<li><a class="reference internal" href="#bytes-bytearray-memoryview">2.4.2.6. bytes, bytearray, memoryview</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#built-in-functions">2.4.3. Built-in functions</a></li>
@@ -281,7 +283,8 @@ message.</p>
 <div class="section" id="function-calls">
 <h3>2.4.1.2. Function calls<a class="headerlink" href="#function-calls" title="Permalink to this headline">¶</a></h3>
 <p>Numba supports function calls using positional and named arguments, as well
-as arguments with default values and <code class="docutils literal"><span class="pre">*args</span></code>.  Explicit <code class="docutils literal"><span class="pre">**kwargs</span></code> are
+as arguments with default values and <code class="docutils literal"><span class="pre">*args</span></code> (note the argument for
+<code class="docutils literal"><span class="pre">*args</span></code> can only be a tuple, not a list).  Explicit <code class="docutils literal"><span class="pre">**kwargs</span></code> are
 not supported.</p>
 </div>
 <div class="section" id="generators">
@@ -322,16 +325,32 @@ methods).</p>
 operations:</p>
 <ul class="simple">
 <li>comparison between tuples</li>
-<li>iteration over homogenous tuples</li>
+<li>iteration and indexing over homogenous tuples</li>
 </ul>
 </div>
+<div class="section" id="list">
+<h3>2.4.2.4. list<a class="headerlink" href="#list" title="Permalink to this headline">¶</a></h3>
+<p>Creating and returning lists from JIT-compiled functions is supported,
+as well as most methods and operations on lists.  Unsupported operations
+are:</p>
+<ul class="simple">
+<li>the <code class="docutils literal"><span class="pre">.sort()</span></code> method</li>
+<li>in-place operators (<code class="docutils literal"><span class="pre">+=</span></code> and <code class="docutils literal"><span class="pre">*=</span></code>)</li>
+</ul>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Passing lists from Python into JIT-compiled functions is unsupported,
+as mutations done by Numba code would not be visible from the Python
+interpreter.</p>
+</div>
+</div>
 <div class="section" id="none">
-<h3>2.4.2.4. None<a class="headerlink" href="#none" title="Permalink to this headline">¶</a></h3>
+<h3>2.4.2.5. None<a class="headerlink" href="#none" title="Permalink to this headline">¶</a></h3>
 <p>The None value is supported for identity testing (when using an
 <a class="reference internal" href="types.html#numba.optional" title="numba.optional"><code class="xref py py-class docutils literal"><span class="pre">optional</span></code></a> type).</p>
 </div>
 <div class="section" id="bytes-bytearray-memoryview">
-<h3>2.4.2.5. bytes, bytearray, memoryview<a class="headerlink" href="#bytes-bytearray-memoryview" title="Permalink to this headline">¶</a></h3>
+<h3>2.4.2.6. bytes, bytearray, memoryview<a class="headerlink" href="#bytes-bytearray-memoryview" title="Permalink to this headline">¶</a></h3>
 <p>The <a class="reference external" href="https://docs.python.org/3/library/functions.html#bytearray" title="(in Python v3.4)"><code class="xref py py-class docutils literal"><span class="pre">bytearray</span></code></a> type and, on Python 3, the <a class="reference external" href="https://docs.python.org/3/library/functions.html#bytes" title="(in Python v3.4)"><code class="xref py py-class docutils literal"><span class="pre">bytes</span></code></a> type
 support indexing, iteration and retrieving the len().</p>
 <p>The <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#memoryview" title="(in Python v3.4)"><code class="xref py py-class docutils literal"><span class="pre">memoryview</span></code></a> type supports indexing, slicing, iteration,
@@ -613,7 +632,7 @@ functions, using the following C types:</p>
         <li><a href="../genindex.html" title="General Index" >index</a></li>
         <li><a href="numpysupported.html" title="2.5. Supported NumPy features" >next</a></li>
         <li><a href="envvars.html" title="2.3. Environment variables" >previous</a></li>
-        <li><a href="../index.html">Numba 0.20.0+532.geea9231-py2.7-linux-x86_64.egg documentation</a></li>
+        <li><a href="../index.html">Numba 0.20.0+581.gabc09e1-py2.7-linux-x86_64.egg documentation</a></li>
         <li><a href="index.html" >2. Reference Manual</a></li> 
       
     </ul>
