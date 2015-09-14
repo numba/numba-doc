@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+
+
+
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+    <title>3.3. Memory management &mdash; Numba 0.21.0-py3.4-macosx-10.5-x86_64.egg documentation</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    
+
+<link rel="stylesheet" href="../_static/css/basicstrap-base.css" type="text/css" />
+<link rel="stylesheet" id="current-theme" href="../_static/css/bootstrap3/bootstrap.min.css" type="text/css" />
+<link rel="stylesheet" id="current-adjust-theme" type="text/css" />
+
+<link rel="stylesheet" href="../_static/css/font-awesome.min.css">
+
+<style type="text/css">
+  body {
+    padding-top: 60px;
+    padding-bottom: 40px;
+  }
+</style>
+
+<link rel="stylesheet" href="../_static/css/basicstrap.css" type="text/css" />
+<link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+<script type="text/javascript">
+  var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:    '../',
+            VERSION:     '0.21.0-py3.4-macosx-10.5-x86_64.egg',
+            COLLAPSE_INDEX: false,
+            FILE_SUFFIX: '.html',
+            HAS_SOURCE:  true
+  };
+</script>
+    <script type="text/javascript" src="../_static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/bootstrap3.min.js"></script>
+<script type="text/javascript" src="../_static/js/jquery.cookie.min.js"></script>
+<script type="text/javascript" src="../_static/js/basicstrap.js"></script>
+<script type="text/javascript">
+</script>
+    <link rel="top" title="Numba 0.21.0-py3.4-macosx-10.5-x86_64.egg documentation" href="../index.html" />
+    <link rel="up" title="3. Numba for CUDA GPUs" href="index.html" />
+    <link rel="next" title="3.4. Writing Device Functions" href="device-functions.html" />
+    <link rel="prev" title="3.2. Writing CUDA Kernels" href="kernels.html" /> 
+  </head>
+  <body role="document">
+    <div id="navbar-top" class="navbar navbar-fixed-top navbar-default" role="navigation" aria-label="top navigation">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="../index.html">Numba 0.21.0-py3.4-macosx-10.5-x86_64.egg documentation</a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+              <li class="dropdown visible-xs">
+                <a role="button" id="localToc" data-toggle="dropdown" data-target="#" href="#">Table Of Contents <b class="caret"></b></a>
+                <ul class="dropdown-menu localtoc sp-localtoc" role="menu" aria-labelledby="localToc">
+                <ul>
+<li><a class="reference internal" href="#">3.3. Memory management</a><ul>
+<li><a class="reference internal" href="#data-transfer">3.3.1. Data transfer</a><ul>
+<li><a class="reference internal" href="#device-arrays">3.3.1.1. Device arrays</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#pinned-memory">3.3.2. Pinned memory</a></li>
+<li><a class="reference internal" href="#streams">3.3.3. Streams</a></li>
+<li><a class="reference internal" href="#shared-memory-and-thread-synchronization">3.3.4. Shared memory and thread synchronization</a></li>
+<li><a class="reference internal" href="#local-memory">3.3.5. Local memory</a></li>
+</ul>
+</li>
+</ul>
+
+                </ul>
+              </li>
+
+            
+              <li><a href="kernels.html" title="3.2. Writing CUDA Kernels" accesskey="P">previous </a></li>
+              <li><a href="device-functions.html" title="3.4. Writing Device Functions" accesskey="N">next </a></li>
+              <li><a href="../genindex.html" title="General Index" accesskey="I">index </a></li>
+              <li><a href="index.html" accesskey="U">3. Numba for CUDA GPUs</a></li>
+            
+            <li class="visible-xs"><a href="../_sources/cuda/memory.txt" rel="nofollow">Show Source</a></li>
+
+            <li class="visible-xs">
+                <form class="search form-search form-inline navbar-form navbar-right sp-searchbox" action="../search.html" method="get">
+                  <div class="input-append input-group">
+                    <input type="text" class="search-query form-control" name="q" placeholder="Search...">
+                    <span class="input-group-btn">
+                    <input type="submit" class="btn" value="Go" />
+                    </span>
+                  </div>
+                  <input type="hidden" name="check_keywords" value="yes" />
+                  <input type="hidden" name="area" value="default" />
+                </form>
+            </li>
+
+            
+
+          </ul>
+
+        </div>
+      </div>
+    </div>
+    
+
+    <!-- container -->
+    <div class="container-fluid">
+
+      <!-- row -->
+      <div class="row">
+         
+<div class="col-md-3 hidden-xs" id="sidebar-wrapper">
+  <div class="sidebar hidden-xs" role="navigation" aria-label="main navigation">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">3.3. Memory management</a><ul>
+<li><a class="reference internal" href="#data-transfer">3.3.1. Data transfer</a><ul>
+<li><a class="reference internal" href="#device-arrays">3.3.1.1. Device arrays</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#pinned-memory">3.3.2. Pinned memory</a></li>
+<li><a class="reference internal" href="#streams">3.3.3. Streams</a></li>
+<li><a class="reference internal" href="#shared-memory-and-thread-synchronization">3.3.4. Shared memory and thread synchronization</a></li>
+<li><a class="reference internal" href="#local-memory">3.3.5. Local memory</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="kernels.html"
+                        title="previous chapter">3.2. Writing CUDA Kernels</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="device-functions.html"
+                        title="next chapter">3.4. Writing Device Functions</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/cuda/memory.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" role="search">
+  <h3>Quick search</h3>
+  <form class="search form-inline" action="../search.html" method="get">
+      <div class="input-append input-group">
+        <input type="text" class="search-query form-control" name="q" placeholder="Search...">
+        <span class="input-group-btn">
+        <input type="submit" class="btn" value="Go" />
+        </span>
+      </div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+  </div>
+</div> 
+        
+
+        <div class="col-md-9" id="content-wrapper">
+          <div class="document" role="main">
+            <div class="documentwrapper">
+              <div class="bodywrapper">
+                <div class="body">
+                  
+  <div class="section" id="memory-management">
+<h1>3.3. Memory management<a class="headerlink" href="#memory-management" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="data-transfer">
+<span id="cuda-device-memory"></span><h2>3.3.1. Data transfer<a class="headerlink" href="#data-transfer" title="Permalink to this headline">¶</a></h2>
+<p>Even though Numba can automatically transfer NumPy arrays to the device,
+it can only do so conservatively by always transferring device memory back to
+the host when a kernel finishes. To avoid the unnecessary transfer for
+read-only arrays, you can use the following APIs to manually control the
+transfer:</p>
+<dl class="function">
+<dt>
+<code class="descclassname">numba.cuda.</code><code class="descname">device_array</code><span class="sig-paren">(</span><em>shape</em>, <em>dtype=np.float</em>, <em>strides=None</em>, <em>order='C'</em>, <em>stream=0</em><span class="sig-paren">)</span></dt>
+<dd><p>Allocate an empty device ndarray. Similar to <code class="xref py py-meth docutils literal"><span class="pre">numpy.empty()</span></code>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="descclassname">numba.cuda.</code><code class="descname">device_array_like</code><span class="sig-paren">(</span><em>ary</em>, <em>stream=0</em><span class="sig-paren">)</span></dt>
+<dd><p>Call cuda.devicearray() with information from the array.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="descclassname">numba.cuda.</code><code class="descname">to_device</code><span class="sig-paren">(</span><em>obj</em>, <em>stream=0</em>, <em>copy=True</em>, <em>to=None</em><span class="sig-paren">)</span></dt>
+<dd><p>Allocate and transfer a numpy ndarray or structured scalar to the device.</p>
+<p>To copy host-&gt;device a numpy array:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">ary</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">d_ary</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">to_device</span><span class="p">(</span><span class="n">ary</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>To enqueue the transfer to a stream:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">stream</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">stream</span><span class="p">()</span>
+<span class="n">d_ary</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">to_device</span><span class="p">(</span><span class="n">ary</span><span class="p">,</span> <span class="n">stream</span><span class="o">=</span><span class="n">stream</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The resulting <code class="docutils literal"><span class="pre">d_ary</span></code> is a <code class="docutils literal"><span class="pre">DeviceNDArray</span></code>.</p>
+<p>To copy device-&gt;host:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">hary</span> <span class="o">=</span> <span class="n">d_ary</span><span class="o">.</span><span class="n">copy_to_host</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>To copy device-&gt;host to an existing array:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">ary</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="n">d_ary</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">d_ary</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+<span class="n">d_ary</span><span class="o">.</span><span class="n">copy_to_host</span><span class="p">(</span><span class="n">ary</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>To enqueue the transfer to a stream:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">hary</span> <span class="o">=</span> <span class="n">d_ary</span><span class="o">.</span><span class="n">copy_to_host</span><span class="p">(</span><span class="n">stream</span><span class="o">=</span><span class="n">stream</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<div class="section" id="device-arrays">
+<h3>3.3.1.1. Device arrays<a class="headerlink" href="#device-arrays" title="Permalink to this headline">¶</a></h3>
+<p>Device array references have the following methods.  These methods are to be
+called in host code, not within CUDA-jitted functions.</p>
+<dl class="class">
+<dt>
+<em class="property">class </em><code class="descclassname">numba.cuda.cudadrv.devicearray.</code><code class="descname">DeviceNDArray</code><span class="sig-paren">(</span><em>shape</em>, <em>strides</em>, <em>dtype</em>, <em>stream=0</em>, <em>writeback=None</em>, <em>gpu_data=None</em><span class="sig-paren">)</span></dt>
+<dd><p>An on-GPU array type</p>
+<dl class="method">
+<dt>
+<code class="descname">copy_to_host</code><span class="sig-paren">(</span><em>ary=None</em>, <em>stream=0</em><span class="sig-paren">)</span></dt>
+<dd><p>Copy <code class="docutils literal"><span class="pre">self</span></code> to <code class="docutils literal"><span class="pre">ary</span></code> or create a new Numpy ndarray
+if <code class="docutils literal"><span class="pre">ary</span></code> is <code class="docutils literal"><span class="pre">None</span></code>.</p>
+<p>If a CUDA <code class="docutils literal"><span class="pre">stream</span></code> is given, then the transfer will be made
+asynchronously as part as the given stream.  Otherwise, the transfer is
+synchronous: the function returns after the copy is finished.</p>
+<p>Always returns the host array.</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">cuda</span>
+
+<span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
+<span class="n">d_arr</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">to_device</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span>
+
+<span class="n">my_kernel</span><span class="p">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">](</span><span class="n">d_arr</span><span class="p">)</span>
+
+<span class="n">result_array</span> <span class="o">=</span> <span class="n">d_arr</span><span class="o">.</span><span class="n">copy_to_host</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">is_c_contiguous</code><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<dd><p>Return true if the array is C-contiguous.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">is_f_contiguous</code><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<dd><p>Return true if the array is Fortran-contiguous.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">ravel</code><span class="sig-paren">(</span><em>order='C'</em>, <em>stream=0</em><span class="sig-paren">)</span></dt>
+<dd><p>Flatten the array without changing its contents, similar to
+<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.ravel.html#numpy.ndarray.ravel" title="(in NumPy v1.9)"><code class="xref py py-meth docutils literal"><span class="pre">numpy.ndarray.ravel()</span></code></a>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">reshape</code><span class="sig-paren">(</span><em>*newshape</em>, <em>**kws</em><span class="sig-paren">)</span></dt>
+<dd><p>Reshape the array without changing its contents, similarly to
+<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.reshape.html#numpy.ndarray.reshape" title="(in NumPy v1.9)"><code class="xref py py-meth docutils literal"><span class="pre">numpy.ndarray.reshape()</span></code></a>. Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">d_arr</span> <span class="o">=</span> <span class="n">d_arr</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="s">&#39;F&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+<div class="section" id="pinned-memory">
+<h2>3.3.2. Pinned memory<a class="headerlink" href="#pinned-memory" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt>
+<code class="descclassname">numba.cuda.</code><code class="descname">pinned</code><span class="sig-paren">(</span><em>*arylist</em><span class="sig-paren">)</span></dt>
+<dd><p>A context manager for temporary pinning a sequence of host ndarrays.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="descclassname">numba.cuda.</code><code class="descname">pinned_array</code><span class="sig-paren">(</span><em>shape</em>, <em>dtype=np.float</em>, <em>strides=None</em>, <em>order='C'</em><span class="sig-paren">)</span></dt>
+<dd><p>Allocate a numpy.ndarray with a buffer that is pinned (pagelocked).
+Similar to numpy.empty().</p>
+</dd></dl>
+
+</div>
+<div class="section" id="streams">
+<h2>3.3.3. Streams<a class="headerlink" href="#streams" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt>
+<code class="descclassname">numba.cuda.</code><code class="descname">stream</code><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<dd><p>Create a CUDA stream that represents a command queue for the device.</p>
+</dd></dl>
+
+<p>CUDA streams have the following methods:</p>
+<dl class="class">
+<dt>
+<em class="property">class </em><code class="descclassname">numba.cuda.cudadrv.driver.</code><code class="descname">Stream</code><span class="sig-paren">(</span><em>context</em>, <em>handle</em>, <em>finalizer</em><span class="sig-paren">)</span></dt>
+<dd><dl class="method">
+<dt>
+<code class="descname">auto_synchronize</code><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<dd><p>A context manager that waits for all commands in this stream to execute
+and commits any pending memory transfers upon exiting the context.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">synchronize</code><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<dd><p>Wait for all commands in this stream to execute. This will commit any
+pending memory transfers.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="shared-memory-and-thread-synchronization">
+<span id="cuda-shared-memory"></span><h2>3.3.4. Shared memory and thread synchronization<a class="headerlink" href="#shared-memory-and-thread-synchronization" title="Permalink to this headline">¶</a></h2>
+<p>A limited amount of shared memory can be allocated on the device to speed
+up access to data, when necessary.  That memory will be shared (i.e. both
+readable and writable) amongst all threads belonging to a given block
+and has faster access times than regular device memory.  It also allows
+threads to cooperate on a given solution.  You can think of it as a
+manually-managed data cache.</p>
+<p>The memory is allocated once for the duration of the kernel, unlike
+traditional dynamic memory management.</p>
+<dl class="function">
+<dt>
+<code class="descclassname">numba.cuda.shared.</code><code class="descname">array</code><span class="sig-paren">(</span><em>shape</em>, <em>type</em><span class="sig-paren">)</span></dt>
+<dd><p>Allocate a shared array of the given <em>shape</em> and <em>type</em> on the device.
+This function must be called on the device (i.e. from a kernel or
+device function).  <em>shape</em> is either an integer or a tuple of integers
+representing the array&#8217;s dimensions.  <em>type</em> is a <a class="reference internal" href="../reference/types.html#numba-types"><span>Numba type</span></a>
+of the elements needing to be stored in the array.</p>
+<p>The returned array-like object can be read and written to like any normal
+device array (e.g. through indexing).</p>
+<p>A common pattern is to have each thread populate one element in the
+shared array and then wait for all threads to finish using <a class="reference internal" href="../cuda-reference/kernel.html#numba.cuda.syncthreads" title="numba.cuda.syncthreads"><code class="xref py py-func docutils literal"><span class="pre">syncthreads()</span></code></a>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="descclassname">numba.cuda.</code><code class="descname">syncthreads</code><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<dd><p>Synchronize all threads in the same thread block.  This function
+implements the same pattern as <a class="reference external" href="http://en.wikipedia.org/wiki/Barrier_%28computer_science%29">barriers</a>
+in traditional multi-threaded programming: this function waits
+until all threads in the block call it, at which point it returns
+control to all its callers.</p>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="examples.html#cuda-matmul"><span>Matrix multiplication example</span></a>.</p>
+</div>
+</div>
+<div class="section" id="local-memory">
+<span id="cuda-local-memory"></span><h2>3.3.5. Local memory<a class="headerlink" href="#local-memory" title="Permalink to this headline">¶</a></h2>
+<p>Local memory is an area of memory private to each thread.  Using local
+memory helps allocate some scratchpad area when scalar local variables
+are not enough.  The memory is allocated once for the duration of the kernel,
+unlike traditional dynamic memory management.</p>
+<dl class="function">
+<dt>
+<code class="descclassname">numba.cuda.local.</code><code class="descname">array</code><span class="sig-paren">(</span><em>shape</em>, <em>type</em><span class="sig-paren">)</span></dt>
+<dd><p>Allocate a local array of the given <em>shape</em> and <em>type</em> on the device.
+The array is private to the current thread.  An array-like object is
+returned which can be read and written to like any standard array
+(e.g. through indexing).</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        
+      </div><!-- /row -->
+
+      <!-- row -->
+      <div class="row footer-relbar">
+<div id="navbar-related" class=" related navbar navbar-default" role="navigation" aria-label="related navigation">
+  <div class="navbar-inner">
+    <ul class="nav navbar-nav ">
+        <li><a href="../index.html">Numba 0.21.0-py3.4-macosx-10.5-x86_64.egg documentation</a></li>
+    </ul>
+<ul class="nav navbar-nav pull-right hidden-xs hidden-sm">
+      
+        <li><a href="kernels.html" title="3.2. Writing CUDA Kernels" >previous</a></li>
+        <li><a href="device-functions.html" title="3.4. Writing Device Functions" >next</a></li>
+        <li><a href="../genindex.html" title="General Index" >index</a></li>
+        <li><a href="index.html" >3. Numba for CUDA GPUs</a></li>
+        <li><a href="#">top</a></li> 
+      
+    </ul>
+  </div>
+</div>
+      </div><!-- /row -->
+
+      <!-- footer -->
+      <footer role="contentinfo">
+          &copy; Copyright 2012-2015, Continuum Analytics.
+        Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.1.
+      </footer>
+      <!-- /footer -->
+
+    </div>
+    <!-- /container -->
+
+  </body>
+</html>
