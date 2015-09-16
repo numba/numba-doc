@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     
-    <title>3.11. GPU Reduction &mdash; Numba 0.21.0+125.g6797f17-py2.7-linux-x86_64.egg documentation</title>
+    <title>3.11. GPU Reduction &mdash; Numba 0.21.0+137.gac9929d-py2.7-linux-x86_64.egg documentation</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
@@ -34,7 +34,7 @@
 <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
             URL_ROOT:    '../',
-            VERSION:     '0.21.0+125.g6797f17-py2.7-linux-x86_64.egg',
+            VERSION:     '0.21.0+137.gac9929d-py2.7-linux-x86_64.egg',
             COLLAPSE_INDEX: false,
             FILE_SUFFIX: '.html',
             HAS_SOURCE:  true
@@ -57,7 +57,7 @@
     });
   });
 </script>
-    <link rel="top" title="Numba 0.21.0+125.g6797f17-py2.7-linux-x86_64.egg documentation" href="../index.html" />
+    <link rel="top" title="Numba 0.21.0+137.gac9929d-py2.7-linux-x86_64.egg documentation" href="../index.html" />
     <link rel="up" title="3. Numba for CUDA GPUs" href="index.html" />
     <link rel="next" title="3.12. CUDA Ufuncs and Generalized Ufuncs" href="ufunc.html" />
     <link rel="prev" title="3.10. Debugging CUDA Python with the the CUDA Simulator" href="simulator.html" /> 
@@ -71,7 +71,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="../index.html">Numba 0.21.0+125.g6797f17-py2.7-linux-x86_64.egg documentation</a>
+          <a class="brand" href="../index.html">Numba 0.21.0+137.gac9929d-py2.7-linux-x86_64.egg documentation</a>
           <div class="nav-collapse collapse">
             <ul class="nav pull-right">
               
@@ -199,8 +199,9 @@
                   
   <div class="section" id="gpu-reduction">
 <h1>3.11. GPU Reduction<a class="headerlink" href="#gpu-reduction" title="Permalink to this headline">¶</a></h1>
-<p>Writing a reduction algorithm for CUDA GPU can be tricky.
-Numba provides a <code class="docutils literal"><span class="pre">&#64;reduce</span></code> decorator for converting simple binary operation into a reduction kernel.</p>
+<p>Writing a reduction algorithm for CUDA GPU can be tricky.  Numba provides a
+<code class="docutils literal"><span class="pre">&#64;reduce</span></code> decorator for converting simple binary operation into a reduction
+kernel.</p>
 <div class="section" id="reduce">
 <h2>3.11.1. <code class="docutils literal"><span class="pre">&#64;reduce</span></code><a class="headerlink" href="#reduce" title="Permalink to this headline">¶</a></h2>
 <p>Example:</p>
@@ -221,34 +222,66 @@ Numba provides a <code class="docutils literal"><span class="pre">&#64;reduce</s
 <div class="highlight-python"><div class="highlight"><pre><span class="n">sum_reduce</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">reduce</span><span class="p">(</span><span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>The decorated function <strong>must not use CUDA specific features</strong> because it is also used for host-side execution for the final round of reduction.</p>
 </div>
 <div class="section" id="class-reduce">
 <h2>3.11.2. class Reduce<a class="headerlink" href="#class-reduce" title="Permalink to this headline">¶</a></h2>
-<p>The <code class="docutils literal"><span class="pre">reduce</span></code> decorator creates an instance of the <code class="docutils literal"><span class="pre">Reduce</span></code> class.  (Currently, <code class="docutils literal"><span class="pre">reduce</span></code> is an alias to <code class="docutils literal"><span class="pre">Reduce</span></code>, but this behavior is not guaranteed.)</p>
+<p>The <code class="docutils literal"><span class="pre">reduce</span></code> decorator creates an instance of the <code class="docutils literal"><span class="pre">Reduce</span></code> class.
+(Currently, <code class="docutils literal"><span class="pre">reduce</span></code> is an alias to <code class="docutils literal"><span class="pre">Reduce</span></code>, but this behavior is not
+guaranteed.)</p>
 <dl class="class">
 <dt id="numba.cuda.Reduce">
 <em class="property">class </em><code class="descclassname">numba.cuda.</code><code class="descname">Reduce</code><span class="sig-paren">(</span><em>binop</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.cuda.Reduce" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="method">
-<dt id="numba.cuda.Reduce.device_partial_inplace">
-<code class="descname">device_partial_inplace</code><span class="sig-paren">(</span><em>darr</em>, <em>size=None</em>, <em>init=0</em>, <em>stream=0</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.cuda.Reduce.device_partial_inplace" title="Permalink to this definition">¶</a></dt>
-<dd><p>Partially reduce a device array inplace as much as possible in an
-efficient manner. Does not automatically transfer host array.</p>
+<dt id="numba.cuda.Reduce.__call__">
+<code class="descname">__call__</code><span class="sig-paren">(</span><em>arr</em>, <em>res=None</em>, <em>size=None</em>, <em>init=0</em>, <em>stream=0</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.cuda.Reduce.__call__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs a full reduction.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>darr</strong> (<em>device array</em>) &#8211; Used to input and output.</li>
-<li><strong>size</strong> (<em>int or None</em>) &#8211; Number of element in <code class="docutils literal"><span class="pre">arr</span></code>.  If None, the entire array is used.</li>
-<li><strong>init</strong> (<em>dtype of darr</em>) &#8211; Initial value for the reduction</li>
-<li><strong>stream</strong> (<em>cuda stream</em>) &#8211; All CUDA operations are performed on this stream if it is given.
-Otherwise, a new stream is created.</li>
+<li><strong>arr</strong> &#8211; A host or device array. If a device array is given, the
+reduction is performed inplace and the values in the array
+are overwritten. If a host array is given, it is copied to
+the device automatically.</li>
+<li><strong>size</strong> &#8211; Optional integer specifying the number of elements in
+<code class="docutils literal"><span class="pre">arr</span></code> to reduce. If this parameter is not specified, the
+entire array is reduced.</li>
+<li><strong>res</strong> &#8211; Optional device array into which to write the reduction
+result to. The result is written into the first element of
+this array. If this parameter is specified, then no
+communication of the reduction output takes place from the
+device to the host.</li>
+<li><strong>init</strong> &#8211; Optional initial value for the reduction, the type of which
+must match <code class="docutils literal"><span class="pre">arr.dtype</span></code>.</li>
+<li><strong>stream</strong> &#8211; Optional CUDA stream in which to perform the reduction.
+If no stream is specified, the default stream of 0 is
+used.</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">int &#8211; Number of elements in <code class="docutils literal"><span class="pre">darr</span></code> that contains the reduction result.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">If <code class="docutils literal"><span class="pre">res</span></code> is specified, <code class="docutils literal"><span class="pre">None</span></code> is returned. Otherwise, the
+result of the reduction is returned.</p>
 </td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.Reduce.__init__">
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>binop</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.cuda.Reduce.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a reduction object that reduces values using a given binary
+function. The binary function is compiled once and cached inside this
+object. Keeping this object alive will prevent re-compilation.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>binop</strong> &#8211; A function to be compiled as a CUDA device function that
+will be used as the binary operation for reduction on a
+CUDA device. Internally, it is compiled using
+<code class="docutils literal"><span class="pre">cuda.jit(signature,</span> <span class="pre">device=True)</span></code>.</td>
 </tr>
 </tbody>
 </table>
@@ -278,7 +311,7 @@ Otherwise, a new stream is created.</li>
         <li><a href="../genindex.html" title="General Index" >index</a></li>
         <li><a href="ufunc.html" title="3.12. CUDA Ufuncs and Generalized Ufuncs" >next</a></li>
         <li><a href="simulator.html" title="3.10. Debugging CUDA Python with the the CUDA Simulator" >previous</a></li>
-        <li><a href="../index.html">Numba 0.21.0+125.g6797f17-py2.7-linux-x86_64.egg documentation</a></li>
+        <li><a href="../index.html">Numba 0.21.0+137.gac9929d-py2.7-linux-x86_64.egg documentation</a></li>
         <li><a href="index.html" >3. Numba for CUDA GPUs</a></li> 
       
     </ul>
