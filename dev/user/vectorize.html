@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     
-    <title>1.4. Creating Numpy universal functions &mdash; Numba 0.21.0+334.gef3cdfe-py2.7-linux-x86_64.egg documentation</title>
+    <title>1.4. Creating Numpy universal functions &mdash; Numba 0.21.0+362.gc79a928-py2.7-linux-x86_64.egg documentation</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
@@ -34,7 +34,7 @@
 <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
             URL_ROOT:    '../',
-            VERSION:     '0.21.0+334.gef3cdfe-py2.7-linux-x86_64.egg',
+            VERSION:     '0.21.0+362.gc79a928-py2.7-linux-x86_64.egg',
             COLLAPSE_INDEX: false,
             FILE_SUFFIX: '.html',
             HAS_SOURCE:  true
@@ -57,7 +57,7 @@
     });
   });
 </script>
-    <link rel="top" title="Numba 0.21.0+334.gef3cdfe-py2.7-linux-x86_64.egg documentation" href="../index.html" />
+    <link rel="top" title="Numba 0.21.0+362.gc79a928-py2.7-linux-x86_64.egg documentation" href="../index.html" />
     <link rel="up" title="1. User Manual" href="index.html" />
     <link rel="next" title="1.5. Compiling code ahead of time" href="pycc.html" />
     <link rel="prev" title="1.3. Compiling Python code with @jit" href="jit.html" /> 
@@ -71,7 +71,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="../index.html">Numba 0.21.0+334.gef3cdfe-py2.7-linux-x86_64.egg documentation</a>
+          <a class="brand" href="../index.html">Numba 0.21.0+362.gc79a928-py2.7-linux-x86_64.egg documentation</a>
           <div class="nav-collapse collapse">
             <ul class="nav pull-right">
               
@@ -202,17 +202,17 @@
   <div class="section" id="creating-numpy-universal-functions">
 <h1>1.4. Creating Numpy universal functions<a class="headerlink" href="#creating-numpy-universal-functions" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="the-vectorize-decorator">
-<h2>1.4.1. The <code class="docutils literal"><span class="pre">&#64;vectorize</span></code> decorator<a class="headerlink" href="#the-vectorize-decorator" title="Permalink to this headline">¶</a></h2>
+<span id="vectorize"></span><h2>1.4.1. The <code class="docutils literal"><span class="pre">&#64;vectorize</span></code> decorator<a class="headerlink" href="#the-vectorize-decorator" title="Permalink to this headline">¶</a></h2>
 <p>Numba&#8217;s vectorize allows Python functions taking scalar input arguments to
 be used as NumPy <a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/ufuncs.html">ufuncs</a>.  Creating a traditional NumPy ufunc is not
 not the most straightforward process and involves writing some C code.
-Numba makes this easy.  Using the <a class="reference internal" href="../reference/compilation.html#numba.vectorize" title="numba.vectorize"><code class="xref py py-func docutils literal"><span class="pre">vectorize()</span></code></a> decorator, Numba
+Numba makes this easy.  Using the <a class="reference internal" href="../reference/jit-compilation.html#numba.vectorize" title="numba.vectorize"><code class="xref py py-func docutils literal"><span class="pre">vectorize()</span></code></a> decorator, Numba
 can compile a pure Python function into a ufunc that operates over NumPy
 arrays as fast as traditional ufuncs written in C.</p>
-<p>Using <a class="reference internal" href="../reference/compilation.html#numba.vectorize" title="numba.vectorize"><code class="xref py py-func docutils literal"><span class="pre">vectorize()</span></code></a>, you write your function as operating over
+<p>Using <a class="reference internal" href="../reference/jit-compilation.html#numba.vectorize" title="numba.vectorize"><code class="xref py py-func docutils literal"><span class="pre">vectorize()</span></code></a>, you write your function as operating over
 input scalars, rather than arrays.  Numba will generate the surrounding
 loop (or <em>kernel</em>) allowing efficient iteration over the actual inputs.</p>
-<p>The <a class="reference internal" href="../reference/compilation.html#numba.vectorize" title="numba.vectorize"><code class="xref py py-func docutils literal"><span class="pre">vectorize()</span></code></a> decorator has two modes of operation:</p>
+<p>The <a class="reference internal" href="../reference/jit-compilation.html#numba.vectorize" title="numba.vectorize"><code class="xref py py-func docutils literal"><span class="pre">vectorize()</span></code></a> decorator has two modes of operation:</p>
 <ul class="simple">
 <li>Eager, or decoration-time, compilation: If you pass one or more type
 signatures to the decorator, you will be building a Numpy universal
@@ -220,13 +220,13 @@ function (ufunc).  The rest of this subsection describes building
 ufuncs using decoration-time compilation.</li>
 <li>Lazy, or call-time, compilation: When not given any signatures, the
 decorator will give you a Numba dynamic universal function
-(<a class="reference internal" href="../reference/compilation.html#numba.DUFunc" title="numba.DUFunc"><code class="xref py py-class docutils literal"><span class="pre">DUFunc</span></code></a>) that dynamically compiles a new kernel when
+(<a class="reference internal" href="../reference/jit-compilation.html#numba.DUFunc" title="numba.DUFunc"><code class="xref py py-class docutils literal"><span class="pre">DUFunc</span></code></a>) that dynamically compiles a new kernel when
 called with a previously unsupported input type.  A later
 subsection, &#8220;<a class="reference internal" href="#dynamic-universal-functions"><span>Dynamic universal functions</span></a>&#8221;, describes this mode in
 more depth.</li>
 </ul>
 <p>As described above, if you pass a list of signatures to the
-<a class="reference internal" href="../reference/compilation.html#numba.vectorize" title="numba.vectorize"><code class="xref py py-func docutils literal"><span class="pre">vectorize()</span></code></a> decorator, your function will be compiled
+<a class="reference internal" href="../reference/jit-compilation.html#numba.vectorize" title="numba.vectorize"><code class="xref py py-func docutils literal"><span class="pre">vectorize()</span></code></a> decorator, your function will be compiled
 into a Numpy ufunc.  In the basic case, only one signature will be
 passed:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">vectorize</span><span class="p">,</span> <span class="n">float64</span>
@@ -292,7 +292,7 @@ reduction, accumulation or broadcasting.  Using the example above:</p>
 <p class="first admonition-title">See also</p>
 <p class="last"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/ufuncs.html#ufunc">Standard features of ufuncs</a> (NumPy documentation).</p>
 </div>
-<p>The <a class="reference internal" href="../reference/compilation.html#numba.vectorize" title="numba.vectorize"><code class="xref py py-func docutils literal"><span class="pre">vectorize()</span></code></a> decorator supports multiple ufunc targets:</p>
+<p>The <a class="reference internal" href="../reference/jit-compilation.html#numba.vectorize" title="numba.vectorize"><code class="xref py py-func docutils literal"><span class="pre">vectorize()</span></code></a> decorator supports multiple ufunc targets:</p>
 <table border="1" class="docutils">
 <colgroup>
 <col width="20%" />
@@ -333,13 +333,13 @@ significant overhead.</p>
 </div>
 <div class="section" id="the-guvectorize-decorator">
 <h2>1.4.2. The <code class="docutils literal"><span class="pre">&#64;guvectorize</span></code> decorator<a class="headerlink" href="#the-guvectorize-decorator" title="Permalink to this headline">¶</a></h2>
-<p>While <a class="reference internal" href="../reference/compilation.html#numba.vectorize" title="numba.vectorize"><code class="xref py py-func docutils literal"><span class="pre">vectorize()</span></code></a> allows you to write ufuncs that work on one
-element at a time, the <a class="reference internal" href="../reference/compilation.html#numba.guvectorize" title="numba.guvectorize"><code class="xref py py-func docutils literal"><span class="pre">guvectorize()</span></code></a> decorator takes the concept
+<p>While <a class="reference internal" href="../reference/jit-compilation.html#numba.vectorize" title="numba.vectorize"><code class="xref py py-func docutils literal"><span class="pre">vectorize()</span></code></a> allows you to write ufuncs that work on one
+element at a time, the <a class="reference internal" href="../reference/jit-compilation.html#numba.guvectorize" title="numba.guvectorize"><code class="xref py py-func docutils literal"><span class="pre">guvectorize()</span></code></a> decorator takes the concept
 one step further and allows you to write ufuncs that will work on an
 arbitrary number of elements of input arrays, and take and return arrays of
 differing dimensions.  The typical example is a running median or a
 convolution filter.</p>
-<p>Contrary to <a class="reference internal" href="../reference/compilation.html#numba.vectorize" title="numba.vectorize"><code class="xref py py-func docutils literal"><span class="pre">vectorize()</span></code></a> functions, <a class="reference internal" href="../reference/compilation.html#numba.guvectorize" title="numba.guvectorize"><code class="xref py py-func docutils literal"><span class="pre">guvectorize()</span></code></a>
+<p>Contrary to <a class="reference internal" href="../reference/jit-compilation.html#numba.vectorize" title="numba.vectorize"><code class="xref py py-func docutils literal"><span class="pre">vectorize()</span></code></a> functions, <a class="reference internal" href="../reference/jit-compilation.html#numba.guvectorize" title="numba.guvectorize"><code class="xref py py-func docutils literal"><span class="pre">guvectorize()</span></code></a>
 functions don&#8217;t return their result value: they take it as an array
 argument, which must be filled in by the function.  This is because the
 array is actually allocated by NumPy&#8217;s dispatch mechanism, which calls into
@@ -393,7 +393,7 @@ complicated inputs, depending on their shapes:</p>
 </div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">Both <a class="reference internal" href="../reference/compilation.html#numba.vectorize" title="numba.vectorize"><code class="xref py py-func docutils literal"><span class="pre">vectorize()</span></code></a> and <a class="reference internal" href="../reference/compilation.html#numba.guvectorize" title="numba.guvectorize"><code class="xref py py-func docutils literal"><span class="pre">guvectorize()</span></code></a> support
+<p class="last">Both <a class="reference internal" href="../reference/jit-compilation.html#numba.vectorize" title="numba.vectorize"><code class="xref py py-func docutils literal"><span class="pre">vectorize()</span></code></a> and <a class="reference internal" href="../reference/jit-compilation.html#numba.guvectorize" title="numba.guvectorize"><code class="xref py py-func docutils literal"><span class="pre">guvectorize()</span></code></a> support
 passing <code class="docutils literal"><span class="pre">nopython=True</span></code> <a class="reference internal" href="jit.html#jit-nopython"><span>as in the &#64;jit decorator</span></a>.
 Use it to ensure the generated code does not fallback to
 <a class="reference internal" href="../glossary.html#term-object-mode"><span class="xref std std-term">object mode</span></a>.</p>
@@ -402,8 +402,8 @@ Use it to ensure the generated code does not fallback to
 <div class="section" id="dynamic-universal-functions">
 <span id="id1"></span><h2>1.4.3. Dynamic universal functions<a class="headerlink" href="#dynamic-universal-functions" title="Permalink to this headline">¶</a></h2>
 <p>As described above, if you do not pass any signatures to the
-<a class="reference internal" href="../reference/compilation.html#numba.vectorize" title="numba.vectorize"><code class="xref py py-func docutils literal"><span class="pre">vectorize()</span></code></a> decorator, your Python function will be used
-to build a dynamic universal function, or <a class="reference internal" href="../reference/compilation.html#numba.DUFunc" title="numba.DUFunc"><code class="xref py py-class docutils literal"><span class="pre">DUFunc</span></code></a>.  For
+<a class="reference internal" href="../reference/jit-compilation.html#numba.vectorize" title="numba.vectorize"><code class="xref py py-func docutils literal"><span class="pre">vectorize()</span></code></a> decorator, your Python function will be used
+to build a dynamic universal function, or <a class="reference internal" href="../reference/jit-compilation.html#numba.DUFunc" title="numba.DUFunc"><code class="xref py py-class docutils literal"><span class="pre">DUFunc</span></code></a>.  For
 example:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">vectorize</span>
 
@@ -412,7 +412,7 @@ example:</p>
     <span class="k">return</span> <span class="n">x</span> <span class="o">*</span> <span class="n">y</span>
 </pre></div>
 </div>
-<p>The resulting <code class="xref py py-func docutils literal"><span class="pre">f()</span></code> is a <a class="reference internal" href="../reference/compilation.html#numba.DUFunc" title="numba.DUFunc"><code class="xref py py-class docutils literal"><span class="pre">DUFunc</span></code></a> instance that
+<p>The resulting <code class="xref py py-func docutils literal"><span class="pre">f()</span></code> is a <a class="reference internal" href="../reference/jit-compilation.html#numba.DUFunc" title="numba.DUFunc"><code class="xref py py-class docutils literal"><span class="pre">DUFunc</span></code></a> instance that
 starts with no supported input types.  As you make calls to <code class="xref py py-func docutils literal"><span class="pre">f()</span></code>,
 Numba generates new kernels whenever you pass a previously unsupported
 input type.  Given the example above, the following set of interpreter
@@ -425,9 +425,9 @@ interactions illustrate how dynamic compilation works:</p>
 <span class="go">[]</span>
 </pre></div>
 </div>
-<p>The example above shows that <a class="reference internal" href="../reference/compilation.html#numba.DUFunc" title="numba.DUFunc"><code class="xref py py-class docutils literal"><span class="pre">DUFunc</span></code></a> instances are not
-ufuncs.  Rather than subclass ufunc&#8217;s, <a class="reference internal" href="../reference/compilation.html#numba.DUFunc" title="numba.DUFunc"><code class="xref py py-class docutils literal"><span class="pre">DUFunc</span></code></a>
-instances work by keeping a <a class="reference internal" href="../reference/compilation.html#numba.DUFunc.ufunc" title="numba.DUFunc.ufunc"><code class="xref py py-attr docutils literal"><span class="pre">ufunc</span></code></a> member, and
+<p>The example above shows that <a class="reference internal" href="../reference/jit-compilation.html#numba.DUFunc" title="numba.DUFunc"><code class="xref py py-class docutils literal"><span class="pre">DUFunc</span></code></a> instances are not
+ufuncs.  Rather than subclass ufunc&#8217;s, <a class="reference internal" href="../reference/jit-compilation.html#numba.DUFunc" title="numba.DUFunc"><code class="xref py py-class docutils literal"><span class="pre">DUFunc</span></code></a>
+instances work by keeping a <a class="reference internal" href="../reference/jit-compilation.html#numba.DUFunc.ufunc" title="numba.DUFunc.ufunc"><code class="xref py py-attr docutils literal"><span class="pre">ufunc</span></code></a> member, and
 then delegating ufunc property reads and method calls to this member
 (also known as type aggregation).  When we look at the initial types
 supported by the ufunc, we can verify there are none.</p>
@@ -464,7 +464,7 @@ casting rules</a> are still in effect:</p>
 caused Numpy to select the floating-point loop, and cast the integer
 argument to a floating-point value.  Thus, Numba did not create a
 special <code class="code docutils literal"><span class="pre">&quot;dl-&gt;d&quot;</span></code> kernel.</p>
-<p>This <a class="reference internal" href="../reference/compilation.html#numba.DUFunc" title="numba.DUFunc"><code class="xref py py-class docutils literal"><span class="pre">DUFunc</span></code></a> behavior leads us to a point similar to
+<p>This <a class="reference internal" href="../reference/jit-compilation.html#numba.DUFunc" title="numba.DUFunc"><code class="xref py py-class docutils literal"><span class="pre">DUFunc</span></code></a> behavior leads us to a point similar to
 the warning given above in &#8220;<a class="reference internal" href="#the-vectorize-decorator">The &#64;vectorize decorator</a>&#8221; subsection,
 but instead of signature declaration order in the decorator, call
 order matters.  If we had passed in floating-point arguments first,
@@ -482,7 +482,7 @@ floating-point values.  For example:</p>
 </pre></div>
 </div>
 <p>If you require precise support for various type signatures, you should
-specify them in the <a class="reference internal" href="../reference/compilation.html#numba.vectorize" title="numba.vectorize"><code class="xref py py-func docutils literal"><span class="pre">vectorize()</span></code></a> decorator, and not rely
+specify them in the <a class="reference internal" href="../reference/jit-compilation.html#numba.vectorize" title="numba.vectorize"><code class="xref py py-func docutils literal"><span class="pre">vectorize()</span></code></a> decorator, and not rely
 on dynamic compilation.</p>
 </div>
 </div>
@@ -506,7 +506,7 @@ on dynamic compilation.</p>
         <li><a href="../genindex.html" title="General Index" >index</a></li>
         <li><a href="pycc.html" title="1.5. Compiling code ahead of time" >next</a></li>
         <li><a href="jit.html" title="1.3. Compiling Python code with @jit" >previous</a></li>
-        <li><a href="../index.html">Numba 0.21.0+334.gef3cdfe-py2.7-linux-x86_64.egg documentation</a></li>
+        <li><a href="../index.html">Numba 0.21.0+362.gc79a928-py2.7-linux-x86_64.egg documentation</a></li>
         <li><a href="index.html" >1. User Manual</a></li> 
       
     </ul>

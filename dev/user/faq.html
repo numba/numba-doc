@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     
-    <title>1.7. Frequently Asked Questions &mdash; Numba 0.21.0+334.gef3cdfe-py2.7-linux-x86_64.egg documentation</title>
+    <title>1.7. Frequently Asked Questions &mdash; Numba 0.21.0+362.gc79a928-py2.7-linux-x86_64.egg documentation</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
@@ -34,7 +34,7 @@
 <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
             URL_ROOT:    '../',
-            VERSION:     '0.21.0+334.gef3cdfe-py2.7-linux-x86_64.egg',
+            VERSION:     '0.21.0+362.gc79a928-py2.7-linux-x86_64.egg',
             COLLAPSE_INDEX: false,
             FILE_SUFFIX: '.html',
             HAS_SOURCE:  true
@@ -57,7 +57,7 @@
     });
   });
 </script>
-    <link rel="top" title="Numba 0.21.0+334.gef3cdfe-py2.7-linux-x86_64.egg documentation" href="../index.html" />
+    <link rel="top" title="Numba 0.21.0+362.gc79a928-py2.7-linux-x86_64.egg documentation" href="../index.html" />
     <link rel="up" title="1. User Manual" href="index.html" />
     <link rel="next" title="1.8. Examples" href="examples.html" />
     <link rel="prev" title="1.6. Troubleshooting and tips" href="troubleshoot.html" /> 
@@ -71,7 +71,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="../index.html">Numba 0.21.0+334.gef3cdfe-py2.7-linux-x86_64.egg documentation</a>
+          <a class="brand" href="../index.html">Numba 0.21.0+362.gc79a928-py2.7-linux-x86_64.egg documentation</a>
           <div class="nav-collapse collapse">
             <ul class="nav pull-right">
               
@@ -119,6 +119,7 @@
 <li><a class="reference internal" href="#does-numba-vectorize-array-computations-simd">1.7.2.2. Does Numba vectorize array computations (SIMD)?</a></li>
 <li><a class="reference internal" href="#does-numba-parallelize-code">1.7.2.3. Does Numba parallelize code?</a></li>
 <li><a class="reference internal" href="#can-numba-speed-up-short-running-functions">1.7.2.4. Can Numba speed up short-running functions?</a></li>
+<li><a class="reference internal" href="#there-is-a-delay-when-jit-compiling-a-complicated-function-how-can-i-improve-it">1.7.2.5. There is a delay when JIT-compiling a complicated function, how can I improve it?</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#integration-with-other-utilities">1.7.3. Integration with other utilities</a><ul>
@@ -181,6 +182,7 @@
 <li><a class="reference internal" href="#does-numba-vectorize-array-computations-simd">1.7.2.2. Does Numba vectorize array computations (SIMD)?</a></li>
 <li><a class="reference internal" href="#does-numba-parallelize-code">1.7.2.3. Does Numba parallelize code?</a></li>
 <li><a class="reference internal" href="#can-numba-speed-up-short-running-functions">1.7.2.4. Can Numba speed up short-running functions?</a></li>
+<li><a class="reference internal" href="#there-is-a-delay-when-jit-compiling-a-complicated-function-how-can-i-improve-it">1.7.2.5. There is a delay when JIT-compiling a complicated function, how can I improve it?</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#integration-with-other-utilities">1.7.3. Integration with other utilities</a><ul>
@@ -262,7 +264,7 @@ For example, this example:</p>
 <p>Numba considers global variables as compile-time constants.  If you want
 your jitted function to update itself when you have modified a global
 variable&#8217;s value, one solution is to recompile it using the
-<a class="reference internal" href="../reference/compilation.html#Dispatcher.recompile" title="Dispatcher.recompile"><code class="xref py py-meth docutils literal"><span class="pre">recompile()</span></code></a> method.  This is a relatively slow operation,
+<a class="reference internal" href="../reference/jit-compilation.html#Dispatcher.recompile" title="Dispatcher.recompile"><code class="xref py py-meth docutils literal"><span class="pre">recompile()</span></code></a> method.  This is a relatively slow operation,
 though, so you may instead decide to rearchitect your code and turn the
 global variable into a function argument.</p>
 </div>
@@ -307,6 +309,12 @@ function call mechanism, rather than the function itself.  As a rule of
 thumb, if a function takes less than 10 µs to execute: leave it.</p>
 <p>The exception is that you <em>should</em> JIT-compile that function if it is called
 from another jitted function.</p>
+</div>
+<div class="section" id="there-is-a-delay-when-jit-compiling-a-complicated-function-how-can-i-improve-it">
+<h3>1.7.2.5. There is a delay when JIT-compiling a complicated function, how can I improve it?<a class="headerlink" href="#there-is-a-delay-when-jit-compiling-a-complicated-function-how-can-i-improve-it" title="Permalink to this headline">¶</a></h3>
+<p>Try to pass <code class="docutils literal"><span class="pre">cache=True</span></code> to the <code class="docutils literal"><span class="pre">&#64;jit</span></code> decorator.  It will keep the
+compiled version on disk for later use.</p>
+<p>A more radical alternative is <a class="reference internal" href="pycc.html#pycc"><span>ahead-of-time compilation</span></a>.</p>
 </div>
 </div>
 <div class="section" id="integration-with-other-utilities">
@@ -353,7 +361,7 @@ kernel.</p>
         <li><a href="../genindex.html" title="General Index" >index</a></li>
         <li><a href="examples.html" title="1.8. Examples" >next</a></li>
         <li><a href="troubleshoot.html" title="1.6. Troubleshooting and tips" >previous</a></li>
-        <li><a href="../index.html">Numba 0.21.0+334.gef3cdfe-py2.7-linux-x86_64.egg documentation</a></li>
+        <li><a href="../index.html">Numba 0.21.0+362.gc79a928-py2.7-linux-x86_64.egg documentation</a></li>
         <li><a href="index.html" >1. User Manual</a></li> 
       
     </ul>
