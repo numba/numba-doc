@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     
-    <title>5.2. Writing HSA Kernels &mdash; Numba 0.22.1+37.g5ed7ff9-py2.7-linux-x86_64.egg documentation</title>
+    <title>5.2. Writing HSA Kernels &mdash; Numba 0.22.1+60.g7bc1535-py2.7-linux-x86_64.egg documentation</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
@@ -34,7 +34,7 @@
 <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
             URL_ROOT:    '../',
-            VERSION:     '0.22.1+37.g5ed7ff9-py2.7-linux-x86_64.egg',
+            VERSION:     '0.22.1+60.g7bc1535-py2.7-linux-x86_64.egg',
             COLLAPSE_INDEX: false,
             FILE_SUFFIX: '.html',
             HAS_SOURCE:  true
@@ -57,7 +57,7 @@
     });
   });
 </script>
-    <link rel="top" title="Numba 0.22.1+37.g5ed7ff9-py2.7-linux-x86_64.egg documentation" href="../index.html" />
+    <link rel="top" title="Numba 0.22.1+60.g7bc1535-py2.7-linux-x86_64.egg documentation" href="../index.html" />
     <link rel="up" title="5. Numba for HSA APUs" href="index.html" />
     <link rel="next" title="5.3. Memory management" href="memory.html" />
     <link rel="prev" title="5.1. Overview" href="overview.html" /> 
@@ -71,7 +71,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="../index.html">Numba 0.22.1+37.g5ed7ff9-py2.7-linux-x86_64.egg documentation</a>
+          <a class="brand" href="../index.html">Numba 0.22.1+60.g7bc1535-py2.7-linux-x86_64.egg documentation</a>
           <div class="nav-collapse collapse">
             <ul class="nav pull-right">
               
@@ -113,7 +113,7 @@
 <li><a class="reference internal" href="#kernel-declaration">5.2.3. Kernel declaration</a></li>
 <li><a class="reference internal" href="#kernel-invocation">5.2.4. Kernel invocation</a><ul>
 <li><a class="reference internal" href="#choosing-the-workgroup-size">5.2.4.1. Choosing the workgroup size</a></li>
-<li><a class="reference internal" href="#multi-dimensional-workgroup-and-ndrange">5.2.4.2. Multi-dimensional workgroup and ndrange</a></li>
+<li><a class="reference internal" href="#multi-dimensional-workgroup-and-grid">5.2.4.2. Multi-dimensional workgroup and grid</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#workitem-positioning">5.2.5. WorkItem positioning</a></li>
@@ -166,7 +166,7 @@
 <li><a class="reference internal" href="#kernel-declaration">5.2.3. Kernel declaration</a></li>
 <li><a class="reference internal" href="#kernel-invocation">5.2.4. Kernel invocation</a><ul>
 <li><a class="reference internal" href="#choosing-the-workgroup-size">5.2.4.1. Choosing the workgroup size</a></li>
-<li><a class="reference internal" href="#multi-dimensional-workgroup-and-ndrange">5.2.4.2. Multi-dimensional workgroup and ndrange</a></li>
+<li><a class="reference internal" href="#multi-dimensional-workgroup-and-grid">5.2.4.2. Multi-dimensional workgroup and grid</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#workitem-positioning">5.2.5. WorkItem positioning</a></li>
@@ -222,7 +222,7 @@ the fine-grain scheduling is hidden from the programmer instead of programming
 with SIMD vectors as a data structure.  In HSA, the code you write will be
 executed by multiple threads at once (often hundreds or thousands).  Your
 solution will
-be modeled by defining a thread hierarchy of <em>NDRange</em>, <em>workgroup</em> and
+be modeled by defining a thread hierarchy of <em>grid</em>, <em>workgroup</em> and
 <em>workitem</em>.</p>
 <p>Numba&#8217;s HSA support exposes facilities to declare and manage this
 hierarchy of threads.</p>
@@ -234,10 +234,10 @@ shared memory model employed by HSA so that there are no device memory.  The
 GPU hardware uses the machine&#8217;s main memory (or host memory in
 CUDA term) directly.  Therefore, you will not need <code class="docutils literal"><span class="pre">to_device()</span></code> and
 <code class="docutils literal"><span class="pre">copy_to_host()</span></code> in HSA programming.</p>
-<p>Here&#8217;s a quick mapping of the CUDA terms to HSA (opencl terms):
+<p>Here&#8217;s a quick mapping of the CUDA terms to HSA:
 * workitem is CUDA threads
 * workgroup is CUDA thread block
-* NDrange is CUDA grid</p>
+* grid is CUDA grid</p>
 </div>
 <div class="section" id="kernel-declaration">
 <h2>5.2.3. Kernel declaration<a class="headerlink" href="#kernel-declaration" title="Permalink to this headline">¶</a></h2>
@@ -250,7 +250,7 @@ probably pass a one-element array);</li>
 <li>kernels explicitly declare their thread hierarchy when called: i.e.
 the number of workgroups and the number of workitems per workgroup
 (note that while a kernel is compiled once, it can be called multiple
-times with different workgroup sizes or NDrange sizes).</li>
+times with different workgroup sizes or grid sizes).</li>
 </ul>
 <p>At first sight, writing a HSA kernel with Numba looks very much like
 writing a <a class="reference internal" href="../glossary.html#term-jit-function"><span class="xref std std-term">JIT function</span></a> for the CPU:</p>
@@ -274,7 +274,7 @@ writing a <a class="reference internal" href="../glossary.html#term-jit-function
 <p>We notice two steps here:</p>
 <ul class="simple">
 <li>Instantiate the kernel proper, by specifying a number of workgroup
-(or &#8220;workgroup per ndrange&#8221;), and a number of workitems per workgroup.  The
+(or &#8220;workgroup per grid&#8221;), and a number of workitems per workgroup.  The
 product of the two will give the total number of workitem launched.  Kernel
 instantiation is done by taking the compiled kernel function
 (here <code class="docutils literal"><span class="pre">increment_by_one</span></code>) and indexing it with a tuple of integers.</li>
@@ -300,10 +300,10 @@ share a given area of <a class="reference internal" href="memory.html#hsa-shared
 </li>
 </ul>
 </div>
-<div class="section" id="multi-dimensional-workgroup-and-ndrange">
-<h3>5.2.4.2. Multi-dimensional workgroup and ndrange<a class="headerlink" href="#multi-dimensional-workgroup-and-ndrange" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="multi-dimensional-workgroup-and-grid">
+<h3>5.2.4.2. Multi-dimensional workgroup and grid<a class="headerlink" href="#multi-dimensional-workgroup-and-grid" title="Permalink to this headline">¶</a></h3>
 <p>To help deal with multi-dimensional arrays, HSA allows you to specify
-multi-dimensional workgroups and ndranges.  In the example above, you could
+multi-dimensional workgroups and grids.  In the example above, you could
 make <code class="docutils literal"><span class="pre">itempergroup</span></code> and <code class="docutils literal"><span class="pre">groupperrange</span></code> tuples of one, two
 or three integers.  Compared to 1D declarations of equivalent sizes,
 this doesn&#8217;t change anything to the efficiency or behaviour of generated
@@ -317,13 +317,13 @@ thread once.  It therefore has to know which thread it is in, in order
 to know which array element(s) it is responsible for (complex algorithms
 may define more complex responsibilities, but the underlying principle
 is the same).</p>
-<p>One way is for the thread to determines its position in the ndrange and
+<p>One way is for the thread to determines its position in the grid and
 workgroup and manually compute the corresponding array position:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="nd">@hsa.jit</span>
 <span class="k">def</span> <span class="nf">increment_by_one</span><span class="p">(</span><span class="n">an_array</span><span class="p">):</span>
     <span class="c"># workitem id in a 1D workgroup</span>
     <span class="n">tx</span> <span class="o">=</span> <span class="n">hsa</span><span class="o">.</span><span class="n">get_local_id</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-    <span class="c"># workgroup id in a 1D ndrange</span>
+    <span class="c"># workgroup id in a 1D grid</span>
     <span class="n">ty</span> <span class="o">=</span> <span class="n">hsa</span><span class="o">.</span><span class="n">get_group_id</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
     <span class="c"># workgroup size, i.e. number of workitem per workgroup</span>
     <span class="n">bw</span> <span class="o">=</span> <span class="n">hsa</span><span class="o">.</span><span class="n">get_local_size</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
@@ -366,7 +366,7 @@ even if they belong to different workgroups (i.e. each workgroups is &#8220;full
 <dt id="numba.hsa.get_group_id">
 <code class="descclassname">numba.hsa.</code><code class="descname">get_group_id</code><span class="sig-paren">(</span><em>dim</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.hsa.get_group_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>Takes the index of the dimension being queried</p>
-<p>Returns the workgroup ID in the ndrange of workgroup launched a kernel.</p>
+<p>Returns the workgroup ID in the grid of workgroup launched a kernel.</p>
 </dd></dl>
 
 <dl class="function">
@@ -374,7 +374,7 @@ even if they belong to different workgroups (i.e. each workgroups is &#8220;full
 <code class="descclassname">numba.hsa.</code><code class="descname">get_global_id</code><span class="sig-paren">(</span><em>dim</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.hsa.get_global_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>Takes the index of the dimension being queried</p>
 <p>Returns the global workitem ID for the given dimension.  Unlike <cite>numba.hsa
-.get_local_id()</cite>, this number is unique for all workitems in a NDrange.</p>
+.get_local_id()</cite>, this number is unique for all workitems in a grid.</p>
 </dd></dl>
 
 </div>
@@ -399,7 +399,7 @@ even if they belong to different workgroups (i.e. each workgroups is &#8220;full
         <li><a href="../genindex.html" title="General Index" >index</a></li>
         <li><a href="memory.html" title="5.3. Memory management" >next</a></li>
         <li><a href="overview.html" title="5.1. Overview" >previous</a></li>
-        <li><a href="../index.html">Numba 0.22.1+37.g5ed7ff9-py2.7-linux-x86_64.egg documentation</a></li>
+        <li><a href="../index.html">Numba 0.22.1+60.g7bc1535-py2.7-linux-x86_64.egg documentation</a></li>
         <li><a href="index.html" >5. Numba for HSA APUs</a></li> 
       
     </ul>
