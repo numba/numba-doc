@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     
-    <title>7.2.1. NBEP 2: Extension points &mdash; Numba 0.23.0+19.gf3ec60b-py2.7-linux-x86_64.egg documentation</title>
+    <title>7.2.1. NBEP 2: Extension points &mdash; Numba 0.23.0+28.g9b17e63-py2.7-linux-x86_64.egg documentation</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
@@ -34,7 +34,7 @@
 <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
             URL_ROOT:    '../',
-            VERSION:     '0.23.0+19.gf3ec60b-py2.7-linux-x86_64.egg',
+            VERSION:     '0.23.0+28.g9b17e63-py2.7-linux-x86_64.egg',
             COLLAPSE_INDEX: false,
             FILE_SUFFIX: '.html',
             HAS_SOURCE:  true
@@ -57,7 +57,7 @@
     });
   });
 </script>
-    <link rel="top" title="Numba 0.23.0+19.gf3ec60b-py2.7-linux-x86_64.egg documentation" href="../index.html" />
+    <link rel="top" title="Numba 0.23.0+28.g9b17e63-py2.7-linux-x86_64.egg documentation" href="../index.html" />
     <link rel="up" title="7. Numba Enhancement Proposals" href="index.html" />
     <link rel="next" title="8. Glossary" href="../glossary.html" />
     <link rel="prev" title="7.1.1. NBEP 1: Changes in integer typing" href="integer-typing.html" /> 
@@ -71,7 +71,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="../index.html">Numba 0.23.0+19.gf3ec60b-py2.7-linux-x86_64.egg documentation</a>
+          <a class="brand" href="../index.html">Numba 0.23.0+28.g9b17e63-py2.7-linux-x86_64.egg documentation</a>
           <div class="nav-collapse collapse">
             <ul class="nav pull-right">
               
@@ -109,7 +109,14 @@
   <ul>
 <li><a class="reference internal" href="#">7.2.1. NBEP 2: Extension points</a><ul>
 <li><a class="reference internal" href="#high-level-api">7.2.1.1. High-level API</a><ul>
-<li><a class="reference internal" href="#proposed-changes">7.2.1.1.1. Proposed changes</a></li>
+<li><a class="reference internal" href="#proposed-changes">7.2.1.1.1. Proposed changes</a><ul>
+<li><a class="reference internal" href="#dedicated-module">7.2.1.1.1.1. Dedicated module</a></li>
+<li><a class="reference internal" href="#implementing-a-function">7.2.1.1.1.2. Implementing a function</a></li>
+<li><a class="reference internal" href="#implementing-an-attribute">7.2.1.1.1.3. Implementing an attribute</a></li>
+<li><a class="reference internal" href="#implementing-a-method">7.2.1.1.1.4. Implementing a method</a></li>
+<li><a class="reference internal" href="#exposing-a-structure-member">7.2.1.1.1.5. Exposing a structure member</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a class="reference internal" href="#typing">7.2.1.2. Typing</a><ul>
@@ -195,7 +202,14 @@
   <ul>
 <li><a class="reference internal" href="#">7.2.1. NBEP 2: Extension points</a><ul>
 <li><a class="reference internal" href="#high-level-api">7.2.1.1. High-level API</a><ul>
-<li><a class="reference internal" href="#proposed-changes">7.2.1.1.1. Proposed changes</a></li>
+<li><a class="reference internal" href="#proposed-changes">7.2.1.1.1. Proposed changes</a><ul>
+<li><a class="reference internal" href="#dedicated-module">7.2.1.1.1.1. Dedicated module</a></li>
+<li><a class="reference internal" href="#implementing-a-function">7.2.1.1.1.2. Implementing a function</a></li>
+<li><a class="reference internal" href="#implementing-an-attribute">7.2.1.1.1.3. Implementing an attribute</a></li>
+<li><a class="reference internal" href="#implementing-a-method">7.2.1.1.1.4. Implementing a method</a></li>
+<li><a class="reference internal" href="#exposing-a-structure-member">7.2.1.1.1.5. Exposing a structure member</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a class="reference internal" href="#typing">7.2.1.2. Typing</a><ul>
@@ -305,28 +319,30 @@ public.</p>
 </div>
 <div class="section" id="high-level-api">
 <h2>7.2.1.1. High-level API<a class="headerlink" href="#high-level-api" title="Permalink to this headline">¶</a></h2>
-<p>There is currently no high-level API for quick implementation of
-an existing function or type.</p>
+<p>There is currently no high-level API, making some use cases more
+complicated than they should be.</p>
 <div class="section" id="proposed-changes">
 <h3>7.2.1.1.1. Proposed changes<a class="headerlink" href="#proposed-changes" title="Permalink to this headline">¶</a></h3>
-<p>It would be nice for people to be able to implement a function
-in a single go, as if they were writing a <code class="docutils literal"><span class="pre">&#64;jit</span></code> function.
-As an example, let&#8217;s assume we want to make <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.where.html#numpy.where" title="(in NumPy v1.10)"><code class="xref py py-func docutils literal"><span class="pre">numpy.where()</span></code></a>
-usable from <a class="reference internal" href="../glossary.html#term-nopython-mode"><span class="xref std std-term">nopython mode</span></a>.  We would like to be able
-to define several implementations and select between them at
-compile-time depending on the input types.</p>
-<p>The following example showcases a hypothetical API where we can
-register a function taking the argument types and returning a
-callable implementing the actual function for those types.
-The API should also be able to handle optional arguments, and
-the resulting implementation should support calling with named
-parameters.</p>
+<div class="section" id="dedicated-module">
+<h4>7.2.1.1.1.1. Dedicated module<a class="headerlink" href="#dedicated-module" title="Permalink to this headline">¶</a></h4>
+<p>We propose the addition of a <code class="docutils literal"><span class="pre">numba.extending</span></code> module exposing the main
+APIs useful for extending Numba.</p>
+</div>
+<div class="section" id="implementing-a-function">
+<h4>7.2.1.1.1.2. Implementing a function<a class="headerlink" href="#implementing-a-function" title="Permalink to this headline">¶</a></h4>
+<p>We propose the addition of a <code class="docutils literal"><span class="pre">&#64;overload</span></code> decorator allowing the
+implementation of a given function for use in <a class="reference internal" href="../glossary.html#term-nopython-mode"><span class="xref std std-term">nopython mode</span></a>.
+The overloading function has the same formal signature as the implemented
+function, and receives the actual argument types.  It should return a
+Python function implementing the overloaded function for the given types.</p>
+<p>The following example implements <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.where.html#numpy.where" title="(in NumPy v1.10)"><code class="xref py py-func docutils literal"><span class="pre">numpy.where()</span></code></a> with
+this approach.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 
 <span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">types</span>
-<span class="kn">from</span> <span class="nn">numba.extending</span> <span class="kn">import</span> <span class="n">overlay</span>
+<span class="kn">from</span> <span class="nn">numba.extending</span> <span class="kn">import</span> <span class="n">overload</span>
 
-<span class="nd">@overlay</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">)</span>
+<span class="nd">@overload</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">where</span><span class="p">(</span><span class="n">cond</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Implement np.where().</span>
@@ -374,6 +390,77 @@ parameters.</p>
     <span class="k">return</span> <span class="n">where_impl</span>
 </pre></div>
 </div>
+<p>It is also possible to implement functions already known to Numba, to
+support additional types.  The following example implements the
+built-in function <a class="reference external" href="https://docs.python.org/3/library/functions.html#len" title="(in Python v3.5)"><code class="xref py py-func docutils literal"><span class="pre">len()</span></code></a> for tuples with this approach:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@overload</span><span class="p">(</span><span class="nb">len</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">tuple_len</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+   <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">BaseTuple</span><span class="p">):</span>
+      <span class="c"># The tuple length is known at compile-time, so simply reify it</span>
+      <span class="c"># as a constant.</span>
+      <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+      <span class="k">def</span> <span class="nf">len_impl</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+         <span class="k">return</span> <span class="n">n</span>
+      <span class="k">return</span> <span class="n">len_impl</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="implementing-an-attribute">
+<h4>7.2.1.1.1.3. Implementing an attribute<a class="headerlink" href="#implementing-an-attribute" title="Permalink to this headline">¶</a></h4>
+<p>We propose the addition of a <code class="docutils literal"><span class="pre">&#64;overload_attribute</span></code> decorator allowing
+the implementation of an attribute getter for use in <a class="reference internal" href="../glossary.html#term-nopython-mode"><span class="xref std std-term">nopython mode</span></a>.</p>
+<p>The following example implements the <code class="docutils literal"><span class="pre">.nbytes</span></code> attribute on Numpy arrays:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@overload_attribute</span><span class="p">(</span><span class="n">types</span><span class="o">.</span><span class="n">Array</span><span class="p">,</span> <span class="s">&#39;nbytes&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">array_nbytes</span><span class="p">(</span><span class="n">arr</span><span class="p">):</span>
+   <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="n">arr</span><span class="p">):</span>
+       <span class="k">return</span> <span class="n">arr</span><span class="o">.</span><span class="n">size</span> <span class="o">*</span> <span class="n">arr</span><span class="o">.</span><span class="n">itemsize</span>
+   <span class="k">return</span> <span class="n">get</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The overload_attribute() signature allows for expansion to also define
+setters and deleters, by letting the decorated function return a
+<code class="docutils literal"><span class="pre">getter,</span> <span class="pre">setter,</span> <span class="pre">deleter</span></code> tuple instead of a single <code class="docutils literal"><span class="pre">getter</span></code>.</p>
+</div>
+</div>
+<div class="section" id="implementing-a-method">
+<h4>7.2.1.1.1.4. Implementing a method<a class="headerlink" href="#implementing-a-method" title="Permalink to this headline">¶</a></h4>
+<p>We propose the addition of a <code class="docutils literal"><span class="pre">&#64;overload_method</span></code> decorator allowing the
+implementation of an instance method for use in <a class="reference internal" href="../glossary.html#term-nopython-mode"><span class="xref std std-term">nopython mode</span></a>.</p>
+<p>The following example implements the <code class="docutils literal"><span class="pre">.take()</span></code> method on Numpy arrays:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@overload_method</span><span class="p">(</span><span class="n">types</span><span class="o">.</span><span class="n">Array</span><span class="p">,</span> <span class="s">&#39;take&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">array_take</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">indices</span><span class="p">):</span>
+   <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">indices</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">Array</span><span class="p">):</span>
+       <span class="k">def</span> <span class="nf">take_impl</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">indices</span><span class="p">):</span>
+           <span class="n">n</span> <span class="o">=</span> <span class="n">indices</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+           <span class="n">res</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">arr</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+           <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+               <span class="n">res</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">arr</span><span class="p">[</span><span class="n">indices</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
+           <span class="k">return</span> <span class="n">res</span>
+       <span class="k">return</span> <span class="n">take_impl</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="exposing-a-structure-member">
+<h4>7.2.1.1.1.5. Exposing a structure member<a class="headerlink" href="#exposing-a-structure-member" title="Permalink to this headline">¶</a></h4>
+<p>We propose the addition of a <code class="docutils literal"><span class="pre">make_attribute_wrapper()</span></code> function exposing
+an internal field as a visible read-only attribute, for those types backed
+by a <code class="docutils literal"><span class="pre">StructModel</span></code> data model.</p>
+<p>For example, assuming <code class="docutils literal"><span class="pre">PdIndexType</span></code> is the Numba type of pandas indices,
+here is how to expose the underlying Numpy array as a <code class="docutils literal"><span class="pre">._data</span></code> attribute:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@register_model</span><span class="p">(</span><span class="n">PdIndexType</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">PdIndexModel</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">StructModel</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dmm</span><span class="p">,</span> <span class="n">fe_type</span><span class="p">):</span>
+        <span class="n">members</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">(</span><span class="s">&#39;values&#39;</span><span class="p">,</span> <span class="n">fe_type</span><span class="o">.</span><span class="n">as_array</span><span class="p">),</span>
+            <span class="p">]</span>
+        <span class="n">models</span><span class="o">.</span><span class="n">StructModel</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dmm</span><span class="p">,</span> <span class="n">fe_type</span><span class="p">,</span> <span class="n">members</span><span class="p">)</span>
+
+<span class="n">make_attribute_wrapper</span><span class="p">(</span><span class="n">PdIndexType</span><span class="p">,</span> <span class="s">&#39;values&#39;</span><span class="p">,</span> <span class="s">&#39;_data&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
 </div>
 </div>
 <div class="section" id="typing">
@@ -406,6 +493,8 @@ classes, e.g.:</p>
 </div>
 <p>The <code class="docutils literal"><span class="pre">typeof_impl</span></code> specialization must return a Numba type instance,
 or None if the value failed typing.</p>
+<p>(when one controls the class being type-inferred, an alternative
+to <code class="docutils literal"><span class="pre">typeof_impl</span></code> is to define a <code class="docutils literal"><span class="pre">_numba_type_</span></code> property on the class)</p>
 <p>In the rarer case where the new type can denote various Python classes
 that are impossible to enumerate, one must insert a manual check in the
 fallback implementation of the <code class="docutils literal"><span class="pre">typeof_impl</span></code> generic function.</p>
@@ -510,9 +599,24 @@ lists:</p>
 full signature)</p>
 <div class="section" id="id4">
 <h4>7.2.1.2.4.1. Proposed changes<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h4>
-<p>If we expose some of this, should we streamline the API first?
-The class-based API can feel clumsy, one could instead imagine
-a functional API for some of the template kinds:</p>
+<p>Naming of the various decorators is quite vague and confusing.  We propose
+renaming <code class="docutils literal"><span class="pre">&#64;builtin</span></code> to <code class="docutils literal"><span class="pre">&#64;infer</span></code>, <code class="docutils literal"><span class="pre">&#64;builtin_attr</span></code> to <code class="docutils literal"><span class="pre">&#64;infer_getattr</span></code>
+and <code class="docutils literal"><span class="pre">builtin_global</span></code> to <code class="docutils literal"><span class="pre">infer_global</span></code>.</p>
+<p>The two-step declaration for global values is a bit verbose, we propose
+simplifying it by allowing the use of <code class="docutils literal"><span class="pre">infer_global</span></code> as a decorator:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@infer_global</span><span class="p">(</span><span class="nb">len</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Len</span><span class="p">(</span><span class="n">AbstractTemplate</span><span class="p">):</span>
+    <span class="n">key</span> <span class="o">=</span> <span class="nb">len</span>
+
+    <span class="k">def</span> <span class="nf">generic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">kws</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="ow">not</span> <span class="n">kws</span>
+        <span class="p">(</span><span class="n">val</span><span class="p">,)</span> <span class="o">=</span> <span class="n">args</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="p">(</span><span class="n">types</span><span class="o">.</span><span class="n">Buffer</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">BaseTuple</span><span class="p">)):</span>
+            <span class="k">return</span> <span class="n">signature</span><span class="p">(</span><span class="n">types</span><span class="o">.</span><span class="n">intp</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The class-based API can feel clumsy, we can add a functional API for
+some of the template kinds:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="nd">@type_callable</span><span class="p">(</span><span class="nb">sorted</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">type_sorted</span><span class="p">(</span><span class="n">context</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">typer</span><span class="p">(</span><span class="n">iterable</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
@@ -553,8 +657,18 @@ call.</p>
 </div>
 <div class="section" id="id6">
 <h4>7.2.1.3.2.1. Proposed changes<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h4>
-<p>Implicit conversion could use some kind of generic function, with multiple
-dispatch based on the source and destination types.</p>
+<p>Add a generic function for implicit conversion, with multiple dispatch
+based on the source and destination types.  Here is an example showing
+how to write a float-to-integer conversion:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@lower_cast</span><span class="p">(</span><span class="n">types</span><span class="o">.</span><span class="n">Float</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">Integer</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">float_to_integer</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">builder</span><span class="p">,</span> <span class="n">fromty</span><span class="p">,</span> <span class="n">toty</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+    <span class="n">lty</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">get_value_type</span><span class="p">(</span><span class="n">toty</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">toty</span><span class="o">.</span><span class="n">signed</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">builder</span><span class="o">.</span><span class="n">fptosi</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">lty</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">builder</span><span class="o">.</span><span class="n">fptoui</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">lty</span><span class="p">)</span>
+</pre></div>
+</div>
 </div>
 </div>
 <div class="section" id="implementation-of-an-operation">
@@ -579,8 +693,12 @@ attribute on Numpy arrays is implemented:</p>
 </div>
 <div class="section" id="id7">
 <h4>7.2.1.3.3.1. Proposed changes<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h4>
-<p>No changes required.  Perhaps review and streamine the API (drop the
-requirement to write <code class="docutils literal"><span class="pre">types.Kind(...)</span></code> explicitly?).</p>
+<p>Review and streamine the API.  Drop the requirement to write
+<code class="docutils literal"><span class="pre">types.Kind(...)</span></code> explicitly.  Remove the separate <code class="docutils literal"><span class="pre">&#64;implement</span></code>
+decorator and rename <code class="docutils literal"><span class="pre">&#64;builtin</span></code> to <code class="docutils literal"><span class="pre">&#64;lower_builtin</span></code>, <code class="docutils literal"><span class="pre">&#64;builtin_attr</span></code>
+to <code class="docutils literal"><span class="pre">&#64;lower_getattr</span></code>, etc.</p>
+<p>Add decorators to implement <code class="docutils literal"><span class="pre">setattr()</span></code> operations, named
+<code class="docutils literal"><span class="pre">&#64;lower_setattr</span></code> and <code class="docutils literal"><span class="pre">&#64;lower_setattr_generic</span></code>.</p>
 </div>
 </div>
 <div class="section" id="conversion-from-to-python-objects">
@@ -599,8 +717,8 @@ implementation for a boolean value:</p>
 </div>
 <div class="section" id="id8">
 <h4>7.2.1.3.4.1. Proposed changes<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h4>
-<p>Perhaps change the implementation signature slightly, from <code class="docutils literal"><span class="pre">(c,</span> <span class="pre">typ,</span> <span class="pre">val)</span></code>
-to <code class="docutils literal"><span class="pre">(typ,</span> <span class="pre">val,</span> <span class="pre">c)</span></code>, to match the one chosen for the <code class="docutils literal"><span class="pre">typeof_impl</span></code>
+<p>Change the implementation signature from <code class="docutils literal"><span class="pre">(c,</span> <span class="pre">typ,</span> <span class="pre">val)</span></code> to
+<code class="docutils literal"><span class="pre">(typ,</span> <span class="pre">val,</span> <span class="pre">c)</span></code>, to match the one chosen for the <code class="docutils literal"><span class="pre">typeof_impl</span></code>
 generic function.</p>
 </div>
 </div>
@@ -626,7 +744,7 @@ generic function.</p>
         <li><a href="../genindex.html" title="General Index" >index</a></li>
         <li><a href="../glossary.html" title="8. Glossary" >next</a></li>
         <li><a href="integer-typing.html" title="7.1.1. NBEP 1: Changes in integer typing" >previous</a></li>
-        <li><a href="../index.html">Numba 0.23.0+19.gf3ec60b-py2.7-linux-x86_64.egg documentation</a></li>
+        <li><a href="../index.html">Numba 0.23.0+28.g9b17e63-py2.7-linux-x86_64.egg documentation</a></li>
         <li><a href="index.html" >7. Numba Enhancement Proposals</a></li> 
       
     </ul>
