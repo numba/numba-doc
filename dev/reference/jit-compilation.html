@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     
-    <title>2.2. Just-in-Time compilation &mdash; Numba 0.23.0+47.g2a3e31a-py2.7-linux-x86_64.egg documentation</title>
+    <title>2.2. Just-in-Time compilation &mdash; Numba 0.23.1+103.g41ac00e-py2.7-linux-x86_64.egg documentation</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
@@ -34,7 +34,7 @@
 <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
             URL_ROOT:    '../',
-            VERSION:     '0.23.0+47.g2a3e31a-py2.7-linux-x86_64.egg',
+            VERSION:     '0.23.1+103.g41ac00e-py2.7-linux-x86_64.egg',
             COLLAPSE_INDEX: false,
             FILE_SUFFIX: '.html',
             HAS_SOURCE:  true
@@ -57,7 +57,7 @@
     });
   });
 </script>
-    <link rel="top" title="Numba 0.23.0+47.g2a3e31a-py2.7-linux-x86_64.egg documentation" href="../index.html" />
+    <link rel="top" title="Numba 0.23.1+103.g41ac00e-py2.7-linux-x86_64.egg documentation" href="../index.html" />
     <link rel="up" title="2. Reference Manual" href="index.html" />
     <link rel="next" title="2.3. Ahead-of-Time compilation" href="aot-compilation.html" />
     <link rel="prev" title="2.1. Types and signatures" href="types.html" /> 
@@ -71,7 +71,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="../index.html">Numba 0.23.0+47.g2a3e31a-py2.7-linux-x86_64.egg documentation</a>
+          <a class="brand" href="../index.html">Numba 0.23.1+103.g41ac00e-py2.7-linux-x86_64.egg documentation</a>
           <div class="nav-collapse collapse">
             <ul class="nav pull-right">
               
@@ -109,7 +109,9 @@
   <ul>
 <li><a class="reference internal" href="#">2.2. Just-in-Time compilation</a><ul>
 <li><a class="reference internal" href="#jit-functions">2.2.1. JIT functions</a></li>
-<li><a class="reference internal" href="#vectorized-functions-ufuncs-and-dufuncs">2.2.2. Vectorized functions (ufuncs and DUFuncs)</a></li>
+<li><a class="reference internal" href="#generated-jit-functions">2.2.2. Generated JIT functions</a></li>
+<li><a class="reference internal" href="#dispatcher-objects">2.2.3. Dispatcher objects</a></li>
+<li><a class="reference internal" href="#vectorized-functions-ufuncs-and-dufuncs">2.2.4. Vectorized functions (ufuncs and DUFuncs)</a></li>
 </ul>
 </li>
 </ul>
@@ -155,7 +157,9 @@
   <ul>
 <li><a class="reference internal" href="#">2.2. Just-in-Time compilation</a><ul>
 <li><a class="reference internal" href="#jit-functions">2.2.1. JIT functions</a></li>
-<li><a class="reference internal" href="#vectorized-functions-ufuncs-and-dufuncs">2.2.2. Vectorized functions (ufuncs and DUFuncs)</a></li>
+<li><a class="reference internal" href="#generated-jit-functions">2.2.2. Generated JIT functions</a></li>
+<li><a class="reference internal" href="#dispatcher-objects">2.2.3. Dispatcher objects</a></li>
+<li><a class="reference internal" href="#vectorized-functions-ufuncs-and-dufuncs">2.2.4. Vectorized functions (ufuncs and DUFuncs)</a></li>
 </ul>
 </li>
 </ul>
@@ -290,12 +294,32 @@ with some given argument types.</p>
 </div>
 </dd></dl>
 
+</div>
+<div class="section" id="generated-jit-functions">
+<h2>2.2.2. Generated JIT functions<a class="headerlink" href="#generated-jit-functions" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="numba.generated_jit">
+<code class="descclassname">&#64;</code><code class="descclassname">numba.</code><code class="descname">generated_jit</code><span class="sig-paren">(</span><em>nopython=False</em>, <em>nogil=False</em>, <em>cache=False</em>, <em>forceobj=False</em>, <em>locals={}</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.generated_jit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Like the <a class="reference internal" href="#numba.jit" title="numba.jit"><code class="xref py py-func docutils literal"><span class="pre">jit()</span></code></a> decorator, but calls the decorated function at
+compile-time, passing the <em>types</em> of the function&#8217;s arguments.
+The decorated function must return a callable which will be compiled as
+the function&#8217;s implementation for those types, allowing flexible kinds of
+specialization.</p>
+<p>The <a class="reference internal" href="#numba.generated_jit" title="numba.generated_jit"><code class="xref py py-func docutils literal"><span class="pre">generated_jit()</span></code></a> decorator returns a <a class="reference internal" href="#Dispatcher" title="Dispatcher"><code class="xref py py-class docutils literal"><span class="pre">Dispatcher</span></code></a> object.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="dispatcher-objects">
+<h2>2.2.3. Dispatcher objects<a class="headerlink" href="#dispatcher-objects" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="Dispatcher">
 <em class="property">class </em><code class="descname">Dispatcher</code><a class="headerlink" href="#Dispatcher" title="Permalink to this definition">¶</a></dt>
-<dd><p>The class of objects created by calling <a class="reference internal" href="#numba.jit" title="numba.jit"><code class="xref py py-func docutils literal"><span class="pre">numba.jit()</span></code></a>.  You shouldn&#8217;t
-try to create such an object in any other way.  Dispatcher objects have
-the following methods and attributes:</p>
+<dd><p>The class of objects created by calling <a class="reference internal" href="#numba.jit" title="numba.jit"><code class="xref py py-func docutils literal"><span class="pre">jit()</span></code></a> or
+<a class="reference internal" href="#numba.generated_jit" title="numba.generated_jit"><code class="xref py py-func docutils literal"><span class="pre">generated_jit()</span></code></a>.  You shouldn&#8217;t try to create such an object
+in any other way.  Calling a Dispatcher object calls the compiled
+specialization for the arguments with which it is called, letting it
+act as an accelerated replacement for the Python function which was compiled.</p>
+<p>In addition, Dispatcher objects have the following methods and attributes:</p>
 <dl class="attribute">
 <dt id="Dispatcher.py_func">
 <code class="descname">py_func</code><a class="headerlink" href="#Dispatcher.py_func" title="Permalink to this definition">¶</a></dt>
@@ -346,7 +370,7 @@ for testing and interactive use.</p>
 
 </div>
 <div class="section" id="vectorized-functions-ufuncs-and-dufuncs">
-<h2>2.2.2. Vectorized functions (ufuncs and DUFuncs)<a class="headerlink" href="#vectorized-functions-ufuncs-and-dufuncs" title="Permalink to this headline">¶</a></h2>
+<h2>2.2.4. Vectorized functions (ufuncs and DUFuncs)<a class="headerlink" href="#vectorized-functions-ufuncs-and-dufuncs" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="numba.vectorize">
 <code class="descclassname">&#64;</code><code class="descclassname">numba.</code><code class="descname">vectorize</code><span class="sig-paren">(</span><em>*</em>, <em>signatures=[]</em>, <em>identity=None</em>, <em>nopython=True</em>, <em>target='cpu'</em>, <em>forceobj=False</em>, <em>locals={}</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.vectorize" title="Permalink to this definition">¶</a></dt>
@@ -572,7 +596,7 @@ earlier, this method will not be present.  See <a class="reference external" hre
         <li><a href="../genindex.html" title="General Index" >index</a></li>
         <li><a href="aot-compilation.html" title="2.3. Ahead-of-Time compilation" >next</a></li>
         <li><a href="types.html" title="2.1. Types and signatures" >previous</a></li>
-        <li><a href="../index.html">Numba 0.23.0+47.g2a3e31a-py2.7-linux-x86_64.egg documentation</a></li>
+        <li><a href="../index.html">Numba 0.23.1+103.g41ac00e-py2.7-linux-x86_64.egg documentation</a></li>
         <li><a href="index.html" >2. Reference Manual</a></li> 
       
     </ul>

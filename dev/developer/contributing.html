@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     
-    <title>6.1. Contributing to Numba &mdash; Numba 0.23.0+47.g2a3e31a-py2.7-linux-x86_64.egg documentation</title>
+    <title>6.1. Contributing to Numba &mdash; Numba 0.23.1+103.g41ac00e-py2.7-linux-x86_64.egg documentation</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
@@ -34,7 +34,7 @@
 <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
             URL_ROOT:    '../',
-            VERSION:     '0.23.0+47.g2a3e31a-py2.7-linux-x86_64.egg',
+            VERSION:     '0.23.1+103.g41ac00e-py2.7-linux-x86_64.egg',
             COLLAPSE_INDEX: false,
             FILE_SUFFIX: '.html',
             HAS_SOURCE:  true
@@ -57,7 +57,7 @@
     });
   });
 </script>
-    <link rel="top" title="Numba 0.23.0+47.g2a3e31a-py2.7-linux-x86_64.egg documentation" href="../index.html" />
+    <link rel="top" title="Numba 0.23.1+103.g41ac00e-py2.7-linux-x86_64.egg documentation" href="../index.html" />
     <link rel="up" title="6. Developer Manual" href="index.html" />
     <link rel="next" title="6.2. Numba Architecture" href="architecture.html" />
     <link rel="prev" title="6. Developer Manual" href="index.html" /> 
@@ -71,7 +71,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="../index.html">Numba 0.23.0+47.g2a3e31a-py2.7-linux-x86_64.egg documentation</a>
+          <a class="brand" href="../index.html">Numba 0.23.1+103.g41ac00e-py2.7-linux-x86_64.egg documentation</a>
           <div class="nav-collapse collapse">
             <ul class="nav pull-right">
               
@@ -293,12 +293,12 @@ the llvmlite library:</p>
 </pre></div>
 </div>
 <p>Then create an environment with the right dependencies:</p>
-<div class="highlight-python"><div class="highlight"><pre>$ &lt;path_to_miniconda&gt;/conda create -n numbaenv python=3.4 llvmlite numpy
+<div class="highlight-python"><div class="highlight"><pre>$ &lt;path_to_miniconda&gt;/conda create -n numbaenv python=3.5 llvmlite numpy
 </pre></div>
 </div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">This installs an environment based on Python 3.4, but you can of course
+<p class="last">This installs an environment based on Python 3.5, but you can of course
 choose another version supported by Numba.</p>
 </div>
 <p>To activate the environment for the current shell session:</p>
@@ -324,45 +324,48 @@ Type &quot;help&quot;, &quot;copyright&quot;, &quot;credits&quot; or &quot;licen
 </div>
 <div class="section" id="building-numba">
 <h3>6.1.2.2. Building Numba<a class="headerlink" href="#building-numba" title="Permalink to this headline">¶</a></h3>
-<p>For a quick development workaround, we recommend you build Numba inside
+<p>For a convenient development workflow, we recommend you build Numba inside
 its source checkout:</p>
 <div class="highlight-python"><div class="highlight"><pre>$ python setup.py build_ext --inplace
 </pre></div>
 </div>
 <p>This assumes you have a working C compiler and runtime on your development
-system.</p>
+system.  You will have to run this command again whenever you modify
+C files inside the Numba source tree.</p>
 </div>
 <div class="section" id="running-tests">
 <h3>6.1.2.3. Running tests<a class="headerlink" href="#running-tests" title="Permalink to this headline">¶</a></h3>
 <p>Numba is validated using a test suite comprised of various kind of tests
 (unit tests, functional tests). The test suite is written using the
 standard <a class="reference external" href="https://docs.python.org/3/library/unittest.html#module-unittest" title="(in Python v3.5)"><code class="xref py py-mod docutils literal"><span class="pre">unittest</span></code></a> framework.</p>
-<p>The tests can be executed via <cite>python -m numba.testing</cite>. Various
-options are supported to influence test running and reporting. Pass <code class="docutils literal"><span class="pre">-h</span></code>
-or <code class="docutils literal"><span class="pre">--help</span></code> to get a glimpse at those options. Examples:</p>
+<p>The tests can be executed via <code class="docutils literal"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">numba.runtests</span></code>.  If you are
+running Numba from a source checkout, you can type <code class="docutils literal"><span class="pre">./runtests.py</span></code>
+as a shortcut.  Various options are supported to influence test running
+and reporting.  Pass <code class="docutils literal"><span class="pre">-h</span></code> or <code class="docutils literal"><span class="pre">--help</span></code> to get a glimpse at those options.
+Examples:</p>
 <ul>
 <li><p class="first">to list all available tests:</p>
-<div class="highlight-python"><div class="highlight"><pre>$ python -m numba.testing -l
+<div class="highlight-python"><div class="highlight"><pre>$ python -m numba.runtests -l
 </pre></div>
 </div>
 </li>
 <li><p class="first">to list tests from a specific (sub-)suite:</p>
-<div class="highlight-python"><div class="highlight"><pre>$ python -m numba.testing -l numba.tests.test_usecases
+<div class="highlight-python"><div class="highlight"><pre>$ python -m numba.runtests -l numba.tests.test_usecases
 </pre></div>
 </div>
 </li>
 <li><p class="first">to run those tests:</p>
-<div class="highlight-python"><div class="highlight"><pre>$ python -m numba.testing numba.tests.test_usecases
+<div class="highlight-python"><div class="highlight"><pre>$ python -m numba.runtests -l numba.tests.test_usecases
 </pre></div>
 </div>
 </li>
 <li><p class="first">to run all tests in parallel, using multiple sub-processes:</p>
-<div class="highlight-python"><div class="highlight"><pre>$ python -m numba.testing -m
+<div class="highlight-python"><div class="highlight"><pre>$ python -m numba.runtests -m
 </pre></div>
 </div>
 </li>
 <li><p class="first">For a detailed list of all options:</p>
-<div class="highlight-python"><div class="highlight"><pre>$ python -m numba.testing -h
+<div class="highlight-python"><div class="highlight"><pre>$ python -m numba.runtests -h
 </pre></div>
 </div>
 </li>
@@ -496,7 +499,7 @@ Finally, use <code class="docutils literal"><span class="pre">git</span> <span c
         <li><a href="../genindex.html" title="General Index" >index</a></li>
         <li><a href="architecture.html" title="6.2. Numba Architecture" >next</a></li>
         <li><a href="index.html" title="6. Developer Manual" >previous</a></li>
-        <li><a href="../index.html">Numba 0.23.0+47.g2a3e31a-py2.7-linux-x86_64.egg documentation</a></li>
+        <li><a href="../index.html">Numba 0.23.1+103.g41ac00e-py2.7-linux-x86_64.egg documentation</a></li>
         <li><a href="index.html" >6. Developer Manual</a></li> 
       
     </ul>
