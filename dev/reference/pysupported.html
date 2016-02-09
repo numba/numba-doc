@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     
-    <title>2.5. Supported Python features &mdash; Numba 0.23.1+108.g86d34e2-py2.7-linux-x86_64.egg documentation</title>
+    <title>2.5. Supported Python features &mdash; Numba 0.23.1+118.gc14e90b-py2.7-linux-x86_64.egg documentation</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
@@ -34,7 +34,7 @@
 <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
             URL_ROOT:    '../',
-            VERSION:     '0.23.1+108.g86d34e2-py2.7-linux-x86_64.egg',
+            VERSION:     '0.23.1+118.gc14e90b-py2.7-linux-x86_64.egg',
             COLLAPSE_INDEX: false,
             FILE_SUFFIX: '.html',
             HAS_SOURCE:  true
@@ -57,7 +57,7 @@
     });
   });
 </script>
-    <link rel="top" title="Numba 0.23.1+108.g86d34e2-py2.7-linux-x86_64.egg documentation" href="../index.html" />
+    <link rel="top" title="Numba 0.23.1+118.gc14e90b-py2.7-linux-x86_64.egg documentation" href="../index.html" />
     <link rel="up" title="2. Reference Manual" href="index.html" />
     <link rel="next" title="2.6. Supported NumPy features" href="numpysupported.html" />
     <link rel="prev" title="2.4. Environment variables" href="envvars.html" /> 
@@ -71,7 +71,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="../index.html">Numba 0.23.1+108.g86d34e2-py2.7-linux-x86_64.egg documentation</a>
+          <a class="brand" href="../index.html">Numba 0.23.1+118.gc14e90b-py2.7-linux-x86_64.egg documentation</a>
           <div class="nav-collapse collapse">
             <ul class="nav pull-right">
               
@@ -601,7 +601,7 @@ random module</span></a>.</p>
 <div class="section" id="cffi">
 <h3>2.5.5.1. <code class="docutils literal"><span class="pre">cffi</span></code><a class="headerlink" href="#cffi" title="Permalink to this headline">¶</a></h3>
 <p>Similarly to ctypes, Numba is able to call into <a class="reference external" href="https://cffi.readthedocs.org/">cffi</a>-declared external
-functions, using the following C types:</p>
+functions, using the following C types and any derived pointer types:</p>
 <ul class="simple">
 <li><code class="xref c c-type docutils literal"><span class="pre">char</span></code></li>
 <li><code class="xref c c-type docutils literal"><span class="pre">short</span></code></li>
@@ -623,18 +623,15 @@ functions, using the following C types:</p>
 <li><code class="xref c c-type docutils literal"><span class="pre">uint64_t</span></code></li>
 <li><code class="xref c c-type docutils literal"><span class="pre">float</span></code></li>
 <li><code class="xref c c-type docutils literal"><span class="pre">double</span></code></li>
-<li><code class="xref c c-type docutils literal"><span class="pre">char</span> <span class="pre">*</span></code></li>
-<li><code class="xref c c-type docutils literal"><span class="pre">void</span> <span class="pre">*</span></code></li>
-<li><code class="xref c c-type docutils literal"><span class="pre">uint8_t</span> <span class="pre">*</span></code></li>
-<li><code class="xref c c-type docutils literal"><span class="pre">float</span> <span class="pre">*</span></code></li>
-<li><code class="xref c c-type docutils literal"><span class="pre">double</span> <span class="pre">*</span></code></li>
 <li><code class="xref c c-type docutils literal"><span class="pre">ssize_t</span></code></li>
 <li><code class="xref c c-type docutils literal"><span class="pre">size_t</span></code></li>
 <li><code class="xref c c-type docutils literal"><span class="pre">void</span></code></li>
 </ul>
-<p>The <code class="docutils literal"><span class="pre">from_buffer</span></code> method of <code class="docutils literal"><span class="pre">cffi.FFI</span></code> and <code class="docutils literal"><span class="pre">CompiledFFI</span></code> objects is
-supported for passing NumPy arrays of <code class="docutils literal"><span class="pre">float32</span></code> and <code class="docutils literal"><span class="pre">float64</span></code> values to C
-function parameters of type <code class="docutils literal"><span class="pre">float</span> <span class="pre">*</span></code> and <code class="docutils literal"><span class="pre">double</span> <span class="pre">*</span></code> respectively.</p>
+<p>The <code class="docutils literal"><span class="pre">from_buffer()</span></code> method of <code class="docutils literal"><span class="pre">cffi.FFI</span></code> and <code class="docutils literal"><span class="pre">CompiledFFI</span></code> objects is
+supported for passing Numpy arrays and other buffer-like objects.  Only
+<em>contiguous</em> arguments are accepted.  The argument to <code class="docutils literal"><span class="pre">from_buffer()</span></code>
+is converted to a raw pointer of the appropriate C type (for example a
+<code class="docutils literal"><span class="pre">double</span> <span class="pre">*</span></code> for a <code class="docutils literal"><span class="pre">float64</span></code> array).</p>
 <p>Out-of-line cffi modules must be registered with Numba prior to the use of any
 of their functions from within Numba-compiled functions:</p>
 <dl class="function">
@@ -667,7 +664,7 @@ of their functions from within Numba-compiled functions:</p>
         <li><a href="../genindex.html" title="General Index" >index</a></li>
         <li><a href="numpysupported.html" title="2.6. Supported NumPy features" >next</a></li>
         <li><a href="envvars.html" title="2.4. Environment variables" >previous</a></li>
-        <li><a href="../index.html">Numba 0.23.1+108.g86d34e2-py2.7-linux-x86_64.egg documentation</a></li>
+        <li><a href="../index.html">Numba 0.23.1+118.gc14e90b-py2.7-linux-x86_64.egg documentation</a></li>
         <li><a href="index.html" >2. Reference Manual</a></li> 
       
     </ul>
