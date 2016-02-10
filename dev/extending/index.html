@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     
-    <title>5. Numba for HSA APUs &mdash; Numba 0.23.1+131.gf7f53d5-py2.7-linux-x86_64.egg documentation</title>
+    <title>6. Extending Numba &mdash; Numba 0.23.1+131.gf7f53d5-py2.7-linux-x86_64.egg documentation</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
@@ -58,8 +58,8 @@
   });
 </script>
     <link rel="top" title="Numba 0.23.1+131.gf7f53d5-py2.7-linux-x86_64.egg documentation" href="../index.html" />
-    <link rel="next" title="5.1. Overview" href="overview.html" />
-    <link rel="prev" title="4.3. Memory Management" href="../cuda-reference/memory.html" /> 
+    <link rel="next" title="6.1. High-level extension API" href="high-level.html" />
+    <link rel="prev" title="5.7. Examples" href="../hsa/examples.html" /> 
   </head>
   <body>
     <div class="navbar navbar-fixed-top ">
@@ -81,10 +81,10 @@
                 <a href="../py-modindex.html" title="Python Module Index" >modules</a>
                 </li>
                 <li>
-                <a href="overview.html" title="5.1. Overview" accesskey="N">next</a>
+                <a href="high-level.html" title="6.1. High-level extension API" accesskey="N">next</a>
                 </li>
                 <li>
-                <a href="../cuda-reference/memory.html" title="4.3. Memory Management" accesskey="P">previous</a>
+                <a href="../hsa/examples.html" title="5.7. Examples" accesskey="P">previous</a>
                 </li>
               
             </ul>
@@ -105,15 +105,15 @@
   <a class="visible-phone btn btn-small show-sidebar" data-toggle="collapse" data-target=".for-mobile">Open Table Of Contents</a>
   <div class="for-mobile sidebar hidden-phone">
   <h4>Previous topic</h4>
-  <p class="topless"><a href="../cuda-reference/memory.html"
-                        title="previous chapter">4.3. Memory Management</a></p>
+  <p class="topless"><a href="../hsa/examples.html"
+                        title="previous chapter">5.7. Examples</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="overview.html"
-                        title="next chapter">5.1. Overview</a></p>
+  <p class="topless"><a href="high-level.html"
+                        title="next chapter">6.1. High-level extension API</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="../_sources/hsa/index.txt"
+      <li><a href="../_sources/extending/index.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
@@ -142,15 +142,15 @@
 <div class="span3 visible-desktop visible-tablet">
   <div class=" sidebar hidden-phone">
   <h4>Previous topic</h4>
-  <p class="topless"><a href="../cuda-reference/memory.html"
-                        title="previous chapter">4.3. Memory Management</a></p>
+  <p class="topless"><a href="../hsa/examples.html"
+                        title="previous chapter">5.7. Examples</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="overview.html"
-                        title="next chapter">5.1. Overview</a></p>
+  <p class="topless"><a href="high-level.html"
+                        title="next chapter">6.1. High-level extension API</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="../_sources/hsa/index.txt"
+      <li><a href="../_sources/extending/index.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
@@ -178,40 +178,56 @@
               <div class="bodywrapper">
                 <div class="body">
                   
-  <div class="section" id="numba-for-hsa-apus">
-<h1>5. Numba for HSA APUs<a class="headerlink" href="#numba-for-hsa-apus" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-numba.extending">
+<span id="extending-numba"></span><h1>6. Extending Numba<a class="headerlink" href="#module-numba.extending" title="Permalink to this headline">¶</a></h1>
+<p>This chapter describes how to extend Numba to make it recognize and support
+additional operations, functions or types.  Numba provides two categories
+of APIs to this end:</p>
+<ul class="simple">
+<li>The high-level APIs provide abstracted entry points which are sufficient
+for simple uses.  They require little knowledge of Numba&#8217;s internal
+compilation chain.</li>
+<li>The low-level APIs reflect Numba&#8217;s internal compilation chain and allow
+flexible interaction with its various layers, but require more effort
+and experience with Numba internals.</li>
+</ul>
+<p>It may be helpful for readers of this chapter to also read some of the
+documents in the <a class="reference internal" href="../developer/index.html"><em>developer manual</em></a>, especially
+the <a class="reference internal" href="../developer/architecture.html"><em>architecture document</em></a>.</p>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="overview.html">5.1. Overview</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="overview.html#terminology">5.1.1. Terminology</a></li>
-<li class="toctree-l2"><a class="reference internal" href="overview.html#requirements">5.1.2. Requirements</a></li>
-<li class="toctree-l2"><a class="reference internal" href="overview.html#installation">5.1.3. Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="high-level.html">6.1. High-level extension API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="high-level.html#implementing-functions">6.1.1. Implementing functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="high-level.html#implementing-methods">6.1.2. Implementing methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="high-level.html#implementing-attributes">6.1.3. Implementing attributes</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="kernels.html">5.2. Writing HSA Kernels</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="kernels.html#introduction">5.2.1. Introduction</a></li>
-<li class="toctree-l2"><a class="reference internal" href="kernels.html#introduction-for-cuda-programmers">5.2.2. Introduction for CUDA Programmers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="kernels.html#kernel-declaration">5.2.3. Kernel declaration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="kernels.html#kernel-invocation">5.2.4. Kernel invocation</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="kernels.html#choosing-the-workgroup-size">5.2.4.1. Choosing the workgroup size</a></li>
-<li class="toctree-l3"><a class="reference internal" href="kernels.html#multi-dimensional-workgroup-and-grid">5.2.4.2. Multi-dimensional workgroup and grid</a></li>
+<li class="toctree-l1"><a class="reference internal" href="low-level.html">6.2. Low-level extension API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="low-level.html#typing">6.2.1. Typing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="low-level.html#lowering">6.2.2. Lowering</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="low-level.html#native-operations">6.2.2.1. Native operations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="low-level.html#boxing-and-unboxing">6.2.2.2. Boxing and unboxing</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="kernels.html#workitem-positioning">5.2.5. WorkItem positioning</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="memory.html">5.3. Memory management</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="memory.html#shared-memory-and-thread-synchronization">5.3.1. Shared memory and thread synchronization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="interval-example.html">6.3. Example: an interval type</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="interval-example.html#extending-the-typing-layer">6.3.1. Extending the typing layer</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="interval-example.html#creating-a-new-numba-type">6.3.1.1. Creating a new Numba type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="interval-example.html#type-inference-for-python-values">6.3.1.2. Type inference for Python values</a></li>
+<li class="toctree-l3"><a class="reference internal" href="interval-example.html#type-inference-for-operations">6.3.1.3. Type inference for operations</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="device-functions.html">5.4. Writing Device Functions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="intrinsics.html">5.5. Supported Atomic Operations</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="intrinsics.html#example">5.5.1. Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interval-example.html#extending-the-lowering-layer">6.3.2. Extending the lowering layer</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="interval-example.html#defining-the-data-model-for-native-intervals">6.3.2.1. Defining the data model for native intervals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="interval-example.html#exposing-data-model-attributes">6.3.2.2. Exposing data model attributes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="interval-example.html#exposing-a-property">6.3.2.3. Exposing a property</a></li>
+<li class="toctree-l3"><a class="reference internal" href="interval-example.html#implementing-the-constructor">6.3.2.4. Implementing the constructor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="interval-example.html#boxing-and-unboxing">6.3.2.5. Boxing and unboxing</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="device-management.html">5.6. Device management</a></li>
-<li class="toctree-l1"><a class="reference internal" href="examples.html">5.7. Examples</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="examples.html#matrix-multiplication">5.7.1. Matrix multiplication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interval-example.html#using-it">6.3.3. Using it</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interval-example.html#conclusion">6.3.4. Conclusion</a></li>
 </ul>
 </li>
 </ul>
@@ -236,8 +252,8 @@
       
         <li><a href="../genindex.html" title="General Index" >index</a></li>
         <li><a href="../py-modindex.html" title="Python Module Index" >modules</a></li>
-        <li><a href="overview.html" title="5.1. Overview" >next</a></li>
-        <li><a href="../cuda-reference/memory.html" title="4.3. Memory Management" >previous</a></li>
+        <li><a href="high-level.html" title="6.1. High-level extension API" >next</a></li>
+        <li><a href="../hsa/examples.html" title="5.7. Examples" >previous</a></li>
         <li><a href="../index.html">Numba 0.23.1+131.gf7f53d5-py2.7-linux-x86_64.egg documentation</a></li> 
       
     </ul>

@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     
-    <title>6.2. Numba Architecture &mdash; Numba 0.23.1+123.gb2c3dce-py2.7-linux-x86_64.egg documentation</title>
+    <title>7.2. Numba architecture &mdash; Numba 0.23.1+131.gf7f53d5-py2.7-linux-x86_64.egg documentation</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
@@ -34,7 +34,7 @@
 <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
             URL_ROOT:    '../',
-            VERSION:     '0.23.1+123.gb2c3dce-py2.7-linux-x86_64.egg',
+            VERSION:     '0.23.1+131.gf7f53d5-py2.7-linux-x86_64.egg',
             COLLAPSE_INDEX: false,
             FILE_SUFFIX: '.html',
             HAS_SOURCE:  true
@@ -57,10 +57,10 @@
     });
   });
 </script>
-    <link rel="top" title="Numba 0.23.1+123.gb2c3dce-py2.7-linux-x86_64.egg documentation" href="../index.html" />
-    <link rel="up" title="6. Developer Manual" href="index.html" />
-    <link rel="next" title="6.3. Extending the Numba frontend" href="extending-frontend.html" />
-    <link rel="prev" title="6.1. Contributing to Numba" href="contributing.html" /> 
+    <link rel="top" title="Numba 0.23.1+131.gf7f53d5-py2.7-linux-x86_64.egg documentation" href="../index.html" />
+    <link rel="up" title="7. Developer Manual" href="index.html" />
+    <link rel="next" title="7.3. Polymorphic dispatching" href="dispatching.html" />
+    <link rel="prev" title="7.1. Contributing to Numba" href="contributing.html" /> 
   </head>
   <body>
     <div class="navbar navbar-fixed-top ">
@@ -71,7 +71,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="../index.html">Numba 0.23.1+123.gb2c3dce-py2.7-linux-x86_64.egg documentation</a>
+          <a class="brand" href="../index.html">Numba 0.23.1+131.gf7f53d5-py2.7-linux-x86_64.egg documentation</a>
           <div class="nav-collapse collapse">
             <ul class="nav pull-right">
               
@@ -79,13 +79,16 @@
                 <a href="../genindex.html" title="General Index" accesskey="I">index</a>
                 </li>
                 <li>
-                <a href="extending-frontend.html" title="6.3. Extending the Numba frontend" accesskey="N">next</a>
+                <a href="../py-modindex.html" title="Python Module Index" >modules</a>
                 </li>
                 <li>
-                <a href="contributing.html" title="6.1. Contributing to Numba" accesskey="P">previous</a>
+                <a href="dispatching.html" title="7.3. Polymorphic dispatching" accesskey="N">next</a>
                 </li>
                 <li>
-                <a href="index.html" accesskey="U">6. Developer Manual</a>
+                <a href="contributing.html" title="7.1. Contributing to Numba" accesskey="P">previous</a>
+                </li>
+                <li>
+                <a href="index.html" accesskey="U">7. Developer Manual</a>
                 </li>
               
             </ul>
@@ -107,18 +110,20 @@
   <div class="for-mobile sidebar hidden-phone">
   <h3><a href="../index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">6.2. Numba Architecture</a><ul>
-<li><a class="reference internal" href="#introduction">6.2.1. Introduction</a></li>
-<li><a class="reference internal" href="#contexts">6.2.2. Contexts</a></li>
-<li><a class="reference internal" href="#compiler-stages">6.2.3. Compiler Stages</a><ul>
-<li><a class="reference internal" href="#stage-1-analyze-bytecode">6.2.3.1. Stage 1: Analyze Bytecode</a></li>
-<li><a class="reference internal" href="#stage-2-generate-the-numba-ir">6.2.3.2. Stage 2: Generate the Numba IR</a></li>
-<li><a class="reference internal" href="#stage-3-macro-expansion">6.2.3.3. Stage 3: Macro expansion</a></li>
-<li><a class="reference internal" href="#stage-4-infer-types">6.2.3.4. Stage 4: Infer Types</a></li>
-<li><a class="reference internal" href="#stage-5-rewrite-typed-ir">6.2.3.5. Stage 5: Rewrite Typed IR</a></li>
-<li><a class="reference internal" href="#stage-6a-generate-no-python-llvm-ir">6.2.3.6. Stage 6a: Generate No-Python LLVM IR</a></li>
-<li><a class="reference internal" href="#stage-6b-generate-object-mode-llvm-ir">6.2.3.7. Stage 6b: Generate Object Mode LLVM IR</a></li>
-<li><a class="reference internal" href="#stage-7-compile-llvm-ir-to-machine-code">6.2.3.8. Stage 7: Compile LLVM IR to Machine Code</a></li>
+<li><a class="reference internal" href="#">7.2. Numba architecture</a><ul>
+<li><a class="reference internal" href="#introduction">7.2.1. Introduction</a></li>
+<li><a class="reference internal" href="#compiler-architecture">7.2.2. Compiler architecture</a></li>
+<li><a class="reference internal" href="#contexts">7.2.3. Contexts</a></li>
+<li><a class="reference internal" href="#compiler-stages">7.2.4. Compiler stages</a><ul>
+<li><a class="reference internal" href="#stage-1-analyze-bytecode">7.2.4.1. Stage 1: Analyze bytecode</a></li>
+<li><a class="reference internal" href="#stage-2-generate-the-numba-ir">7.2.4.2. Stage 2: Generate the Numba IR</a></li>
+<li><a class="reference internal" href="#stage-3-macro-expansion">7.2.4.3. Stage 3: Macro expansion</a></li>
+<li><a class="reference internal" href="#stage-4-rewrite-untyped-ir">7.2.4.4. Stage 4: Rewrite untyped IR</a></li>
+<li><a class="reference internal" href="#stage-5-infer-types">7.2.4.5. Stage 5: Infer types</a></li>
+<li><a class="reference internal" href="#stage-6-rewrite-typed-ir">7.2.4.6. Stage 6: Rewrite typed IR</a></li>
+<li><a class="reference internal" href="#stage-7a-generate-nopython-llvm-ir">7.2.4.7. Stage 7a: Generate nopython LLVM IR</a></li>
+<li><a class="reference internal" href="#stage-7b-generate-object-mode-llvm-ir">7.2.4.8. Stage 7b: Generate object mode LLVM IR</a></li>
+<li><a class="reference internal" href="#stage-8-compile-llvm-ir-to-machine-code">7.2.4.9. Stage 8: Compile LLVM IR to machine code</a></li>
 </ul>
 </li>
 </ul>
@@ -127,10 +132,10 @@
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="contributing.html"
-                        title="previous chapter">6.1. Contributing to Numba</a></p>
+                        title="previous chapter">7.1. Contributing to Numba</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="extending-frontend.html"
-                        title="next chapter">6.3. Extending the Numba frontend</a></p>
+  <p class="topless"><a href="dispatching.html"
+                        title="next chapter">7.3. Polymorphic dispatching</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -164,18 +169,20 @@
   <div class=" sidebar hidden-phone">
   <h3><a href="../index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">6.2. Numba Architecture</a><ul>
-<li><a class="reference internal" href="#introduction">6.2.1. Introduction</a></li>
-<li><a class="reference internal" href="#contexts">6.2.2. Contexts</a></li>
-<li><a class="reference internal" href="#compiler-stages">6.2.3. Compiler Stages</a><ul>
-<li><a class="reference internal" href="#stage-1-analyze-bytecode">6.2.3.1. Stage 1: Analyze Bytecode</a></li>
-<li><a class="reference internal" href="#stage-2-generate-the-numba-ir">6.2.3.2. Stage 2: Generate the Numba IR</a></li>
-<li><a class="reference internal" href="#stage-3-macro-expansion">6.2.3.3. Stage 3: Macro expansion</a></li>
-<li><a class="reference internal" href="#stage-4-infer-types">6.2.3.4. Stage 4: Infer Types</a></li>
-<li><a class="reference internal" href="#stage-5-rewrite-typed-ir">6.2.3.5. Stage 5: Rewrite Typed IR</a></li>
-<li><a class="reference internal" href="#stage-6a-generate-no-python-llvm-ir">6.2.3.6. Stage 6a: Generate No-Python LLVM IR</a></li>
-<li><a class="reference internal" href="#stage-6b-generate-object-mode-llvm-ir">6.2.3.7. Stage 6b: Generate Object Mode LLVM IR</a></li>
-<li><a class="reference internal" href="#stage-7-compile-llvm-ir-to-machine-code">6.2.3.8. Stage 7: Compile LLVM IR to Machine Code</a></li>
+<li><a class="reference internal" href="#">7.2. Numba architecture</a><ul>
+<li><a class="reference internal" href="#introduction">7.2.1. Introduction</a></li>
+<li><a class="reference internal" href="#compiler-architecture">7.2.2. Compiler architecture</a></li>
+<li><a class="reference internal" href="#contexts">7.2.3. Contexts</a></li>
+<li><a class="reference internal" href="#compiler-stages">7.2.4. Compiler stages</a><ul>
+<li><a class="reference internal" href="#stage-1-analyze-bytecode">7.2.4.1. Stage 1: Analyze bytecode</a></li>
+<li><a class="reference internal" href="#stage-2-generate-the-numba-ir">7.2.4.2. Stage 2: Generate the Numba IR</a></li>
+<li><a class="reference internal" href="#stage-3-macro-expansion">7.2.4.3. Stage 3: Macro expansion</a></li>
+<li><a class="reference internal" href="#stage-4-rewrite-untyped-ir">7.2.4.4. Stage 4: Rewrite untyped IR</a></li>
+<li><a class="reference internal" href="#stage-5-infer-types">7.2.4.5. Stage 5: Infer types</a></li>
+<li><a class="reference internal" href="#stage-6-rewrite-typed-ir">7.2.4.6. Stage 6: Rewrite typed IR</a></li>
+<li><a class="reference internal" href="#stage-7a-generate-nopython-llvm-ir">7.2.4.7. Stage 7a: Generate nopython LLVM IR</a></li>
+<li><a class="reference internal" href="#stage-7b-generate-object-mode-llvm-ir">7.2.4.8. Stage 7b: Generate object mode LLVM IR</a></li>
+<li><a class="reference internal" href="#stage-8-compile-llvm-ir-to-machine-code">7.2.4.9. Stage 8: Compile LLVM IR to machine code</a></li>
 </ul>
 </li>
 </ul>
@@ -184,10 +191,10 @@
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="contributing.html"
-                        title="previous chapter">6.1. Contributing to Numba</a></p>
+                        title="previous chapter">7.1. Contributing to Numba</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="extending-frontend.html"
-                        title="next chapter">6.3. Extending the Numba frontend</a></p>
+  <p class="topless"><a href="dispatching.html"
+                        title="next chapter">7.3. Polymorphic dispatching</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -220,11 +227,11 @@
                 <div class="body">
                   
   <div class="section" id="numba-architecture">
-<span id="architecture"></span><h1>6.2. Numba Architecture<a class="headerlink" href="#numba-architecture" title="Permalink to this headline">¶</a></h1>
+<span id="architecture"></span><h1>7.2. Numba architecture<a class="headerlink" href="#numba-architecture" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="introduction">
-<h2>6.2.1. Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<h2>7.2.1. Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
 <p>Numba is a compiler for Python bytecode with optional type-specialization.</p>
-<p>Suppose you type a function like this into the standard Python interpreter
+<p>Suppose you enter a function like this into the standard Python interpreter
 (henceforward referred to as &#8220;CPython&#8221;):</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
@@ -266,29 +273,50 @@ Python runtime, we say the function has been compiled in <a class="reference int
 Numeric code compiled in nopython mode can be hundreds of times faster
 than the original Python.</p>
 </div>
+<div class="section" id="compiler-architecture">
+<h2>7.2.2. Compiler architecture<a class="headerlink" href="#compiler-architecture" title="Permalink to this headline">¶</a></h2>
+<p>Like many compilers, Numba can be conceptually divided into a
+<em>frontend</em> and a <em>backend</em>.</p>
+<p>The Numba <em>frontend</em> comprises the stages which analyze the Python bytecode,
+translate it to <a class="reference internal" href="../glossary.html#term-numba-ir"><span class="xref std std-term">Numba IR</span></a> and perform various transformations and
+analysis steps on the IR.  One of the key steps is <a class="reference internal" href="../glossary.html#term-type-inference"><span class="xref std std-term">type inference</span></a>.
+The frontend must succeed in typing all variables unambiguously in order
+for the backend to generate code in <a class="reference internal" href="../glossary.html#term-nopython-mode"><span class="xref std std-term">nopython mode</span></a>, because the
+backend uses type information to match appropriate code generators with
+the values they operate on.</p>
+<p>The Numba <em>backend</em> walks the Numba IR resulting from the frontend analyses
+and exploits the type information deduced by the type inference phase to
+produce the right LLVM code for each encountered operation.  After LLVM
+code is produced, the LLVM library is asked to optimize it and generate
+native processor code for the final, native function.</p>
+<p>There are other pieces besides the compiler frontend and backend, such
+as the caching machinery for JIT functions.  Those pieces are not considered
+in this document.</p>
+</div>
 <div class="section" id="contexts">
-<h2>6.2.2. Contexts<a class="headerlink" href="#contexts" title="Permalink to this headline">¶</a></h2>
+<h2>7.2.3. Contexts<a class="headerlink" href="#contexts" title="Permalink to this headline">¶</a></h2>
 <p>Numba is quite flexible, allowing it to generate code for different hardware
-architectures like CPUs and GPUs (just CUDA, for now).  In order to support
-these different applications, Numba uses a <em>typing context</em> and a <em>target
-context</em>.</p>
-<p>A typing context is used in the compiler frontend to perform type inference on
-values in the function.  Similar typing contexts could be used for many
-architectures because for nearly all cases, typing inference is hardware-independent.
-However, Numba currently has a different typing context for each target.</p>
-<p>A target context is used to generate the specific instruction sequence
+architectures like CPUs and GPUs.  In order to support these different
+applications, Numba uses a <em>typing context</em> and a <em>target context</em>.</p>
+<p>A <em>typing context</em> is used in the compiler frontend to perform type inference
+on operations and values in the function.  Similar typing contexts could be
+used for many architectures because for nearly all cases, typing inference
+is hardware-independent.  However, Numba currently has a different typing
+context for each target.</p>
+<p>A <em>target context</em> is used to generate the specific instruction sequence
 required to operate on the Numba types identified during type inference.
-Target contexts are architecture specific.  For example, Numba has a &#8220;cpu&#8221; and
-a &#8220;gpu&#8221; context, and NumbaPro adds a &#8220;parallel&#8221; context which produces
-multithreaded CPU code.</p>
+Target contexts are architecture-specific and are flexible in defining
+the execution model and available Python APIs.  For example, Numba has a &#8220;cpu&#8221;
+and a &#8220;cuda&#8221; context for those two kinds of architecture, and a &#8220;parallel&#8221;
+context which produces multithreaded CPU code.</p>
 </div>
 <div class="section" id="compiler-stages">
-<h2>6.2.3. Compiler Stages<a class="headerlink" href="#compiler-stages" title="Permalink to this headline">¶</a></h2>
-<p>The <code class="docutils literal"><span class="pre">&#64;jit</span></code> decorator in Numba ultimately calls
+<h2>7.2.4. Compiler stages<a class="headerlink" href="#compiler-stages" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference internal" href="../reference/jit-compilation.html#numba.jit" title="numba.jit"><code class="xref py py-func docutils literal"><span class="pre">jit()</span></code></a> decorator in Numba ultimately calls
 <code class="docutils literal"><span class="pre">numba.compiler.compile_extra()</span></code> which compiles the Python function in a
 multi-stage process, described below.</p>
 <div class="section" id="stage-1-analyze-bytecode">
-<h3>6.2.3.1. Stage 1: Analyze Bytecode<a class="headerlink" href="#stage-1-analyze-bytecode" title="Permalink to this headline">¶</a></h3>
+<h3>7.2.4.1. Stage 1: Analyze bytecode<a class="headerlink" href="#stage-1-analyze-bytecode" title="Permalink to this headline">¶</a></h3>
 <p>At the start of compilation, the function bytecode is passed to an instance of
 the Numba interpreter (<code class="docutils literal"><span class="pre">numba.interpreter</span></code>).  The interpreter object
 analyzes the bytecode to find the control flow graph (<code class="docutils literal"><span class="pre">numba.controlflow</span></code>).
@@ -386,7 +414,7 @@ CFG node-to-loops:
 of the opcode names above.</p>
 </div>
 <div class="section" id="stage-2-generate-the-numba-ir">
-<span id="arch-generate-numba-ir"></span><h3>6.2.3.2. Stage 2: Generate the Numba IR<a class="headerlink" href="#stage-2-generate-the-numba-ir" title="Permalink to this headline">¶</a></h3>
+<span id="arch-generate-numba-ir"></span><h3>7.2.4.2. Stage 2: Generate the Numba IR<a class="headerlink" href="#stage-2-generate-the-numba-ir" title="Permalink to this headline">¶</a></h3>
 <p>Once the control flow and data analyses are complete, the Numba interpreter
 can step through the bytecode and translate it into an Numba-internal
 intermediate representation.  This translation process changes the function
@@ -413,7 +441,7 @@ where each variable contains an owned reference to a PyObject.  They are
 no-ops in <a class="reference internal" href="../glossary.html#term-nopython-mode"><span class="xref std std-term">nopython mode</span></a>.</p>
 </div>
 <div class="section" id="stage-3-macro-expansion">
-<h3>6.2.3.3. Stage 3: Macro expansion<a class="headerlink" href="#stage-3-macro-expansion" title="Permalink to this headline">¶</a></h3>
+<h3>7.2.4.3. Stage 3: Macro expansion<a class="headerlink" href="#stage-3-macro-expansion" title="Permalink to this headline">¶</a></h3>
 <p>Now that the function has been translated into the Numba IR, macro expansion can
 be performed. Macro expansion converts specific attributes that are known to
 Numba into IR nodes representing function calls. This is initiated in the
@@ -444,8 +472,41 @@ translated into:</p>
 <p>which represents an instance of the <code class="docutils literal"><span class="pre">Intrinsic</span></code> IR node for calling the
 <code class="docutils literal"><span class="pre">tid.x</span></code> intrinsic function.</p>
 </div>
-<div class="section" id="stage-4-infer-types">
-<span id="arch-type-inference"></span><h3>6.2.3.4. Stage 4: Infer Types<a class="headerlink" href="#stage-4-infer-types" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="stage-4-rewrite-untyped-ir">
+<span id="rewrite-untyped-ir"></span><h3>7.2.4.4. Stage 4: Rewrite untyped IR<a class="headerlink" href="#stage-4-rewrite-untyped-ir" title="Permalink to this headline">¶</a></h3>
+<p>Before running type inference, it may be desired to run certain
+transformations on the Numba IR.  One such example is to detect <code class="docutils literal"><span class="pre">raise</span></code>
+statements which have an implicitly constant argument, so as to
+support them in <a class="reference internal" href="../glossary.html#term-nopython-mode"><span class="xref std std-term">nopython mode</span></a>.  Let&#8217;s say you compile the
+following function with Numba:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+   <span class="k">if</span> <span class="n">x</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+      <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;x cannot be zero&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If you set the <span class="target" id="index-0"></span><a class="reference internal" href="../reference/envvars.html#envvar-NUMBA_DUMP_IR"><code class="xref std std-envvar docutils literal"><span class="pre">NUMBA_DUMP_IR</span></code></a> environment variable to <code class="docutils literal"><span class="pre">1</span></code>,
+you&#8217;ll see the IR being rewritten before the type inference phase:</p>
+<div class="highlight-python"><div class="highlight"><pre>REWRITING:
+    del $0.3                                 []
+    $12.1 = global(ValueError: &lt;class &#39;ValueError&#39;&gt;) [&#39;$12.1&#39;]
+    $const12.2 = const(str, x cannot be zero) [&#39;$const12.2&#39;]
+    $12.3 = call $12.1($const12.2)           [&#39;$12.1&#39;, &#39;$12.3&#39;, &#39;$const12.2&#39;]
+    del $const12.2                           []
+    del $12.1                                []
+    raise $12.3                              [&#39;$12.3&#39;]
+____________________________________________________________
+    del $0.3                                 []
+    $12.1 = global(ValueError: &lt;class &#39;ValueError&#39;&gt;) [&#39;$12.1&#39;]
+    $const12.2 = const(str, x cannot be zero) [&#39;$const12.2&#39;]
+    $12.3 = call $12.1($const12.2)           [&#39;$12.1&#39;, &#39;$12.3&#39;, &#39;$const12.2&#39;]
+    del $const12.2                           []
+    del $12.1                                []
+    raise &lt;class &#39;ValueError&#39;&gt;(&#39;x cannot be zero&#39;) []
+</pre></div>
+</div>
+</div>
+<div class="section" id="stage-5-infer-types">
+<span id="arch-type-inference"></span><h3>7.2.4.5. Stage 5: Infer types<a class="headerlink" href="#stage-5-infer-types" title="Permalink to this headline">¶</a></h3>
 <p>Now that the Numba IR has been generated and macro-expanded, type analysis
 can be performed.  The types of the function arguments can be taken either
 from the explicit function signature given in the <code class="docutils literal"><span class="pre">&#64;jit</span></code> decorator
@@ -454,7 +515,7 @@ the types of the actual function arguments if compilation is happening
 when the function is first called.</p>
 <p>The type inference engine is found in <code class="docutils literal"><span class="pre">numba.typeinfer</span></code>.  Its job is to
 assign a type to every intermediate variable in the Numba IR.  The result of
-this pass can be seen by setting the <span class="target" id="index-0"></span><a class="reference internal" href="../reference/envvars.html#envvar-NUMBA_DUMP_ANNOTATION"><code class="xref std std-envvar docutils literal"><span class="pre">NUMBA_DUMP_ANNOTATION</span></code></a>
+this pass can be seen by setting the <span class="target" id="index-1"></span><a class="reference internal" href="../reference/envvars.html#envvar-NUMBA_DUMP_ANNOTATION"><code class="xref std std-envvar docutils literal"><span class="pre">NUMBA_DUMP_ANNOTATION</span></code></a>
 environment variable to 1:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="o">-----------------------------------</span><span class="n">ANNOTATION</span><span class="o">-----------------------------------</span>
 <span class="c"># File: archex.py</span>
@@ -485,12 +546,10 @@ intermediate variables, it will label every variable as type <code class="docuti
 fall back to object mode.  Type inference can fail when unsupported Python
 types, language features, or functions are used in the function body.</p>
 </div>
-<div class="section" id="stage-5-rewrite-typed-ir">
-<span id="rewrite-typed-ir"></span><h3>6.2.3.5. Stage 5: Rewrite Typed IR<a class="headerlink" href="#stage-5-rewrite-typed-ir" title="Permalink to this headline">¶</a></h3>
-<p>Numba implements a user-extensible rewriting pass that reads and
-possibly rewrites Numba IR.  This pass&#8217;s purpose is to perform any
-high-level optimizations that still require, or could at least benefit
-from, Numba IR type information.</p>
+<div class="section" id="stage-6-rewrite-typed-ir">
+<span id="rewrite-typed-ir"></span><h3>7.2.4.6. Stage 6: Rewrite typed IR<a class="headerlink" href="#stage-6-rewrite-typed-ir" title="Permalink to this headline">¶</a></h3>
+<p>This pass&#8217;s purpose is to perform any high-level optimizations that still
+require, or could at least benefit from, Numba IR type information.</p>
 <p>One example of a problem domain that isn&#8217;t as easily optimized once
 lowered is the domain of multidimensional array operations.  When
 Numba lowers an array operation, Numba treats the operation like a
@@ -512,7 +571,7 @@ pass to implement these array optimizations.  For more information,
 please consult the &#8220;<a class="reference internal" href="rewrites.html#case-study-array-expressions"><span>Case study: Array Expressions</span></a>&#8221; subsection,
 later in this document.</p>
 <p>One can see the result of rewriting by setting the
-<span class="target" id="index-1"></span><a class="reference internal" href="../reference/envvars.html#envvar-NUMBA_DUMP_IR"><code class="xref std std-envvar docutils literal"><span class="pre">NUMBA_DUMP_IR</span></code></a> environment variable to a non-zero value (such
+<span class="target" id="index-2"></span><a class="reference internal" href="../reference/envvars.html#envvar-NUMBA_DUMP_IR"><code class="xref std std-envvar docutils literal"><span class="pre">NUMBA_DUMP_IR</span></code></a> environment variable to a non-zero value (such
 as 1).  The following example shows the output of the rewrite pass as
 it recognizes an array expression consisting of a multiply and add,
 and outputs a fused kernel as a special operator, <code class="xref py py-func docutils literal"><span class="pre">arrayexpr()</span></code>:</p>
@@ -548,19 +607,19 @@ ______________________________________________________________________
 ufunc-like function that is inlined into a single loop that only
 allocates a single result array.</p>
 </div>
-<div class="section" id="stage-6a-generate-no-python-llvm-ir">
-<h3>6.2.3.6. Stage 6a: Generate No-Python LLVM IR<a class="headerlink" href="#stage-6a-generate-no-python-llvm-ir" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="stage-7a-generate-nopython-llvm-ir">
+<h3>7.2.4.7. Stage 7a: Generate nopython LLVM IR<a class="headerlink" href="#stage-7a-generate-nopython-llvm-ir" title="Permalink to this headline">¶</a></h3>
 <p>If type inference succeeds in finding a Numba type for every intermediate
 variable, then Numba can (potentially) generate specialized native code.  This
-process is called <em>lowering</em>.  The Numba IR tree is translated into LLVM IR by
-using helper classes from <a class="reference external" href="https://github.com/numba/llvmlite">llvmlite</a>.
+process is called <a class="reference internal" href="../glossary.html#term-lowering"><span class="xref std std-term">lowering</span></a>.  The Numba IR tree is translated into
+LLVM IR by using helper classes from <a class="reference external" href="http://llvmlite.pydata.org/">llvmlite</a>.
 The  machine-generated LLVM IR can seem unnecessarily verbose, but the LLVM
 toolchain is able to optimize it quite easily into compact, efficient code.</p>
 <p>The basic lowering algorithm is generic, but the specifics of how particular
 Numba IR nodes are translated to LLVM instructions is handled by the
 target context selected for compilation.  The default target context is
 the &#8220;cpu&#8221; context, defined in <code class="docutils literal"><span class="pre">numba.targets.cpu</span></code>.</p>
-<p>The LLVM IR can be displayed by setting the <span class="target" id="index-2"></span><a class="reference internal" href="../reference/envvars.html#envvar-NUMBA_DUMP_LLVM"><code class="xref std std-envvar docutils literal"><span class="pre">NUMBA_DUMP_LLVM</span></code></a> environment
+<p>The LLVM IR can be displayed by setting the <span class="target" id="index-3"></span><a class="reference internal" href="../reference/envvars.html#envvar-NUMBA_DUMP_LLVM"><code class="xref std std-envvar docutils literal"><span class="pre">NUMBA_DUMP_LLVM</span></code></a> environment
 variable to 1.  For the &#8220;cpu&#8221; context, our <code class="docutils literal"><span class="pre">add()</span></code> example would look like:</p>
 <div class="highlight-llvm"><div class="highlight"><pre><span class="k">define</span> <span class="k">i32</span> <span class="vg">@&quot;__main__.add$1.int64.int64&quot;</span><span class="p">(</span><span class="k">i64</span><span class="p">*</span> <span class="nv">%&quot;retptr&quot;</span><span class="p">,</span>
                                          <span class="p">{</span><span class="k">i8</span><span class="p">*,</span> <span class="k">i32</span><span class="p">}**</span> <span class="nv">%&quot;excinfo&quot;</span><span class="p">,</span>
@@ -589,7 +648,7 @@ variable to 1.  For the &#8220;cpu&#8221; context, our <code class="docutils lit
 </pre></div>
 </div>
 <p>The post-optimization LLVM IR can be output by setting
-<span class="target" id="index-3"></span><a class="reference internal" href="../reference/envvars.html#envvar-NUMBA_DUMP_OPTIMIZED"><code class="xref std std-envvar docutils literal"><span class="pre">NUMBA_DUMP_OPTIMIZED</span></code></a> to 1.  The optimizer shortens the code
+<span class="target" id="index-4"></span><a class="reference internal" href="../reference/envvars.html#envvar-NUMBA_DUMP_OPTIMIZED"><code class="xref std std-envvar docutils literal"><span class="pre">NUMBA_DUMP_OPTIMIZED</span></code></a> to 1.  The optimizer shortens the code
 generated above quite significantly:</p>
 <div class="highlight-llvm"><div class="highlight"><pre><span class="k">define</span> <span class="k">i32</span> <span class="vg">@&quot;__main__.add$1.int64.int64&quot;</span><span class="p">(</span><span class="k">i64</span><span class="p">*</span> <span class="k">nocapture</span> <span class="nv">%retptr</span><span class="p">,</span>
                                          <span class="p">{</span> <span class="k">i8</span><span class="p">*,</span> <span class="k">i32</span> <span class="p">}**</span> <span class="k">nocapture</span> <span class="k">readnone</span> <span class="nv">%excinfo</span><span class="p">,</span>
@@ -604,8 +663,8 @@ generated above quite significantly:</p>
 </pre></div>
 </div>
 </div>
-<div class="section" id="stage-6b-generate-object-mode-llvm-ir">
-<h3>6.2.3.7. Stage 6b: Generate Object Mode LLVM IR<a class="headerlink" href="#stage-6b-generate-object-mode-llvm-ir" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="stage-7b-generate-object-mode-llvm-ir">
+<h3>7.2.4.8. Stage 7b: Generate object mode LLVM IR<a class="headerlink" href="#stage-7b-generate-object-mode-llvm-ir" title="Permalink to this headline">¶</a></h3>
 <p>If type inference fails to find Numba types for all values inside a function,
 the function will be compiled in object mode.  The generated LLVM will be
 significantly longer, as the compiled code will need to make calls to the
@@ -687,16 +746,17 @@ function.  Loop-lifting helps improve the performance of functions that
 need to access uncompilable code (such as I/O or plotting code) but still
 contain a time-intensive section of compilable code.</p>
 </div>
-<div class="section" id="stage-7-compile-llvm-ir-to-machine-code">
-<h3>6.2.3.8. Stage 7: Compile LLVM IR to Machine Code<a class="headerlink" href="#stage-7-compile-llvm-ir-to-machine-code" title="Permalink to this headline">¶</a></h3>
-<p>In both &#8220;object mode&#8221; and &#8220;nopython mode&#8221;, the generated LLVM IR is compiled
-by the LLVM JIT compiler and the machine code is loaded into memory.  A Python
-wrapper is also created (defined in <code class="docutils literal"><span class="pre">numba.dispatcher.Overloaded</span></code>) which can
-do the dynamic dispatch to the correct version of the compiled function if
-multiple type specializations were generated (for example, for both
-<code class="docutils literal"><span class="pre">float32</span></code> and <code class="docutils literal"><span class="pre">float64</span></code> versions of the same function).</p>
+<div class="section" id="stage-8-compile-llvm-ir-to-machine-code">
+<h3>7.2.4.9. Stage 8: Compile LLVM IR to machine code<a class="headerlink" href="#stage-8-compile-llvm-ir-to-machine-code" title="Permalink to this headline">¶</a></h3>
+<p>In both <a class="reference internal" href="../glossary.html#term-object-mode"><span class="xref std std-term">object mode</span></a> and <a class="reference internal" href="../glossary.html#term-nopython-mode"><span class="xref std std-term">nopython mode</span></a>, the generated LLVM IR
+is compiled by the LLVM JIT compiler and the machine code is loaded into
+memory.  A Python wrapper is also created (defined in
+<code class="docutils literal"><span class="pre">numba.dispatcher.Dispatcher</span></code>) which can do the dynamic dispatch to the
+correct version of the compiled function if multiple type specializations
+were generated (for example, for both <code class="docutils literal"><span class="pre">float32</span></code> and <code class="docutils literal"><span class="pre">float64</span></code> versions
+of the same function).</p>
 <p>The machine assembly code generated by LLVM can be dumped to the screen by
-setting the <span class="target" id="index-4"></span><a class="reference internal" href="../reference/envvars.html#envvar-NUMBA_DUMP_ASSEMBLY"><code class="xref std std-envvar docutils literal"><span class="pre">NUMBA_DUMP_ASSEMBLY</span></code></a> environment variable to 1:</p>
+setting the <span class="target" id="index-5"></span><a class="reference internal" href="../reference/envvars.html#envvar-NUMBA_DUMP_ASSEMBLY"><code class="xref std std-envvar docutils literal"><span class="pre">NUMBA_DUMP_ASSEMBLY</span></code></a> environment variable to 1:</p>
 <div class="highlight-gas"><div class="highlight"><pre>        <span class="na">.globl</span>  <span class="no">__main__.add$1.int64.int64</span>
         <span class="na">.align</span>  <span class="mi">16</span><span class="p">,</span> <span class="mi">0x90</span>
         <span class="na">.type</span>   <span class="no">__main__.add$1.int64.int64</span><span class="p">,</span><span class="na">@function</span>
@@ -730,10 +790,11 @@ translates the Python arguments to native data types.</p>
     <ul class="nav pull-right">
       
         <li><a href="../genindex.html" title="General Index" >index</a></li>
-        <li><a href="extending-frontend.html" title="6.3. Extending the Numba frontend" >next</a></li>
-        <li><a href="contributing.html" title="6.1. Contributing to Numba" >previous</a></li>
-        <li><a href="../index.html">Numba 0.23.1+123.gb2c3dce-py2.7-linux-x86_64.egg documentation</a></li>
-        <li><a href="index.html" >6. Developer Manual</a></li> 
+        <li><a href="../py-modindex.html" title="Python Module Index" >modules</a></li>
+        <li><a href="dispatching.html" title="7.3. Polymorphic dispatching" >next</a></li>
+        <li><a href="contributing.html" title="7.1. Contributing to Numba" >previous</a></li>
+        <li><a href="../index.html">Numba 0.23.1+131.gf7f53d5-py2.7-linux-x86_64.egg documentation</a></li>
+        <li><a href="index.html" >7. Developer Manual</a></li> 
       
     </ul>
   </div>
