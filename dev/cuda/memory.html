@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     
-    <title>3.3. Memory management &mdash; Numba 0.23.1+224.gd31fc2b-py2.7-linux-x86_64.egg documentation</title>
+    <title>3.3. Memory management &mdash; Numba 0.23.1+229.g842d2d9-py2.7-linux-x86_64.egg documentation</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
@@ -34,7 +34,7 @@
 <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
             URL_ROOT:    '../',
-            VERSION:     '0.23.1+224.gd31fc2b-py2.7-linux-x86_64.egg',
+            VERSION:     '0.23.1+229.g842d2d9-py2.7-linux-x86_64.egg',
             COLLAPSE_INDEX: false,
             FILE_SUFFIX: '.html',
             HAS_SOURCE:  true
@@ -57,7 +57,7 @@
     });
   });
 </script>
-    <link rel="top" title="Numba 0.23.1+224.gd31fc2b-py2.7-linux-x86_64.egg documentation" href="../index.html" />
+    <link rel="top" title="Numba 0.23.1+229.g842d2d9-py2.7-linux-x86_64.egg documentation" href="../index.html" />
     <link rel="up" title="3. Numba for CUDA GPUs" href="index.html" />
     <link rel="next" title="3.4. Writing Device Functions" href="device-functions.html" />
     <link rel="prev" title="3.2. Writing CUDA Kernels" href="kernels.html" /> 
@@ -71,7 +71,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="../index.html">Numba 0.23.1+224.gd31fc2b-py2.7-linux-x86_64.egg documentation</a>
+          <a class="brand" href="../index.html">Numba 0.23.1+229.g842d2d9-py2.7-linux-x86_64.egg documentation</a>
           <div class="nav-collapse collapse">
             <ul class="nav pull-right">
               
@@ -119,6 +119,7 @@
 <li><a class="reference internal" href="#streams">3.3.3. Streams</a></li>
 <li><a class="reference internal" href="#shared-memory-and-thread-synchronization">3.3.4. Shared memory and thread synchronization</a></li>
 <li><a class="reference internal" href="#local-memory">3.3.5. Local memory</a></li>
+<li><a class="reference internal" href="#smartarrays-experimental">3.3.6. SmartArrays (experimental)</a></li>
 </ul>
 </li>
 </ul>
@@ -171,6 +172,7 @@
 <li><a class="reference internal" href="#streams">3.3.3. Streams</a></li>
 <li><a class="reference internal" href="#shared-memory-and-thread-synchronization">3.3.4. Shared memory and thread synchronization</a></li>
 <li><a class="reference internal" href="#local-memory">3.3.5. Local memory</a></li>
+<li><a class="reference internal" href="#smartarrays-experimental">3.3.6. SmartArrays (experimental)</a></li>
 </ul>
 </li>
 </ul>
@@ -427,6 +429,71 @@ returned which can be read and written to like any standard array
 </dd></dl>
 
 </div>
+<div class="section" id="smartarrays-experimental">
+<h2>3.3.6. SmartArrays (experimental)<a class="headerlink" href="#smartarrays-experimental" title="Permalink to this headline">¶</a></h2>
+<p>Numba provides an Array-like data type that manages data movement to
+and from the device automatically. It can be used as drop-in replacement for
+<cite>numpy.ndarray</cite> in most cases, and is supported by Numba&#8217;s JIT-compiler for both
+&#8216;host&#8217; and &#8216;cuda&#8217; target.</p>
+<dl class="class">
+<dt id="numba.SmartArray">
+<em class="property">class </em><code class="descclassname">numba.</code><code class="descname">SmartArray</code><span class="sig-paren">(</span><em>obj=None</em>, <em>copy=True</em>, <em>shape=None</em>, <em>dtype=None</em>, <em>order=None</em>, <em>where='host'</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.SmartArray" title="Permalink to this definition">¶</a></dt>
+<dd><p>An array type that supports host and GPU storage.</p>
+<dl class="method">
+<dt id="numba.SmartArray.__init__">
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>obj=None</em>, <em>copy=True</em>, <em>shape=None</em>, <em>dtype=None</em>, <em>order=None</em>, <em>where='host'</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.SmartArray.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Construct a SmartArray in the memory space defined by &#8216;where&#8217;.
+Valid invocations:</p>
+<ul>
+<li><p class="first">SmartArray(obj=&lt;array-like object&gt;, copy=&lt;optional-true-or-false&gt;):</p>
+<p>to create a SmartArray from an existing array-like object.
+The &#8216;copy&#8217; argument specifies whether to adopt or to copy it.</p>
+</li>
+<li><p class="first">SmartArray(shape=&lt;shape&gt;, dtype=&lt;dtype&gt;, order=&lt;order&gt;)</p>
+<p>to create a new SmartArray from scratch, given the typical NumPy array
+attributes.</p>
+</li>
+</ul>
+<p>(The optional &#8216;where&#8217; argument specifies where to allocate the array
+initially. (Default: &#8216;host&#8217;)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.SmartArray.gpu">
+<code class="descname">gpu</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#numba.SmartArray.gpu" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the GPU representation of &#8216;self&#8217;.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.SmartArray.gpu_changed">
+<code class="descname">gpu_changed</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#numba.SmartArray.gpu_changed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mark the gpu array as changed, broadcast updates if needed.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.SmartArray.host">
+<code class="descname">host</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#numba.SmartArray.host" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the host representation of &#8216;self&#8217;.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.SmartArray.host_changed">
+<code class="descname">host_changed</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#numba.SmartArray.host_changed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mark the host array as changed, broadcast updates if needed.</p>
+</dd></dl>
+
+</dd></dl>
+
+<p>Thus, <cite>SmartArray</cite> objects may be passed as function arguments to jit-compiled
+functions. Whenever a cuda.jit-compiled function is being executed, it will
+trigger a data transfer to the GPU (unless the data are already there). But instead
+of transferring the data back to the host after the function completes, it leaves
+the data on the device and merely updates the host-side if there are any external
+references to that.
+Thus, if the next operation is another invocation of a cuda.jit-compiled function,
+the data does not need to be transferred again, making the compound operation more
+efficient (and making the use of the GPU advantagous even for smaller data sizes).</p>
+</div>
 </div>
 
 
@@ -449,7 +516,7 @@ returned which can be read and written to like any standard array
         <li><a href="../py-modindex.html" title="Python Module Index" >modules</a></li>
         <li><a href="device-functions.html" title="3.4. Writing Device Functions" >next</a></li>
         <li><a href="kernels.html" title="3.2. Writing CUDA Kernels" >previous</a></li>
-        <li><a href="../index.html">Numba 0.23.1+224.gd31fc2b-py2.7-linux-x86_64.egg documentation</a></li>
+        <li><a href="../index.html">Numba 0.23.1+229.g842d2d9-py2.7-linux-x86_64.egg documentation</a></li>
         <li><a href="index.html" >3. Numba for CUDA GPUs</a></li> 
       
     </ul>
