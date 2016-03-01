@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+
+
+
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+    <title>7.7. Live Variable Analysis &mdash; Numba 0.23.1+224.gd31fc2b-py2.7-linux-x86_64.egg documentation</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    
+<link rel="stylesheet" href="../_static/css/basicstrap-base.css" type="text/css" />
+<link rel="stylesheet" href="../_static/css/bootstrap.min.css" type="text/css" />
+<link rel="stylesheet" href="../_static/css/font-awesome.min.css">
+<!--[if IE 7]>
+<link rel="stylesheet" href="../_static/css/font-awesome-ie7.min.css">
+<![endif]-->
+<style type="text/css">
+  body {
+    padding-top: 60px;
+    padding-bottom: 40px;
+  }
+}
+</style>
+<link rel="stylesheet" href="../_static/basicstrap.css" type="text/css" />
+<link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+<link rel="stylesheet" href="../_static/css/bootstrap-responsive.min.css" type="text/css" />
+    
+<script type="text/javascript">
+  var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:    '../',
+            VERSION:     '0.23.1+224.gd31fc2b-py2.7-linux-x86_64.egg',
+            COLLAPSE_INDEX: false,
+            FILE_SUFFIX: '.html',
+            HAS_SOURCE:  true
+  };
+</script>
+<script type="text/javascript" src="../_static/js/jquery.min.js"></script>
+<script type="text/javascript" src="../_static/underscore.js"></script>
+<script type="text/javascript" src="../_static/doctools.js"></script>
+<script type="text/javascript" src="../_static/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+  $(document).ready(function(){
+    $('.show-sidebar').click(function(e) {
+       e.preventDefault();
+       if ($(".show-sidebar").html() == "Open Table Of Contents") {
+          $('.for-mobile').removeClass('hidden-phone');
+          $(".show-sidebar").html("Close Table Of Contents");
+       } else {
+          $(".show-sidebar").html("Open Table Of Contents");
+       }
+    });
+  });
+</script>
+    <link rel="top" title="Numba 0.23.1+224.gd31fc2b-py2.7-linux-x86_64.egg documentation" href="../index.html" />
+    <link rel="up" title="7. Developer Manual" href="index.html" />
+    <link rel="next" title="8. Numba Enhancement Proposals" href="../proposals/index.html" />
+    <link rel="prev" title="7.6. Using the Numba Rewrite Pass for Fun and Optimization" href="rewrites.html" /> 
+  </head>
+  <body>
+    <div class="navbar navbar-fixed-top ">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="../index.html">Numba 0.23.1+224.gd31fc2b-py2.7-linux-x86_64.egg documentation</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav pull-right">
+              
+                <li>
+                <a href="../genindex.html" title="General Index" accesskey="I">index</a>
+                </li>
+                <li>
+                <a href="../py-modindex.html" title="Python Module Index" >modules</a>
+                </li>
+                <li>
+                <a href="../proposals/index.html" title="8. Numba Enhancement Proposals" accesskey="N">next</a>
+                </li>
+                <li>
+                <a href="rewrites.html" title="7.6. Using the Numba Rewrite Pass for Fun and Optimization" accesskey="P">previous</a>
+                </li>
+                <li>
+                <a href="index.html" accesskey="U">7. Developer Manual</a>
+                </li>
+              
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <!-- container -->
+    <div class="container-fluid">
+
+
+      
+      <div class="row-fluid hidden-desktop hidden-tablet">
+      
+<div class="span3 ">
+  <a class="visible-phone btn btn-small show-sidebar" data-toggle="collapse" data-target=".for-mobile">Open Table Of Contents</a>
+  <div class="for-mobile sidebar hidden-phone">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">7.7. Live Variable Analysis</a><ul>
+<li><a class="reference internal" href="#notes-on-behavior-of-the-live-variable-analysis">7.7.1. Notes on behavior of the live variable analysis</a><ul>
+<li><a class="reference internal" href="#variable-deleted-before-definition">7.7.1.1. Variable deleted before definition</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="rewrites.html"
+                        title="previous chapter">7.6. Using the Numba Rewrite Pass for Fun and Optimization</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../proposals/index.html"
+                        title="next chapter">8. Numba Enhancement Proposals</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/developer/live_variable_analysis.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox">
+  <h3>Quick search</h3>
+  <form class="search form-search" action="../search.html" method="get">
+      <div class="input-append">
+        <input type="text" class="search-query" name="q">
+        <input type="submit" class="btn" value="Go" />
+      </div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+  </div>
+</div>
+      </div>
+      
+
+      <!-- row -->
+      <div class="row-fluid">
+         
+<div class="span3 visible-desktop visible-tablet">
+  <div class=" sidebar hidden-phone">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">7.7. Live Variable Analysis</a><ul>
+<li><a class="reference internal" href="#notes-on-behavior-of-the-live-variable-analysis">7.7.1. Notes on behavior of the live variable analysis</a><ul>
+<li><a class="reference internal" href="#variable-deleted-before-definition">7.7.1.1. Variable deleted before definition</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="rewrites.html"
+                        title="previous chapter">7.6. Using the Numba Rewrite Pass for Fun and Optimization</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../proposals/index.html"
+                        title="next chapter">8. Numba Enhancement Proposals</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/developer/live_variable_analysis.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox">
+  <h3>Quick search</h3>
+  <form class="search form-search" action="../search.html" method="get">
+      <div class="input-append">
+        <input type="text" class="search-query" name="q">
+        <input type="submit" class="btn" value="Go" />
+      </div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+  </div>
+</div> 
+        
+
+        <div class="span9">
+          <div class="document">
+            <div class="documentwrapper">
+              <div class="bodywrapper">
+                <div class="body">
+                  
+  <div class="section" id="live-variable-analysis">
+<span id="id1"></span><h1>7.7. Live Variable Analysis<a class="headerlink" href="#live-variable-analysis" title="Permalink to this headline">¶</a></h1>
+<p>(Releated issue <a class="reference external" href="https://github.com/numba/numba/pull/1611">https://github.com/numba/numba/pull/1611</a>)</p>
+<p>Numba uses reference-counting for garbage collection, a technique that
+requires cooperation by the compiler.  The Numba IR encodes the location
+where a decref must be inserted.  These locations are determined by live
+variable analysis.  The corresponding source code is the <code class="docutils literal"><span class="pre">_insert_var_dels()</span></code>
+method in <a class="reference external" href="https://github.com/numba/numba/blob/master/numba/interpreter.py">https://github.com/numba/numba/blob/master/numba/interpreter.py</a>.</p>
+<p>In Python semantic, once a variable is defined inside a function, it is alive
+until the variable is explicitly deleted or the function scope is ended.
+However, Numba analyzes the code to determine the minimum bound of the lifetime
+of each variable by its definition and usages during compilation.
+As soon as a variable is unreachable, a <code class="docutils literal"><span class="pre">del</span></code> instruction is inserted at the
+closest basic-block (either at the start of the next block(s) or at the
+end of the current block).  This means variables can be released earlier than in
+regular Python code.</p>
+<p>The behavior of the live variable analysis affects memory usage of the compiled
+code.  Internally, Numba does not differentiate temporary variables and user
+variables.  Since each operation generates at least one temporary variable,
+a function can accumulate a high number of temporary variables if they are not
+released as soon as possible.
+Our generator implementation can benefit from early releasing of variables,
+which reduces the size of the state to suspend at each yield point.</p>
+<div class="section" id="notes-on-behavior-of-the-live-variable-analysis">
+<h2>7.7.1. Notes on behavior of the live variable analysis<a class="headerlink" href="#notes-on-behavior-of-the-live-variable-analysis" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="variable-deleted-before-definition">
+<h3>7.7.1.1. Variable deleted before definition<a class="headerlink" href="#variable-deleted-before-definition" title="Permalink to this headline">¶</a></h3>
+<p>(Related issue: <a class="reference external" href="https://github.com/numba/numba/pull/1738">https://github.com/numba/numba/pull/1738</a>)</p>
+<p>When a variable lifetime is confined within the loop body (its definition and
+usage does not escape the loop body), like:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">arr</span><span class="p">):</span>
+  <span class="c"># BB 0</span>
+  <span class="n">res</span> <span class="o">=</span> <span class="mi">0</span>
+  <span class="c"># BB 1</span>
+  <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span>
+      <span class="c"># BB 2</span>
+      <span class="n">t</span> <span class="o">=</span> <span class="n">arr</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+      <span class="k">if</span> <span class="n">t</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+          <span class="c"># BB 3</span>
+          <span class="n">res</span> <span class="o">+=</span> <span class="n">t</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+  <span class="c"># BB 4</span>
+  <span class="k">return</span> <span class="n">res</span>
+</pre></div>
+</div>
+<p>Variable <code class="docutils literal"><span class="pre">t</span></code> is never referenced outside of the loop.
+A <code class="docutils literal"><span class="pre">del</span></code> instruction is emitted for <code class="docutils literal"><span class="pre">t</span></code> at the head of the loop (BB 1)
+before a variable is defined.  The reason is obvious once we know the control
+flow graph:</p>
+<div class="highlight-python"><div class="highlight"><pre>         +------------------------------&gt; BB4
+         |
+         |
+BB 0 --&gt; BB 1  --&gt;  BB 2 ---&gt; BB 3
+         ^          |          |
+         |          V          V
+         +---------------------+
+</pre></div>
+</div>
+<p>Variable <code class="docutils literal"><span class="pre">t</span></code> is defined in BB 1.  In BB 2, the evaluation of
+<code class="docutils literal"><span class="pre">t[i]</span> <span class="pre">&gt;</span> <span class="pre">1</span></code> uses <code class="docutils literal"><span class="pre">t</span></code>, which is the last use if execution takes the false
+branch and goto BB 1.  In BB 3, <code class="docutils literal"><span class="pre">t</span></code> is only used in <code class="docutils literal"><span class="pre">res</span> <span class="pre">+=</span> <span class="pre">t[i]</span></code>, which is
+the last use if execution takes the true branch.  Because BB 3, an outgoing
+branch of BB 2 uses <code class="docutils literal"><span class="pre">t</span></code>, <code class="docutils literal"><span class="pre">t</span></code> must be deleted at the common predecessor.
+The closest point is BB 1, which does not have <code class="docutils literal"><span class="pre">t</span></code> defined from the incoming
+edge of BB 0.</p>
+<p>Alternatively, if <code class="docutils literal"><span class="pre">t</span></code> is deleted at BB 4, we will still have to delete the
+variable before its definition because BB4 can be executed without executing
+the loop body (BB 2 and BB 3), where the variable is defined.</p>
+</div>
+</div>
+</div>
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        
+      </div><!-- /row -->
+
+      <!-- row -->
+      <div class="row-fluid">
+<div class="related navbar ">
+  <div class="navbar-inner">
+    <ul class="nav pull-right">
+      
+        <li><a href="../genindex.html" title="General Index" >index</a></li>
+        <li><a href="../py-modindex.html" title="Python Module Index" >modules</a></li>
+        <li><a href="../proposals/index.html" title="8. Numba Enhancement Proposals" >next</a></li>
+        <li><a href="rewrites.html" title="7.6. Using the Numba Rewrite Pass for Fun and Optimization" >previous</a></li>
+        <li><a href="../index.html">Numba 0.23.1+224.gd31fc2b-py2.7-linux-x86_64.egg documentation</a></li>
+        <li><a href="index.html" >7. Developer Manual</a></li> 
+      
+    </ul>
+  </div>
+</div>
+      </div><!-- /row -->
+
+      <!-- footer -->
+      <footer>
+          &copy; Copyright 2012-2015, Continuum Analytics.
+        Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.1.
+      </footer>
+      <!-- /footer -->
+
+    </div>
+    <!-- /container -->
+
+  </body>
+</html>
