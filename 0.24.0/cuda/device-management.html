@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+
+
+
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+    <title>3.7. Device management &mdash; Numba 0.24.0-py2.7-macosx-10.5-x86_64.egg documentation</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    
+
+<link rel="stylesheet" href="../_static/css/basicstrap-base.css" type="text/css" />
+<link rel="stylesheet" id="current-theme" href="../_static/css/bootstrap3/bootstrap.min.css" type="text/css" />
+<link rel="stylesheet" id="current-adjust-theme" type="text/css" />
+
+<link rel="stylesheet" href="../_static/css/font-awesome.min.css">
+
+<style type="text/css">
+  body {
+    padding-top: 60px;
+    padding-bottom: 40px;
+  }
+}
+</style>
+
+<link rel="stylesheet" href="../_static/css/basicstrap.css" type="text/css" />
+<link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+<script type="text/javascript">
+  var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:    '../',
+            VERSION:     '0.24.0-py2.7-macosx-10.5-x86_64.egg',
+            COLLAPSE_INDEX: false,
+            FILE_SUFFIX: '.html',
+            HAS_SOURCE:  true
+  };
+</script>
+    <script type="text/javascript" src="../_static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/bootstrap3.min.js"></script>
+<script type="text/javascript" src="../_static/js/jquery.cookie.min.js"></script>
+<script type="text/javascript" src="../_static/js/basicstrap.js"></script>
+<script type="text/javascript">
+</script>
+    <link rel="top" title="Numba 0.24.0-py2.7-macosx-10.5-x86_64.egg documentation" href="../index.html" />
+    <link rel="up" title="3. Numba for CUDA GPUs" href="index.html" />
+    <link rel="next" title="3.9. Examples" href="examples.html" />
+    <link rel="prev" title="3.6. Supported Atomic Operations" href="intrinsics.html" /> 
+  </head>
+  <body role="document">
+    <div id="navbar-top" class="navbar navbar-fixed-top navbar-default" role="navigation" aria-label="top navigation">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="../index.html">Numba 0.24.0-py2.7-macosx-10.5-x86_64.egg documentation</a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+              <li class="dropdown visible-xs">
+                <a role="button" id="localToc" data-toggle="dropdown" data-target="#" href="#">Table Of Contents <b class="caret"></b></a>
+                <ul class="dropdown-menu localtoc sp-localtoc" role="menu" aria-labelledby="localToc">
+                <ul>
+<li><a class="reference internal" href="#">3.7. Device management</a><ul>
+<li><a class="reference internal" href="#device-selection">3.7.1. Device Selection</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#the-device-list">3.8. The Device List</a></li>
+</ul>
+
+                </ul>
+              </li>
+
+            
+              <li><a href="intrinsics.html" title="3.6. Supported Atomic Operations" accesskey="P">previous </a></li>
+              <li><a href="examples.html" title="3.9. Examples" accesskey="N">next </a></li>
+              <li><a href="../py-modindex.html" title="Python Module Index" >modules </a></li>
+              <li><a href="../genindex.html" title="General Index" accesskey="I">index </a></li>
+              <li><a href="index.html" accesskey="U">3. Numba for CUDA GPUs</a></li>
+            
+            <li class="visible-xs"><a href="../_sources/cuda/device-management.txt" rel="nofollow">Show Source</a></li>
+
+            <li class="visible-xs">
+                <form class="search form-search form-inline navbar-form navbar-right sp-searchbox" action="../search.html" method="get">
+                  <div class="input-append input-group">
+                    <input type="text" class="search-query form-control" name="q" placeholder="Search...">
+                    <span class="input-group-btn">
+                    <input type="submit" class="btn" value="Go" />
+                    </span>
+                  </div>
+                  <input type="hidden" name="check_keywords" value="yes" />
+                  <input type="hidden" name="area" value="default" />
+                </form>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    
+
+    <!-- container -->
+    <div class="container-fluid">
+
+      <!-- row -->
+      <div class="row">
+         
+<div class="col-md-3 hidden-xs">
+  <div class="sidebar hidden-xs" role="navigation" aria-label="main navigation">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">3.7. Device management</a><ul>
+<li><a class="reference internal" href="#device-selection">3.7.1. Device Selection</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#the-device-list">3.8. The Device List</a></li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="intrinsics.html"
+                        title="previous chapter">3.6. Supported Atomic Operations</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="examples.html"
+                        title="next chapter">3.9. Examples</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/cuda/device-management.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" role="search">
+  <h3>Quick search</h3>
+  <form class="search form-inline" action="../search.html" method="get">
+      <div class="input-append input-group">
+        <input type="text" class="search-query form-control" name="q" placeholder="Search...">
+        <span class="input-group-btn">
+        <input type="submit" class="btn" value="Go" />
+        </span>
+      </div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+  </div>
+</div> 
+        
+
+        <div class="col-md-9">
+          <div class="document" role="main">
+            <div class="documentwrapper">
+              <div class="bodywrapper">
+                <div class="body">
+                  
+  <div class="section" id="device-management">
+<h1>3.7. Device management<a class="headerlink" href="#device-management" title="Permalink to this headline">¶</a></h1>
+<p>For multi-GPU machines, users may want to select which GPU to use.
+By default the CUDA driver selects the fastest GPU as the device 0,
+which is the default device used by Numba.</p>
+<p>The features introduced on this page are generally not of interest
+unless working with systems hosting/offering more than one CUDA-capable GPU.</p>
+<div class="section" id="device-selection">
+<h2>3.7.1. Device Selection<a class="headerlink" href="#device-selection" title="Permalink to this headline">¶</a></h2>
+<p>If at all required, device selection must be done before any CUDA feature is
+used.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">cuda</span>
+<span class="n">cuda</span><span class="o">.</span><span class="n">select_device</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The device can be closed by:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">cuda</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Users can then create a new context with another device.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">cuda</span><span class="o">.</span><span class="n">select_device</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>  <span class="c"># assuming we have 2 GPUs</span>
+</pre></div>
+</div>
+<dl class="function">
+<dt>
+<tt class="descclassname">numba.cuda.</tt><tt class="descname">select_device</tt><big>(</big><em>device_id</em><big>)</big></dt>
+<dd><p>Create a new CUDA context for the selected <em>device_id</em>.  <em>device_id</em>
+should be the number of the device (starting from 0; the device order
+is determined by the CUDA libraries).  The context is associated with
+the current thread.  Numba currently allows only one context per thread.</p>
+<p>If successful, this function returns a device instance.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">numba.cuda.</tt><tt class="descname">close</tt><big>(</big><big>)</big></dt>
+<dd><p>Explicitly close all contexts in the current thread.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Compiled functions are associated with the CUDA context.
+This makes it not very useful to close and create new devices, though it
+is certainly useful for choosing which device to use when the machine
+has multiple GPUs.</p>
+</div>
+</dd></dl>
+
+</div>
+</div>
+<div class="section" id="the-device-list">
+<h1>3.8. The Device List<a class="headerlink" href="#the-device-list" title="Permalink to this headline">¶</a></h1>
+<p>The Device List is a list of all the GPUs in the system, and can be indexed to
+obtain a context manager that ensures execution on the selected GPU.</p>
+<dl class="attribute">
+<dt>
+<tt class="descclassname">numba.cuda.</tt><tt class="descname">gpus</tt></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="numba.cuda.cudadrv.devices.gpus">
+<tt class="descclassname">numba.cuda.cudadrv.devices.</tt><tt class="descname">gpus</tt><a class="headerlink" href="#numba.cuda.cudadrv.devices.gpus" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p><tt class="xref py py-data docutils literal"><span class="pre">gpus</span></tt> is an instance of the <tt class="xref py py-class docutils literal"><span class="pre">_DeviceList</span></tt> class, from which
+the current GPU context can also be retrieved:</p>
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">numba.cuda.cudadrv.devices.</tt><tt class="descname">_DeviceList</tt></dt>
+<dd><dl class="attribute">
+<dt>
+<tt class="descname">current</tt></dt>
+<dd><p>Returns the active device or None if there&#8217;s no active device</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        
+      </div><!-- /row -->
+
+      <!-- row -->
+      <div class="row footer-relbar">
+<div id="navbar-related" class=" related navbar navbar-default" role="navigation" aria-label="related navigation">
+  <div class="navbar-inner">
+    <ul class="nav navbar-nav">
+        <li><a href="../index.html">Numba 0.24.0-py2.7-macosx-10.5-x86_64.egg documentation</a></li>
+    </ul>
+    <ul class="nav navbar-nav pull-right hidden-xs hidden-sm">
+      
+        <li><a href="intrinsics.html" title="3.6. Supported Atomic Operations" >previous</a></li>
+        <li><a href="examples.html" title="3.9. Examples" >next</a></li>
+        <li><a href="../py-modindex.html" title="Python Module Index" >modules</a></li>
+        <li><a href="../genindex.html" title="General Index" >index</a></li>
+        <li><a href="index.html" >3. Numba for CUDA GPUs</a></li> 
+      
+    </ul>
+  </div>
+</div>
+      </div><!-- /row -->
+
+      <!-- footer -->
+      <footer role="contentinfo">
+          &copy; Copyright 2012-2015, Continuum Analytics.
+        Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.3.
+      </footer>
+      <!-- /footer -->
+
+    </div>
+    <!-- /container -->
+
+  </body>
+</html>

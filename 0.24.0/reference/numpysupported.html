@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+
+
+
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+    <title>2.6. Supported NumPy features &mdash; Numba 0.24.0-py2.7-macosx-10.5-x86_64.egg documentation</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    
+
+<link rel="stylesheet" href="../_static/css/basicstrap-base.css" type="text/css" />
+<link rel="stylesheet" id="current-theme" href="../_static/css/bootstrap3/bootstrap.min.css" type="text/css" />
+<link rel="stylesheet" id="current-adjust-theme" type="text/css" />
+
+<link rel="stylesheet" href="../_static/css/font-awesome.min.css">
+
+<style type="text/css">
+  body {
+    padding-top: 60px;
+    padding-bottom: 40px;
+  }
+}
+</style>
+
+<link rel="stylesheet" href="../_static/css/basicstrap.css" type="text/css" />
+<link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+<script type="text/javascript">
+  var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:    '../',
+            VERSION:     '0.24.0-py2.7-macosx-10.5-x86_64.egg',
+            COLLAPSE_INDEX: false,
+            FILE_SUFFIX: '.html',
+            HAS_SOURCE:  true
+  };
+</script>
+    <script type="text/javascript" src="../_static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/bootstrap3.min.js"></script>
+<script type="text/javascript" src="../_static/js/jquery.cookie.min.js"></script>
+<script type="text/javascript" src="../_static/js/basicstrap.js"></script>
+<script type="text/javascript">
+</script>
+    <link rel="top" title="Numba 0.24.0-py2.7-macosx-10.5-x86_64.egg documentation" href="../index.html" />
+    <link rel="up" title="2. Reference Manual" href="index.html" />
+    <link rel="next" title="2.7. Deviations from Python semantics" href="pysemantics.html" />
+    <link rel="prev" title="2.5. Supported Python features" href="pysupported.html" /> 
+  </head>
+  <body role="document">
+    <div id="navbar-top" class="navbar navbar-fixed-top navbar-default" role="navigation" aria-label="top navigation">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="../index.html">Numba 0.24.0-py2.7-macosx-10.5-x86_64.egg documentation</a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+              <li class="dropdown visible-xs">
+                <a role="button" id="localToc" data-toggle="dropdown" data-target="#" href="#">Table Of Contents <b class="caret"></b></a>
+                <ul class="dropdown-menu localtoc sp-localtoc" role="menu" aria-labelledby="localToc">
+                <ul>
+<li><a class="reference internal" href="#">2.6. Supported NumPy features</a><ul>
+<li><a class="reference internal" href="#scalar-types">2.6.1. Scalar types</a></li>
+<li><a class="reference internal" href="#array-types">2.6.2. Array types</a><ul>
+<li><a class="reference internal" href="#array-access">2.6.2.1. Array access</a></li>
+<li><a class="reference internal" href="#attributes">2.6.2.2. Attributes</a><ul>
+<li><a class="reference internal" href="#the-flags-object">2.6.2.2.1. The <tt class="docutils literal"><span class="pre">flags</span></tt> object</a></li>
+<li><a class="reference internal" href="#the-flat-object">2.6.2.2.2. The <tt class="docutils literal"><span class="pre">flat</span></tt> object</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#calculation">2.6.2.3. Calculation</a></li>
+<li><a class="reference internal" href="#other-methods">2.6.2.4. Other methods</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#functions">2.6.3. Functions</a><ul>
+<li><a class="reference internal" href="#linear-algebra">2.6.3.1. Linear algebra</a></li>
+<li><a class="reference internal" href="#other-functions">2.6.3.2. Other functions</a></li>
+<li><a class="reference internal" href="#literal-arrays">2.6.3.3. Literal arrays</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#modules">2.6.4. Modules</a><ul>
+<li><a class="reference internal" href="#random">2.6.4.1. <tt class="docutils literal"><span class="pre">random</span></tt></a><ul>
+<li><a class="reference internal" href="#initialization">2.6.4.1.1. Initialization</a></li>
+<li><a class="reference internal" href="#simple-random-data">2.6.4.1.2. Simple random data</a></li>
+<li><a class="reference internal" href="#permutations">2.6.4.1.3. Permutations</a></li>
+<li><a class="reference internal" href="#distributions">2.6.4.1.4. Distributions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#standard-ufuncs">2.6.5. Standard ufuncs</a><ul>
+<li><a class="reference internal" href="#limitations">2.6.5.1. Limitations</a></li>
+<li><a class="reference internal" href="#math-operations">2.6.5.2. Math operations</a></li>
+<li><a class="reference internal" href="#trigonometric-functions">2.6.5.3. Trigonometric functions</a></li>
+<li><a class="reference internal" href="#bit-twiddling-functions">2.6.5.4. Bit-twiddling functions</a></li>
+<li><a class="reference internal" href="#comparison-functions">2.6.5.5. Comparison functions</a></li>
+<li><a class="reference internal" href="#floating-functions">2.6.5.6. Floating functions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+                </ul>
+              </li>
+
+            
+              <li><a href="pysupported.html" title="2.5. Supported Python features" accesskey="P">previous </a></li>
+              <li><a href="pysemantics.html" title="2.7. Deviations from Python semantics" accesskey="N">next </a></li>
+              <li><a href="../py-modindex.html" title="Python Module Index" >modules </a></li>
+              <li><a href="../genindex.html" title="General Index" accesskey="I">index </a></li>
+              <li><a href="index.html" accesskey="U">2. Reference Manual</a></li>
+            
+            <li class="visible-xs"><a href="../_sources/reference/numpysupported.txt" rel="nofollow">Show Source</a></li>
+
+            <li class="visible-xs">
+                <form class="search form-search form-inline navbar-form navbar-right sp-searchbox" action="../search.html" method="get">
+                  <div class="input-append input-group">
+                    <input type="text" class="search-query form-control" name="q" placeholder="Search...">
+                    <span class="input-group-btn">
+                    <input type="submit" class="btn" value="Go" />
+                    </span>
+                  </div>
+                  <input type="hidden" name="check_keywords" value="yes" />
+                  <input type="hidden" name="area" value="default" />
+                </form>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    
+
+    <!-- container -->
+    <div class="container-fluid">
+
+      <!-- row -->
+      <div class="row">
+         
+<div class="col-md-3 hidden-xs">
+  <div class="sidebar hidden-xs" role="navigation" aria-label="main navigation">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">2.6. Supported NumPy features</a><ul>
+<li><a class="reference internal" href="#scalar-types">2.6.1. Scalar types</a></li>
+<li><a class="reference internal" href="#array-types">2.6.2. Array types</a><ul>
+<li><a class="reference internal" href="#array-access">2.6.2.1. Array access</a></li>
+<li><a class="reference internal" href="#attributes">2.6.2.2. Attributes</a><ul>
+<li><a class="reference internal" href="#the-flags-object">2.6.2.2.1. The <tt class="docutils literal"><span class="pre">flags</span></tt> object</a></li>
+<li><a class="reference internal" href="#the-flat-object">2.6.2.2.2. The <tt class="docutils literal"><span class="pre">flat</span></tt> object</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#calculation">2.6.2.3. Calculation</a></li>
+<li><a class="reference internal" href="#other-methods">2.6.2.4. Other methods</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#functions">2.6.3. Functions</a><ul>
+<li><a class="reference internal" href="#linear-algebra">2.6.3.1. Linear algebra</a></li>
+<li><a class="reference internal" href="#other-functions">2.6.3.2. Other functions</a></li>
+<li><a class="reference internal" href="#literal-arrays">2.6.3.3. Literal arrays</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#modules">2.6.4. Modules</a><ul>
+<li><a class="reference internal" href="#random">2.6.4.1. <tt class="docutils literal"><span class="pre">random</span></tt></a><ul>
+<li><a class="reference internal" href="#initialization">2.6.4.1.1. Initialization</a></li>
+<li><a class="reference internal" href="#simple-random-data">2.6.4.1.2. Simple random data</a></li>
+<li><a class="reference internal" href="#permutations">2.6.4.1.3. Permutations</a></li>
+<li><a class="reference internal" href="#distributions">2.6.4.1.4. Distributions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#standard-ufuncs">2.6.5. Standard ufuncs</a><ul>
+<li><a class="reference internal" href="#limitations">2.6.5.1. Limitations</a></li>
+<li><a class="reference internal" href="#math-operations">2.6.5.2. Math operations</a></li>
+<li><a class="reference internal" href="#trigonometric-functions">2.6.5.3. Trigonometric functions</a></li>
+<li><a class="reference internal" href="#bit-twiddling-functions">2.6.5.4. Bit-twiddling functions</a></li>
+<li><a class="reference internal" href="#comparison-functions">2.6.5.5. Comparison functions</a></li>
+<li><a class="reference internal" href="#floating-functions">2.6.5.6. Floating functions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="pysupported.html"
+                        title="previous chapter">2.5. Supported Python features</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="pysemantics.html"
+                        title="next chapter">2.7. Deviations from Python semantics</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/reference/numpysupported.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" role="search">
+  <h3>Quick search</h3>
+  <form class="search form-inline" action="../search.html" method="get">
+      <div class="input-append input-group">
+        <input type="text" class="search-query form-control" name="q" placeholder="Search...">
+        <span class="input-group-btn">
+        <input type="submit" class="btn" value="Go" />
+        </span>
+      </div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+  </div>
+</div> 
+        
+
+        <div class="col-md-9">
+          <div class="document" role="main">
+            <div class="documentwrapper">
+              <div class="bodywrapper">
+                <div class="body">
+                  
+  <div class="section" id="supported-numpy-features">
+<h1>2.6. Supported NumPy features<a class="headerlink" href="#supported-numpy-features" title="Permalink to this headline">¶</a></h1>
+<p>One objective of Numba is having a seamless integration with <a class="reference external" href="http://www.numpy.org/">NumPy</a>.
+NumPy arrays provide an efficient storage method for homogeneous sets of
+data.  NumPy dtypes provide type information useful when compiling, and
+the regular, structured storage of potentially large amounts of data
+in memory provides an ideal memory layout for code generation.  Numba
+excels at generating code that executes on top of NumPy arrays.</p>
+<p>NumPy support in Numba comes in many forms:</p>
+<ul class="simple">
+<li>Numba understands calls to NumPy <a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/ufuncs.html">ufuncs</a> and is able to generate
+equivalent native code for many of them.</li>
+<li>NumPy arrays are directly supported in Numba.  Access to Numpy arrays
+is very efficient, as indexing is lowered to direct memory accesses
+when possible.</li>
+<li>Numba is able to generate <a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/ufuncs.html">ufuncs</a> and <a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/c-api.generalized-ufuncs.html">gufuncs</a>. This means that it
+is possible to implement ufuncs and gufuncs within Python, getting
+speeds comparable to that of ufuncs/gufuncs implemented in C extension
+modules using the NumPy C API.</li>
+</ul>
+<p>The following sections focus on the Numpy features supported in
+<a class="reference internal" href="../glossary.html#term-nopython-mode"><em class="xref std std-term">nopython mode</em></a>, unless otherwise stated.</p>
+<div class="section" id="scalar-types">
+<h2>2.6.1. Scalar types<a class="headerlink" href="#scalar-types" title="Permalink to this headline">¶</a></h2>
+<p>Numba supports the following Numpy scalar types:</p>
+<ul class="simple">
+<li><strong>Integers</strong>: all integers of either signedness, and any width up to 64 bits</li>
+<li><strong>Booleans</strong></li>
+<li><strong>Real numbers:</strong> single-precision (32-bit) and double-precision (64-bit) reals</li>
+<li><strong>Complex numbers:</strong> single-precision (2x32-bit) and double-precision (2x64-bit) complex numbers</li>
+<li><strong>Datetimes and timestamps:</strong> of any unit</li>
+<li><strong>Character sequences</strong> (but no operations are available on them)</li>
+<li><strong>Structured scalars:</strong> structured scalars made of any of the types above and arrays of the types above</li>
+</ul>
+<p>The following scalar types and features are not supported:</p>
+<ul class="simple">
+<li><strong>Arbitrary Python objects</strong></li>
+<li><strong>Half-precision and extended-precision</strong> real and complex numbers</li>
+<li><strong>Nested structured scalars</strong> the fields of structured scalars may not contain other structured scalars</li>
+</ul>
+<p>The operations supported on scalar Numpy numbers are the same as on the
+equivalent built-in types such as <tt class="docutils literal"><span class="pre">int</span></tt> or <tt class="docutils literal"><span class="pre">float</span></tt>.  You can use
+a type&#8217;s constructor to convert from a different type or width.</p>
+<p>Structured scalars support attribute getting and setting, as well as
+member lookup using constant strings.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/arrays.scalars.html">Numpy scalars</a>
+reference.</p>
+</div>
+</div>
+<div class="section" id="array-types">
+<h2>2.6.2. Array types<a class="headerlink" href="#array-types" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/arrays.ndarray.html">Numpy arrays</a>
+of any of the scalar types above are supported, regardless of the shape
+or layout.</p>
+<div class="section" id="array-access">
+<h3>2.6.2.1. Array access<a class="headerlink" href="#array-access" title="Permalink to this headline">¶</a></h3>
+<p>Arrays support normal iteration.  Full basic indexing and slicing is
+supported.  A subset of advanced indexing is also supported: only one
+advanced index is allowed, and it has to be a one-dimensional array
+(it can be combined with an arbitrary number of basic indices as well).</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/arrays.indexing.html">Numpy indexing</a>
+reference.</p>
+</div>
+</div>
+<div class="section" id="attributes">
+<h3>2.6.2.2. Attributes<a class="headerlink" href="#attributes" title="Permalink to this headline">¶</a></h3>
+<p>The following attributes of Numpy arrays are supported:</p>
+<ul class="simple">
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.dtype.html#numpy.ndarray.dtype" title="(in NumPy v1.10)"><tt class="xref py py-attr docutils literal"><span class="pre">dtype</span></tt></a></li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.flags.html#numpy.ndarray.flags" title="(in NumPy v1.10)"><tt class="xref py py-attr docutils literal"><span class="pre">flags</span></tt></a></li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.flat.html#numpy.ndarray.flat" title="(in NumPy v1.10)"><tt class="xref py py-attr docutils literal"><span class="pre">flat</span></tt></a></li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.itemsize.html#numpy.ndarray.itemsize" title="(in NumPy v1.10)"><tt class="xref py py-attr docutils literal"><span class="pre">itemsize</span></tt></a></li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.ndim.html#numpy.ndarray.ndim" title="(in NumPy v1.10)"><tt class="xref py py-attr docutils literal"><span class="pre">ndim</span></tt></a></li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.shape.html#numpy.ndarray.shape" title="(in NumPy v1.10)"><tt class="xref py py-attr docutils literal"><span class="pre">shape</span></tt></a></li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.size.html#numpy.ndarray.size" title="(in NumPy v1.10)"><tt class="xref py py-attr docutils literal"><span class="pre">size</span></tt></a></li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.strides.html#numpy.ndarray.strides" title="(in NumPy v1.10)"><tt class="xref py py-attr docutils literal"><span class="pre">strides</span></tt></a></li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.T.html#numpy.ndarray.T" title="(in NumPy v1.10)"><tt class="xref py py-attr docutils literal"><span class="pre">T</span></tt></a></li>
+</ul>
+<div class="section" id="the-flags-object">
+<h4>2.6.2.2.1. The <tt class="docutils literal"><span class="pre">flags</span></tt> object<a class="headerlink" href="#the-flags-object" title="Permalink to this headline">¶</a></h4>
+<p>The object returned by the <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.flags.html#numpy.ndarray.flags" title="(in NumPy v1.10)"><tt class="xref py py-attr docutils literal"><span class="pre">flags</span></tt></a> attribute supports
+the <tt class="docutils literal"><span class="pre">contiguous</span></tt>, <tt class="docutils literal"><span class="pre">c_contiguous</span></tt> and <tt class="docutils literal"><span class="pre">f_contiguous</span></tt> attributes.</p>
+</div>
+<div class="section" id="the-flat-object">
+<h4>2.6.2.2.2. The <tt class="docutils literal"><span class="pre">flat</span></tt> object<a class="headerlink" href="#the-flat-object" title="Permalink to this headline">¶</a></h4>
+<p>The object returned by the <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.flat.html#numpy.ndarray.flat" title="(in NumPy v1.10)"><tt class="xref py py-attr docutils literal"><span class="pre">flat</span></tt></a> attribute supports
+iteration and indexing, but be careful: indexing is very slow on
+non-C-contiguous arrays.</p>
+</div>
+</div>
+<div class="section" id="calculation">
+<h3>2.6.2.3. Calculation<a class="headerlink" href="#calculation" title="Permalink to this headline">¶</a></h3>
+<p>The following methods of Numpy arrays are supported in their basic form
+(without any optional arguments):</p>
+<ul class="simple">
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.argmax.html#numpy.ndarray.argmax" title="(in NumPy v1.10)"><tt class="xref py py-meth docutils literal"><span class="pre">argmax()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.argmin.html#numpy.ndarray.argmin" title="(in NumPy v1.10)"><tt class="xref py py-meth docutils literal"><span class="pre">argmin()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.cumprod.html#numpy.ndarray.cumprod" title="(in NumPy v1.10)"><tt class="xref py py-meth docutils literal"><span class="pre">cumprod()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.cumsum.html#numpy.ndarray.cumsum" title="(in NumPy v1.10)"><tt class="xref py py-meth docutils literal"><span class="pre">cumsum()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.max.html#numpy.ndarray.max" title="(in NumPy v1.10)"><tt class="xref py py-meth docutils literal"><span class="pre">max()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.mean.html#numpy.ndarray.mean" title="(in NumPy v1.10)"><tt class="xref py py-meth docutils literal"><span class="pre">mean()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.min.html#numpy.ndarray.min" title="(in NumPy v1.10)"><tt class="xref py py-meth docutils literal"><span class="pre">min()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.nonzero.html#numpy.ndarray.nonzero" title="(in NumPy v1.10)"><tt class="xref py py-meth docutils literal"><span class="pre">nonzero()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.prod.html#numpy.ndarray.prod" title="(in NumPy v1.10)"><tt class="xref py py-meth docutils literal"><span class="pre">prod()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.std.html#numpy.ndarray.std" title="(in NumPy v1.10)"><tt class="xref py py-meth docutils literal"><span class="pre">std()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.sum.html#numpy.ndarray.sum" title="(in NumPy v1.10)"><tt class="xref py py-meth docutils literal"><span class="pre">sum()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.var.html#numpy.ndarray.var" title="(in NumPy v1.10)"><tt class="xref py py-meth docutils literal"><span class="pre">var()</span></tt></a></li>
+</ul>
+<p>The corresponding top-level Numpy functions (such as <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.sum.html#numpy.sum" title="(in NumPy v1.10)"><tt class="xref py py-func docutils literal"><span class="pre">numpy.sum()</span></tt></a>)
+are similarly supported.</p>
+</div>
+<div class="section" id="other-methods">
+<h3>2.6.2.4. Other methods<a class="headerlink" href="#other-methods" title="Permalink to this headline">¶</a></h3>
+<p>The following methods of Numpy arrays are supported:</p>
+<ul class="simple">
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.copy.html#numpy.ndarray.copy" title="(in NumPy v1.10)"><tt class="xref py py-meth docutils literal"><span class="pre">copy()</span></tt></a> (without arguments)</li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.reshape.html#numpy.ndarray.reshape" title="(in NumPy v1.10)"><tt class="xref py py-meth docutils literal"><span class="pre">reshape()</span></tt></a> (only the 1-argument form)</li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.sort.html#numpy.ndarray.sort" title="(in NumPy v1.10)"><tt class="xref py py-meth docutils literal"><span class="pre">sort()</span></tt></a> (without arguments)</li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.transpose.html#numpy.ndarray.transpose" title="(in NumPy v1.10)"><tt class="xref py py-meth docutils literal"><span class="pre">transpose()</span></tt></a> (without arguments, and without copying)</li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.view.html#numpy.ndarray.view" title="(in NumPy v1.10)"><tt class="xref py py-meth docutils literal"><span class="pre">view()</span></tt></a> (only the 1-argument form)</li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.ravel.html#numpy.ndarray.ravel" title="(in NumPy v1.10)"><tt class="xref py py-meth docutils literal"><span class="pre">ravel()</span></tt></a> (no order argument; &#8216;C&#8217; order only)</li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.flatten.html#numpy.ndarray.flatten" title="(in NumPy v1.10)"><tt class="xref py py-meth docutils literal"><span class="pre">flatten()</span></tt></a> (no order argument; &#8216;C&#8217; order only)</li>
+</ul>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Sorting may be slightly slower than Numpy&#8217;s implementation.</p>
+</div>
+</div>
+</div>
+<div class="section" id="functions">
+<h2>2.6.3. Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="linear-algebra">
+<h3>2.6.3.1. Linear algebra<a class="headerlink" href="#linear-algebra" title="Permalink to this headline">¶</a></h3>
+<p>Basic linear algebra is supported on 1-D and 2-D contiguous arrays of
+floating-point and complex numbers.</p>
+<ul class="simple">
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.dot.html#numpy.dot" title="(in NumPy v1.10)"><tt class="xref py py-func docutils literal"><span class="pre">numpy.dot()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.vdot.html#numpy.vdot" title="(in NumPy v1.10)"><tt class="xref py py-func docutils literal"><span class="pre">numpy.vdot()</span></tt></a></li>
+<li>On Python 3.5 and above, the matrix multiplication operator from
+<span class="target" id="index-0"></span><a class="pep reference external" href="http://www.python.org/dev/peps/pep-0465"><strong>PEP 465</strong></a> (i.e. <tt class="docutils literal"><span class="pre">a</span> <span class="pre">&#64;</span> <span class="pre">b</span></tt> where <tt class="docutils literal"><span class="pre">a</span></tt> and <tt class="docutils literal"><span class="pre">b</span></tt> are 1-D or 2-D arrays).</li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.linalg.inv.html#numpy.linalg.inv" title="(in NumPy v1.10)"><tt class="xref py py-func docutils literal"><span class="pre">numpy.linalg.inv()</span></tt></a></li>
+</ul>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The implementation of these functions needs Scipy 0.16+ to be installed.</p>
+</div>
+</div>
+<div class="section" id="other-functions">
+<h3>2.6.3.2. Other functions<a class="headerlink" href="#other-functions" title="Permalink to this headline">¶</a></h3>
+<p>The following top-level functions are supported:</p>
+<ul class="simple">
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.arange.html#numpy.arange" title="(in NumPy v1.10)"><tt class="xref py py-func docutils literal"><span class="pre">numpy.arange()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.array.html#numpy.array" title="(in NumPy v1.10)"><tt class="xref py py-func docutils literal"><span class="pre">numpy.array()</span></tt></a> (only the 2 first arguments)</li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.diag.html#numpy.diag" title="(in NumPy v1.10)"><tt class="xref py py-func docutils literal"><span class="pre">numpy.diag()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.empty.html#numpy.empty" title="(in NumPy v1.10)"><tt class="xref py py-func docutils literal"><span class="pre">numpy.empty()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.empty_like.html#numpy.empty_like" title="(in NumPy v1.10)"><tt class="xref py py-func docutils literal"><span class="pre">numpy.empty_like()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.eye.html#numpy.eye" title="(in NumPy v1.10)"><tt class="xref py py-func docutils literal"><span class="pre">numpy.eye()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.frombuffer.html#numpy.frombuffer" title="(in NumPy v1.10)"><tt class="xref py py-func docutils literal"><span class="pre">numpy.frombuffer()</span></tt></a> (only the 2 first arguments)</li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.full.html#numpy.full" title="(in NumPy v1.10)"><tt class="xref py py-func docutils literal"><span class="pre">numpy.full()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.full_like.html#numpy.full_like" title="(in NumPy v1.10)"><tt class="xref py py-func docutils literal"><span class="pre">numpy.full_like()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.identity.html#numpy.identity" title="(in NumPy v1.10)"><tt class="xref py py-func docutils literal"><span class="pre">numpy.identity()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.linspace.html#numpy.linspace" title="(in NumPy v1.10)"><tt class="xref py py-func docutils literal"><span class="pre">numpy.linspace()</span></tt></a> (only the 3-argument form)</li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.median.html#numpy.median" title="(in NumPy v1.10)"><tt class="xref py py-func docutils literal"><span class="pre">numpy.median()</span></tt></a> (only the first argument)</li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndenumerate.html#numpy.ndenumerate" title="(in NumPy v1.10)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndenumerate</span></tt></a></li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndindex.html#numpy.ndindex" title="(in NumPy v1.10)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndindex</span></tt></a></li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ones.html#numpy.ones" title="(in NumPy v1.10)"><tt class="xref py py-func docutils literal"><span class="pre">numpy.ones()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ones_like.html#numpy.ones_like" title="(in NumPy v1.10)"><tt class="xref py py-func docutils literal"><span class="pre">numpy.ones_like()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.round_.html#numpy.round_" title="(in NumPy v1.10)"><tt class="xref py py-func docutils literal"><span class="pre">numpy.round_()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.sinc.html#numpy.sinc" title="(in NumPy v1.10)"><tt class="xref py py-func docutils literal"><span class="pre">numpy.sinc()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.sort.html#numpy.sort" title="(in NumPy v1.10)"><tt class="xref py py-func docutils literal"><span class="pre">numpy.sort()</span></tt></a> (no optional arguments)</li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.where.html#numpy.where" title="(in NumPy v1.10)"><tt class="xref py py-func docutils literal"><span class="pre">numpy.where()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.zeros.html#numpy.zeros" title="(in NumPy v1.10)"><tt class="xref py py-func docutils literal"><span class="pre">numpy.zeros()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.zeros_like.html#numpy.zeros_like" title="(in NumPy v1.10)"><tt class="xref py py-func docutils literal"><span class="pre">numpy.zeros_like()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ravel.html#numpy.ravel" title="(in NumPy v1.10)"><tt class="xref py py-func docutils literal"><span class="pre">numpy.ravel()</span></tt></a> (no order argument; &#8216;C&#8217; order only)</li>
+<li><tt class="xref py py-func docutils literal"><span class="pre">numpy.flatten()</span></tt> (no order argument; &#8216;C&#8217; order only)</li>
+</ul>
+<p>The following constructors are supported, both with a numeric input (to
+construct a scalar) or a sequence (to construct an array):</p>
+<ul class="simple">
+<li><tt class="xref py py-class docutils literal"><span class="pre">numpy.bool_</span></tt></li>
+<li><tt class="xref py py-class docutils literal"><span class="pre">numpy.complex64</span></tt></li>
+<li><tt class="xref py py-class docutils literal"><span class="pre">numpy.complex128</span></tt></li>
+<li><tt class="xref py py-class docutils literal"><span class="pre">numpy.float32</span></tt></li>
+<li><tt class="xref py py-class docutils literal"><span class="pre">numpy.float64</span></tt></li>
+<li><tt class="xref py py-class docutils literal"><span class="pre">numpy.int8</span></tt></li>
+<li><tt class="xref py py-class docutils literal"><span class="pre">numpy.int16</span></tt></li>
+<li><tt class="xref py py-class docutils literal"><span class="pre">numpy.int32</span></tt></li>
+<li><tt class="xref py py-class docutils literal"><span class="pre">numpy.int64</span></tt></li>
+<li><tt class="xref py py-class docutils literal"><span class="pre">numpy.intc</span></tt></li>
+<li><tt class="xref py py-class docutils literal"><span class="pre">numpy.intp</span></tt></li>
+<li><tt class="xref py py-class docutils literal"><span class="pre">numpy.uint8</span></tt></li>
+<li><tt class="xref py py-class docutils literal"><span class="pre">numpy.uint16</span></tt></li>
+<li><tt class="xref py py-class docutils literal"><span class="pre">numpy.uint32</span></tt></li>
+<li><tt class="xref py py-class docutils literal"><span class="pre">numpy.uint64</span></tt></li>
+<li><tt class="xref py py-class docutils literal"><span class="pre">numpy.uintc</span></tt></li>
+<li><tt class="xref py py-class docutils literal"><span class="pre">numpy.uintp</span></tt></li>
+</ul>
+</div>
+<div class="section" id="literal-arrays">
+<h3>2.6.3.3. Literal arrays<a class="headerlink" href="#literal-arrays" title="Permalink to this headline">¶</a></h3>
+<p>Neither Python nor Numba has actual array literals, but you can construct
+arbitrary arrays by calling <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.array.html#numpy.array" title="(in NumPy v1.10)"><tt class="xref py py-func docutils literal"><span class="pre">numpy.array()</span></tt></a> on a nested tuple:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">a</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(((</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">),</span> <span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">f</span><span class="p">)))</span>
+</pre></div>
+</div>
+<p>(nested lists are not yet supported by Numba)</p>
+</div>
+</div>
+<div class="section" id="modules">
+<h2>2.6.4. Modules<a class="headerlink" href="#modules" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="random">
+<span id="numpy-random"></span><h3>2.6.4.1. <tt class="docutils literal"><span class="pre">random</span></tt><a class="headerlink" href="#random" title="Permalink to this headline">¶</a></h3>
+<p>Numba supports top-level functions from the
+<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/routines.random.html">numpy.random</a>
+module, but does not allow you to create individual RandomState instances.
+The same algorithms are used as for <a class="reference internal" href="pysupported.html#pysupported-random"><em>the standard
+random module</em></a> (and therefore the same notes apply),
+but with an independent internal state: seeding or drawing numbers from
+one generator won&#8217;t affect the other.</p>
+<p>The following functions are supported, but only with scalar output: you can&#8217;t
+pass a <em>size</em> argument.</p>
+<div class="section" id="initialization">
+<h4>2.6.4.1.1. Initialization<a class="headerlink" href="#initialization" title="Permalink to this headline">¶</a></h4>
+<ul class="simple">
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.random.seed.html#numpy.random.seed" title="(in NumPy v1.10)"><tt class="xref py py-func docutils literal"><span class="pre">numpy.random.seed()</span></tt></a>: with an integer argument only</li>
+</ul>
+</div>
+<div class="section" id="simple-random-data">
+<h4>2.6.4.1.2. Simple random data<a class="headerlink" href="#simple-random-data" title="Permalink to this headline">¶</a></h4>
+<ul class="simple">
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.random.rand.html#numpy.random.rand" title="(in NumPy v1.10)"><tt class="xref py py-func docutils literal"><span class="pre">numpy.random.rand()</span></tt></a>: only without argument</li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.random.randint.html#numpy.random.randint" title="(in NumPy v1.10)"><tt class="xref py py-func docutils literal"><span class="pre">numpy.random.randint()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.random.randn.html#numpy.random.randn" title="(in NumPy v1.10)"><tt class="xref py py-func docutils literal"><span class="pre">numpy.random.randn()</span></tt></a>: only without argument</li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.random.random.html#numpy.random.random" title="(in NumPy v1.10)"><tt class="xref py py-func docutils literal"><span class="pre">numpy.random.random()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.random.random_sample.html#numpy.random.random_sample" title="(in NumPy v1.10)"><tt class="xref py py-func docutils literal"><span class="pre">numpy.random.random_sample()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.random.ranf.html#numpy.random.ranf" title="(in NumPy v1.10)"><tt class="xref py py-func docutils literal"><span class="pre">numpy.random.ranf()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.random.sample.html#numpy.random.sample" title="(in NumPy v1.10)"><tt class="xref py py-func docutils literal"><span class="pre">numpy.random.sample()</span></tt></a></li>
+</ul>
+</div>
+<div class="section" id="permutations">
+<h4>2.6.4.1.3. Permutations<a class="headerlink" href="#permutations" title="Permalink to this headline">¶</a></h4>
+<ul class="simple">
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.random.shuffle.html#numpy.random.shuffle" title="(in NumPy v1.10)"><tt class="xref py py-func docutils literal"><span class="pre">numpy.random.shuffle()</span></tt></a>: the sequence argument must be a one-dimension
+Numpy array or buffer-providing object (such as a <a class="reference external" href="https://docs.python.org/3/library/functions.html#bytearray" title="(in Python v3.5)"><tt class="xref py py-class docutils literal"><span class="pre">bytearray</span></tt></a>
+or <a class="reference external" href="https://docs.python.org/3/library/array.html#array.array" title="(in Python v3.5)"><tt class="xref py py-class docutils literal"><span class="pre">array.array</span></tt></a>)</li>
+</ul>
+</div>
+<div class="section" id="distributions">
+<h4>2.6.4.1.4. Distributions<a class="headerlink" href="#distributions" title="Permalink to this headline">¶</a></h4>
+<ul class="simple">
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.random.beta.html#numpy.random.beta" title="(in NumPy v1.10)"><tt class="xref py py-func docutils literal"><span class="pre">numpy.random.beta()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.random.binomial.html#numpy.random.binomial" title="(in NumPy v1.10)"><tt class="xref py py-func docutils literal"><span class="pre">numpy.random.binomial()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.random.chisquare.html#numpy.random.chisquare" title="(in NumPy v1.10)"><tt class="xref py py-func docutils literal"><span class="pre">numpy.random.chisquare()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.random.exponential.html#numpy.random.exponential" title="(in NumPy v1.10)"><tt class="xref py py-func docutils literal"><span class="pre">numpy.random.exponential()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.random.f.html#numpy.random.f" title="(in NumPy v1.10)"><tt class="xref py py-func docutils literal"><span class="pre">numpy.random.f()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.random.gamma.html#numpy.random.gamma" title="(in NumPy v1.10)"><tt class="xref py py-func docutils literal"><span class="pre">numpy.random.gamma()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.random.geometric.html#numpy.random.geometric" title="(in NumPy v1.10)"><tt class="xref py py-func docutils literal"><span class="pre">numpy.random.geometric()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.random.gumbel.html#numpy.random.gumbel" title="(in NumPy v1.10)"><tt class="xref py py-func docutils literal"><span class="pre">numpy.random.gumbel()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.random.hypergeometric.html#numpy.random.hypergeometric" title="(in NumPy v1.10)"><tt class="xref py py-func docutils literal"><span class="pre">numpy.random.hypergeometric()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.random.laplace.html#numpy.random.laplace" title="(in NumPy v1.10)"><tt class="xref py py-func docutils literal"><span class="pre">numpy.random.laplace()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.random.logistic.html#numpy.random.logistic" title="(in NumPy v1.10)"><tt class="xref py py-func docutils literal"><span class="pre">numpy.random.logistic()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.random.lognormal.html#numpy.random.lognormal" title="(in NumPy v1.10)"><tt class="xref py py-func docutils literal"><span class="pre">numpy.random.lognormal()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.random.logseries.html#numpy.random.logseries" title="(in NumPy v1.10)"><tt class="xref py py-func docutils literal"><span class="pre">numpy.random.logseries()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.random.negative_binomial.html#numpy.random.negative_binomial" title="(in NumPy v1.10)"><tt class="xref py py-func docutils literal"><span class="pre">numpy.random.negative_binomial()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.random.normal.html#numpy.random.normal" title="(in NumPy v1.10)"><tt class="xref py py-func docutils literal"><span class="pre">numpy.random.normal()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.random.pareto.html#numpy.random.pareto" title="(in NumPy v1.10)"><tt class="xref py py-func docutils literal"><span class="pre">numpy.random.pareto()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.random.poisson.html#numpy.random.poisson" title="(in NumPy v1.10)"><tt class="xref py py-func docutils literal"><span class="pre">numpy.random.poisson()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.random.power.html#numpy.random.power" title="(in NumPy v1.10)"><tt class="xref py py-func docutils literal"><span class="pre">numpy.random.power()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.random.rayleigh.html#numpy.random.rayleigh" title="(in NumPy v1.10)"><tt class="xref py py-func docutils literal"><span class="pre">numpy.random.rayleigh()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.random.standard_cauchy.html#numpy.random.standard_cauchy" title="(in NumPy v1.10)"><tt class="xref py py-func docutils literal"><span class="pre">numpy.random.standard_cauchy()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.random.standard_exponential.html#numpy.random.standard_exponential" title="(in NumPy v1.10)"><tt class="xref py py-func docutils literal"><span class="pre">numpy.random.standard_exponential()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.random.standard_gamma.html#numpy.random.standard_gamma" title="(in NumPy v1.10)"><tt class="xref py py-func docutils literal"><span class="pre">numpy.random.standard_gamma()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.random.standard_normal.html#numpy.random.standard_normal" title="(in NumPy v1.10)"><tt class="xref py py-func docutils literal"><span class="pre">numpy.random.standard_normal()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.random.standard_t.html#numpy.random.standard_t" title="(in NumPy v1.10)"><tt class="xref py py-func docutils literal"><span class="pre">numpy.random.standard_t()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.random.triangular.html#numpy.random.triangular" title="(in NumPy v1.10)"><tt class="xref py py-func docutils literal"><span class="pre">numpy.random.triangular()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.random.uniform.html#numpy.random.uniform" title="(in NumPy v1.10)"><tt class="xref py py-func docutils literal"><span class="pre">numpy.random.uniform()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.random.vonmises.html#numpy.random.vonmises" title="(in NumPy v1.10)"><tt class="xref py py-func docutils literal"><span class="pre">numpy.random.vonmises()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.random.wald.html#numpy.random.wald" title="(in NumPy v1.10)"><tt class="xref py py-func docutils literal"><span class="pre">numpy.random.wald()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.random.weibull.html#numpy.random.weibull" title="(in NumPy v1.10)"><tt class="xref py py-func docutils literal"><span class="pre">numpy.random.weibull()</span></tt></a></li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.random.zipf.html#numpy.random.zipf" title="(in NumPy v1.10)"><tt class="xref py py-func docutils literal"><span class="pre">numpy.random.zipf()</span></tt></a></li>
+</ul>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Calling <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.random.seed.html#numpy.random.seed" title="(in NumPy v1.10)"><tt class="xref py py-func docutils literal"><span class="pre">numpy.random.seed()</span></tt></a> from non-Numba code (or from
+<a class="reference internal" href="../glossary.html#term-object-mode"><em class="xref std std-term">object mode</em></a> code) will seed the Numpy random generator, not the
+Numba random generator.</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>The generator is not thread-safe when <a class="reference internal" href="../user/jit.html#jit-nogil"><em>releasing the GIL</em></a>.</p>
+<p class="last">Also, under Unix, if creating a child process using <a class="reference external" href="https://docs.python.org/3/library/os.html#os.fork" title="(in Python v3.5)"><tt class="xref py py-func docutils literal"><span class="pre">os.fork()</span></tt></a> or the
+<a class="reference external" href="https://docs.python.org/3/library/multiprocessing.html#module-multiprocessing" title="(in Python v3.5)"><tt class="xref py py-mod docutils literal"><span class="pre">multiprocessing</span></tt></a> module, the child&#8217;s random generator will inherit
+the parent&#8217;s state and will therefore produce the same sequence of
+numbers (except when using the &#8220;forkserver&#8221; start method under Python 3.4
+and later).</p>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="standard-ufuncs">
+<h2>2.6.5. Standard ufuncs<a class="headerlink" href="#standard-ufuncs" title="Permalink to this headline">¶</a></h2>
+<p>One objective of Numba is having all the
+<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/ufuncs.html#available-ufuncs">standard ufuncs in NumPy</a>
+understood by Numba.  When a supported ufunc is found when compiling a
+function, Numba maps the ufunc to equivalent native code.  This allows the
+use of those ufuncs in Numba code that gets compiled in <a class="reference internal" href="../glossary.html#term-nopython-mode"><em class="xref std std-term">nopython mode</em></a>.</p>
+<div class="section" id="limitations">
+<h3>2.6.5.1. Limitations<a class="headerlink" href="#limitations" title="Permalink to this headline">¶</a></h3>
+<p>Right now, only a selection of the standard ufuncs work in <a class="reference internal" href="../glossary.html#term-nopython-mode"><em class="xref std std-term">nopython mode</em></a>.
+Following is a list of the different standard ufuncs that Numba is aware of,
+sorted in the same way as in the NumPy documentation.</p>
+</div>
+<div class="section" id="math-operations">
+<h3>2.6.5.2. Math operations<a class="headerlink" href="#math-operations" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="33%" />
+<col width="31%" />
+<col width="36%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">UFUNC</th>
+<th class="head" colspan="2">MODE</th>
+</tr>
+<tr class="row-even"><th class="head">name</th>
+<th class="head">object mode</th>
+<th class="head">nopython mode</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-odd"><td>add</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="row-even"><td>subtract</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="row-odd"><td>multiply</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="row-even"><td>divide</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="row-odd"><td>logaddexp</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="row-even"><td>logaddexp2</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="row-odd"><td>true_divide</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="row-even"><td>floor_divide</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="row-odd"><td>negative</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="row-even"><td>power</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="row-odd"><td>remainder</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="row-even"><td>mod</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="row-odd"><td>fmod</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="row-even"><td>abs</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="row-odd"><td>absolute</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="row-even"><td>fabs</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="row-odd"><td>rint</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="row-even"><td>sign</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="row-odd"><td>conj</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="row-even"><td>exp</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="row-odd"><td>exp2</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="row-even"><td>log</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="row-odd"><td>log2</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="row-even"><td>log10</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="row-odd"><td>expm1</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="row-even"><td>log1p</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="row-odd"><td>sqrt</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="row-even"><td>square</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="row-odd"><td>reciprocal</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="row-even"><td>conjugate</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="trigonometric-functions">
+<h3>2.6.5.3. Trigonometric functions<a class="headerlink" href="#trigonometric-functions" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="33%" />
+<col width="31%" />
+<col width="36%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">UFUNC</th>
+<th class="head" colspan="2">MODE</th>
+</tr>
+<tr class="row-even"><th class="head">name</th>
+<th class="head">object mode</th>
+<th class="head">nopython mode</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-odd"><td>sin</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="row-even"><td>cos</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="row-odd"><td>tan</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="row-even"><td>arcsin</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="row-odd"><td>arccos</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="row-even"><td>arctan</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="row-odd"><td>arctan2</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="row-even"><td>hypot</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="row-odd"><td>sinh</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="row-even"><td>cosh</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="row-odd"><td>tanh</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="row-even"><td>arcsinh</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="row-odd"><td>arccosh</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="row-even"><td>arctanh</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="row-odd"><td>deg2rad</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="row-even"><td>rad2deg</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="row-odd"><td>degrees</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="row-even"><td>radians</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="bit-twiddling-functions">
+<h3>2.6.5.4. Bit-twiddling functions<a class="headerlink" href="#bit-twiddling-functions" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="33%" />
+<col width="31%" />
+<col width="36%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">UFUNC</th>
+<th class="head" colspan="2">MODE</th>
+</tr>
+<tr class="row-even"><th class="head">name</th>
+<th class="head">object mode</th>
+<th class="head">nopython mode</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-odd"><td>bitwise_and</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="row-even"><td>bitwise_or</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="row-odd"><td>bitwise_xor</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="row-even"><td>bitwise_not</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="row-odd"><td>invert</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="row-even"><td>left_shift</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="row-odd"><td>right_shift</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="comparison-functions">
+<h3>2.6.5.5. Comparison functions<a class="headerlink" href="#comparison-functions" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="33%" />
+<col width="31%" />
+<col width="36%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">UFUNC</th>
+<th class="head" colspan="2">MODE</th>
+</tr>
+<tr class="row-even"><th class="head">name</th>
+<th class="head">object mode</th>
+<th class="head">nopython mode</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-odd"><td>greater</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="row-even"><td>greater_equal</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="row-odd"><td>less</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="row-even"><td>less_equal</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="row-odd"><td>not_equal</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="row-even"><td>equal</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="row-odd"><td>logical_and</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="row-even"><td>logical_or</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="row-odd"><td>logical_xor</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="row-even"><td>logical_not</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="row-odd"><td>maximum</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="row-even"><td>minimum</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="row-odd"><td>fmax</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="row-even"><td>fmin</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="floating-functions">
+<h3>2.6.5.6. Floating functions<a class="headerlink" href="#floating-functions" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="33%" />
+<col width="31%" />
+<col width="36%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">UFUNC</th>
+<th class="head" colspan="2">MODE</th>
+</tr>
+<tr class="row-even"><th class="head">name</th>
+<th class="head">object mode</th>
+<th class="head">nopython mode</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-odd"><td>isfinite</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="row-even"><td>isinf</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="row-odd"><td>isnan</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="row-even"><td>signbit</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="row-odd"><td>copysign</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="row-even"><td>nextafter</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="row-odd"><td>modf</td>
+<td>Yes</td>
+<td>No</td>
+</tr>
+<tr class="row-even"><td>ldexp</td>
+<td>Yes (*)</td>
+<td>Yes</td>
+</tr>
+<tr class="row-odd"><td>frexp</td>
+<td>Yes</td>
+<td>No</td>
+</tr>
+<tr class="row-even"><td>floor</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="row-odd"><td>ceil</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="row-even"><td>trunc</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="row-odd"><td>spacing</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+</tbody>
+</table>
+<p>(*) not supported on windows 32 bit</p>
+</div>
+</div>
+</div>
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        
+      </div><!-- /row -->
+
+      <!-- row -->
+      <div class="row footer-relbar">
+<div id="navbar-related" class=" related navbar navbar-default" role="navigation" aria-label="related navigation">
+  <div class="navbar-inner">
+    <ul class="nav navbar-nav">
+        <li><a href="../index.html">Numba 0.24.0-py2.7-macosx-10.5-x86_64.egg documentation</a></li>
+    </ul>
+    <ul class="nav navbar-nav pull-right hidden-xs hidden-sm">
+      
+        <li><a href="pysupported.html" title="2.5. Supported Python features" >previous</a></li>
+        <li><a href="pysemantics.html" title="2.7. Deviations from Python semantics" >next</a></li>
+        <li><a href="../py-modindex.html" title="Python Module Index" >modules</a></li>
+        <li><a href="../genindex.html" title="General Index" >index</a></li>
+        <li><a href="index.html" >2. Reference Manual</a></li> 
+      
+    </ul>
+  </div>
+</div>
+      </div><!-- /row -->
+
+      <!-- footer -->
+      <footer role="contentinfo">
+          &copy; Copyright 2012-2015, Continuum Analytics.
+        Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.3.
+      </footer>
+      <!-- /footer -->
+
+    </div>
+    <!-- /container -->
+
+  </body>
+</html>
