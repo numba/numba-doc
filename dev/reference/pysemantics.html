@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     
-    <title>2.7. Deviations from Python semantics &mdash; Numba 0.26.0.dev0+8.gf1c1909-py2.7-linux-x86_64.egg documentation</title>
+    <title>2.7. Deviations from Python semantics &mdash; Numba 0.26.0.dev0+14.g5b21f60-py2.7-linux-x86_64.egg documentation</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
@@ -34,7 +34,7 @@
 <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
             URL_ROOT:    '../',
-            VERSION:     '0.26.0.dev0+8.gf1c1909-py2.7-linux-x86_64.egg',
+            VERSION:     '0.26.0.dev0+14.g5b21f60-py2.7-linux-x86_64.egg',
             COLLAPSE_INDEX: false,
             FILE_SUFFIX: '.html',
             HAS_SOURCE:  true
@@ -57,7 +57,7 @@
     });
   });
 </script>
-    <link rel="top" title="Numba 0.26.0.dev0+8.gf1c1909-py2.7-linux-x86_64.egg documentation" href="../index.html" />
+    <link rel="top" title="Numba 0.26.0.dev0+14.g5b21f60-py2.7-linux-x86_64.egg documentation" href="../index.html" />
     <link rel="up" title="2. Reference Manual" href="index.html" />
     <link rel="next" title="3. Numba for CUDA GPUs" href="../cuda/index.html" />
     <link rel="prev" title="2.6. Supported NumPy features" href="numpysupported.html" /> 
@@ -71,7 +71,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="../index.html">Numba 0.26.0.dev0+8.gf1c1909-py2.7-linux-x86_64.egg documentation</a>
+          <a class="brand" href="../index.html">Numba 0.26.0.dev0+14.g5b21f60-py2.7-linux-x86_64.egg documentation</a>
           <div class="nav-collapse collapse">
             <ul class="nav pull-right">
               
@@ -112,7 +112,8 @@
   <ul>
 <li><a class="reference internal" href="#">2.7. Deviations from Python semantics</a><ul>
 <li><a class="reference internal" href="#integer-width">2.7.1. Integer width</a></li>
-<li><a class="reference internal" href="#global-and-closure-variables">2.7.2. Global and closure variables</a></li>
+<li><a class="reference internal" href="#boolean-inversion">2.7.2. Boolean inversion</a></li>
+<li><a class="reference internal" href="#global-and-closure-variables">2.7.3. Global and closure variables</a></li>
 </ul>
 </li>
 </ul>
@@ -158,7 +159,8 @@
   <ul>
 <li><a class="reference internal" href="#">2.7. Deviations from Python semantics</a><ul>
 <li><a class="reference internal" href="#integer-width">2.7.1. Integer width</a></li>
-<li><a class="reference internal" href="#global-and-closure-variables">2.7.2. Global and closure variables</a></li>
+<li><a class="reference internal" href="#boolean-inversion">2.7.2. Boolean inversion</a></li>
+<li><a class="reference internal" href="#global-and-closure-variables">2.7.3. Global and closure variables</a></li>
 </ul>
 </li>
 </ul>
@@ -209,8 +211,21 @@ functions get a fixed size (either through <a class="reference internal" href=".
 from an explicit specification by the user).  This means that arithmetic
 operations can wrapround or produce undefined results or overflow.</p>
 </div>
+<div class="section" id="boolean-inversion">
+<h2>2.7.2. Boolean inversion<a class="headerlink" href="#boolean-inversion" title="Permalink to this headline">¶</a></h2>
+<p>Calling the bitwise complement operator (the <code class="docutils literal"><span class="pre">~</span></code> operator) on a Python
+boolean returns an integer, while the same operator on a Numpy boolean
+returns another boolean:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="o">~</span><span class="bp">True</span>
+<span class="go">-2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">bool_</span><span class="p">(</span><span class="bp">True</span><span class="p">)</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+<p>Numba follows the Numpy semantics.</p>
+</div>
 <div class="section" id="global-and-closure-variables">
-<h2>2.7.2. Global and closure variables<a class="headerlink" href="#global-and-closure-variables" title="Permalink to this headline">¶</a></h2>
+<h2>2.7.3. Global and closure variables<a class="headerlink" href="#global-and-closure-variables" title="Permalink to this headline">¶</a></h2>
 <p>In <a class="reference internal" href="../glossary.html#term-nopython-mode"><span class="xref std std-term">nopython mode</span></a>, global and closure variables are <em>frozen</em> by
 Numba: a Numba-compiled function sees the value of those variables at the
 time the function was compiled.  Also, it is not possible to change their
@@ -244,7 +259,7 @@ and modify it in place without the need to explicitly return it.</p>
         <li><a href="../py-modindex.html" title="Python Module Index" >modules</a></li>
         <li><a href="../cuda/index.html" title="3. Numba for CUDA GPUs" >next</a></li>
         <li><a href="numpysupported.html" title="2.6. Supported NumPy features" >previous</a></li>
-        <li><a href="../index.html">Numba 0.26.0.dev0+8.gf1c1909-py2.7-linux-x86_64.egg documentation</a></li>
+        <li><a href="../index.html">Numba 0.26.0.dev0+14.g5b21f60-py2.7-linux-x86_64.egg documentation</a></li>
         <li><a href="index.html" >2. Reference Manual</a></li> 
       
     </ul>
