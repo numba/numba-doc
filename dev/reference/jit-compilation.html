@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     
-    <title>2.2. Just-in-Time compilation &mdash; Numba 0.26.0.dev0+130.g9e5fa64-py2.7-linux-x86_64.egg documentation</title>
+    <title>2.2. Just-in-Time compilation &mdash; Numba 0.26.0.dev0+152.ga3fe893-py2.7-linux-x86_64.egg documentation</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
@@ -34,7 +34,7 @@
 <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
             URL_ROOT:    '../',
-            VERSION:     '0.26.0.dev0+130.g9e5fa64-py2.7-linux-x86_64.egg',
+            VERSION:     '0.26.0.dev0+152.ga3fe893-py2.7-linux-x86_64.egg',
             COLLAPSE_INDEX: false,
             FILE_SUFFIX: '.html',
             HAS_SOURCE:  true
@@ -57,7 +57,7 @@
     });
   });
 </script>
-    <link rel="top" title="Numba 0.26.0.dev0+130.g9e5fa64-py2.7-linux-x86_64.egg documentation" href="../index.html" />
+    <link rel="top" title="Numba 0.26.0.dev0+152.ga3fe893-py2.7-linux-x86_64.egg documentation" href="../index.html" />
     <link rel="up" title="2. Reference Manual" href="index.html" />
     <link rel="next" title="2.3. Ahead-of-Time compilation" href="aot-compilation.html" />
     <link rel="prev" title="2.1. Types and signatures" href="types.html" /> 
@@ -71,7 +71,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="../index.html">Numba 0.26.0.dev0+130.g9e5fa64-py2.7-linux-x86_64.egg documentation</a>
+          <a class="brand" href="../index.html">Numba 0.26.0.dev0+152.ga3fe893-py2.7-linux-x86_64.egg documentation</a>
           <div class="nav-collapse collapse">
             <ul class="nav pull-right">
               
@@ -115,6 +115,7 @@
 <li><a class="reference internal" href="#generated-jit-functions">2.2.2. Generated JIT functions</a></li>
 <li><a class="reference internal" href="#dispatcher-objects">2.2.3. Dispatcher objects</a></li>
 <li><a class="reference internal" href="#vectorized-functions-ufuncs-and-dufuncs">2.2.4. Vectorized functions (ufuncs and DUFuncs)</a></li>
+<li><a class="reference internal" href="#c-callbacks">2.2.5. C callbacks</a></li>
 </ul>
 </li>
 </ul>
@@ -163,6 +164,7 @@
 <li><a class="reference internal" href="#generated-jit-functions">2.2.2. Generated JIT functions</a></li>
 <li><a class="reference internal" href="#dispatcher-objects">2.2.3. Dispatcher objects</a></li>
 <li><a class="reference internal" href="#vectorized-functions-ufuncs-and-dufuncs">2.2.4. Vectorized functions (ufuncs and DUFuncs)</a></li>
+<li><a class="reference internal" href="#c-callbacks">2.2.5. C callbacks</a></li>
 </ul>
 </li>
 </ul>
@@ -287,7 +289,7 @@ the decorator without any arguments, i.e.:</p>
 <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">):</span> <span class="o">...</span>
 </pre></div>
 </div>
-<p>The decorator returns a Dispatcher object.</p>
+<p>The decorator returns a <a class="reference internal" href="#Dispatcher" title="Dispatcher"><code class="xref py py-class docutils literal"><span class="pre">Dispatcher</span></code></a> object.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">If no <em>signature</em> is given, compilation errors will be raised when
@@ -580,6 +582,63 @@ earlier, this method will not be present.  See <a class="reference external" hre
 </dd></dl>
 
 </div>
+<div class="section" id="c-callbacks">
+<h2>2.2.5. C callbacks<a class="headerlink" href="#c-callbacks" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="numba.cfunc">
+<code class="descclassname">&#64;</code><code class="descclassname">numba.</code><code class="descname">cfunc</code><span class="sig-paren">(</span><em>signature</em>, <em>nopython=False</em>, <em>cache=False</em>, <em>locals={}</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.cfunc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compile the decorated function on-the-fly to produce efficient machine
+code.  The compiled code is wrapped in a thin C callback that makes it
+callable using the natural C ABI.</p>
+<p>The <em>signature</em> is a single signature representing the signature of the
+C callback.  It must have the same form as in <a class="reference internal" href="#numba.jit" title="numba.jit"><code class="xref py py-func docutils literal"><span class="pre">jit()</span></code></a>.
+The decorator does not check that the types in the signature have
+a well-defined representation in C.</p>
+<p><em>nopython</em> and <em>cache</em> are boolean flags.  <em>locals</em> is a mapping of
+local variable names to <a class="reference internal" href="types.html#numba-types"><span>Types and signatures</span></a>.  They all have the same
+meaning as in <a class="reference internal" href="#numba.jit" title="numba.jit"><code class="xref py py-func docutils literal"><span class="pre">jit()</span></code></a>.</p>
+<p>The decorator returns a <a class="reference internal" href="#CFunc" title="CFunc"><code class="xref py py-class docutils literal"><span class="pre">CFunc</span></code></a> object.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">C callbacks currently do not support <a class="reference internal" href="../glossary.html#term-object-mode"><span class="xref std std-term">object mode</span></a>.</p>
+</div>
+</dd></dl>
+
+<dl class="class">
+<dt id="CFunc">
+<em class="property">class </em><code class="descname">CFunc</code><a class="headerlink" href="#CFunc" title="Permalink to this definition">¶</a></dt>
+<dd><p>The class of objects created by <a class="reference internal" href="#numba.cfunc" title="numba.cfunc"><code class="xref py py-func docutils literal"><span class="pre">cfunc()</span></code></a>.  <a class="reference internal" href="#CFunc" title="CFunc"><code class="xref py py-class docutils literal"><span class="pre">CFunc</span></code></a>
+objects expose the following attributes and methods:</p>
+<dl class="attribute">
+<dt id="CFunc.address">
+<code class="descname">address</code><a class="headerlink" href="#CFunc.address" title="Permalink to this definition">¶</a></dt>
+<dd><p>The address of the compiled C callback, as an integer.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="CFunc.ctypes">
+<code class="descname">ctypes</code><a class="headerlink" href="#CFunc.ctypes" title="Permalink to this definition">¶</a></dt>
+<dd><p>A <a class="reference external" href="https://docs.python.org/3/library/ctypes.html#module-ctypes" title="(in Python v3.5)"><code class="xref py py-mod docutils literal"><span class="pre">ctypes</span></code></a> callback instance, as if it were created using
+<a class="reference external" href="https://docs.python.org/3/library/ctypes.html#ctypes.CFUNCTYPE" title="(in Python v3.5)"><code class="xref py py-func docutils literal"><span class="pre">ctypes.CFUNCTYPE()</span></code></a>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="CFunc.native_name">
+<code class="descname">native_name</code><a class="headerlink" href="#CFunc.native_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>The name of the compiled C callback.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="CFunc.inspect_llvm">
+<code class="descname">inspect_llvm</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#CFunc.inspect_llvm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the human-readable LLVM IR generated for the C callback.
+<a class="reference internal" href="#CFunc.native_name" title="CFunc.native_name"><code class="xref py py-attr docutils literal"><span class="pre">native_name</span></code></a> is the name under which this callback is defined
+in the IR.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
 </div>
 
 
@@ -602,7 +661,7 @@ earlier, this method will not be present.  See <a class="reference external" hre
         <li><a href="../py-modindex.html" title="Python Module Index" >modules</a></li>
         <li><a href="aot-compilation.html" title="2.3. Ahead-of-Time compilation" >next</a></li>
         <li><a href="types.html" title="2.1. Types and signatures" >previous</a></li>
-        <li><a href="../index.html">Numba 0.26.0.dev0+130.g9e5fa64-py2.7-linux-x86_64.egg documentation</a></li>
+        <li><a href="../index.html">Numba 0.26.0.dev0+152.ga3fe893-py2.7-linux-x86_64.egg documentation</a></li>
         <li><a href="index.html" >2. Reference Manual</a></li> 
       
     </ul>
