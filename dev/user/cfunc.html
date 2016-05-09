@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     
-    <title>1.7. Creating C callbacks with @cfunc &mdash; Numba 0.26.0.dev0+200.g2529673-py2.7-linux-x86_64.egg documentation</title>
+    <title>1.7. Creating C callbacks with @cfunc &mdash; Numba 0.26.0.dev0+215.ge0a8656-py2.7-linux-x86_64.egg documentation</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
@@ -34,7 +34,7 @@
 <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
             URL_ROOT:    '../',
-            VERSION:     '0.26.0.dev0+200.g2529673-py2.7-linux-x86_64.egg',
+            VERSION:     '0.26.0.dev0+215.ge0a8656-py2.7-linux-x86_64.egg',
             COLLAPSE_INDEX: false,
             FILE_SUFFIX: '.html',
             HAS_SOURCE:  true
@@ -57,7 +57,7 @@
     });
   });
 </script>
-    <link rel="top" title="Numba 0.26.0.dev0+200.g2529673-py2.7-linux-x86_64.egg documentation" href="../index.html" />
+    <link rel="top" title="Numba 0.26.0.dev0+215.ge0a8656-py2.7-linux-x86_64.egg documentation" href="../index.html" />
     <link rel="up" title="1. User Manual" href="index.html" />
     <link rel="next" title="1.8. Compiling code ahead of time" href="pycc.html" />
     <link rel="prev" title="1.6. Compiling python classes with @jitclass" href="jitclass.html" /> 
@@ -71,7 +71,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="../index.html">Numba 0.26.0.dev0+200.g2529673-py2.7-linux-x86_64.egg documentation</a>
+          <a class="brand" href="../index.html">Numba 0.26.0.dev0+215.ge0a8656-py2.7-linux-x86_64.egg documentation</a>
           <div class="nav-collapse collapse">
             <ul class="nav pull-right">
               
@@ -113,8 +113,9 @@
 <li><a class="reference internal" href="#">1.7. Creating C callbacks with <code class="docutils literal"><span class="pre">&#64;cfunc</span></code></a><ul>
 <li><a class="reference internal" href="#basic-usage">1.7.1. Basic usage</a></li>
 <li><a class="reference internal" href="#example">1.7.2. Example</a></li>
-<li><a class="reference internal" href="#signature-specification">1.7.3. Signature specification</a></li>
-<li><a class="reference internal" href="#compilation-options">1.7.4. Compilation options</a></li>
+<li><a class="reference internal" href="#dealing-with-pointers-and-array-memory">1.7.3. Dealing with pointers and array memory</a></li>
+<li><a class="reference internal" href="#signature-specification">1.7.4. Signature specification</a></li>
+<li><a class="reference internal" href="#compilation-options">1.7.5. Compilation options</a></li>
 </ul>
 </li>
 </ul>
@@ -161,8 +162,9 @@
 <li><a class="reference internal" href="#">1.7. Creating C callbacks with <code class="docutils literal"><span class="pre">&#64;cfunc</span></code></a><ul>
 <li><a class="reference internal" href="#basic-usage">1.7.1. Basic usage</a></li>
 <li><a class="reference internal" href="#example">1.7.2. Example</a></li>
-<li><a class="reference internal" href="#signature-specification">1.7.3. Signature specification</a></li>
-<li><a class="reference internal" href="#compilation-options">1.7.4. Compilation options</a></li>
+<li><a class="reference internal" href="#dealing-with-pointers-and-array-memory">1.7.3. Dealing with pointers and array memory</a></li>
+<li><a class="reference internal" href="#signature-specification">1.7.4. Signature specification</a></li>
+<li><a class="reference internal" href="#compilation-options">1.7.5. Compilation options</a></li>
 </ul>
 </li>
 </ul>
@@ -276,15 +278,46 @@ integration is made 18 times faster:</p>
 </pre></div>
 </div>
 </div>
+<div class="section" id="dealing-with-pointers-and-array-memory">
+<h2>1.7.3. Dealing with pointers and array memory<a class="headerlink" href="#dealing-with-pointers-and-array-memory" title="Permalink to this headline">¶</a></h2>
+<p>A less trivial use case of C callbacks involves doing operation on some
+array of data passed by the caller.  As C doesn&#8217;t have a high-level
+abstraction similar to Numpy arrays, the C callback&#8217;s signature will pass
+low-level pointer and size arguments.  Nevertheless, the Python code for
+the callback will expect to exploit the power and expressiveness of Numpy
+arrays.</p>
+<p>In the following example, the C callback is expected to operate on 2-d arrays,
+with the signature <code class="docutils literal"><span class="pre">void(double</span> <span class="pre">*input,</span> <span class="pre">double</span> <span class="pre">*output,</span> <span class="pre">int</span> <span class="pre">m,</span> <span class="pre">int</span> <span class="pre">n)</span></code>.
+You can implement such a callback thusly:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">cfunc</span><span class="p">,</span> <span class="n">types</span><span class="p">,</span> <span class="n">carray</span>
+
+<span class="n">c_sig</span> <span class="o">=</span> <span class="n">types</span><span class="o">.</span><span class="n">void</span><span class="p">(</span><span class="n">types</span><span class="o">.</span><span class="n">CPointer</span><span class="p">(</span><span class="n">types</span><span class="o">.</span><span class="n">double</span><span class="p">),</span>
+                   <span class="n">types</span><span class="o">.</span><span class="n">CPointer</span><span class="p">(</span><span class="n">types</span><span class="o">.</span><span class="n">double</span><span class="p">),</span>
+                   <span class="n">types</span><span class="o">.</span><span class="n">intc</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">intc</span><span class="p">)</span>
+
+<span class="nd">@cfunc</span><span class="p">(</span><span class="n">c_sig</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">my_callback</span><span class="p">(</span><span class="n">in_</span><span class="p">,</span> <span class="n">out</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+    <span class="n">in_array</span> <span class="o">=</span> <span class="n">carray</span><span class="p">(</span><span class="n">in_</span><span class="p">,</span> <span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">n</span><span class="p">))</span>
+    <span class="n">out_array</span> <span class="o">=</span> <span class="n">carray</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">n</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">m</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+            <span class="n">out_array</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">in_array</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>The <a class="reference internal" href="../reference/utils.html#numba.carray" title="numba.carray"><code class="xref py py-func docutils literal"><span class="pre">numba.carray()</span></code></a> function takes as input a data pointer and a shape
+and returns an array view of the given shape over that data.  The data is
+assumed to be laid out in C order.  If the data is laid out in Fortran order,
+<a class="reference internal" href="../reference/utils.html#numba.farray" title="numba.farray"><code class="xref py py-func docutils literal"><span class="pre">numba.farray()</span></code></a> should be used instead.</p>
+</div>
 <div class="section" id="signature-specification">
-<h2>1.7.3. Signature specification<a class="headerlink" href="#signature-specification" title="Permalink to this headline">¶</a></h2>
-<p>The explicit <code class="docutils literal"><span class="pre">&#64;cfunc</span></code> signature can use any Numba types, but only a subset
-of them make sense for a C callback.  You should generally limit yourself
-to scalar types (such as <code class="docutils literal"><span class="pre">int8</span></code> or <code class="docutils literal"><span class="pre">float64</span></code>) or pointers to them
-(for example <code class="docutils literal"><span class="pre">types.CPointer(types.int8)</span></code>).</p>
+<h2>1.7.4. Signature specification<a class="headerlink" href="#signature-specification" title="Permalink to this headline">¶</a></h2>
+<p>The explicit <code class="docutils literal"><span class="pre">&#64;cfunc</span></code> signature can use any <a class="reference internal" href="../reference/types.html#numba-types"><span>Numba types</span></a>,
+but only a subset of them make sense for a C callback.  You should
+generally limit yourself to scalar types (such as <code class="docutils literal"><span class="pre">int8</span></code> or <code class="docutils literal"><span class="pre">float64</span></code>)
+or pointers to them (for example <code class="docutils literal"><span class="pre">types.CPointer(types.int8)</span></code>).</p>
 </div>
 <div class="section" id="compilation-options">
-<h2>1.7.4. Compilation options<a class="headerlink" href="#compilation-options" title="Permalink to this headline">¶</a></h2>
+<h2>1.7.5. Compilation options<a class="headerlink" href="#compilation-options" title="Permalink to this headline">¶</a></h2>
 <p>A number of keyword-only arguments can be passed to the <code class="docutils literal"><span class="pre">&#64;cfunc</span></code>
 decorator: <code class="docutils literal"><span class="pre">nopython</span></code> and <code class="docutils literal"><span class="pre">cache</span></code>.  Their meaning is similar to those
 in the <code class="docutils literal"><span class="pre">&#64;jit</span></code> decorator.</p>
@@ -311,7 +344,7 @@ in the <code class="docutils literal"><span class="pre">&#64;jit</span></code> d
         <li><a href="../py-modindex.html" title="Python Module Index" >modules</a></li>
         <li><a href="pycc.html" title="1.8. Compiling code ahead of time" >next</a></li>
         <li><a href="jitclass.html" title="1.6. Compiling python classes with @jitclass" >previous</a></li>
-        <li><a href="../index.html">Numba 0.26.0.dev0+200.g2529673-py2.7-linux-x86_64.egg documentation</a></li>
+        <li><a href="../index.html">Numba 0.26.0.dev0+215.ge0a8656-py2.7-linux-x86_64.egg documentation</a></li>
         <li><a href="index.html" >1. User Manual</a></li> 
       
     </ul>
