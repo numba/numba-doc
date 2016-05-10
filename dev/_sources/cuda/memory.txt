@@ -13,42 +13,82 @@ the host when a kernel finishes. To avoid the unnecessary transfer for
 read-only arrays, you can use the following APIs to manually control the
 transfer:
 
-.. autofunction:: numba.cuda.device_array
-   :noindex:
-.. autofunction:: numba.cuda.device_array_like
-   :noindex:
-.. autofunction:: numba.cuda.to_device
-   :noindex:
+.. function:: numba.cuda.to_device(array, stream=0)
+
+   Copy the Numpy *array* to device memory.  A device array reference
+   is returned which can be passed as argument to a kernel expecting the
+   same kind of array.
+
+   If a CUDA *stream* is given, then the transfer will be made asynchronously
+   as part as the given stream.  Otherwise, the transfer is synchronous:
+   the function returns after the copy is finished.
+
+   The lifetime of the allocated device memory is managed by Numba.  Once
+   it isn't referred to anymore, it is automatically released.
 
 Device arrays
 -------------
 
 Device array references have the following methods.  These methods are to be
-called in host code, not within CUDA-jitted functions.
+called on the host, not on the device.
 
-.. autoclass:: numba.cuda.cudadrv.devicearray.DeviceNDArray
-    :members: copy_to_host, is_c_contiguous, is_f_contiguous, ravel, reshape
-    :noindex:
+.. method:: copy_to_host(array=None, stream=0)
 
-Pinned memory
-=============
+   Copy back contents of the device array to Numpy *array* on the host.
+   If *array* is not given, a new array is allocated and returned.
 
-.. autofunction:: numba.cuda.pinned
-   :noindex:
-.. autofunction:: numba.cuda.pinned_array
-   :noindex:
+   If a CUDA *stream* is given, then the transfer will be made asynchronously
+   as part as the given stream.  Otherwise, the transfer is synchronous:
+   the function returns after the copy is finished.
+
+   Example::
+
+      import numpy as np
+      from numba import cuda
+
+      arr = np.arange(1000)
+      d_arr = cuda.to_device(arr)
+
+      my_kernel[100, 100](d_arr)
+
+      result_array = d_arr.copy_to_host()
+
+.. method:: is_c_contiguous()
+
+   Return whether the array is C-contiguous.
+
+.. method:: is_f_contiguous()
+
+   Return whether the array is Fortran-contiguous.
+
+.. method:: ravel(order='C')
+
+   Flatten the array without changing its contents, similarly to
+   :meth:`numpy.ndarray.ravel`.
+
+.. method:: reshape(*newshape, order='C')
+
+   Change the array's shape without changing its contents, similarly to
+   :meth:`numpy.ndarray.reshape`.  Example::
+
+      d_arr = d_arr.reshape(20, 50, order='F')
+
 
 Streams
 =======
 
-.. autofunction:: numba.cuda.stream
-   :noindex:
+.. function:: numba.cuda.stream()
 
-CUDA streams have the following methods:
+   Create and return a CUDA stream.  A CUDA stream acts as a command queue
+   for the device.
 
-.. autoclass:: numba.cuda.cudadrv.driver.Stream
-    :members: synchronize, auto_synchronize
-    :noindex:
+   CUDA streams have the following method:
+
+   .. method:: synchronize()
+
+      Wait for all commands in this stream to execute.  This will commit
+      any pending memory transfers.
+
 
 .. _cuda-shared-memory:
 
@@ -66,7 +106,6 @@ The memory is allocated once for the duration of the kernel, unlike
 traditional dynamic memory management.
 
 .. function:: numba.cuda.shared.array(shape, type)
-   :noindex:
 
    Allocate a shared array of the given *shape* and *type* on the device.
    This function must be called on the device (i.e. from a kernel or
@@ -80,9 +119,7 @@ traditional dynamic memory management.
    A common pattern is to have each thread populate one element in the
    shared array and then wait for all threads to finish using :func:`.syncthreads`.
 
-
 .. function:: numba.cuda.syncthreads()
-   :noindex:
 
    Synchronize all threads in the same thread block.  This function
    implements the same pattern as `barriers <http://en.wikipedia.org/wiki/Barrier_%28computer_science%29>`_
@@ -104,34 +141,8 @@ are not enough.  The memory is allocated once for the duration of the kernel,
 unlike traditional dynamic memory management.
 
 .. function:: numba.cuda.local.array(shape, type)
-   :noindex:
 
    Allocate a local array of the given *shape* and *type* on the device.
    The array is private to the current thread.  An array-like object is
    returned which can be read and written to like any standard array
    (e.g. through indexing).
-
-SmartArrays (experimental)
-==========================
-
-Numba provides an Array-like data type that manages data movement to
-and from the device automatically. It can be used as drop-in replacement for
-`numpy.ndarray` in most cases, and is supported by Numba's JIT-compiler for both
-'host' and 'cuda' target.
-
-.. comment: function:: numba.SmartArray(obj=None, copy=True,
-                               shape=None, dtype=None, order=None, where='host')
-
-.. autoclass:: numba.SmartArray
-   :members: __init__, host, host_changed, gpu, gpu_changed
-	       
-
-Thus, `SmartArray` objects may be passed as function arguments to jit-compiled
-functions. Whenever a cuda.jit-compiled function is being executed, it will
-trigger a data transfer to the GPU (unless the data are already there). But instead
-of transferring the data back to the host after the function completes, it leaves
-the data on the device and merely updates the host-side if there are any external
-references to that.
-Thus, if the next operation is another invocation of a cuda.jit-compiled function,
-the data does not need to be transferred again, making the compound operation more
-efficient (and making the use of the GPU advantagous even for smaller data sizes).
