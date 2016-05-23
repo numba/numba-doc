@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+
+
+
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+    <title>3.11. GPU Reduction &mdash; Numba 0.26.0 documentation</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    
+
+<link rel="stylesheet" href="../_static/css/basicstrap-base.css" type="text/css" />
+<link rel="stylesheet" id="current-theme" href="../_static/css/bootstrap3/bootstrap.min.css" type="text/css" />
+<link rel="stylesheet" id="current-adjust-theme" type="text/css" />
+
+<link rel="stylesheet" href="../_static/css/font-awesome.min.css">
+
+<style type="text/css">
+  body {
+    padding-top: 60px;
+    padding-bottom: 40px;
+  }
+</style>
+
+<link rel="stylesheet" href="../_static/css/basicstrap.css" type="text/css" />
+<link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+<script type="text/javascript">
+  var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:    '../',
+            VERSION:     '0.26.0',
+            COLLAPSE_INDEX: false,
+            FILE_SUFFIX: '.html',
+            HAS_SOURCE:  true
+  };
+</script>
+    <script type="text/javascript" src="../_static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/bootstrap3.min.js"></script>
+<script type="text/javascript" src="../_static/js/jquery.cookie.min.js"></script>
+<script type="text/javascript" src="../_static/js/basicstrap.js"></script>
+<script type="text/javascript">
+</script>
+    <link rel="top" title="Numba 0.26.0 documentation" href="../index.html" />
+    <link rel="up" title="3. Numba for CUDA GPUs" href="index.html" />
+    <link rel="next" title="3.12. CUDA Ufuncs and Generalized Ufuncs" href="ufunc.html" />
+    <link rel="prev" title="3.10. Debugging CUDA Python with the the CUDA Simulator" href="simulator.html" /> 
+  </head>
+  <body role="document">
+    <div id="navbar-top" class="navbar navbar-fixed-top navbar-default" role="navigation" aria-label="top navigation">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="../index.html">Numba 0.26.0 documentation</a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+              <li class="dropdown visible-xs">
+                <a role="button" id="localToc" data-toggle="dropdown" data-target="#" href="#">Table Of Contents <b class="caret"></b></a>
+                <ul class="dropdown-menu localtoc sp-localtoc" role="menu" aria-labelledby="localToc">
+                <ul>
+<li><a class="reference internal" href="#">3.11. GPU Reduction</a><ul>
+<li><a class="reference internal" href="#reduce">3.11.1. <code class="docutils literal"><span class="pre">&#64;reduce</span></code></a></li>
+<li><a class="reference internal" href="#class-reduce">3.11.2. class Reduce</a></li>
+</ul>
+</li>
+</ul>
+
+                </ul>
+              </li>
+
+            
+              <li><a href="simulator.html" title="3.10. Debugging CUDA Python with the the CUDA Simulator" accesskey="P">previous </a></li>
+              <li><a href="ufunc.html" title="3.12. CUDA Ufuncs and Generalized Ufuncs" accesskey="N">next </a></li>
+              <li><a href="../py-modindex.html" title="Python Module Index" >modules </a></li>
+              <li><a href="../genindex.html" title="General Index" accesskey="I">index </a></li>
+              <li><a href="index.html" accesskey="U">3. Numba for CUDA GPUs</a></li>
+            
+            <li class="visible-xs"><a href="../_sources/cuda/reduction.txt" rel="nofollow">Show Source</a></li>
+
+            <li class="visible-xs">
+                <form class="search form-search form-inline navbar-form navbar-right sp-searchbox" action="../search.html" method="get">
+                  <div class="input-append input-group">
+                    <input type="text" class="search-query form-control" name="q" placeholder="Search...">
+                    <span class="input-group-btn">
+                    <input type="submit" class="btn" value="Go" />
+                    </span>
+                  </div>
+                  <input type="hidden" name="check_keywords" value="yes" />
+                  <input type="hidden" name="area" value="default" />
+                </form>
+            </li>
+
+            
+
+          </ul>
+
+        </div>
+      </div>
+    </div>
+    
+
+    <!-- container -->
+    <div class="container-fluid">
+
+      <!-- row -->
+      <div class="row">
+         
+<div class="col-md-3 hidden-xs" id="sidebar-wrapper">
+  <div class="sidebar hidden-xs" role="navigation" aria-label="main navigation">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">3.11. GPU Reduction</a><ul>
+<li><a class="reference internal" href="#reduce">3.11.1. <code class="docutils literal"><span class="pre">&#64;reduce</span></code></a></li>
+<li><a class="reference internal" href="#class-reduce">3.11.2. class Reduce</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="simulator.html"
+                        title="previous chapter">3.10. Debugging CUDA Python with the the CUDA Simulator</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="ufunc.html"
+                        title="next chapter">3.12. CUDA Ufuncs and Generalized Ufuncs</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/cuda/reduction.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" role="search">
+  <h3>Quick search</h3>
+  <form class="search form-inline" action="../search.html" method="get">
+      <div class="input-append input-group">
+        <input type="text" class="search-query form-control" name="q" placeholder="Search...">
+        <span class="input-group-btn">
+        <input type="submit" class="btn" value="Go" />
+        </span>
+      </div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+  </div>
+</div> 
+        
+
+        <div class="col-md-9" id="content-wrapper">
+          <div class="document" role="main">
+            <div class="documentwrapper">
+              <div class="bodywrapper">
+                <div class="body">
+                  
+  <div class="section" id="gpu-reduction">
+<h1>3.11. GPU Reduction<a class="headerlink" href="#gpu-reduction" title="Permalink to this headline">¶</a></h1>
+<p>Writing a reduction algorithm for CUDA GPU can be tricky.  Numba provides a
+<code class="docutils literal"><span class="pre">&#64;reduce</span></code> decorator for converting simple binary operation into a reduction
+kernel.</p>
+<div class="section" id="reduce">
+<h2>3.11.1. <code class="docutils literal"><span class="pre">&#64;reduce</span></code><a class="headerlink" href="#reduce" title="Permalink to this headline">¶</a></h2>
+<p>Example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">from</span> <span class="nn">numba</span> <span class="k">import</span> <span class="n">cuda</span>
+
+<span class="nd">@cuda</span><span class="o">.</span><span class="n">reduce</span>
+<span class="k">def</span> <span class="nf">sum_reduce</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
+
+<span class="n">A</span> <span class="o">=</span> <span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1234</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">))</span> <span class="o">+</span> <span class="mi">1</span>
+<span class="n">expect</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>      <span class="c1"># numpy sum reduction</span>
+<span class="n">got</span> <span class="o">=</span> <span class="n">sum_reduce</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>   <span class="c1"># cuda sum reduction</span>
+<span class="k">assert</span> <span class="n">expect</span> <span class="o">==</span> <span class="n">got</span>
+</pre></div>
+</div>
+<p>User can also use a lambda function:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sum_reduce</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">reduce</span><span class="p">(</span><span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="class-reduce">
+<h2>3.11.2. class Reduce<a class="headerlink" href="#class-reduce" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal"><span class="pre">reduce</span></code> decorator creates an instance of the <code class="docutils literal"><span class="pre">Reduce</span></code> class.
+(Currently, <code class="docutils literal"><span class="pre">reduce</span></code> is an alias to <code class="docutils literal"><span class="pre">Reduce</span></code>, but this behavior is not
+guaranteed.)</p>
+<dl class="class">
+<dt id="numba.cuda.Reduce">
+<em class="property">class </em><code class="descclassname">numba.cuda.</code><code class="descname">Reduce</code><span class="sig-paren">(</span><em>binop</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.cuda.Reduce" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="numba.cuda.Reduce.__call__">
+<code class="descname">__call__</code><span class="sig-paren">(</span><em>arr</em>, <em>res=None</em>, <em>size=None</em>, <em>init=0</em>, <em>stream=0</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.cuda.Reduce.__call__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs a full reduction.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>arr</strong> &#8211; A host or device array. If a device array is given, the
+reduction is performed inplace and the values in the array
+are overwritten. If a host array is given, it is copied to
+the device automatically.</li>
+<li><strong>size</strong> &#8211; Optional integer specifying the number of elements in
+<code class="docutils literal"><span class="pre">arr</span></code> to reduce. If this parameter is not specified, the
+entire array is reduced.</li>
+<li><strong>res</strong> &#8211; Optional device array into which to write the reduction
+result to. The result is written into the first element of
+this array. If this parameter is specified, then no
+communication of the reduction output takes place from the
+device to the host.</li>
+<li><strong>init</strong> &#8211; Optional initial value for the reduction, the type of which
+must match <code class="docutils literal"><span class="pre">arr.dtype</span></code>.</li>
+<li><strong>stream</strong> &#8211; Optional CUDA stream in which to perform the reduction.
+If no stream is specified, the default stream of 0 is
+used.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">If <code class="docutils literal"><span class="pre">res</span></code> is specified, <code class="docutils literal"><span class="pre">None</span></code> is returned. Otherwise, the
+result of the reduction is returned.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.Reduce.__init__">
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>binop</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.cuda.Reduce.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a reduction object that reduces values using a given binary
+function. The binary function is compiled once and cached inside this
+object. Keeping this object alive will prevent re-compilation.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>binop</strong> &#8211; A function to be compiled as a CUDA device function that
+will be used as the binary operation for reduction on a
+CUDA device. Internally, it is compiled using
+<code class="docutils literal"><span class="pre">cuda.jit(signature,</span> <span class="pre">device=True)</span></code>.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        
+      </div><!-- /row -->
+
+      <!-- row -->
+      <div class="row footer-relbar">
+<div id="navbar-related" class=" related navbar navbar-default" role="navigation" aria-label="related navigation">
+  <div class="navbar-inner">
+    <ul class="nav navbar-nav ">
+        <li><a href="../index.html">Numba 0.26.0 documentation</a></li>
+    </ul>
+<ul class="nav navbar-nav pull-right hidden-xs hidden-sm">
+      
+        <li><a href="simulator.html" title="3.10. Debugging CUDA Python with the the CUDA Simulator" >previous</a></li>
+        <li><a href="ufunc.html" title="3.12. CUDA Ufuncs and Generalized Ufuncs" >next</a></li>
+        <li><a href="../py-modindex.html" title="Python Module Index" >modules</a></li>
+        <li><a href="../genindex.html" title="General Index" >index</a></li>
+        <li><a href="index.html" >3. Numba for CUDA GPUs</a></li>
+        <li><a href="#">top</a></li> 
+      
+    </ul>
+  </div>
+</div>
+      </div><!-- /row -->
+
+      <!-- footer -->
+      <footer role="contentinfo">
+          &copy; Copyright 2012-2015, Continuum Analytics.
+        Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.4.1.
+      </footer>
+      <!-- /footer -->
+
+    </div>
+    <!-- /container -->
+
+  </body>
+</html>

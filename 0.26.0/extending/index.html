@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+
+
+
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+    <title>6. Extending Numba &mdash; Numba 0.26.0 documentation</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    
+
+<link rel="stylesheet" href="../_static/css/basicstrap-base.css" type="text/css" />
+<link rel="stylesheet" id="current-theme" href="../_static/css/bootstrap3/bootstrap.min.css" type="text/css" />
+<link rel="stylesheet" id="current-adjust-theme" type="text/css" />
+
+<link rel="stylesheet" href="../_static/css/font-awesome.min.css">
+
+<style type="text/css">
+  body {
+    padding-top: 60px;
+    padding-bottom: 40px;
+  }
+</style>
+
+<link rel="stylesheet" href="../_static/css/basicstrap.css" type="text/css" />
+<link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+<script type="text/javascript">
+  var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:    '../',
+            VERSION:     '0.26.0',
+            COLLAPSE_INDEX: false,
+            FILE_SUFFIX: '.html',
+            HAS_SOURCE:  true
+  };
+</script>
+    <script type="text/javascript" src="../_static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/bootstrap3.min.js"></script>
+<script type="text/javascript" src="../_static/js/jquery.cookie.min.js"></script>
+<script type="text/javascript" src="../_static/js/basicstrap.js"></script>
+<script type="text/javascript">
+</script>
+    <link rel="top" title="Numba 0.26.0 documentation" href="../index.html" />
+    <link rel="next" title="6.1. High-level extension API" href="high-level.html" />
+    <link rel="prev" title="5.7. Examples" href="../hsa/examples.html" /> 
+  </head>
+  <body role="document">
+    <div id="navbar-top" class="navbar navbar-fixed-top navbar-default" role="navigation" aria-label="top navigation">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="../index.html">Numba 0.26.0 documentation</a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+
+            
+              <li><a href="../hsa/examples.html" title="5.7. Examples" accesskey="P">previous </a></li>
+              <li><a href="high-level.html" title="6.1. High-level extension API" accesskey="N">next </a></li>
+              <li><a href="../py-modindex.html" title="Python Module Index" >modules </a></li>
+              <li><a href="../genindex.html" title="General Index" accesskey="I">index </a></li>
+            
+            <li class="visible-xs"><a href="../_sources/extending/index.txt" rel="nofollow">Show Source</a></li>
+
+            <li class="visible-xs">
+                <form class="search form-search form-inline navbar-form navbar-right sp-searchbox" action="../search.html" method="get">
+                  <div class="input-append input-group">
+                    <input type="text" class="search-query form-control" name="q" placeholder="Search...">
+                    <span class="input-group-btn">
+                    <input type="submit" class="btn" value="Go" />
+                    </span>
+                  </div>
+                  <input type="hidden" name="check_keywords" value="yes" />
+                  <input type="hidden" name="area" value="default" />
+                </form>
+            </li>
+
+            
+
+          </ul>
+
+        </div>
+      </div>
+    </div>
+    
+
+    <!-- container -->
+    <div class="container-fluid">
+
+      <!-- row -->
+      <div class="row">
+         
+<div class="col-md-3 hidden-xs" id="sidebar-wrapper">
+  <div class="sidebar hidden-xs" role="navigation" aria-label="main navigation">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../hsa/examples.html"
+                        title="previous chapter">5.7. Examples</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="high-level.html"
+                        title="next chapter">6.1. High-level extension API</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/extending/index.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" role="search">
+  <h3>Quick search</h3>
+  <form class="search form-inline" action="../search.html" method="get">
+      <div class="input-append input-group">
+        <input type="text" class="search-query form-control" name="q" placeholder="Search...">
+        <span class="input-group-btn">
+        <input type="submit" class="btn" value="Go" />
+        </span>
+      </div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+  </div>
+</div> 
+        
+
+        <div class="col-md-9" id="content-wrapper">
+          <div class="document" role="main">
+            <div class="documentwrapper">
+              <div class="bodywrapper">
+                <div class="body">
+                  
+  <div class="section" id="module-numba.extending">
+<span id="extending-numba"></span><h1>6. Extending Numba<a class="headerlink" href="#module-numba.extending" title="Permalink to this headline">¶</a></h1>
+<p>This chapter describes how to extend Numba to make it recognize and support
+additional operations, functions or types.  Numba provides two categories
+of APIs to this end:</p>
+<ul class="simple">
+<li>The high-level APIs provide abstracted entry points which are sufficient
+for simple uses.  They require little knowledge of Numba&#8217;s internal
+compilation chain.</li>
+<li>The low-level APIs reflect Numba&#8217;s internal compilation chain and allow
+flexible interaction with its various layers, but require more effort
+and experience with Numba internals.</li>
+</ul>
+<p>It may be helpful for readers of this chapter to also read some of the
+documents in the <a class="reference internal" href="../developer/index.html"><span class="doc">developer manual</span></a>, especially
+the <a class="reference internal" href="../developer/architecture.html"><span class="doc">architecture document</span></a>.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="high-level.html">6.1. High-level extension API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="high-level.html#implementing-functions">6.1.1. Implementing functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="high-level.html#implementing-methods">6.1.2. Implementing methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="high-level.html#implementing-attributes">6.1.3. Implementing attributes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="low-level.html">6.2. Low-level extension API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="low-level.html#typing">6.2.1. Typing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="low-level.html#lowering">6.2.2. Lowering</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="low-level.html#native-operations">6.2.2.1. Native operations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="low-level.html#constants">6.2.2.2. Constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="low-level.html#boxing-and-unboxing">6.2.2.3. Boxing and unboxing</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="interval-example.html">6.3. Example: an interval type</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="interval-example.html#extending-the-typing-layer">6.3.1. Extending the typing layer</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="interval-example.html#creating-a-new-numba-type">6.3.1.1. Creating a new Numba type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="interval-example.html#type-inference-for-python-values">6.3.1.2. Type inference for Python values</a></li>
+<li class="toctree-l3"><a class="reference internal" href="interval-example.html#type-inference-for-operations">6.3.1.3. Type inference for operations</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="interval-example.html#extending-the-lowering-layer">6.3.2. Extending the lowering layer</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="interval-example.html#defining-the-data-model-for-native-intervals">6.3.2.1. Defining the data model for native intervals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="interval-example.html#exposing-data-model-attributes">6.3.2.2. Exposing data model attributes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="interval-example.html#exposing-a-property">6.3.2.3. Exposing a property</a></li>
+<li class="toctree-l3"><a class="reference internal" href="interval-example.html#implementing-the-constructor">6.3.2.4. Implementing the constructor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="interval-example.html#boxing-and-unboxing">6.3.2.5. Boxing and unboxing</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="interval-example.html#using-it">6.3.3. Using it</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interval-example.html#conclusion">6.3.4. Conclusion</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        
+      </div><!-- /row -->
+
+      <!-- row -->
+      <div class="row footer-relbar">
+<div id="navbar-related" class=" related navbar navbar-default" role="navigation" aria-label="related navigation">
+  <div class="navbar-inner">
+    <ul class="nav navbar-nav ">
+        <li><a href="../index.html">Numba 0.26.0 documentation</a></li>
+    </ul>
+<ul class="nav navbar-nav pull-right hidden-xs hidden-sm">
+      
+        <li><a href="../hsa/examples.html" title="5.7. Examples" >previous</a></li>
+        <li><a href="high-level.html" title="6.1. High-level extension API" >next</a></li>
+        <li><a href="../py-modindex.html" title="Python Module Index" >modules</a></li>
+        <li><a href="../genindex.html" title="General Index" >index</a></li>
+        <li><a href="#">top</a></li> 
+      
+    </ul>
+  </div>
+</div>
+      </div><!-- /row -->
+
+      <!-- footer -->
+      <footer role="contentinfo">
+          &copy; Copyright 2012-2015, Continuum Analytics.
+        Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.4.1.
+      </footer>
+      <!-- /footer -->
+
+    </div>
+    <!-- /container -->
+
+  </body>
+</html>
