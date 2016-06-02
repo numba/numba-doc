@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     
-    <title>2.4. Utilities &mdash; Numba 0.26.0+14.g4149b5c-py2.7-linux-x86_64.egg documentation</title>
+    <title>3.13. CUDA Frequently Asked Questions &mdash; Numba 0.26.0+14.g4149b5c-py2.7-linux-x86_64.egg documentation</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
@@ -58,9 +58,9 @@
   });
 </script>
     <link rel="top" title="Numba 0.26.0+14.g4149b5c-py2.7-linux-x86_64.egg documentation" href="../index.html" />
-    <link rel="up" title="2. Reference Manual" href="index.html" />
-    <link rel="next" title="2.5. Environment variables" href="envvars.html" />
-    <link rel="prev" title="2.3. Ahead-of-Time compilation" href="aot-compilation.html" /> 
+    <link rel="up" title="3. Numba for CUDA GPUs" href="index.html" />
+    <link rel="next" title="4. CUDA Python Reference" href="../cuda-reference/index.html" />
+    <link rel="prev" title="3.12. CUDA Ufuncs and Generalized Ufuncs" href="ufunc.html" /> 
   </head>
   <body>
     <div class="navbar navbar-fixed-top ">
@@ -82,13 +82,13 @@
                 <a href="../py-modindex.html" title="Python Module Index" >modules</a>
                 </li>
                 <li>
-                <a href="envvars.html" title="2.5. Environment variables" accesskey="N">next</a>
+                <a href="../cuda-reference/index.html" title="4. CUDA Python Reference" accesskey="N">next</a>
                 </li>
                 <li>
-                <a href="aot-compilation.html" title="2.3. Ahead-of-Time compilation" accesskey="P">previous</a>
+                <a href="ufunc.html" title="3.12. CUDA Ufuncs and Generalized Ufuncs" accesskey="P">previous</a>
                 </li>
                 <li>
-                <a href="index.html" accesskey="U">2. Reference Manual</a>
+                <a href="index.html" accesskey="U">3. Numba for CUDA GPUs</a>
                 </li>
               
             </ul>
@@ -110,22 +110,22 @@
   <div class="for-mobile sidebar hidden-phone">
   <h3><a href="../index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">2.4. Utilities</a><ul>
-<li><a class="reference internal" href="#dealing-with-pointers">2.4.1. Dealing with pointers</a></li>
+<li><a class="reference internal" href="#">3.13. CUDA Frequently Asked Questions</a><ul>
+<li><a class="reference internal" href="#nvprof-reports-no-kernels-were-profiled">3.13.1. nvprof reports &#8220;No kernels were profiled&#8221;</a></li>
 </ul>
 </li>
 </ul>
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="aot-compilation.html"
-                        title="previous chapter">2.3. Ahead-of-Time compilation</a></p>
+  <p class="topless"><a href="ufunc.html"
+                        title="previous chapter">3.12. CUDA Ufuncs and Generalized Ufuncs</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="envvars.html"
-                        title="next chapter">2.5. Environment variables</a></p>
+  <p class="topless"><a href="../cuda-reference/index.html"
+                        title="next chapter">4. CUDA Python Reference</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="../_sources/reference/utils.txt"
+      <li><a href="../_sources/cuda/faq.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
@@ -155,22 +155,22 @@
   <div class=" sidebar hidden-phone">
   <h3><a href="../index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">2.4. Utilities</a><ul>
-<li><a class="reference internal" href="#dealing-with-pointers">2.4.1. Dealing with pointers</a></li>
+<li><a class="reference internal" href="#">3.13. CUDA Frequently Asked Questions</a><ul>
+<li><a class="reference internal" href="#nvprof-reports-no-kernels-were-profiled">3.13.1. nvprof reports &#8220;No kernels were profiled&#8221;</a></li>
 </ul>
 </li>
 </ul>
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="aot-compilation.html"
-                        title="previous chapter">2.3. Ahead-of-Time compilation</a></p>
+  <p class="topless"><a href="ufunc.html"
+                        title="previous chapter">3.12. CUDA Ufuncs and Generalized Ufuncs</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="envvars.html"
-                        title="next chapter">2.5. Environment variables</a></p>
+  <p class="topless"><a href="../cuda-reference/index.html"
+                        title="next chapter">4. CUDA Python Reference</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="../_sources/reference/utils.txt"
+      <li><a href="../_sources/cuda/faq.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
@@ -198,34 +198,18 @@
               <div class="bodywrapper">
                 <div class="body">
                   
-  <div class="section" id="utilities">
-<h1>2.4. Utilities<a class="headerlink" href="#utilities" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="dealing-with-pointers">
-<h2>2.4.1. Dealing with pointers<a class="headerlink" href="#dealing-with-pointers" title="Permalink to this headline">¶</a></h2>
-<p>These functions can be called from pure Python as well as in
-<a class="reference internal" href="../glossary.html#term-nopython-mode"><span class="xref std std-term">nopython mode</span></a>.</p>
-<dl class="function">
-<dt id="numba.carray">
-<code class="descclassname">numba.</code><code class="descname">carray</code><span class="sig-paren">(</span><em>ptr</em>, <em>shape</em>, <em>dtype=None</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.carray" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a Numpy array view over the data pointed to by <em>ptr</em> with the
-given <em>shape</em>, in C order.  If <em>dtype</em> is given, it is used as the array&#8217;s
-dtype, otherwise the array&#8217;s dtype is inferred from <em>ptr</em>&#8216;s type.
-As the returned array is a view, not a copy, writing to it will modify
-the original data.</p>
-<p><em>ptr</em> should be a ctypes pointer object (either a typed pointer
-as created using <a class="reference external" href="https://docs.python.org/3/library/ctypes.html#ctypes.POINTER" title="(in Python v3.5)"><code class="xref py py-func docutils literal"><span class="pre">POINTER()</span></code></a>, or a <a class="reference external" href="https://docs.python.org/3/library/ctypes.html#ctypes.c_void_p" title="(in Python v3.5)"><code class="xref py py-class docutils literal"><span class="pre">c_void_p</span></code></a>).</p>
-<p><em>shape</em> should be an integer or a tuple of integers.</p>
-<p><em>dtype</em> should be a Numpy dtype or scalar class (i.e. both
-<code class="docutils literal"><span class="pre">np.dtype('int8')</span></code> and <code class="docutils literal"><span class="pre">np.int8</span></code> are accepted).</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="numba.farray">
-<code class="descclassname">numba.</code><code class="descname">farray</code><span class="sig-paren">(</span><em>ptr</em>, <em>shape</em>, <em>dtype=None</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.farray" title="Permalink to this definition">¶</a></dt>
-<dd><p>Same as <a class="reference internal" href="#numba.carray" title="numba.carray"><code class="xref py py-func docutils literal"><span class="pre">carray()</span></code></a>, but the data is assumed to be laid out
-in Fortran order, and the array view is constructed accordingly.</p>
-</dd></dl>
-
+  <div class="section" id="cuda-frequently-asked-questions">
+<span id="cudafaq"></span><h1>3.13. CUDA Frequently Asked Questions<a class="headerlink" href="#cuda-frequently-asked-questions" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="nvprof-reports-no-kernels-were-profiled">
+<h2>3.13.1. nvprof reports &#8220;No kernels were profiled&#8221;<a class="headerlink" href="#nvprof-reports-no-kernels-were-profiled" title="Permalink to this headline">¶</a></h2>
+<p>When using the <code class="docutils literal"><span class="pre">nvprof</span></code> tool to profile Numba jitted code for the CUDA
+target, the output contains <code class="docutils literal"><span class="pre">No</span> <span class="pre">kernels</span> <span class="pre">were</span> <span class="pre">profiled</span></code> but there are clearly
+running kernels present, what is going on?</p>
+<p>This is quite likely due to the profiling data not being flushed on program
+exit, see the <a class="reference external" href="http://docs.nvidia.com/cuda/profiler-users-guide/#flush-profile-data">NVIDIA CUDA documentation</a> for
+details. To fix this simply add a call to <code class="docutils literal"><span class="pre">numba.cuda.profile_stop()</span></code> prior
+to the exit point in your program (or whereever you want to stop profiling).
+For more on CUDA profiling support in Numba, see <a class="reference internal" href="../cuda-reference/host.html#cuda-profiling"><span>Profiling</span></a>.</p>
 </div>
 </div>
 
@@ -247,10 +231,10 @@ in Fortran order, and the array view is constructed accordingly.</p>
       
         <li><a href="../genindex.html" title="General Index" >index</a></li>
         <li><a href="../py-modindex.html" title="Python Module Index" >modules</a></li>
-        <li><a href="envvars.html" title="2.5. Environment variables" >next</a></li>
-        <li><a href="aot-compilation.html" title="2.3. Ahead-of-Time compilation" >previous</a></li>
+        <li><a href="../cuda-reference/index.html" title="4. CUDA Python Reference" >next</a></li>
+        <li><a href="ufunc.html" title="3.12. CUDA Ufuncs and Generalized Ufuncs" >previous</a></li>
         <li><a href="../index.html">Numba 0.26.0+14.g4149b5c-py2.7-linux-x86_64.egg documentation</a></li>
-        <li><a href="index.html" >2. Reference Manual</a></li> 
+        <li><a href="index.html" >3. Numba for CUDA GPUs</a></li> 
       
     </ul>
   </div>
