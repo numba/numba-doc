@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     
-    <title>3.3. Memory management &mdash; Numba 0.28.0.dev0+141.g03a378f-py2.7-linux-x86_64.egg documentation</title>
+    <title>3.3. Memory management &mdash; Numba 0.28.0.dev0+149.g10661a7-py2.7-linux-x86_64.egg documentation</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
@@ -34,7 +34,7 @@
 <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
             URL_ROOT:    '../',
-            VERSION:     '0.28.0.dev0+141.g03a378f-py2.7-linux-x86_64.egg',
+            VERSION:     '0.28.0.dev0+149.g10661a7-py2.7-linux-x86_64.egg',
             COLLAPSE_INDEX: false,
             FILE_SUFFIX: '.html',
             HAS_SOURCE:  true
@@ -57,7 +57,7 @@
     });
   });
 </script>
-    <link rel="top" title="Numba 0.28.0.dev0+141.g03a378f-py2.7-linux-x86_64.egg documentation" href="../index.html" />
+    <link rel="top" title="Numba 0.28.0.dev0+149.g10661a7-py2.7-linux-x86_64.egg documentation" href="../index.html" />
     <link rel="up" title="3. Numba for CUDA GPUs" href="index.html" />
     <link rel="next" title="3.4. Writing Device Functions" href="device-functions.html" />
     <link rel="prev" title="3.2. Writing CUDA Kernels" href="kernels.html" /> 
@@ -71,7 +71,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="../index.html">Numba 0.28.0.dev0+141.g03a378f-py2.7-linux-x86_64.egg documentation</a>
+          <a class="brand" href="../index.html">Numba 0.28.0.dev0+149.g10661a7-py2.7-linux-x86_64.egg documentation</a>
           <div class="nav-collapse collapse">
             <ul class="nav pull-right">
               
@@ -120,6 +120,7 @@
 <li><a class="reference internal" href="#shared-memory-and-thread-synchronization">3.3.4. Shared memory and thread synchronization</a></li>
 <li><a class="reference internal" href="#local-memory">3.3.5. Local memory</a></li>
 <li><a class="reference internal" href="#smartarrays-experimental">3.3.6. SmartArrays (experimental)</a></li>
+<li><a class="reference internal" href="#deallocation-behavior">3.3.7. Deallocation Behavior</a></li>
 </ul>
 </li>
 </ul>
@@ -173,6 +174,7 @@
 <li><a class="reference internal" href="#shared-memory-and-thread-synchronization">3.3.4. Shared memory and thread synchronization</a></li>
 <li><a class="reference internal" href="#local-memory">3.3.5. Local memory</a></li>
 <li><a class="reference internal" href="#smartarrays-experimental">3.3.6. SmartArrays (experimental)</a></li>
+<li><a class="reference internal" href="#deallocation-behavior">3.3.7. Deallocation Behavior</a></li>
 </ul>
 </li>
 </ul>
@@ -482,6 +484,61 @@ Thus, if the next operation is another invocation of a cuda.jit-compiled functio
 the data does not need to be transferred again, making the compound operation more
 efficient (and making the use of the GPU advantagous even for smaller data sizes).</p>
 </div>
+<div class="section" id="deallocation-behavior">
+<h2>3.3.7. Deallocation Behavior<a class="headerlink" href="#deallocation-behavior" title="Permalink to this headline">¶</a></h2>
+<p>Deallocation of all CUDA resources are tracked on a per-context basis.
+When the last reference to a device memory is dropped, the underlying memory
+is scheduled to be deallocated.  The deallocation does not occur immediately.
+It is added to a queue of pending deallocations.  This design has two benefits:</p>
+<ol class="arabic simple">
+<li>Resource deallocation API may cause the device to synchronize; thus, breaking
+any asynchronous execution.  Deferring the deallocation could avoid latency
+in performance critical code section.</li>
+<li>Some deallocation errors may cause all the remaining deallocations to fail.
+Continued deallocation errors can cause critical errors at the CUDA driver
+level.  In some cases, this could mean a segmentation fault in the CUDA
+driver. In the worst case, this could cause the system GUI to freeze and
+could only recover with a system reset.  When an error occurs during a
+deallocation, the remaining pending deallocations are cancelled.  Any
+deallocation error will be reported.  When the process is terminated, the
+CUDA driver is able to release all allocated resources by the terminated
+process.</li>
+</ol>
+<p>The deallocation queue is flushed automatically as soon as the following events
+occur:</p>
+<ul class="simple">
+<li>An allocation failed due to out-of-memory error.  Allocation is retried after
+flushing all deallocations.</li>
+<li>The deallocation queue has reached its maximum size, which is default to 10.
+User can override by setting the environment variable
+<cite>NUMBA_CUDA_MAX_PENDING_DEALLOCS_COUNT</cite>.  For example,
+<cite>NUMBA_CUDA_MAX_PENDING_DEALLOCS_COUNT=20</cite>, increases the limit to 20.</li>
+<li>The maximum accumulated byte size of resources that are pending deallocation
+is reached.  This is default to 20% of the device memory capacity.
+User can override by setting the environment variable
+<cite>NUMBA_CUDA_MAX_PENDING_DEALLOCS_RATIO</cite>. For example,
+<cite>NUMBA_CUDA_MAX_PENDING_DEALLOCS_RATIO=0.5</cite> sets the limit to 50% of the
+capacity.</li>
+</ul>
+<p>Sometimes, it is desired to defer resource deallocation until a code section
+ends.  Most often, users want to avoid any implicit synchronization due to
+deallocation.  This can be done by using the following context manager:</p>
+<dl class="function">
+<dt id="numba.cuda.defer_cleanup">
+<code class="descclassname">numba.cuda.</code><code class="descname">defer_cleanup</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwds</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.cuda.defer_cleanup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Temporarily disable memory deallocation.
+Use this to prevent resource deallocation breaking asynchronous execution.</p>
+<p>For example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">with</span> <span class="n">defer_cleanup</span><span class="p">():</span>
+    <span class="c"># all cleanup is deferred in here</span>
+    <span class="n">do_speed_critical_code</span><span class="p">()</span>
+<span class="c"># cleanup can occur here</span>
+</pre></div>
+</div>
+<p>Note: this context manager can be nested.</p>
+</dd></dl>
+
+</div>
 </div>
 
 
@@ -504,7 +561,7 @@ efficient (and making the use of the GPU advantagous even for smaller data sizes
         <li><a href="../py-modindex.html" title="Python Module Index" >modules</a></li>
         <li><a href="device-functions.html" title="3.4. Writing Device Functions" >next</a></li>
         <li><a href="kernels.html" title="3.2. Writing CUDA Kernels" >previous</a></li>
-        <li><a href="../index.html">Numba 0.28.0.dev0+141.g03a378f-py2.7-linux-x86_64.egg documentation</a></li>
+        <li><a href="../index.html">Numba 0.28.0.dev0+149.g10661a7-py2.7-linux-x86_64.egg documentation</a></li>
         <li><a href="index.html" >3. Numba for CUDA GPUs</a></li> 
       
     </ul>
