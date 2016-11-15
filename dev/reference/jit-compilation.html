@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     
-    <title>2.2. Just-in-Time compilation &mdash; Numba 0.30.0.dev0+28.g4a3b8b5-py2.7-linux-x86_64.egg documentation</title>
+    <title>2.2. Just-in-Time compilation &mdash; Numba 0.30.0.dev0+37.g537bc2b-py2.7-linux-x86_64.egg documentation</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
@@ -34,7 +34,7 @@
 <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
             URL_ROOT:    '../',
-            VERSION:     '0.30.0.dev0+28.g4a3b8b5-py2.7-linux-x86_64.egg',
+            VERSION:     '0.30.0.dev0+37.g537bc2b-py2.7-linux-x86_64.egg',
             COLLAPSE_INDEX: false,
             FILE_SUFFIX: '.html',
             HAS_SOURCE:  true
@@ -57,7 +57,7 @@
     });
   });
 </script>
-    <link rel="top" title="Numba 0.30.0.dev0+28.g4a3b8b5-py2.7-linux-x86_64.egg documentation" href="../index.html" />
+    <link rel="top" title="Numba 0.30.0.dev0+37.g537bc2b-py2.7-linux-x86_64.egg documentation" href="../index.html" />
     <link rel="up" title="2. Reference Manual" href="index.html" />
     <link rel="next" title="2.3. Ahead-of-Time compilation" href="aot-compilation.html" />
     <link rel="prev" title="2.1. Types and signatures" href="types.html" /> 
@@ -71,7 +71,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="../index.html">Numba 0.30.0.dev0+28.g4a3b8b5-py2.7-linux-x86_64.egg documentation</a>
+          <a class="brand" href="../index.html">Numba 0.30.0.dev0+37.g537bc2b-py2.7-linux-x86_64.egg documentation</a>
           <div class="nav-collapse collapse">
             <ul class="nav pull-right">
               
@@ -381,7 +381,7 @@ for testing and interactive use.</p>
 <h2>2.2.4. Vectorized functions (ufuncs and DUFuncs)<a class="headerlink" href="#vectorized-functions-ufuncs-and-dufuncs" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="numba.vectorize">
-<code class="descclassname">&#64;</code><code class="descclassname">numba.</code><code class="descname">vectorize</code><span class="sig-paren">(</span><em>*</em>, <em>signatures=[]</em>, <em>identity=None</em>, <em>nopython=True</em>, <em>target='cpu'</em>, <em>forceobj=False</em>, <em>locals={}</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.vectorize" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">&#64;</code><code class="descclassname">numba.</code><code class="descname">vectorize</code><span class="sig-paren">(</span><em>*</em>, <em>signatures=[]</em>, <em>identity=None</em>, <em>nopython=True</em>, <em>target='cpu'</em>, <em>forceobj=False</em>, <em>cache=False</em>, <em>locals={}</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.vectorize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compile the decorated function and wrap it either as a <a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/ufuncs.html">Numpy
 ufunc</a> or a Numba <a class="reference internal" href="#numba.DUFunc" title="numba.DUFunc"><code class="xref py py-class docutils literal"><span class="pre">DUFunc</span></code></a>.  The optional
 <em>nopython</em>, <em>forceobj</em> and <em>locals</em> arguments have the same meaning
@@ -426,11 +426,14 @@ To use a multithreaded version, change the target to &#8220;parallel&#8221;:</p>
 <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">):</span> <span class="o">...</span>
 </pre></div>
 </div>
+<p>The compiled function can be cached to reduce future compilation time.
+It is enabled by setting <em>cache</em> to True. Only the &#8220;cpu&#8221; and &#8220;parallel&#8221;
+targets support caching.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="numba.guvectorize">
-<code class="descclassname">&#64;</code><code class="descclassname">numba.</code><code class="descname">guvectorize</code><span class="sig-paren">(</span><em>signatures</em>, <em>layout</em>, <em>*</em>, <em>identity=None</em>, <em>nopython=True</em>, <em>target='cpu'</em>, <em>forceobj=False</em>, <em>locals={}</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.guvectorize" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">&#64;</code><code class="descclassname">numba.</code><code class="descname">guvectorize</code><span class="sig-paren">(</span><em>signatures</em>, <em>layout</em>, <em>*</em>, <em>identity=None</em>, <em>nopython=True</em>, <em>target='cpu'</em>, <em>forceobj=False</em>, <em>cache=False</em>, <em>locals={}</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.guvectorize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generalized version of <a class="reference internal" href="#numba.vectorize" title="numba.vectorize"><code class="xref py py-func docutils literal"><span class="pre">numba.vectorize()</span></code></a>.  While
 <a class="reference internal" href="#numba.vectorize" title="numba.vectorize"><code class="xref py py-func docutils literal"><span class="pre">numba.vectorize()</span></code></a> will produce a simple ufunc whose core
 functionality (the function you are decorating) operates on scalar
@@ -465,6 +468,9 @@ in the layout string (e.g. <code class="docutils literal"><span class="pre">&quo
 as supported by Numpy.  Note that Numpy uses the term &#8220;signature&#8221;,
 which we unfortunately use for something else.</p>
 </div>
+<p>The compiled function can be cached to reduce future compilation time.
+It is enabled by setting <em>cache</em> to True. Only the &#8220;cpu&#8221; and &#8220;parallel&#8221;
+targets support caching.</p>
 </dd></dl>
 
 <dl class="class">
@@ -674,7 +680,7 @@ in the IR.</p>
         <li><a href="../py-modindex.html" title="Python Module Index" >modules</a></li>
         <li><a href="aot-compilation.html" title="2.3. Ahead-of-Time compilation" >next</a></li>
         <li><a href="types.html" title="2.1. Types and signatures" >previous</a></li>
-        <li><a href="../index.html">Numba 0.30.0.dev0+28.g4a3b8b5-py2.7-linux-x86_64.egg documentation</a></li>
+        <li><a href="../index.html">Numba 0.30.0.dev0+37.g537bc2b-py2.7-linux-x86_64.egg documentation</a></li>
         <li><a href="index.html" >2. Reference Manual</a></li> 
       
     </ul>
