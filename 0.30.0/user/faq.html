@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+
+
+
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+    <title>1.10. Frequently Asked Questions &mdash; Numba 0.30.0 documentation</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    
+
+<link rel="stylesheet" href="../_static/css/basicstrap-base.css" type="text/css" />
+<link rel="stylesheet" id="current-theme" href="../_static/css/bootstrap3/bootstrap.min.css" type="text/css" />
+<link rel="stylesheet" id="current-adjust-theme" type="text/css" />
+
+<link rel="stylesheet" href="../_static/css/font-awesome.min.css">
+
+<style type="text/css">
+  body {
+    padding-top: 60px;
+    padding-bottom: 40px;
+  }
+</style>
+
+<link rel="stylesheet" href="../_static/css/basicstrap.css" type="text/css" />
+<link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+<script type="text/javascript">
+  var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:    '../',
+            VERSION:     '0.30.0',
+            COLLAPSE_INDEX: false,
+            FILE_SUFFIX: '.html',
+            HAS_SOURCE:  true
+  };
+</script>
+    <script type="text/javascript" src="../_static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/bootstrap3.min.js"></script>
+<script type="text/javascript" src="../_static/js/jquery.cookie.min.js"></script>
+<script type="text/javascript" src="../_static/js/basicstrap.js"></script>
+<script type="text/javascript">
+</script>
+    <link rel="top" title="Numba 0.30.0 documentation" href="../index.html" />
+    <link rel="up" title="1. User Manual" href="index.html" />
+    <link rel="next" title="1.11. Examples" href="examples.html" />
+    <link rel="prev" title="1.9. Troubleshooting and tips" href="troubleshoot.html" /> 
+  </head>
+  <body role="document">
+    <div id="navbar-top" class="navbar navbar-fixed-top navbar-default" role="navigation" aria-label="top navigation">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="../index.html">Numba 0.30.0 documentation</a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+              <li class="dropdown visible-xs">
+                <a role="button" id="localToc" data-toggle="dropdown" data-target="#" href="#">Table Of Contents <b class="caret"></b></a>
+                <ul class="dropdown-menu localtoc sp-localtoc" role="menu" aria-labelledby="localToc">
+                <ul>
+<li><a class="reference internal" href="#">1.10. Frequently Asked Questions</a><ul>
+<li><a class="reference internal" href="#programming">1.10.1. Programming</a><ul>
+<li><a class="reference internal" href="#can-i-pass-a-function-as-an-argument-to-a-jitted-function">1.10.1.1. Can I pass a function as an argument to a jitted function?</a></li>
+<li><a class="reference internal" href="#numba-doesn-t-seem-to-care-when-i-modify-a-global-variable">1.10.1.2. Numba doesn&#8217;t seem to care when I modify a global variable</a></li>
+<li><a class="reference internal" href="#can-i-debug-a-jitted-function">1.10.1.3. Can I debug a jitted function?</a></li>
+<li><a class="reference internal" href="#how-can-i-create-a-fortran-ordered-array">1.10.1.4. How can I create a Fortran-ordered array?</a></li>
+<li><a class="reference internal" href="#how-can-i-increase-integer-width">1.10.1.5. How can I increase integer width?</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#performance">1.10.2. Performance</a><ul>
+<li><a class="reference internal" href="#does-numba-inline-functions">1.10.2.1. Does Numba inline functions?</a></li>
+<li><a class="reference internal" href="#does-numba-vectorize-array-computations-simd">1.10.2.2. Does Numba vectorize array computations (SIMD)?</a></li>
+<li><a class="reference internal" href="#does-numba-parallelize-code">1.10.2.3. Does Numba parallelize code?</a></li>
+<li><a class="reference internal" href="#can-numba-speed-up-short-running-functions">1.10.2.4. Can Numba speed up short-running functions?</a></li>
+<li><a class="reference internal" href="#there-is-a-delay-when-jit-compiling-a-complicated-function-how-can-i-improve-it">1.10.2.5. There is a delay when JIT-compiling a complicated function, how can I improve it?</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#integration-with-other-utilities">1.10.3. Integration with other utilities</a><ul>
+<li><a class="reference internal" href="#can-i-freeze-an-application-which-uses-numba">1.10.3.1. Can I &#8220;freeze&#8221; an application which uses Numba?</a></li>
+<li><a class="reference internal" href="#i-get-errors-when-running-a-script-twice-under-spyder">1.10.3.2. I get errors when running a script twice under Spyder</a></li>
+<li><a class="reference internal" href="#why-does-numba-complain-about-the-current-locale">1.10.3.3. Why does Numba complain about the current locale?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+                </ul>
+              </li>
+
+            
+              <li><a href="troubleshoot.html" title="1.9. Troubleshooting and tips" accesskey="P">previous </a></li>
+              <li><a href="examples.html" title="1.11. Examples" accesskey="N">next </a></li>
+              <li><a href="../py-modindex.html" title="Python Module Index" >modules </a></li>
+              <li><a href="../genindex.html" title="General Index" accesskey="I">index </a></li>
+              <li><a href="index.html" accesskey="U">1. User Manual</a></li>
+            
+            <li class="visible-xs"><a href="../_sources/user/faq.txt" rel="nofollow">Show Source</a></li>
+
+            <li class="visible-xs">
+                <form class="search form-search form-inline navbar-form navbar-right sp-searchbox" action="../search.html" method="get">
+                  <div class="input-append input-group">
+                    <input type="text" class="search-query form-control" name="q" placeholder="Search...">
+                    <span class="input-group-btn">
+                    <input type="submit" class="btn" value="Go" />
+                    </span>
+                  </div>
+                  <input type="hidden" name="check_keywords" value="yes" />
+                  <input type="hidden" name="area" value="default" />
+                </form>
+            </li>
+
+            
+
+          </ul>
+
+        </div>
+      </div>
+    </div>
+    
+
+    <!-- container -->
+    <div class="container-fluid">
+
+      <!-- row -->
+      <div class="row">
+         
+<div class="col-md-3 hidden-xs" id="sidebar-wrapper">
+  <div class="sidebar hidden-xs" role="navigation" aria-label="main navigation">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">1.10. Frequently Asked Questions</a><ul>
+<li><a class="reference internal" href="#programming">1.10.1. Programming</a><ul>
+<li><a class="reference internal" href="#can-i-pass-a-function-as-an-argument-to-a-jitted-function">1.10.1.1. Can I pass a function as an argument to a jitted function?</a></li>
+<li><a class="reference internal" href="#numba-doesn-t-seem-to-care-when-i-modify-a-global-variable">1.10.1.2. Numba doesn&#8217;t seem to care when I modify a global variable</a></li>
+<li><a class="reference internal" href="#can-i-debug-a-jitted-function">1.10.1.3. Can I debug a jitted function?</a></li>
+<li><a class="reference internal" href="#how-can-i-create-a-fortran-ordered-array">1.10.1.4. How can I create a Fortran-ordered array?</a></li>
+<li><a class="reference internal" href="#how-can-i-increase-integer-width">1.10.1.5. How can I increase integer width?</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#performance">1.10.2. Performance</a><ul>
+<li><a class="reference internal" href="#does-numba-inline-functions">1.10.2.1. Does Numba inline functions?</a></li>
+<li><a class="reference internal" href="#does-numba-vectorize-array-computations-simd">1.10.2.2. Does Numba vectorize array computations (SIMD)?</a></li>
+<li><a class="reference internal" href="#does-numba-parallelize-code">1.10.2.3. Does Numba parallelize code?</a></li>
+<li><a class="reference internal" href="#can-numba-speed-up-short-running-functions">1.10.2.4. Can Numba speed up short-running functions?</a></li>
+<li><a class="reference internal" href="#there-is-a-delay-when-jit-compiling-a-complicated-function-how-can-i-improve-it">1.10.2.5. There is a delay when JIT-compiling a complicated function, how can I improve it?</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#integration-with-other-utilities">1.10.3. Integration with other utilities</a><ul>
+<li><a class="reference internal" href="#can-i-freeze-an-application-which-uses-numba">1.10.3.1. Can I &#8220;freeze&#8221; an application which uses Numba?</a></li>
+<li><a class="reference internal" href="#i-get-errors-when-running-a-script-twice-under-spyder">1.10.3.2. I get errors when running a script twice under Spyder</a></li>
+<li><a class="reference internal" href="#why-does-numba-complain-about-the-current-locale">1.10.3.3. Why does Numba complain about the current locale?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="troubleshoot.html"
+                        title="previous chapter">1.9. Troubleshooting and tips</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="examples.html"
+                        title="next chapter">1.11. Examples</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/user/faq.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" role="search">
+  <h3>Quick search</h3>
+  <form class="search form-inline" action="../search.html" method="get">
+      <div class="input-append input-group">
+        <input type="text" class="search-query form-control" name="q" placeholder="Search...">
+        <span class="input-group-btn">
+        <input type="submit" class="btn" value="Go" />
+        </span>
+      </div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+  </div>
+</div> 
+        
+
+        <div class="col-md-9" id="content-wrapper">
+          <div class="document" role="main">
+            <div class="documentwrapper">
+              <div class="bodywrapper">
+                <div class="body">
+                  
+  <div class="section" id="frequently-asked-questions">
+<h1>1.10. Frequently Asked Questions<a class="headerlink" href="#frequently-asked-questions" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="programming">
+<h2>1.10.1. Programming<a class="headerlink" href="#programming" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="can-i-pass-a-function-as-an-argument-to-a-jitted-function">
+<h3>1.10.1.1. Can I pass a function as an argument to a jitted function?<a class="headerlink" href="#can-i-pass-a-function-as-an-argument-to-a-jitted-function" title="Permalink to this headline">¶</a></h3>
+<p>You can&#8217;t, but in many cases you can use a closure to emulate it.
+For example, this example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="nd">@jit</span><span class="p">(</span><span class="n">nopython</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">g</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="n">g</span><span class="p">(</span><span class="o">-</span><span class="n">x</span><span class="p">)</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">my_g_function</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>could be rewritten using a factory function:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">make_f</span><span class="p">(</span><span class="n">g</span><span class="p">):</span>
+    <span class="c1"># Note: a new f() is compiled each time make_f() is called!</span>
+    <span class="nd">@jit</span><span class="p">(</span><span class="n">nopython</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">g</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="n">g</span><span class="p">(</span><span class="o">-</span><span class="n">x</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">f</span>
+
+<span class="n">f</span> <span class="o">=</span> <span class="n">make_f</span><span class="p">(</span><span class="n">my_g_function</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="numba-doesn-t-seem-to-care-when-i-modify-a-global-variable">
+<h3>1.10.1.2. Numba doesn&#8217;t seem to care when I modify a global variable<a class="headerlink" href="#numba-doesn-t-seem-to-care-when-i-modify-a-global-variable" title="Permalink to this headline">¶</a></h3>
+<p>Numba considers global variables as compile-time constants.  If you want
+your jitted function to update itself when you have modified a global
+variable&#8217;s value, one solution is to recompile it using the
+<a class="reference internal" href="../reference/jit-compilation.html#Dispatcher.recompile" title="Dispatcher.recompile"><code class="xref py py-meth docutils literal"><span class="pre">recompile()</span></code></a> method.  This is a relatively slow operation,
+though, so you may instead decide to rearchitect your code and turn the
+global variable into a function argument.</p>
+</div>
+<div class="section" id="can-i-debug-a-jitted-function">
+<h3>1.10.1.3. Can I debug a jitted function?<a class="headerlink" href="#can-i-debug-a-jitted-function" title="Permalink to this headline">¶</a></h3>
+<p>Calling into <a class="reference external" href="https://docs.python.org/3/library/pdb.html#module-pdb" title="(in Python v3.5)"><code class="xref py py-mod docutils literal"><span class="pre">pdb</span></code></a> or other such high-level facilities is currently not
+supported from Numba-compiled code.  However, you can temporarily disable
+compilation by setting the <span class="target" id="index-0"></span><a class="reference internal" href="../reference/envvars.html#envvar-NUMBA_DISABLE_JIT"><code class="xref std std-envvar docutils literal"><span class="pre">NUMBA_DISABLE_JIT</span></code></a> environment
+variable.</p>
+</div>
+<div class="section" id="how-can-i-create-a-fortran-ordered-array">
+<h3>1.10.1.4. How can I create a Fortran-ordered array?<a class="headerlink" href="#how-can-i-create-a-fortran-ordered-array" title="Permalink to this headline">¶</a></h3>
+<p>Numba currently doesn&#8217;t support the <code class="docutils literal"><span class="pre">order</span></code> argument to most Numpy
+functions such as <a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.empty.html#numpy.empty" title="(in NumPy v1.11)"><code class="xref py py-func docutils literal"><span class="pre">numpy.empty()</span></code></a> (because of limitations in the
+<a class="reference internal" href="../glossary.html#term-type-inference"><span class="xref std std-term">type inference</span></a> algorithm).  You can work around this issue by
+creating a C-ordered array and then transposing it.  For example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="n">order</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">)</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">some_shape</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>can be rewritten as:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span><span class="o">.</span><span class="n">T</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">some_shape</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">T</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="how-can-i-increase-integer-width">
+<h3>1.10.1.5. How can I increase integer width?<a class="headerlink" href="#how-can-i-increase-integer-width" title="Permalink to this headline">¶</a></h3>
+<p>By default, Numba will generally use machine integer width for integer
+variables.  On a 32-bit machine, you may sometimes need the magnitude of
+64-bit integers instead.  You can simply initialize relevant variables as
+<code class="docutils literal"><span class="pre">np.int64</span></code> (for example <code class="docutils literal"><span class="pre">np.int64(0)</span></code> instead of <code class="docutils literal"><span class="pre">0</span></code>).  It will
+propagate to all computations involving those variables.</p>
+</div>
+</div>
+<div class="section" id="performance">
+<h2>1.10.2. Performance<a class="headerlink" href="#performance" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="does-numba-inline-functions">
+<h3>1.10.2.1. Does Numba inline functions?<a class="headerlink" href="#does-numba-inline-functions" title="Permalink to this headline">¶</a></h3>
+<p>Numba gives enough information to LLVM so that functions short enough
+can be inlined.  This only works in <a class="reference internal" href="../glossary.html#term-nopython-mode"><span class="xref std std-term">nopython mode</span></a>.</p>
+</div>
+<div class="section" id="does-numba-vectorize-array-computations-simd">
+<h3>1.10.2.2. Does Numba vectorize array computations (SIMD)?<a class="headerlink" href="#does-numba-vectorize-array-computations-simd" title="Permalink to this headline">¶</a></h3>
+<p>Numba doesn&#8217;t implement such optimizations by itself, but it lets LLVM
+apply them.</p>
+</div>
+<div class="section" id="does-numba-parallelize-code">
+<h3>1.10.2.3. Does Numba parallelize code?<a class="headerlink" href="#does-numba-parallelize-code" title="Permalink to this headline">¶</a></h3>
+<p>No, it doesn&#8217;t.  If you want to run computations concurrently on multiple
+threads (by <a class="reference internal" href="jit.html#jit-nogil"><span class="std std-ref">releasing the GIL</span></a>) or processes, you&#8217;ll
+have to handle the pooling and synchronisation yourself.</p>
+<p>Or, you can take a look at <a class="reference external" href="http://docs.continuum.io/numbapro/">NumbaPro</a>.</p>
+</div>
+<div class="section" id="can-numba-speed-up-short-running-functions">
+<h3>1.10.2.4. Can Numba speed up short-running functions?<a class="headerlink" href="#can-numba-speed-up-short-running-functions" title="Permalink to this headline">¶</a></h3>
+<p>Not significantly.  New users sometimes expect to JIT-compile such
+functions:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
+</pre></div>
+</div>
+<p>and get a significant speedup over the Python interpreter.  But there isn&#8217;t
+much Numba can improve here: most of the time is probably spent in CPython&#8217;s
+function call mechanism, rather than the function itself.  As a rule of
+thumb, if a function takes less than 10 µs to execute: leave it.</p>
+<p>The exception is that you <em>should</em> JIT-compile that function if it is called
+from another jitted function.</p>
+</div>
+<div class="section" id="there-is-a-delay-when-jit-compiling-a-complicated-function-how-can-i-improve-it">
+<h3>1.10.2.5. There is a delay when JIT-compiling a complicated function, how can I improve it?<a class="headerlink" href="#there-is-a-delay-when-jit-compiling-a-complicated-function-how-can-i-improve-it" title="Permalink to this headline">¶</a></h3>
+<p>Try to pass <code class="docutils literal"><span class="pre">cache=True</span></code> to the <code class="docutils literal"><span class="pre">&#64;jit</span></code> decorator.  It will keep the
+compiled version on disk for later use.</p>
+<p>A more radical alternative is <a class="reference internal" href="pycc.html#pycc"><span class="std std-ref">ahead-of-time compilation</span></a>.</p>
+</div>
+</div>
+<div class="section" id="integration-with-other-utilities">
+<h2>1.10.3. Integration with other utilities<a class="headerlink" href="#integration-with-other-utilities" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="can-i-freeze-an-application-which-uses-numba">
+<h3>1.10.3.1. Can I &#8220;freeze&#8221; an application which uses Numba?<a class="headerlink" href="#can-i-freeze-an-application-which-uses-numba" title="Permalink to this headline">¶</a></h3>
+<p>If you&#8217;re using PyInstaller or a similar utility to freeze an application,
+you may encounter issues with llvmlite.  llvmlite needs a non-Python DLL
+for its working, but it won&#8217;t be automatically detected by freezing utilities.
+You have to inform the freezing utility of the DLL&#8217;s location: it will
+usually be named <code class="docutils literal"><span class="pre">llvmlite/binding/libllvmlite.so</span></code> or
+<code class="docutils literal"><span class="pre">llvmlite/binding/llvmlite.dll</span></code>, depending on your system.</p>
+</div>
+<div class="section" id="i-get-errors-when-running-a-script-twice-under-spyder">
+<h3>1.10.3.2. I get errors when running a script twice under Spyder<a class="headerlink" href="#i-get-errors-when-running-a-script-twice-under-spyder" title="Permalink to this headline">¶</a></h3>
+<p>When you run a script in a console under Spyder, Spyder first tries to
+reload existing modules.  This doesn&#8217;t work well with Numba, and can
+produce errors like <code class="docutils literal"><span class="pre">TypeError:</span> <span class="pre">No</span> <span class="pre">matching</span> <span class="pre">definition</span> <span class="pre">for</span> <span class="pre">argument</span> <span class="pre">type(s)</span></code>.</p>
+<p>There is a fix in the Spyder preferences. Open the &#8220;Preferences&#8221; window,
+select &#8220;Console&#8221;, then &#8220;Advanced Settings&#8221;, click the &#8220;Set UMR excluded
+modules&#8221; button, and add <code class="docutils literal"><span class="pre">numba</span></code> inside the text box that pops up.</p>
+<p>To see the setting take effect, be sure to restart the IPython console or
+kernel.</p>
+</div>
+<div class="section" id="why-does-numba-complain-about-the-current-locale">
+<span id="llvm-locale-bug"></span><h3>1.10.3.3. Why does Numba complain about the current locale?<a class="headerlink" href="#why-does-numba-complain-about-the-current-locale" title="Permalink to this headline">¶</a></h3>
+<p>If you get an error message such as the following:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="ne">RuntimeError</span><span class="p">:</span> <span class="n">Failed</span> <span class="n">at</span> <span class="n">nopython</span> <span class="p">(</span><span class="n">nopython</span> <span class="n">mode</span> <span class="n">backend</span><span class="p">)</span>
+<span class="n">LLVM</span> <span class="n">will</span> <span class="n">produce</span> <span class="n">incorrect</span> <span class="n">floating</span><span class="o">-</span><span class="n">point</span> <span class="n">code</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">current</span> <span class="n">locale</span>
+</pre></div>
+</div>
+<p>it means you have hit a LLVM bug which causes incorrect handling of
+floating-point constants.  This is known to happen with certain third-party
+libraries such as the Qt backend to matplotlib.</p>
+<p>To work around the bug, you need to force back the locale to its default
+value, for example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">locale</span>
+<span class="n">locale</span><span class="o">.</span><span class="n">setlocale</span><span class="p">(</span><span class="n">locale</span><span class="o">.</span><span class="n">LC_NUMERIC</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        
+      </div><!-- /row -->
+
+      <!-- row -->
+      <div class="row footer-relbar">
+<div id="navbar-related" class=" related navbar navbar-default" role="navigation" aria-label="related navigation">
+  <div class="navbar-inner">
+    <ul class="nav navbar-nav ">
+        <li><a href="../index.html">Numba 0.30.0 documentation</a></li>
+    </ul>
+<ul class="nav navbar-nav pull-right hidden-xs hidden-sm">
+      
+        <li><a href="troubleshoot.html" title="1.9. Troubleshooting and tips" >previous</a></li>
+        <li><a href="examples.html" title="1.11. Examples" >next</a></li>
+        <li><a href="../py-modindex.html" title="Python Module Index" >modules</a></li>
+        <li><a href="../genindex.html" title="General Index" >index</a></li>
+        <li><a href="index.html" >1. User Manual</a></li>
+        <li><a href="#">top</a></li> 
+      
+    </ul>
+  </div>
+</div>
+      </div><!-- /row -->
+
+      <!-- footer -->
+      <footer role="contentinfo">
+          &copy; Copyright 2012-2015, Continuum Analytics.
+        Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.4.1.
+      </footer>
+      <!-- /footer -->
+
+    </div>
+    <!-- /container -->
+
+  </body>
+</html>

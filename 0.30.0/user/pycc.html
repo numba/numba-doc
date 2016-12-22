@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+
+
+
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+    <title>1.8. Compiling code ahead of time &mdash; Numba 0.30.0 documentation</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    
+
+<link rel="stylesheet" href="../_static/css/basicstrap-base.css" type="text/css" />
+<link rel="stylesheet" id="current-theme" href="../_static/css/bootstrap3/bootstrap.min.css" type="text/css" />
+<link rel="stylesheet" id="current-adjust-theme" type="text/css" />
+
+<link rel="stylesheet" href="../_static/css/font-awesome.min.css">
+
+<style type="text/css">
+  body {
+    padding-top: 60px;
+    padding-bottom: 40px;
+  }
+</style>
+
+<link rel="stylesheet" href="../_static/css/basicstrap.css" type="text/css" />
+<link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+<script type="text/javascript">
+  var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:    '../',
+            VERSION:     '0.30.0',
+            COLLAPSE_INDEX: false,
+            FILE_SUFFIX: '.html',
+            HAS_SOURCE:  true
+  };
+</script>
+    <script type="text/javascript" src="../_static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/bootstrap3.min.js"></script>
+<script type="text/javascript" src="../_static/js/jquery.cookie.min.js"></script>
+<script type="text/javascript" src="../_static/js/basicstrap.js"></script>
+<script type="text/javascript">
+</script>
+    <link rel="top" title="Numba 0.30.0 documentation" href="../index.html" />
+    <link rel="up" title="1. User Manual" href="index.html" />
+    <link rel="next" title="1.9. Troubleshooting and tips" href="troubleshoot.html" />
+    <link rel="prev" title="1.7. Creating C callbacks with @cfunc" href="cfunc.html" /> 
+  </head>
+  <body role="document">
+    <div id="navbar-top" class="navbar navbar-fixed-top navbar-default" role="navigation" aria-label="top navigation">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="../index.html">Numba 0.30.0 documentation</a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+              <li class="dropdown visible-xs">
+                <a role="button" id="localToc" data-toggle="dropdown" data-target="#" href="#">Table Of Contents <b class="caret"></b></a>
+                <ul class="dropdown-menu localtoc sp-localtoc" role="menu" aria-labelledby="localToc">
+                <ul>
+<li><a class="reference internal" href="#">1.8. Compiling code ahead of time</a><ul>
+<li><a class="reference internal" href="#overview">1.8.1. Overview</a><ul>
+<li><a class="reference internal" href="#benefits">1.8.1.1. Benefits</a></li>
+<li><a class="reference internal" href="#limitations">1.8.1.2. Limitations</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#usage">1.8.2. Usage</a><ul>
+<li><a class="reference internal" href="#standalone-example">1.8.2.1. Standalone example</a></li>
+<li><a class="reference internal" href="#distutils-integration">1.8.2.2. Distutils integration</a></li>
+<li><a class="reference internal" href="#signature-syntax">1.8.2.3. Signature syntax</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+                </ul>
+              </li>
+
+            
+              <li><a href="cfunc.html" title="1.7. Creating C callbacks with @cfunc" accesskey="P">previous </a></li>
+              <li><a href="troubleshoot.html" title="1.9. Troubleshooting and tips" accesskey="N">next </a></li>
+              <li><a href="../py-modindex.html" title="Python Module Index" >modules </a></li>
+              <li><a href="../genindex.html" title="General Index" accesskey="I">index </a></li>
+              <li><a href="index.html" accesskey="U">1. User Manual</a></li>
+            
+            <li class="visible-xs"><a href="../_sources/user/pycc.txt" rel="nofollow">Show Source</a></li>
+
+            <li class="visible-xs">
+                <form class="search form-search form-inline navbar-form navbar-right sp-searchbox" action="../search.html" method="get">
+                  <div class="input-append input-group">
+                    <input type="text" class="search-query form-control" name="q" placeholder="Search...">
+                    <span class="input-group-btn">
+                    <input type="submit" class="btn" value="Go" />
+                    </span>
+                  </div>
+                  <input type="hidden" name="check_keywords" value="yes" />
+                  <input type="hidden" name="area" value="default" />
+                </form>
+            </li>
+
+            
+
+          </ul>
+
+        </div>
+      </div>
+    </div>
+    
+
+    <!-- container -->
+    <div class="container-fluid">
+
+      <!-- row -->
+      <div class="row">
+         
+<div class="col-md-3 hidden-xs" id="sidebar-wrapper">
+  <div class="sidebar hidden-xs" role="navigation" aria-label="main navigation">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">1.8. Compiling code ahead of time</a><ul>
+<li><a class="reference internal" href="#overview">1.8.1. Overview</a><ul>
+<li><a class="reference internal" href="#benefits">1.8.1.1. Benefits</a></li>
+<li><a class="reference internal" href="#limitations">1.8.1.2. Limitations</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#usage">1.8.2. Usage</a><ul>
+<li><a class="reference internal" href="#standalone-example">1.8.2.1. Standalone example</a></li>
+<li><a class="reference internal" href="#distutils-integration">1.8.2.2. Distutils integration</a></li>
+<li><a class="reference internal" href="#signature-syntax">1.8.2.3. Signature syntax</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="cfunc.html"
+                        title="previous chapter">1.7. Creating C callbacks with <code class="docutils literal"><span class="pre">&#64;cfunc</span></code></a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="troubleshoot.html"
+                        title="next chapter">1.9. Troubleshooting and tips</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/user/pycc.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" role="search">
+  <h3>Quick search</h3>
+  <form class="search form-inline" action="../search.html" method="get">
+      <div class="input-append input-group">
+        <input type="text" class="search-query form-control" name="q" placeholder="Search...">
+        <span class="input-group-btn">
+        <input type="submit" class="btn" value="Go" />
+        </span>
+      </div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+  </div>
+</div> 
+        
+
+        <div class="col-md-9" id="content-wrapper">
+          <div class="document" role="main">
+            <div class="documentwrapper">
+              <div class="bodywrapper">
+                <div class="body">
+                  
+  <div class="section" id="compiling-code-ahead-of-time">
+<h1>1.8. Compiling code ahead of time<a class="headerlink" href="#compiling-code-ahead-of-time" title="Permalink to this headline">¶</a></h1>
+<p id="pycc">While Numba&#8217;s main use case is <a class="reference internal" href="../glossary.html#term-just-in-time-compilation"><span class="xref std std-term">Just-in-Time compilation</span></a>, it also
+provides a facility for <a class="reference internal" href="../glossary.html#term-ahead-of-time-compilation"><span class="xref std std-term">Ahead-of-Time compilation</span></a> (AOT).</p>
+<div class="section" id="overview">
+<h2>1.8.1. Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="benefits">
+<h3>1.8.1.1. Benefits<a class="headerlink" href="#benefits" title="Permalink to this headline">¶</a></h3>
+<ol class="arabic simple">
+<li>AOT compilation produces a compiled extension module which does not depend
+on Numba: you can distribute the module on machines which do not have
+Numba installed (but Numpy is required).</li>
+<li>There is no compilation overhead at runtime (but see the
+<code class="docutils literal"><span class="pre">&#64;jit</span></code> <a class="reference internal" href="jit.html#jit-cache"><span class="std std-ref">cache</span></a> option), nor any overhead of importing
+Numba.</li>
+</ol>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last">Compiled extension modules are discussed in the
+<a class="reference external" href="https://packaging.python.org/en/latest/extensions/">Python packaging user guide</a>.</p>
+</div>
+</div>
+<div class="section" id="limitations">
+<h3>1.8.1.2. Limitations<a class="headerlink" href="#limitations" title="Permalink to this headline">¶</a></h3>
+<ol class="arabic simple">
+<li>AOT compilation only allows for regular functions, not <a class="reference internal" href="../glossary.html#term-ufunc"><span class="xref std std-term">ufuncs</span></a>.</li>
+<li>You have to specify function signatures explicitly.</li>
+<li>Each exported function can have only one signature (but you can export
+several different signatures under different names).</li>
+<li>AOT compilation produces generic code for your CPU&#8217;s architectural family
+(for example &#8220;x86-64&#8221;), while JIT compilation produces code optimized
+for your particular CPU model.</li>
+</ol>
+</div>
+</div>
+<div class="section" id="usage">
+<h2>1.8.2. Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="standalone-example">
+<h3>1.8.2.1. Standalone example<a class="headerlink" href="#standalone-example" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">numba.pycc</span> <span class="k">import</span> <span class="n">CC</span>
+
+<span class="n">cc</span> <span class="o">=</span> <span class="n">CC</span><span class="p">(</span><span class="s1">&#39;my_module&#39;</span><span class="p">)</span>
+<span class="c1"># Uncomment the following line to print out the compilation steps</span>
+<span class="c1">#cc.verbose = True</span>
+
+<span class="nd">@cc</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="s1">&#39;multf&#39;</span><span class="p">,</span> <span class="s1">&#39;f8(f8, f8)&#39;</span><span class="p">)</span>
+<span class="nd">@cc</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="s1">&#39;multi&#39;</span><span class="p">,</span> <span class="s1">&#39;i4(i4, i4)&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">mult</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">a</span> <span class="o">*</span> <span class="n">b</span>
+
+<span class="nd">@cc</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="s1">&#39;square&#39;</span><span class="p">,</span> <span class="s1">&#39;f8(f8)&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">square</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">a</span> <span class="o">**</span> <span class="mi">2</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">cc</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>If you run this Python script, it will generate an extension module named
+<code class="docutils literal"><span class="pre">my_module</span></code>.  Depending on your platform, the actual filename may be
+<code class="docutils literal"><span class="pre">my_module.so</span></code>, <code class="docutils literal"><span class="pre">my_module.pyd</span></code>, <code class="docutils literal"><span class="pre">my_module.cpython-34m.so</span></code>, etc.</p>
+<p>The generated module has three functions: <code class="docutils literal"><span class="pre">multf</span></code>, <code class="docutils literal"><span class="pre">multi</span></code> and <code class="docutils literal"><span class="pre">square</span></code>.
+<code class="docutils literal"><span class="pre">multi</span></code> operates on 32-bit integers (<code class="docutils literal"><span class="pre">i4</span></code>), while <code class="docutils literal"><span class="pre">multf</span></code> and <code class="docutils literal"><span class="pre">square</span></code>
+operate on double-precision floats (<code class="docutils literal"><span class="pre">f8</span></code>):</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">my_module</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_module</span><span class="o">.</span><span class="n">multi</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="go">12</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_module</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="mf">1.414</span><span class="p">)</span>
+<span class="go">1.9993959999999997</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="distutils-integration">
+<h3>1.8.2.2. Distutils integration<a class="headerlink" href="#distutils-integration" title="Permalink to this headline">¶</a></h3>
+<p>You can also integrate the compilation step for your extension modules
+in your <code class="docutils literal"><span class="pre">setup.py</span></code> script, using distutils or setuptools:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">distutils.core</span> <span class="k">import</span> <span class="n">setup</span>
+
+<span class="kn">from</span> <span class="nn">source_module</span> <span class="k">import</span> <span class="n">cc</span>
+
+<span class="n">setup</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
+      <span class="n">ext_modules</span><span class="o">=</span><span class="p">[</span><span class="n">cc</span><span class="o">.</span><span class="n">distutils_extension</span><span class="p">()])</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal"><span class="pre">source_module</span></code> above is the module defining the <code class="docutils literal"><span class="pre">cc</span></code> object.
+Extensions compiled like this will be automatically included in the
+build files for your Python project, so you can distribute them inside
+binary packages such as wheels or Conda packages.</p>
+</div>
+<div class="section" id="signature-syntax">
+<h3>1.8.2.3. Signature syntax<a class="headerlink" href="#signature-syntax" title="Permalink to this headline">¶</a></h3>
+<p>The syntax for exported signatures is the same as in the <code class="docutils literal"><span class="pre">&#64;jit</span></code>
+decorator.  You can read more about it in the <a class="reference internal" href="../reference/types.html#numba-types"><span class="std std-ref">types</span></a>
+reference.</p>
+<p>Here is an example of exporting an implementation of the second-order
+centered difference on a 1d array:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="nd">@cc</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="s1">&#39;centdiff_1d&#39;</span><span class="p">,</span> <span class="s1">&#39;f8[:](f8[:], f8)&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">centdiff_1d</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">dx</span><span class="p">):</span>
+    <span class="n">D</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty_like</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
+    <span class="n">D</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">D</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">D</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">D</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">u</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">u</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">u</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="n">dx</span><span class="o">**</span><span class="mi">2</span>
+    <span class="k">return</span> <span class="n">D</span>
+</pre></div>
+</div>
+<p>You can also omit the return type, which will then be inferred by Numba:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="nd">@cc</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="s1">&#39;centdiff_1d&#39;</span><span class="p">,</span> <span class="s1">&#39;(f8[:], f8)&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">centdiff_1d</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">dx</span><span class="p">):</span>
+    <span class="c1"># Same code as above</span>
+    <span class="o">...</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        
+      </div><!-- /row -->
+
+      <!-- row -->
+      <div class="row footer-relbar">
+<div id="navbar-related" class=" related navbar navbar-default" role="navigation" aria-label="related navigation">
+  <div class="navbar-inner">
+    <ul class="nav navbar-nav ">
+        <li><a href="../index.html">Numba 0.30.0 documentation</a></li>
+    </ul>
+<ul class="nav navbar-nav pull-right hidden-xs hidden-sm">
+      
+        <li><a href="cfunc.html" title="1.7. Creating C callbacks with @cfunc" >previous</a></li>
+        <li><a href="troubleshoot.html" title="1.9. Troubleshooting and tips" >next</a></li>
+        <li><a href="../py-modindex.html" title="Python Module Index" >modules</a></li>
+        <li><a href="../genindex.html" title="General Index" >index</a></li>
+        <li><a href="index.html" >1. User Manual</a></li>
+        <li><a href="#">top</a></li> 
+      
+    </ul>
+  </div>
+</div>
+      </div><!-- /row -->
+
+      <!-- footer -->
+      <footer role="contentinfo">
+          &copy; Copyright 2012-2015, Continuum Analytics.
+        Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.4.1.
+      </footer>
+      <!-- /footer -->
+
+    </div>
+    <!-- /container -->
+
+  </body>
+</html>

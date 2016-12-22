@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+
+
+
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+    <title>2.3. Ahead-of-Time compilation &mdash; Numba 0.30.0 documentation</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    
+
+<link rel="stylesheet" href="../_static/css/basicstrap-base.css" type="text/css" />
+<link rel="stylesheet" id="current-theme" href="../_static/css/bootstrap3/bootstrap.min.css" type="text/css" />
+<link rel="stylesheet" id="current-adjust-theme" type="text/css" />
+
+<link rel="stylesheet" href="../_static/css/font-awesome.min.css">
+
+<style type="text/css">
+  body {
+    padding-top: 60px;
+    padding-bottom: 40px;
+  }
+</style>
+
+<link rel="stylesheet" href="../_static/css/basicstrap.css" type="text/css" />
+<link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+<script type="text/javascript">
+  var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:    '../',
+            VERSION:     '0.30.0',
+            COLLAPSE_INDEX: false,
+            FILE_SUFFIX: '.html',
+            HAS_SOURCE:  true
+  };
+</script>
+    <script type="text/javascript" src="../_static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/bootstrap3.min.js"></script>
+<script type="text/javascript" src="../_static/js/jquery.cookie.min.js"></script>
+<script type="text/javascript" src="../_static/js/basicstrap.js"></script>
+<script type="text/javascript">
+</script>
+    <link rel="top" title="Numba 0.30.0 documentation" href="../index.html" />
+    <link rel="up" title="2. Reference Manual" href="index.html" />
+    <link rel="next" title="2.4. Utilities" href="utils.html" />
+    <link rel="prev" title="2.2. Just-in-Time compilation" href="jit-compilation.html" /> 
+  </head>
+  <body role="document">
+    <div id="navbar-top" class="navbar navbar-fixed-top navbar-default" role="navigation" aria-label="top navigation">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="../index.html">Numba 0.30.0 documentation</a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+
+            
+              <li><a href="jit-compilation.html" title="2.2. Just-in-Time compilation" accesskey="P">previous </a></li>
+              <li><a href="utils.html" title="2.4. Utilities" accesskey="N">next </a></li>
+              <li><a href="../py-modindex.html" title="Python Module Index" >modules </a></li>
+              <li><a href="../genindex.html" title="General Index" accesskey="I">index </a></li>
+              <li><a href="index.html" accesskey="U">2. Reference Manual</a></li>
+            
+            <li class="visible-xs"><a href="../_sources/reference/aot-compilation.txt" rel="nofollow">Show Source</a></li>
+
+            <li class="visible-xs">
+                <form class="search form-search form-inline navbar-form navbar-right sp-searchbox" action="../search.html" method="get">
+                  <div class="input-append input-group">
+                    <input type="text" class="search-query form-control" name="q" placeholder="Search...">
+                    <span class="input-group-btn">
+                    <input type="submit" class="btn" value="Go" />
+                    </span>
+                  </div>
+                  <input type="hidden" name="check_keywords" value="yes" />
+                  <input type="hidden" name="area" value="default" />
+                </form>
+            </li>
+
+            
+
+          </ul>
+
+        </div>
+      </div>
+    </div>
+    
+
+    <!-- container -->
+    <div class="container-fluid">
+
+      <!-- row -->
+      <div class="row">
+         
+<div class="col-md-3 hidden-xs" id="sidebar-wrapper">
+  <div class="sidebar hidden-xs" role="navigation" aria-label="main navigation">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="jit-compilation.html"
+                        title="previous chapter">2.2. Just-in-Time compilation</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="utils.html"
+                        title="next chapter">2.4. Utilities</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/reference/aot-compilation.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" role="search">
+  <h3>Quick search</h3>
+  <form class="search form-inline" action="../search.html" method="get">
+      <div class="input-append input-group">
+        <input type="text" class="search-query form-control" name="q" placeholder="Search...">
+        <span class="input-group-btn">
+        <input type="submit" class="btn" value="Go" />
+        </span>
+      </div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+  </div>
+</div> 
+        
+
+        <div class="col-md-9" id="content-wrapper">
+          <div class="document" role="main">
+            <div class="documentwrapper">
+              <div class="bodywrapper">
+                <div class="body">
+                  
+  <div class="section" id="ahead-of-time-compilation">
+<h1>2.3. Ahead-of-Time compilation<a class="headerlink" href="#ahead-of-time-compilation" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="numba.pycc.CC">
+<em class="property">class </em><code class="descclassname">numba.pycc.</code><code class="descname">CC</code><span class="sig-paren">(</span><em>extension_name</em>, <em>source_module=None</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.pycc.CC" title="Permalink to this definition">¶</a></dt>
+<dd><p>An object used to generate compiled extensions from Numba-compiled
+Python functions.  <em>extension_name</em> is the name of the extension
+to be generated.  <em>source_module</em> is the Python module
+containing the functions; if <code class="docutils literal"><span class="pre">None</span></code>, it is inferred by examining
+the call stack.</p>
+<p><a class="reference internal" href="#numba.pycc.CC" title="numba.pycc.CC"><code class="xref py py-class docutils literal"><span class="pre">CC</span></code></a> instances have the following attributes and methods:</p>
+<dl class="attribute">
+<dt id="numba.pycc.CC.name">
+<code class="descname">name</code><a class="headerlink" href="#numba.pycc.CC.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>(read-only attribute) The name of the extension module to be generated.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="numba.pycc.CC.output_dir">
+<code class="descname">output_dir</code><a class="headerlink" href="#numba.pycc.CC.output_dir" title="Permalink to this definition">¶</a></dt>
+<dd><p>(read-write attribute) The directory the extension module will be
+written into.  By default it is the directory the <em>source_module</em> is
+located in.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="numba.pycc.CC.output_file">
+<code class="descname">output_file</code><a class="headerlink" href="#numba.pycc.CC.output_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>(read-write attribute) The name of the file the extension module will
+be written to.  By default this follows the Python naming convention
+for the current platform.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="numba.pycc.CC.target_cpu">
+<code class="descname">target_cpu</code><a class="headerlink" href="#numba.pycc.CC.target_cpu" title="Permalink to this definition">¶</a></dt>
+<dd><p>(read-write attribute) The name of the CPU model to generate code for.
+This will select the appropriate instruction set extensions.  By
+default, a generic CPU is selected in order to produce portable code.</p>
+<p>Recognized names for this attribute depend on the current architecture
+and LLVM version.  If you have LLVM installed, <code class="docutils literal"><span class="pre">llc</span> <span class="pre">-mcpu=help</span></code>
+will give you a list.  Examples on x86-64 are <code class="docutils literal"><span class="pre">&quot;ivybridge&quot;</span></code>,
+<code class="docutils literal"><span class="pre">&quot;haswell&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;skylake&quot;</span></code> or <code class="docutils literal"><span class="pre">&quot;broadwell&quot;</span></code>.  You can also give
+the value <code class="docutils literal"><span class="pre">&quot;host&quot;</span></code> which will select the current host CPU.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="numba.pycc.CC.verbose">
+<code class="descname">verbose</code><a class="headerlink" href="#numba.pycc.CC.verbose" title="Permalink to this definition">¶</a></dt>
+<dd><p>(read-write attribute) If true, print out information while
+compiling the extension.  False by default.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.pycc.CC.export">
+<code class="descclassname">&#64;</code><code class="descname">export</code><span class="sig-paren">(</span><em>exported_name</em>, <em>sig</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.pycc.CC.export" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mark the decorated function for compilation with the signature <em>sig</em>.
+The compiled function will be exposed as <em>exported_name</em> in the
+generated extension module.</p>
+<p>All exported names within a given <a class="reference internal" href="#numba.pycc.CC" title="numba.pycc.CC"><code class="xref py py-class docutils literal"><span class="pre">CC</span></code></a> instance must be
+distinct, otherwise an exception is raised.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.pycc.CC.compile">
+<code class="descname">compile</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#numba.pycc.CC.compile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compile all exported functions and generate the extension module
+as specified by <a class="reference internal" href="#numba.pycc.CC.output_dir" title="numba.pycc.CC.output_dir"><code class="xref py py-attr docutils literal"><span class="pre">output_dir</span></code></a> and <a class="reference internal" href="#numba.pycc.CC.output_file" title="numba.pycc.CC.output_file"><code class="xref py py-attr docutils literal"><span class="pre">output_file</span></code></a>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.pycc.CC.distutils_extension">
+<code class="descname">distutils_extension</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.pycc.CC.distutils_extension" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a <a class="reference external" href="https://docs.python.org/3/distutils/apiref.html#distutils.core.Extension" title="(in Python v3.5)"><code class="xref py py-class docutils literal"><span class="pre">distutils.core.Extension</span></code></a> instance allowing
+to integrate generation of the extension module in a conventional
+<code class="docutils literal"><span class="pre">setup.py</span></code>-driven build process.  The optional <em>kwargs</em> let you
+pass optional parameters to the <a class="reference external" href="https://docs.python.org/3/distutils/apiref.html#distutils.core.Extension" title="(in Python v3.5)"><code class="xref py py-class docutils literal"><span class="pre">Extension</span></code></a>
+constructor.</p>
+<p>In this mode of operation, it is not necessary to call <a class="reference internal" href="#numba.pycc.CC.compile" title="numba.pycc.CC.compile"><code class="xref py py-meth docutils literal"><span class="pre">compile()</span></code></a>
+yourself.  Also, <a class="reference internal" href="#numba.pycc.CC.output_dir" title="numba.pycc.CC.output_dir"><code class="xref py py-attr docutils literal"><span class="pre">output_dir</span></code></a> and <a class="reference internal" href="#numba.pycc.CC.output_file" title="numba.pycc.CC.output_file"><code class="xref py py-attr docutils literal"><span class="pre">output_file</span></code></a> will be
+ignored.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        
+      </div><!-- /row -->
+
+      <!-- row -->
+      <div class="row footer-relbar">
+<div id="navbar-related" class=" related navbar navbar-default" role="navigation" aria-label="related navigation">
+  <div class="navbar-inner">
+    <ul class="nav navbar-nav ">
+        <li><a href="../index.html">Numba 0.30.0 documentation</a></li>
+    </ul>
+<ul class="nav navbar-nav pull-right hidden-xs hidden-sm">
+      
+        <li><a href="jit-compilation.html" title="2.2. Just-in-Time compilation" >previous</a></li>
+        <li><a href="utils.html" title="2.4. Utilities" >next</a></li>
+        <li><a href="../py-modindex.html" title="Python Module Index" >modules</a></li>
+        <li><a href="../genindex.html" title="General Index" >index</a></li>
+        <li><a href="index.html" >2. Reference Manual</a></li>
+        <li><a href="#">top</a></li> 
+      
+    </ul>
+  </div>
+</div>
+      </div><!-- /row -->
+
+      <!-- footer -->
+      <footer role="contentinfo">
+          &copy; Copyright 2012-2015, Continuum Analytics.
+        Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.4.1.
+      </footer>
+      <!-- /footer -->
+
+    </div>
+    <!-- /container -->
+
+  </body>
+</html>
