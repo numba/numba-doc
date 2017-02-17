@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+
+
+
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+    <title>2.2. Just-in-Time compilation &mdash; Numba 0.31.0-py2.7-macosx-10.6-x86_64.egg documentation</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    
+
+<link rel="stylesheet" href="../_static/css/basicstrap-base.css" type="text/css" />
+<link rel="stylesheet" id="current-theme" href="../_static/css/bootstrap3/bootstrap.min.css" type="text/css" />
+<link rel="stylesheet" id="current-adjust-theme" type="text/css" />
+
+<link rel="stylesheet" href="../_static/css/font-awesome.min.css">
+
+<style type="text/css">
+  body {
+    padding-top: 60px;
+    padding-bottom: 40px;
+  }
+</style>
+
+<link rel="stylesheet" href="../_static/css/basicstrap.css" type="text/css" />
+<link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+<script type="text/javascript">
+  var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:    '../',
+            VERSION:     '0.31.0-py2.7-macosx-10.6-x86_64.egg',
+            COLLAPSE_INDEX: false,
+            FILE_SUFFIX: '.html',
+            HAS_SOURCE:  true
+  };
+</script>
+    <script type="text/javascript" src="../_static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/bootstrap3.min.js"></script>
+<script type="text/javascript" src="../_static/js/jquery.cookie.min.js"></script>
+<script type="text/javascript" src="../_static/js/basicstrap.js"></script>
+<script type="text/javascript">
+</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="Numba 0.31.0-py2.7-macosx-10.6-x86_64.egg documentation" href="../index.html" />
+    <link rel="up" title="2. Reference Manual" href="index.html" />
+    <link rel="next" title="2.3. Ahead-of-Time compilation" href="aot-compilation.html" />
+    <link rel="prev" title="2.1. Types and signatures" href="types.html" /> 
+  </head>
+  <body role="document">
+    <div id="navbar-top" class="navbar navbar-fixed-top navbar-default" role="navigation" aria-label="top navigation">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="../index.html">Numba 0.31.0-py2.7-macosx-10.6-x86_64.egg documentation</a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+              <li class="dropdown visible-xs">
+                <a role="button" id="localToc" data-toggle="dropdown" data-target="#" href="#">Table Of Contents <b class="caret"></b></a>
+                <ul class="dropdown-menu localtoc sp-localtoc" role="menu" aria-labelledby="localToc">
+                <ul>
+<li><a class="reference internal" href="#">2.2. Just-in-Time compilation</a><ul>
+<li><a class="reference internal" href="#jit-functions">2.2.1. JIT functions</a></li>
+<li><a class="reference internal" href="#generated-jit-functions">2.2.2. Generated JIT functions</a></li>
+<li><a class="reference internal" href="#dispatcher-objects">2.2.3. Dispatcher objects</a></li>
+<li><a class="reference internal" href="#vectorized-functions-ufuncs-and-dufuncs">2.2.4. Vectorized functions (ufuncs and DUFuncs)</a></li>
+<li><a class="reference internal" href="#c-callbacks">2.2.5. C callbacks</a></li>
+</ul>
+</li>
+</ul>
+
+                </ul>
+              </li>
+
+            
+              <li><a href="types.html" title="2.1. Types and signatures" accesskey="P">previous </a></li>
+              <li><a href="aot-compilation.html" title="2.3. Ahead-of-Time compilation" accesskey="N">next </a></li>
+              <li><a href="../py-modindex.html" title="Python Module Index" >modules </a></li>
+              <li><a href="../genindex.html" title="General Index" accesskey="I">index </a></li>
+              <li><a href="index.html" accesskey="U">2. Reference Manual</a></li>
+            
+            <li class="visible-xs"><a href="../_sources/reference/jit-compilation.rst.txt" rel="nofollow">Show Source</a></li>
+
+            <li class="visible-xs">
+                <form class="search form-search form-inline navbar-form navbar-right sp-searchbox" action="../search.html" method="get">
+                  <div class="input-append input-group">
+                    <input type="text" class="search-query form-control" name="q" placeholder="Search...">
+                    <span class="input-group-btn">
+                    <input type="submit" class="btn" value="Go" />
+                    </span>
+                  </div>
+                  <input type="hidden" name="check_keywords" value="yes" />
+                  <input type="hidden" name="area" value="default" />
+                </form>
+            </li>
+
+            
+
+          </ul>
+
+        </div>
+      </div>
+    </div>
+    
+
+    <!-- container -->
+    <div class="container-fluid">
+
+      <!-- row -->
+      <div class="row">
+         
+<div class="col-md-3 hidden-xs" id="sidebar-wrapper">
+  <div class="sidebar hidden-xs" role="navigation" aria-label="main navigation">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">2.2. Just-in-Time compilation</a><ul>
+<li><a class="reference internal" href="#jit-functions">2.2.1. JIT functions</a></li>
+<li><a class="reference internal" href="#generated-jit-functions">2.2.2. Generated JIT functions</a></li>
+<li><a class="reference internal" href="#dispatcher-objects">2.2.3. Dispatcher objects</a></li>
+<li><a class="reference internal" href="#vectorized-functions-ufuncs-and-dufuncs">2.2.4. Vectorized functions (ufuncs and DUFuncs)</a></li>
+<li><a class="reference internal" href="#c-callbacks">2.2.5. C callbacks</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="types.html"
+                        title="previous chapter">2.1. Types and signatures</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="aot-compilation.html"
+                        title="next chapter">2.3. Ahead-of-Time compilation</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/reference/jit-compilation.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" role="search">
+  <h3>Quick search</h3>
+  <form class="search form-inline" action="../search.html" method="get">
+      <div class="input-append input-group">
+        <input type="text" class="search-query form-control" name="q" placeholder="Search...">
+        <span class="input-group-btn">
+        <input type="submit" class="btn" value="Go" />
+        </span>
+      </div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+  </div>
+</div> 
+        
+
+        <div class="col-md-9" id="content-wrapper">
+          <div class="document" role="main">
+            <div class="documentwrapper">
+              <div class="bodywrapper">
+                <div class="body">
+                  
+  <div class="section" id="just-in-time-compilation">
+<h1>2.2. Just-in-Time compilation<a class="headerlink" href="#just-in-time-compilation" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="jit-functions">
+<h2>2.2.1. JIT functions<a class="headerlink" href="#jit-functions" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="numba.jit">
+<code class="descclassname">&#64;</code><code class="descclassname">numba.</code><code class="descname">jit</code><span class="sig-paren">(</span><em>signature=None</em>, <em>nopython=False</em>, <em>nogil=False</em>, <em>cache=False</em>, <em>forceobj=False</em>, <em>locals={}</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.jit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compile the decorated function on-the-fly to produce efficient machine
+code.  All parameters all optional.</p>
+<p>If present, the <em>signature</em> is either a single signature or a list of
+signatures representing the expected <a class="reference internal" href="types.html#numba-types"><span class="std std-ref">Types and signatures</span></a> of function
+arguments and return values.  Each signature can be given in several
+forms:</p>
+<ul class="simple">
+<li>A tuple of <a class="reference internal" href="types.html#numba-types"><span class="std std-ref">Types and signatures</span></a> arguments (for example
+<code class="docutils literal"><span class="pre">(numba.int32,</span> <span class="pre">numba.double)</span></code>) representing the types of the
+function&#8217;s arguments; Numba will then infer an appropriate return
+type from the arguments.</li>
+<li>A call signature using <a class="reference internal" href="types.html#numba-types"><span class="std std-ref">Types and signatures</span></a>, specifying both return
+type and argument types. This can be given in intuitive form
+(for example <code class="docutils literal"><span class="pre">numba.void(numba.int32,</span> <span class="pre">numba.double)</span></code>).</li>
+<li>A string representation of one of the above, for example
+<code class="docutils literal"><span class="pre">&quot;void(int32,</span> <span class="pre">double)&quot;</span></code>.  All type names used in the string are assumed
+to be defined in the <code class="docutils literal"><span class="pre">numba.types</span></code> module.</li>
+</ul>
+<p><em>nopython</em> and <em>nogil</em> are boolean flags.  <em>locals</em> is a mapping of
+local variable names to <a class="reference internal" href="types.html#numba-types"><span class="std std-ref">Types and signatures</span></a>.</p>
+<p>This decorator has several modes of operation:</p>
+<ul class="simple">
+<li>If one or more signatures are given in <em>signature</em>, a specialization is
+compiled for each of them.  Calling the decorated function will then try
+to choose the best matching signature, and raise a <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TypeError" title="(in Python v3.6)"><code class="xref py py-class docutils literal"><span class="pre">TypeError</span></code></a> if
+no appropriate conversion is available for the function arguments.  If
+converting succeeds, the compiled machine code is executed with the
+converted arguments and the return value is converted back according to
+the signature.</li>
+<li>If no <em>signature</em> is given, the decorated function implements
+lazy compilation.  Each call to the decorated function will try to
+re-use an existing specialization if it exists (for example, a call
+with two integer arguments may re-use a specialization for argument
+types <code class="docutils literal"><span class="pre">(numba.int64,</span> <span class="pre">numba.int64)</span></code>).  If no suitable specialization
+exists, a new specialization is compiled on-the-fly, stored for later
+use, and executed with the converted arguments.</li>
+</ul>
+<p>If true, <em>nopython</em> forces the function to be compiled in <a class="reference internal" href="../glossary.html#term-nopython-mode"><span class="xref std std-term">nopython
+mode</span></a>. If not possible, compilation will raise an error.</p>
+<p>If true, <em>forceobj</em> forces the function to be compiled in <a class="reference internal" href="../glossary.html#term-object-mode"><span class="xref std std-term">object
+mode</span></a>.  Since object mode is slower than nopython mode, this is mostly
+useful for testing purposes.</p>
+<p>If true, <em>nogil</em> tries to release the <a class="reference external" href="https://docs.python.org/3/glossary.html#term-global-interpreter-lock" title="(in Python v3.6)"><span class="xref std std-term">global interpreter lock</span></a>
+inside the compiled function.  The GIL will only be released if Numba can
+compile the function in <a class="reference internal" href="../glossary.html#term-nopython-mode"><span class="xref std std-term">nopython mode</span></a>, otherwise a compilation
+warning will be printed.</p>
+<p>If true, <em>cache</em> enables a file-based cache to shorten compilation times
+when the function was already compiled in a previous invocation.
+The cache is maintained in the <code class="docutils literal"><span class="pre">__pycache__</span></code> subdirectory of
+the directory containing the source file; if the current user is not
+allowed to write to it, though, it falls back to a platform-specific
+user-wide cache directory (such as <code class="docutils literal"><span class="pre">$HOME/.cache/numba</span></code> on Unix
+platforms).</p>
+<p>Not all functions can be cached, since some functionality cannot be
+always persisted to disk.  When a function cannot be cached, a
+warning is emitted; use <span class="target" id="index-0"></span><a class="reference internal" href="envvars.html#envvar-NUMBA_WARNINGS"><code class="xref std std-envvar docutils literal"><span class="pre">NUMBA_WARNINGS</span></code></a> to see it.</p>
+<p>The <em>locals</em> dictionary may be used to force the <a class="reference internal" href="types.html#numba-types"><span class="std std-ref">Types and signatures</span></a>
+of particular local variables, for example if you want to force the
+use of single precision floats at some point.  In general, we recommend
+you let Numba&#8217;s compiler infer the types of local variables by itself.</p>
+<p>Here is an example with two signatures:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="nd">@jit</span><span class="p">([</span><span class="s2">&quot;int32(int32)&quot;</span><span class="p">,</span> <span class="s2">&quot;float32(float32)&quot;</span><span class="p">],</span> <span class="n">nopython</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">):</span> <span class="o">...</span>
+</pre></div>
+</div>
+<p>Not putting any parentheses after the decorator is equivalent to calling
+the decorator without any arguments, i.e.:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="nd">@jit</span>
+<span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">):</span> <span class="o">...</span>
+</pre></div>
+</div>
+<p>is equivalent to:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="nd">@jit</span><span class="p">()</span>
+<span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">):</span> <span class="o">...</span>
+</pre></div>
+</div>
+<p>The decorator returns a <a class="reference internal" href="#Dispatcher" title="Dispatcher"><code class="xref py py-class docutils literal"><span class="pre">Dispatcher</span></code></a> object.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">If no <em>signature</em> is given, compilation errors will be raised when
+the actual compilation occurs, i.e. when the function is first called
+with some given argument types.</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Compilation can be influenced by some dedicated <a class="reference internal" href="envvars.html#numba-envvars"><span class="std std-ref">Environment variables</span></a>.</p>
+</div>
+</dd></dl>
+
+</div>
+<div class="section" id="generated-jit-functions">
+<h2>2.2.2. Generated JIT functions<a class="headerlink" href="#generated-jit-functions" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="numba.generated_jit">
+<code class="descclassname">&#64;</code><code class="descclassname">numba.</code><code class="descname">generated_jit</code><span class="sig-paren">(</span><em>nopython=False</em>, <em>nogil=False</em>, <em>cache=False</em>, <em>forceobj=False</em>, <em>locals={}</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.generated_jit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Like the <a class="reference internal" href="#numba.jit" title="numba.jit"><code class="xref py py-func docutils literal"><span class="pre">jit()</span></code></a> decorator, but calls the decorated function at
+compile-time, passing the <em>types</em> of the function&#8217;s arguments.
+The decorated function must return a callable which will be compiled as
+the function&#8217;s implementation for those types, allowing flexible kinds of
+specialization.</p>
+<p>The <a class="reference internal" href="#numba.generated_jit" title="numba.generated_jit"><code class="xref py py-func docutils literal"><span class="pre">generated_jit()</span></code></a> decorator returns a <a class="reference internal" href="#Dispatcher" title="Dispatcher"><code class="xref py py-class docutils literal"><span class="pre">Dispatcher</span></code></a> object.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="dispatcher-objects">
+<h2>2.2.3. Dispatcher objects<a class="headerlink" href="#dispatcher-objects" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="Dispatcher">
+<em class="property">class </em><code class="descname">Dispatcher</code><a class="headerlink" href="#Dispatcher" title="Permalink to this definition">¶</a></dt>
+<dd><p>The class of objects created by calling <a class="reference internal" href="#numba.jit" title="numba.jit"><code class="xref py py-func docutils literal"><span class="pre">jit()</span></code></a> or
+<a class="reference internal" href="#numba.generated_jit" title="numba.generated_jit"><code class="xref py py-func docutils literal"><span class="pre">generated_jit()</span></code></a>.  You shouldn&#8217;t try to create such an object
+in any other way.  Calling a Dispatcher object calls the compiled
+specialization for the arguments with which it is called, letting it
+act as an accelerated replacement for the Python function which was compiled.</p>
+<p>In addition, Dispatcher objects have the following methods and attributes:</p>
+<dl class="attribute">
+<dt id="Dispatcher.py_func">
+<code class="descname">py_func</code><a class="headerlink" href="#Dispatcher.py_func" title="Permalink to this definition">¶</a></dt>
+<dd><p>The pure Python function which was compiled.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Dispatcher.inspect_types">
+<code class="descname">inspect_types</code><span class="sig-paren">(</span><em>file=None</em><span class="sig-paren">)</span><a class="headerlink" href="#Dispatcher.inspect_types" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print out a listing of the function source code annotated line-by-line
+with the corresponding Numba IR, and the inferred types of the various
+variables.  If <em>file</em> is specified, printing is done to that file
+object, otherwise to sys.stdout.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../developer/architecture.html#architecture"><span class="std std-ref">Numba architecture</span></a></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="Dispatcher.inspect_llvm">
+<code class="descname">inspect_llvm</code><span class="sig-paren">(</span><em>signature=None</em><span class="sig-paren">)</span><a class="headerlink" href="#Dispatcher.inspect_llvm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a dictionary keying compiled function signatures to the human
+readable LLVM IR generated for the function.  If the signature
+keyword is specified a string corresponding to that individual
+signature is returned.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Dispatcher.inspect_asm">
+<code class="descname">inspect_asm</code><span class="sig-paren">(</span><em>signature=None</em><span class="sig-paren">)</span><a class="headerlink" href="#Dispatcher.inspect_asm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a dictionary keying compiled function signatures to the
+human-readable native assembler code for the function.  If the
+signature keyword is specified a string corresponding to that
+individual signature is returned.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Dispatcher.inspect_cfg">
+<code class="descname">inspect_cfg</code><span class="sig-paren">(</span><em>signature=None</em>, <em>show_wrapped</em><span class="sig-paren">)</span><a class="headerlink" href="#Dispatcher.inspect_cfg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a dictionary keying compiled function signatures to the
+control-flow graph objects for the function.  If the signature keyword is
+specified a string corresponding to that individual signature is returned.</p>
+<p>The control-flow graph objects can be stringified (<code class="docutils literal"><span class="pre">str</span></code> or <code class="docutils literal"><span class="pre">repr</span></code>)
+to get the textual representation of the graph in DOT format.  Or, use
+its <code class="docutils literal"><span class="pre">.display(filename=None,</span> <span class="pre">view=False)</span></code> method to plot the graph.
+The <em>filename</em> option can be set to a specific path for the rendered
+output to write to.  If <em>view</em> option is True, the plot is opened by
+the system default application for the image format (PDF). In IPython
+notebook, the returned object can be plot inlined.</p>
+<p>Usage:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="nd">@jit</span>
+<span class="k">def</span> <span class="nf">foo</span><span class="p">():</span>
+  <span class="o">...</span>
+
+<span class="c1"># opens the CFG in system default application</span>
+<span class="n">foo</span><span class="o">.</span><span class="n">inspect_cfg</span><span class="p">(</span><span class="n">foo</span><span class="o">.</span><span class="n">signatures</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">display</span><span class="p">(</span><span class="n">view</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="Dispatcher.recompile">
+<code class="descname">recompile</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Dispatcher.recompile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Recompile all existing signatures.  This can be useful for example if
+a global or closure variable was frozen by your function and its value
+in Python has changed.  Since compiling isn&#8217;t cheap, this is mainly
+for testing and interactive use.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="vectorized-functions-ufuncs-and-dufuncs">
+<h2>2.2.4. Vectorized functions (ufuncs and DUFuncs)<a class="headerlink" href="#vectorized-functions-ufuncs-and-dufuncs" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="numba.vectorize">
+<code class="descclassname">&#64;</code><code class="descclassname">numba.</code><code class="descname">vectorize</code><span class="sig-paren">(</span><em>*</em>, <em>signatures=[]</em>, <em>identity=None</em>, <em>nopython=True</em>, <em>target='cpu'</em>, <em>forceobj=False</em>, <em>cache=False</em>, <em>locals={}</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.vectorize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compile the decorated function and wrap it either as a <a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/ufuncs.html">Numpy
+ufunc</a> or a Numba <a class="reference internal" href="#numba.DUFunc" title="numba.DUFunc"><code class="xref py py-class docutils literal"><span class="pre">DUFunc</span></code></a>.  The optional
+<em>nopython</em>, <em>forceobj</em> and <em>locals</em> arguments have the same meaning
+as in <a class="reference internal" href="#numba.jit" title="numba.jit"><code class="xref py py-func docutils literal"><span class="pre">numba.jit()</span></code></a>.</p>
+<p><em>signatures</em> is an optional list of signatures expressed in the
+same form as in the <a class="reference internal" href="#numba.jit" title="numba.jit"><code class="xref py py-func docutils literal"><span class="pre">numba.jit()</span></code></a> <em>signature</em> argument.  If
+<em>signatures</em> is non-empty, then the decorator will compile the user
+Python function into a Numpy ufunc.  If no <em>signatures</em> are given,
+then the decorator will wrap the user Python function in a
+<a class="reference internal" href="#numba.DUFunc" title="numba.DUFunc"><code class="xref py py-class docutils literal"><span class="pre">DUFunc</span></code></a> instance, which will compile the user
+function at call time whenever Numpy can not find a matching loop
+for the input arguments.</p>
+<p><em>identity</em> is the identity (or unit) value of the function being
+implemented.  Possible values are 0, 1, None, and the string
+<code class="docutils literal"><span class="pre">&quot;reorderable&quot;</span></code>.  The default is None.  Both None and
+<code class="docutils literal"><span class="pre">&quot;reorderable&quot;</span></code> mean the function has no identity value;
+<code class="docutils literal"><span class="pre">&quot;reorderable&quot;</span></code> additionally specifies that reductions along multiple
+axes can be reordered.</p>
+<p>If there are several <em>signatures</em>, they must be ordered from the more
+specific to the least specific.  Otherwise, Numpy&#8217;s type-based
+dispatching may not work as expected.  For example, the following is
+wrong:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="nd">@vectorize</span><span class="p">([</span><span class="s2">&quot;float64(float64)&quot;</span><span class="p">,</span> <span class="s2">&quot;float32(float32)&quot;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">):</span> <span class="o">...</span>
+</pre></div>
+</div>
+<p>as running it over a single-precision array will choose the <code class="docutils literal"><span class="pre">float64</span></code>
+version of the compiled function, leading to much less efficient
+execution.  The correct invocation is:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="nd">@vectorize</span><span class="p">([</span><span class="s2">&quot;float32(float32)&quot;</span><span class="p">,</span> <span class="s2">&quot;float64(float64)&quot;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">):</span> <span class="o">...</span>
+</pre></div>
+</div>
+<p><em>target</em> is a string for backend target; Available values are &#8220;cpu&#8221;, &#8220;parallel&#8221;, and &#8220;cuda&#8221;.
+To use a multithreaded version, change the target to &#8220;parallel&#8221;:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="nd">@vectorize</span><span class="p">([</span><span class="s2">&quot;float64(float64)&quot;</span><span class="p">,</span> <span class="s2">&quot;float32(float32)&quot;</span><span class="p">],</span> <span class="n">target</span><span class="o">=</span><span class="s1">&#39;parallel&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">):</span> <span class="o">...</span>
+</pre></div>
+</div>
+<p>For the CUDA target, use &#8220;cuda&#8221;:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="nd">@vectorize</span><span class="p">([</span><span class="s2">&quot;float64(float64)&quot;</span><span class="p">,</span> <span class="s2">&quot;float32(float32)&quot;</span><span class="p">],</span> <span class="n">target</span><span class="o">=</span><span class="s1">&#39;cuda&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">):</span> <span class="o">...</span>
+</pre></div>
+</div>
+<p>The compiled function can be cached to reduce future compilation time.
+It is enabled by setting <em>cache</em> to True. Only the &#8220;cpu&#8221; and &#8220;parallel&#8221;
+targets support caching.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.guvectorize">
+<code class="descclassname">&#64;</code><code class="descclassname">numba.</code><code class="descname">guvectorize</code><span class="sig-paren">(</span><em>signatures</em>, <em>layout</em>, <em>*</em>, <em>identity=None</em>, <em>nopython=True</em>, <em>target='cpu'</em>, <em>forceobj=False</em>, <em>cache=False</em>, <em>locals={}</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.guvectorize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generalized version of <a class="reference internal" href="#numba.vectorize" title="numba.vectorize"><code class="xref py py-func docutils literal"><span class="pre">numba.vectorize()</span></code></a>.  While
+<a class="reference internal" href="#numba.vectorize" title="numba.vectorize"><code class="xref py py-func docutils literal"><span class="pre">numba.vectorize()</span></code></a> will produce a simple ufunc whose core
+functionality (the function you are decorating) operates on scalar
+operands and returns a scalar value, <a class="reference internal" href="#numba.guvectorize" title="numba.guvectorize"><code class="xref py py-func docutils literal"><span class="pre">numba.guvectorize()</span></code></a>
+allows you to create a <a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/ufuncs.html">Numpy ufunc</a> whose core function takes array
+arguments of various dimensions.</p>
+<p>The additional argument <em>layout</em> is a string specifying, in symbolic
+form, the dimensionality and size relationship of the argument types
+and return types.  For example, a matrix multiplication will have
+a layout string of <code class="docutils literal"><span class="pre">&quot;(m,n),(n,p)-&gt;(m,p)&quot;</span></code>.  Its definition might
+be (function body omitted):</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="nd">@guvectorize</span><span class="p">([</span><span class="s2">&quot;void(float64[:,:], float64[:,:], float64[:,:])&quot;</span><span class="p">],</span>
+             <span class="s2">&quot;(m,n),(n,p)-&gt;(m,p)&quot;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Fill-in *result* matrix such as result := a * b&quot;&quot;&quot;</span>
+    <span class="o">...</span>
+</pre></div>
+</div>
+<p>If one of the arguments should be a scalar, the corresponding layout
+specification is <code class="docutils literal"><span class="pre">()</span></code> and the argument will really be given to
+you as a zero-dimension array (you have to dereference it to get the
+scalar value).  For example, a <a class="reference internal" href="../user/examples.html#example-movemean"><span class="std std-ref">one-dimension moving average</span></a>
+with a parameterable window width may have a layout string of <code class="docutils literal"><span class="pre">&quot;(n),()-&gt;(n)&quot;</span></code>.</p>
+<p>Note that any output will be given to you preallocated as an additional
+function argument: your code has to fill it with the appropriate values
+for the function you are implementing.</p>
+<p>If your function doesn&#8217;t take an output array, you should omit the &#8220;arrow&#8221;
+in the layout string (e.g. <code class="docutils literal"><span class="pre">&quot;(n),(n)&quot;</span></code>).</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last">Specification of the <a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/c-api.generalized-ufuncs.html#details-of-signature">layout string</a>
+as supported by Numpy.  Note that Numpy uses the term &#8220;signature&#8221;,
+which we unfortunately use for something else.</p>
+</div>
+<p>The compiled function can be cached to reduce future compilation time.
+It is enabled by setting <em>cache</em> to True. Only the &#8220;cpu&#8221; and &#8220;parallel&#8221;
+targets support caching.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.DUFunc">
+<em class="property">class </em><code class="descclassname">numba.</code><code class="descname">DUFunc</code><a class="headerlink" href="#numba.DUFunc" title="Permalink to this definition">¶</a></dt>
+<dd><p>The class of objects created by calling <a class="reference internal" href="#numba.vectorize" title="numba.vectorize"><code class="xref py py-func docutils literal"><span class="pre">numba.vectorize()</span></code></a>
+with no signatures.</p>
+<p>DUFunc instances should behave similarly to Numpy
+<code class="xref py py-class docutils literal"><span class="pre">ufunc</span></code> objects with one important difference:
+call-time loop generation.  When calling a ufunc, Numpy looks at
+the existing loops registered for that ufunc, and will raise a
+<code class="xref py py-class docutils literal"><span class="pre">TypeError</span></code> if it cannot find a loop that it cannot
+safely cast the inputs to suit.  When calling a DUFunc, Numba
+delegates the call to Numpy.  If the Numpy ufunc call fails, then
+Numba attempts to build a new loop for the given input types, and
+calls the ufunc again.  If this second call attempt fails or a
+compilation error occurs, then DUFunc passes along the exception to
+the caller.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last">The &#8220;<a class="reference internal" href="../user/vectorize.html#dynamic-universal-functions"><span class="std std-ref">Dynamic universal functions</span></a>&#8221; section in the user&#8217;s
+guide demonstrates the call-time behavior of
+<a class="reference internal" href="#numba.DUFunc" title="numba.DUFunc"><code class="xref py py-class docutils literal"><span class="pre">DUFunc</span></code></a>, and discusses the impact of call order
+on how Numba generates the underlying <code class="xref py py-class docutils literal"><span class="pre">ufunc</span></code>.</p>
+</div>
+<dl class="attribute">
+<dt id="numba.DUFunc.ufunc">
+<code class="descname">ufunc</code><a class="headerlink" href="#numba.DUFunc.ufunc" title="Permalink to this definition">¶</a></dt>
+<dd><p>The actual Numpy <code class="xref py py-class docutils literal"><span class="pre">ufunc</span></code> object being built by the
+<a class="reference internal" href="#numba.DUFunc" title="numba.DUFunc"><code class="xref py py-class docutils literal"><span class="pre">DUFunc</span></code></a> instance.  Note that the
+<a class="reference internal" href="#numba.DUFunc" title="numba.DUFunc"><code class="xref py py-class docutils literal"><span class="pre">DUFunc</span></code></a> object maintains several important data
+structures required for proper ufunc functionality (specifically
+the dynamically compiled loops).  Users should not pass the
+<code class="xref py py-class docutils literal"><span class="pre">ufunc</span></code> value around without ensuring the
+underlying <a class="reference internal" href="#numba.DUFunc" title="numba.DUFunc"><code class="xref py py-class docutils literal"><span class="pre">DUFunc</span></code></a> will not be garbage collected.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="numba.DUFunc.nin">
+<code class="descname">nin</code><a class="headerlink" href="#numba.DUFunc.nin" title="Permalink to this definition">¶</a></dt>
+<dd><p>The number of DUFunc (ufunc) inputs.  See <a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ufunc.nin.html#numpy.ufunc.nin">ufunc.nin</a>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="numba.DUFunc.nout">
+<code class="descname">nout</code><a class="headerlink" href="#numba.DUFunc.nout" title="Permalink to this definition">¶</a></dt>
+<dd><p>The number of DUFunc outputs.  See <a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ufunc.nout.html#numpy.ufunc.nout">ufunc.nout</a>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="numba.DUFunc.nargs">
+<code class="descname">nargs</code><a class="headerlink" href="#numba.DUFunc.nargs" title="Permalink to this definition">¶</a></dt>
+<dd><p>The total number of possible DUFunc arguments (should be
+<a class="reference internal" href="#numba.DUFunc.nin" title="numba.DUFunc.nin"><code class="xref py py-attr docutils literal"><span class="pre">nin</span></code></a> + <a class="reference internal" href="#numba.DUFunc.nout" title="numba.DUFunc.nout"><code class="xref py py-attr docutils literal"><span class="pre">nout</span></code></a>).
+See <a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ufunc.nargs.html#numpy.ufunc.nargs">ufunc.nargs</a>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="numba.DUFunc.ntypes">
+<code class="descname">ntypes</code><a class="headerlink" href="#numba.DUFunc.ntypes" title="Permalink to this definition">¶</a></dt>
+<dd><p>The number of input types supported by the DUFunc.  See
+<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ufunc.ntypes.html#numpy.ufunc.ntypes">ufunc.ntypes</a>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="numba.DUFunc.types">
+<code class="descname">types</code><a class="headerlink" href="#numba.DUFunc.types" title="Permalink to this definition">¶</a></dt>
+<dd><p>A list of the supported types given as strings.  See
+<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ufunc.types.html#numpy.ufunc.types">ufunc.types</a>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="numba.DUFunc.identity">
+<code class="descname">identity</code><a class="headerlink" href="#numba.DUFunc.identity" title="Permalink to this definition">¶</a></dt>
+<dd><p>The identity value when using the ufunc as a reduction.  See
+<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ufunc.identity.html#numpy.ufunc.identity">ufunc.identity</a>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.DUFunc.reduce">
+<code class="descname">reduce</code><span class="sig-paren">(</span><em>A</em>, <em>*</em>, <em>axis</em>, <em>dtype</em>, <em>out</em>, <em>keepdims</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.DUFunc.reduce" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reduces <em>A</em>&#8216;s dimension by one by applying the DUFunc along one
+axis.  See <a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ufunc.reduce.html#numpy.ufunc.reduce">ufunc.reduce</a>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.DUFunc.accumulate">
+<code class="descname">accumulate</code><span class="sig-paren">(</span><em>A</em>, <em>*</em>, <em>axis</em>, <em>dtype</em>, <em>out</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.DUFunc.accumulate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accumulate the result of applying the operator to all elements.
+See <a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ufunc.accumulate.html#numpy.ufunc.accumulate">ufunc.accumulate</a>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.DUFunc.reduceat">
+<code class="descname">reduceat</code><span class="sig-paren">(</span><em>A</em>, <em>indices</em>, <em>*</em>, <em>axis</em>, <em>dtype</em>, <em>out</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.DUFunc.reduceat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs a (local) reduce with specified slices over a single
+axis.  See <a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ufunc.reduceat.html#numpy.ufunc.reduceat">ufunc.reduceat</a>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.DUFunc.outer">
+<code class="descname">outer</code><span class="sig-paren">(</span><em>A</em>, <em>B</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.DUFunc.outer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply the ufunc to all pairs (<em>a</em>, <em>b</em>) with <em>a</em> in <em>A</em>, and <em>b</em>
+in <em>B</em>.  See <a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ufunc.outer.html#numpy.ufunc.outer">ufunc.outer</a>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.DUFunc.at">
+<code class="descname">at</code><span class="sig-paren">(</span><em>A</em>, <em>indices</em>, <em>*</em>, <em>B</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.DUFunc.at" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs unbuffered in place operation on operand <em>A</em> for
+elements specified by <em>indices</em>.  If you are using Numpy 1.7 or
+earlier, this method will not be present.  See <a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ufunc.at.html#numpy.ufunc.at">ufunc.at</a>.</p>
+</dd></dl>
+
+</dd></dl>
+
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Vectorized functions can, in rare circumstances, show
+<a class="reference internal" href="fpsemantics.html#ufunc-fpu-errors"><span class="std std-ref">unexpected warnings or errors</span></a>.</p>
+</div>
+</div>
+<div class="section" id="c-callbacks">
+<h2>2.2.5. C callbacks<a class="headerlink" href="#c-callbacks" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="numba.cfunc">
+<code class="descclassname">&#64;</code><code class="descclassname">numba.</code><code class="descname">cfunc</code><span class="sig-paren">(</span><em>signature</em>, <em>nopython=False</em>, <em>cache=False</em>, <em>locals={}</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.cfunc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compile the decorated function on-the-fly to produce efficient machine
+code.  The compiled code is wrapped in a thin C callback that makes it
+callable using the natural C ABI.</p>
+<p>The <em>signature</em> is a single signature representing the signature of the
+C callback.  It must have the same form as in <a class="reference internal" href="#numba.jit" title="numba.jit"><code class="xref py py-func docutils literal"><span class="pre">jit()</span></code></a>.
+The decorator does not check that the types in the signature have
+a well-defined representation in C.</p>
+<p><em>nopython</em> and <em>cache</em> are boolean flags.  <em>locals</em> is a mapping of
+local variable names to <a class="reference internal" href="types.html#numba-types"><span class="std std-ref">Types and signatures</span></a>.  They all have the same
+meaning as in <a class="reference internal" href="#numba.jit" title="numba.jit"><code class="xref py py-func docutils literal"><span class="pre">jit()</span></code></a>.</p>
+<p>The decorator returns a <a class="reference internal" href="#CFunc" title="CFunc"><code class="xref py py-class docutils literal"><span class="pre">CFunc</span></code></a> object.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">C callbacks currently do not support <a class="reference internal" href="../glossary.html#term-object-mode"><span class="xref std std-term">object mode</span></a>.</p>
+</div>
+</dd></dl>
+
+<dl class="class">
+<dt id="CFunc">
+<em class="property">class </em><code class="descname">CFunc</code><a class="headerlink" href="#CFunc" title="Permalink to this definition">¶</a></dt>
+<dd><p>The class of objects created by <a class="reference internal" href="#numba.cfunc" title="numba.cfunc"><code class="xref py py-func docutils literal"><span class="pre">cfunc()</span></code></a>.  <a class="reference internal" href="#CFunc" title="CFunc"><code class="xref py py-class docutils literal"><span class="pre">CFunc</span></code></a>
+objects expose the following attributes and methods:</p>
+<dl class="attribute">
+<dt id="CFunc.address">
+<code class="descname">address</code><a class="headerlink" href="#CFunc.address" title="Permalink to this definition">¶</a></dt>
+<dd><p>The address of the compiled C callback, as an integer.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="CFunc.cffi">
+<code class="descname">cffi</code><a class="headerlink" href="#CFunc.cffi" title="Permalink to this definition">¶</a></dt>
+<dd><p>A <a class="reference external" href="https://cffi.readthedocs.org/">cffi</a> function pointer instance, to be passed as an argument to
+<a class="reference external" href="https://cffi.readthedocs.org/">cffi</a>-wrapped functions.  The pointer&#8217;s type is <code class="docutils literal"><span class="pre">void</span> <span class="pre">*</span></code>, so
+only minimal type checking will happen when passing it to <a class="reference external" href="https://cffi.readthedocs.org/">cffi</a>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="CFunc.ctypes">
+<code class="descname">ctypes</code><a class="headerlink" href="#CFunc.ctypes" title="Permalink to this definition">¶</a></dt>
+<dd><p>A <a class="reference external" href="https://docs.python.org/3/library/ctypes.html#module-ctypes" title="(in Python v3.6)"><code class="xref py py-mod docutils literal"><span class="pre">ctypes</span></code></a> callback instance, as if it were created using
+<a class="reference external" href="https://docs.python.org/3/library/ctypes.html#ctypes.CFUNCTYPE" title="(in Python v3.6)"><code class="xref py py-func docutils literal"><span class="pre">ctypes.CFUNCTYPE()</span></code></a>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="CFunc.native_name">
+<code class="descname">native_name</code><a class="headerlink" href="#CFunc.native_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>The name of the compiled C callback.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="CFunc.inspect_llvm">
+<code class="descname">inspect_llvm</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#CFunc.inspect_llvm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the human-readable LLVM IR generated for the C callback.
+<a class="reference internal" href="#CFunc.native_name" title="CFunc.native_name"><code class="xref py py-attr docutils literal"><span class="pre">native_name</span></code></a> is the name under which this callback is defined
+in the IR.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        
+      </div><!-- /row -->
+
+      <!-- row -->
+      <div class="row footer-relbar">
+<div id="navbar-related" class=" related navbar navbar-default" role="navigation" aria-label="related navigation">
+  <div class="navbar-inner">
+    <ul class="nav navbar-nav ">
+        <li><a href="../index.html">Numba 0.31.0-py2.7-macosx-10.6-x86_64.egg documentation</a></li>
+    </ul>
+<ul class="nav navbar-nav pull-right hidden-xs hidden-sm">
+      
+        <li><a href="types.html" title="2.1. Types and signatures" >previous</a></li>
+        <li><a href="aot-compilation.html" title="2.3. Ahead-of-Time compilation" >next</a></li>
+        <li><a href="../py-modindex.html" title="Python Module Index" >modules</a></li>
+        <li><a href="../genindex.html" title="General Index" >index</a></li>
+        <li><a href="index.html" >2. Reference Manual</a></li>
+        <li><a href="#">top</a></li> 
+      
+    </ul>
+  </div>
+</div>
+      </div><!-- /row -->
+
+      <!-- footer -->
+      <footer role="contentinfo">
+          &copy; Copyright 2012-2015, Continuum Analytics.
+        Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.1.
+      </footer>
+      <!-- /footer -->
+
+    </div>
+    <!-- /container -->
+
+  </body>
+</html>

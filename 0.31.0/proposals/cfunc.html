@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+
+
+
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+    <title>8.2.3. NBEP 4: Defining C callbacks &mdash; Numba 0.31.0-py2.7-macosx-10.6-x86_64.egg documentation</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    
+
+<link rel="stylesheet" href="../_static/css/basicstrap-base.css" type="text/css" />
+<link rel="stylesheet" id="current-theme" href="../_static/css/bootstrap3/bootstrap.min.css" type="text/css" />
+<link rel="stylesheet" id="current-adjust-theme" type="text/css" />
+
+<link rel="stylesheet" href="../_static/css/font-awesome.min.css">
+
+<style type="text/css">
+  body {
+    padding-top: 60px;
+    padding-bottom: 40px;
+  }
+</style>
+
+<link rel="stylesheet" href="../_static/css/basicstrap.css" type="text/css" />
+<link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+<script type="text/javascript">
+  var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:    '../',
+            VERSION:     '0.31.0-py2.7-macosx-10.6-x86_64.egg',
+            COLLAPSE_INDEX: false,
+            FILE_SUFFIX: '.html',
+            HAS_SOURCE:  true
+  };
+</script>
+    <script type="text/javascript" src="../_static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/bootstrap3.min.js"></script>
+<script type="text/javascript" src="../_static/js/jquery.cookie.min.js"></script>
+<script type="text/javascript" src="../_static/js/basicstrap.js"></script>
+<script type="text/javascript">
+</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="Numba 0.31.0-py2.7-macosx-10.6-x86_64.egg documentation" href="../index.html" />
+    <link rel="up" title="8. Numba Enhancement Proposals" href="index.html" />
+    <link rel="next" title="8.2.4. NBEP 5: Type Inference" href="type-inference.html" />
+    <link rel="prev" title="8.2.2. NBEP 3: JIT Classes" href="jit-classes.html" /> 
+  </head>
+  <body role="document">
+    <div id="navbar-top" class="navbar navbar-fixed-top navbar-default" role="navigation" aria-label="top navigation">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="../index.html">Numba 0.31.0-py2.7-macosx-10.6-x86_64.egg documentation</a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+              <li class="dropdown visible-xs">
+                <a role="button" id="localToc" data-toggle="dropdown" data-target="#" href="#">Table Of Contents <b class="caret"></b></a>
+                <ul class="dropdown-menu localtoc sp-localtoc" role="menu" aria-labelledby="localToc">
+                <ul>
+<li><a class="reference internal" href="#">8.2.3. NBEP 4: Defining C callbacks</a><ul>
+<li><a class="reference internal" href="#basic-usage">8.2.3.1. Basic usage</a><ul>
+<li><a class="reference internal" href="#calling-from-numba-compiled-functions">8.2.3.1.1. Calling from Numba-compiled functions</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#passing-array-data">8.2.3.2. Passing array data</a></li>
+<li><a class="reference internal" href="#error-handling">8.2.3.3. Error handling</a></li>
+<li><a class="reference internal" href="#deferred-topics">8.2.3.4. Deferred topics</a><ul>
+<li><a class="reference internal" href="#ahead-of-time-compilation">8.2.3.4.1. Ahead-of-Time compilation</a></li>
+<li><a class="reference internal" href="#opaque-data-pointers">8.2.3.4.2. Opaque data pointers</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+                </ul>
+              </li>
+
+            
+              <li><a href="jit-classes.html" title="8.2.2. NBEP 3: JIT Classes" accesskey="P">previous </a></li>
+              <li><a href="type-inference.html" title="8.2.4. NBEP 5: Type Inference" accesskey="N">next </a></li>
+              <li><a href="../py-modindex.html" title="Python Module Index" >modules </a></li>
+              <li><a href="../genindex.html" title="General Index" accesskey="I">index </a></li>
+              <li><a href="index.html" accesskey="U">8. Numba Enhancement Proposals</a></li>
+            
+            <li class="visible-xs"><a href="../_sources/proposals/cfunc.rst.txt" rel="nofollow">Show Source</a></li>
+
+            <li class="visible-xs">
+                <form class="search form-search form-inline navbar-form navbar-right sp-searchbox" action="../search.html" method="get">
+                  <div class="input-append input-group">
+                    <input type="text" class="search-query form-control" name="q" placeholder="Search...">
+                    <span class="input-group-btn">
+                    <input type="submit" class="btn" value="Go" />
+                    </span>
+                  </div>
+                  <input type="hidden" name="check_keywords" value="yes" />
+                  <input type="hidden" name="area" value="default" />
+                </form>
+            </li>
+
+            
+
+          </ul>
+
+        </div>
+      </div>
+    </div>
+    
+
+    <!-- container -->
+    <div class="container-fluid">
+
+      <!-- row -->
+      <div class="row">
+         
+<div class="col-md-3 hidden-xs" id="sidebar-wrapper">
+  <div class="sidebar hidden-xs" role="navigation" aria-label="main navigation">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">8.2.3. NBEP 4: Defining C callbacks</a><ul>
+<li><a class="reference internal" href="#basic-usage">8.2.3.1. Basic usage</a><ul>
+<li><a class="reference internal" href="#calling-from-numba-compiled-functions">8.2.3.1.1. Calling from Numba-compiled functions</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#passing-array-data">8.2.3.2. Passing array data</a></li>
+<li><a class="reference internal" href="#error-handling">8.2.3.3. Error handling</a></li>
+<li><a class="reference internal" href="#deferred-topics">8.2.3.4. Deferred topics</a><ul>
+<li><a class="reference internal" href="#ahead-of-time-compilation">8.2.3.4.1. Ahead-of-Time compilation</a></li>
+<li><a class="reference internal" href="#opaque-data-pointers">8.2.3.4.2. Opaque data pointers</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="jit-classes.html"
+                        title="previous chapter">8.2.2. NBEP 3: JIT Classes</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="type-inference.html"
+                        title="next chapter">8.2.4. NBEP 5: Type Inference</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/proposals/cfunc.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" role="search">
+  <h3>Quick search</h3>
+  <form class="search form-inline" action="../search.html" method="get">
+      <div class="input-append input-group">
+        <input type="text" class="search-query form-control" name="q" placeholder="Search...">
+        <span class="input-group-btn">
+        <input type="submit" class="btn" value="Go" />
+        </span>
+      </div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+  </div>
+</div> 
+        
+
+        <div class="col-md-9" id="content-wrapper">
+          <div class="document" role="main">
+            <div class="documentwrapper">
+              <div class="bodywrapper">
+                <div class="body">
+                  
+  <div class="section" id="nbep-4-defining-c-callbacks">
+<h1>8.2.3. NBEP 4: Defining C callbacks<a class="headerlink" href="#nbep-4-defining-c-callbacks" title="Permalink to this headline">¶</a></h1>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Author:</th><td class="field-body">Antoine Pitrou</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Date:</th><td class="field-body">April 2016</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Status:</th><td class="field-body">Draft</td>
+</tr>
+</tbody>
+</table>
+<p>Interfacing with some native libraries (for example written in C
+or C++) can necessitate writing native callbacks to provide business logic
+to the library.  Some Python-facing libraries may also provide the
+alternative of passing a ctypes-wrapped native callback instead of a
+Python callback for better performance.  A simple example is the
+<code class="docutils literal"><span class="pre">scipy.integrate</span></code> package where the user passes the function to be
+integrated as a callback.</p>
+<p>Users of those libraries may want to benefit from the performance advantage
+of running purely native code, while writing their code in Python.
+This proposal outlines a scheme to provide such a functionality in
+Numba.</p>
+<div class="section" id="basic-usage">
+<h2>8.2.3.1. Basic usage<a class="headerlink" href="#basic-usage" title="Permalink to this headline">¶</a></h2>
+<p>We propose adding a new decorator, <code class="docutils literal"><span class="pre">&#64;cfunc</span></code>, importable from the main
+package.  This decorator allows defining a callback as in the following
+example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">numba</span> <span class="k">import</span> <span class="n">cfunc</span>
+<span class="kn">from</span> <span class="nn">numba.types</span> <span class="k">import</span> <span class="n">float64</span>
+
+<span class="c1"># A callback with the C signature `double(double)`</span>
+
+<span class="nd">@cfunc</span><span class="p">(</span><span class="n">float64</span><span class="p">(</span><span class="n">float64</span><span class="p">),</span> <span class="n">nopython</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">integrand</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">x</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal"><span class="pre">&#64;cfunc</span></code> decorator returns a &#8220;C function&#8221; object holding the
+resources necessary to run the given compiled function (for example its
+LLVM module).  This object has several attributes and methods:</p>
+<ul class="simple">
+<li>the <code class="docutils literal"><span class="pre">ctypes</span></code> attribute is a ctypes function object representing
+the native function.</li>
+<li>the <code class="docutils literal"><span class="pre">address</span></code> attribute is the address of the native function code, as
+an integer (note this can also be computed from the <code class="docutils literal"><span class="pre">ctypes</span></code> attribute).</li>
+<li>the <code class="docutils literal"><span class="pre">native_name</span></code> attribute is the symbol under which the function
+can be looked up inside the current process.</li>
+<li>the <code class="docutils literal"><span class="pre">inspect_llvm()</span></code> method returns the IR for the LLVM module
+in which the function is compiled.  It is expected that the <code class="docutils literal"><span class="pre">native_name</span></code>
+attribute corresponds to the function&#8217;s name in the LLVM IR.</li>
+</ul>
+<p>The general signature of the decorator is <code class="docutils literal"><span class="pre">cfunc(signature,</span> <span class="pre">**options)</span></code>.</p>
+<p>The <code class="docutils literal"><span class="pre">signature</span></code> must specify the argument types and return type of the
+function using Numba types.  In contrary to <code class="docutils literal"><span class="pre">&#64;jit</span></code>, the return type cannot
+be omitted.</p>
+<p>The <code class="docutils literal"><span class="pre">options</span></code> are keyword-only parameters specifying compilation options.
+We are expecting that the standard <code class="docutils literal"><span class="pre">&#64;jit</span></code> options (<code class="docutils literal"><span class="pre">nopython</span></code>,
+<code class="docutils literal"><span class="pre">forceobj</span></code>, <code class="docutils literal"><span class="pre">cache</span></code>) can be made to work with <code class="docutils literal"><span class="pre">&#64;cfunc</span></code>.</p>
+<div class="section" id="calling-from-numba-compiled-functions">
+<h3>8.2.3.1.1. Calling from Numba-compiled functions<a class="headerlink" href="#calling-from-numba-compiled-functions" title="Permalink to this headline">¶</a></h3>
+<p>While the intended use is to pass a callback&#8217;s address to foreign C
+code expecting a function pointer, it should be made possible to call
+the C callback from a Numba-compiled function.</p>
+</div>
+</div>
+<div class="section" id="passing-array-data">
+<h2>8.2.3.2. Passing array data<a class="headerlink" href="#passing-array-data" title="Permalink to this headline">¶</a></h2>
+<p>Native platform ABIs as used by C or C++ don&#8217;t have the notion of a shaped
+array as in Numpy.  One common solution is to pass a raw data pointer and
+one or several size arguments (depending on dimensionality).  Numba must
+provide a way to rebuild an array view of this data inside the callback.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">numba</span> <span class="k">import</span> <span class="n">cfunc</span><span class="p">,</span> <span class="n">carray</span>
+<span class="kn">from</span> <span class="nn">numba.types</span> <span class="k">import</span> <span class="n">float64</span><span class="p">,</span> <span class="n">CPointer</span><span class="p">,</span> <span class="n">void</span><span class="p">,</span> <span class="n">intp</span>
+
+<span class="c1"># A callback with the C signature `void(double *, double *, size_t)`</span>
+
+<span class="nd">@cfunc</span><span class="p">(</span><span class="n">void</span><span class="p">(</span><span class="n">CPointer</span><span class="p">(</span><span class="n">float64</span><span class="p">),</span> <span class="n">CPointer</span><span class="p">(</span><span class="n">float64</span><span class="p">),</span> <span class="n">intp</span><span class="p">))</span>
+<span class="k">def</span> <span class="nf">invert</span><span class="p">(</span><span class="n">in_ptr</span><span class="p">,</span> <span class="n">out_ptr</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+    <span class="n">in_</span> <span class="o">=</span> <span class="n">carray</span><span class="p">(</span><span class="n">in_ptr</span><span class="p">,</span> <span class="p">(</span><span class="n">n</span><span class="p">,))</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">carray</span><span class="p">(</span><span class="n">out_ptr</span><span class="p">,</span> <span class="p">(</span><span class="n">n</span><span class="p">,))</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        <span class="n">out</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">in_</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal"><span class="pre">carray</span></code> function takes <code class="docutils literal"><span class="pre">(pointer,</span> <span class="pre">shape,</span> <span class="pre">dtype)</span></code> arguments
+(<code class="docutils literal"><span class="pre">dtype</span></code> being optional) and returns a C-layout array view over the
+data <em>pointer</em>, with the given <em>shape</em> and <em>dtype</em>.  <em>pointer</em> must
+be a ctypes pointer object (not a Python integer).  The array&#8217;s
+dimensionality corresponds to the <em>shape</em> tuple&#8217;s length.  If <em>dtype</em>
+is not given, the array&#8217;s dtype corresponds to the <em>pointer</em>&#8216;s pointee
+type.</p>
+<p>The <code class="docutils literal"><span class="pre">farray</span></code> function is similar except that it returns a F-layout
+array view.</p>
+</div>
+<div class="section" id="error-handling">
+<h2>8.2.3.3. Error handling<a class="headerlink" href="#error-handling" title="Permalink to this headline">¶</a></h2>
+<p>There is no standard mechanism in C for error reporting.  Unfortunately,
+Numba currently doesn&#8217;t handle <code class="docutils literal"><span class="pre">try..except</span></code> blocks, which makes it more
+difficult for the user to implement the required error reporting scheme.
+The current stance of this proposal is to let users guard against invalid
+arguments where necessary, and do whatever is required to inform the caller
+of the error.</p>
+<p>Based on user feedback, we can later add support for some error reporting
+schemes, such as returning an integer error code depending on whether an
+exception was raised, or setting <code class="docutils literal"><span class="pre">errno</span></code>.</p>
+</div>
+<div class="section" id="deferred-topics">
+<h2>8.2.3.4. Deferred topics<a class="headerlink" href="#deferred-topics" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="ahead-of-time-compilation">
+<h3>8.2.3.4.1. Ahead-of-Time compilation<a class="headerlink" href="#ahead-of-time-compilation" title="Permalink to this headline">¶</a></h3>
+<p>This proposal doesn&#8217;t make any provision for AOT compilation of C callbacks.
+It would probably necessitate a separate API (a new method on the
+<code class="docutils literal"><span class="pre">numba.pycc.CC</span></code> object), and the implementation would require exposing
+a subset of the C function object&#8217;s functionality from the compiled C
+extension module.</p>
+</div>
+<div class="section" id="opaque-data-pointers">
+<h3>8.2.3.4.2. Opaque data pointers<a class="headerlink" href="#opaque-data-pointers" title="Permalink to this headline">¶</a></h3>
+<p>Some libraries allow passing an opaque data pointer (<code class="docutils literal"><span class="pre">void</span> <span class="pre">*</span></code>) to a
+user-provided callback, to provide any required context for execution
+of the callback.  Taking advantage of this functionality would require
+adding specific support in Numba, for example the ability to do generic
+conversion from <code class="docutils literal"><span class="pre">types.voidptr</span></code> and to take the address of a
+Python-facing <code class="docutils literal"><span class="pre">jitclass</span></code> instance.</p>
+</div>
+</div>
+</div>
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        
+      </div><!-- /row -->
+
+      <!-- row -->
+      <div class="row footer-relbar">
+<div id="navbar-related" class=" related navbar navbar-default" role="navigation" aria-label="related navigation">
+  <div class="navbar-inner">
+    <ul class="nav navbar-nav ">
+        <li><a href="../index.html">Numba 0.31.0-py2.7-macosx-10.6-x86_64.egg documentation</a></li>
+    </ul>
+<ul class="nav navbar-nav pull-right hidden-xs hidden-sm">
+      
+        <li><a href="jit-classes.html" title="8.2.2. NBEP 3: JIT Classes" >previous</a></li>
+        <li><a href="type-inference.html" title="8.2.4. NBEP 5: Type Inference" >next</a></li>
+        <li><a href="../py-modindex.html" title="Python Module Index" >modules</a></li>
+        <li><a href="../genindex.html" title="General Index" >index</a></li>
+        <li><a href="index.html" >8. Numba Enhancement Proposals</a></li>
+        <li><a href="#">top</a></li> 
+      
+    </ul>
+  </div>
+</div>
+      </div><!-- /row -->
+
+      <!-- footer -->
+      <footer role="contentinfo">
+          &copy; Copyright 2012-2015, Continuum Analytics.
+        Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.1.
+      </footer>
+      <!-- /footer -->
+
+    </div>
+    <!-- /container -->
+
+  </body>
+</html>

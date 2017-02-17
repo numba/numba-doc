@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+
+
+
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+    <title>5.3. Memory management &mdash; Numba 0.31.0-py2.7-macosx-10.6-x86_64.egg documentation</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    
+
+<link rel="stylesheet" href="../_static/css/basicstrap-base.css" type="text/css" />
+<link rel="stylesheet" id="current-theme" href="../_static/css/bootstrap3/bootstrap.min.css" type="text/css" />
+<link rel="stylesheet" id="current-adjust-theme" type="text/css" />
+
+<link rel="stylesheet" href="../_static/css/font-awesome.min.css">
+
+<style type="text/css">
+  body {
+    padding-top: 60px;
+    padding-bottom: 40px;
+  }
+</style>
+
+<link rel="stylesheet" href="../_static/css/basicstrap.css" type="text/css" />
+<link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+<script type="text/javascript">
+  var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:    '../',
+            VERSION:     '0.31.0-py2.7-macosx-10.6-x86_64.egg',
+            COLLAPSE_INDEX: false,
+            FILE_SUFFIX: '.html',
+            HAS_SOURCE:  true
+  };
+</script>
+    <script type="text/javascript" src="../_static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/bootstrap3.min.js"></script>
+<script type="text/javascript" src="../_static/js/jquery.cookie.min.js"></script>
+<script type="text/javascript" src="../_static/js/basicstrap.js"></script>
+<script type="text/javascript">
+</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="Numba 0.31.0-py2.7-macosx-10.6-x86_64.egg documentation" href="../index.html" />
+    <link rel="up" title="5. Numba for HSA APUs" href="index.html" />
+    <link rel="next" title="5.4. Writing Device Functions" href="device-functions.html" />
+    <link rel="prev" title="5.2. Writing HSA Kernels" href="kernels.html" /> 
+  </head>
+  <body role="document">
+    <div id="navbar-top" class="navbar navbar-fixed-top navbar-default" role="navigation" aria-label="top navigation">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="../index.html">Numba 0.31.0-py2.7-macosx-10.6-x86_64.egg documentation</a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+              <li class="dropdown visible-xs">
+                <a role="button" id="localToc" data-toggle="dropdown" data-target="#" href="#">Table Of Contents <b class="caret"></b></a>
+                <ul class="dropdown-menu localtoc sp-localtoc" role="menu" aria-labelledby="localToc">
+                <ul>
+<li><a class="reference internal" href="#">5.3. Memory management</a><ul>
+<li><a class="reference internal" href="#shared-memory-and-thread-synchronization">5.3.1. Shared memory and thread synchronization</a></li>
+</ul>
+</li>
+</ul>
+
+                </ul>
+              </li>
+
+            
+              <li><a href="kernels.html" title="5.2. Writing HSA Kernels" accesskey="P">previous </a></li>
+              <li><a href="device-functions.html" title="5.4. Writing Device Functions" accesskey="N">next </a></li>
+              <li><a href="../py-modindex.html" title="Python Module Index" >modules </a></li>
+              <li><a href="../genindex.html" title="General Index" accesskey="I">index </a></li>
+              <li><a href="index.html" accesskey="U">5. Numba for HSA APUs</a></li>
+            
+            <li class="visible-xs"><a href="../_sources/hsa/memory.rst.txt" rel="nofollow">Show Source</a></li>
+
+            <li class="visible-xs">
+                <form class="search form-search form-inline navbar-form navbar-right sp-searchbox" action="../search.html" method="get">
+                  <div class="input-append input-group">
+                    <input type="text" class="search-query form-control" name="q" placeholder="Search...">
+                    <span class="input-group-btn">
+                    <input type="submit" class="btn" value="Go" />
+                    </span>
+                  </div>
+                  <input type="hidden" name="check_keywords" value="yes" />
+                  <input type="hidden" name="area" value="default" />
+                </form>
+            </li>
+
+            
+
+          </ul>
+
+        </div>
+      </div>
+    </div>
+    
+
+    <!-- container -->
+    <div class="container-fluid">
+
+      <!-- row -->
+      <div class="row">
+         
+<div class="col-md-3 hidden-xs" id="sidebar-wrapper">
+  <div class="sidebar hidden-xs" role="navigation" aria-label="main navigation">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">5.3. Memory management</a><ul>
+<li><a class="reference internal" href="#shared-memory-and-thread-synchronization">5.3.1. Shared memory and thread synchronization</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="kernels.html"
+                        title="previous chapter">5.2. Writing HSA Kernels</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="device-functions.html"
+                        title="next chapter">5.4. Writing Device Functions</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/hsa/memory.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" role="search">
+  <h3>Quick search</h3>
+  <form class="search form-inline" action="../search.html" method="get">
+      <div class="input-append input-group">
+        <input type="text" class="search-query form-control" name="q" placeholder="Search...">
+        <span class="input-group-btn">
+        <input type="submit" class="btn" value="Go" />
+        </span>
+      </div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+  </div>
+</div> 
+        
+
+        <div class="col-md-9" id="content-wrapper">
+          <div class="document" role="main">
+            <div class="documentwrapper">
+              <div class="bodywrapper">
+                <div class="body">
+                  
+  <div class="section" id="memory-management">
+<h1>5.3. Memory management<a class="headerlink" href="#memory-management" title="Permalink to this headline">¶</a></h1>
+<p id="hsa-device-memory">The CPU and GPU in a APU share the same main memory.  There is no distinction
+between CPU and GPU memory.  Even though a HSA kernel can directly consume any
+data in the main memory, it is recommended to register a memory region to the
+HSA runtime compatibility with HSA-compliant discrete GPUs.</p>
+<dl class="function">
+<dt id="hsa.register">
+<code class="descclassname">hsa.</code><code class="descname">register</code><span class="sig-paren">(</span><em>*arrays</em><span class="sig-paren">)</span><a class="headerlink" href="#hsa.register" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register every given array.  The function can be used in a <em>with-context</em>
+for automically deregistration:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">array_a</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">array_b</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="k">with</span> <span class="n">hsa</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">array_a</span><span class="p">,</span> <span class="n">array_b</span><span class="p">):</span>
+    <span class="n">some_hsa_code</span><span class="p">(</span><span class="n">array_a</span><span class="p">,</span> <span class="n">array_b</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="hsa.deregister">
+<code class="descclassname">hsa.</code><code class="descname">deregister</code><span class="sig-paren">(</span><em>*arrays</em><span class="sig-paren">)</span><a class="headerlink" href="#hsa.deregister" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deregister every given array</p>
+</dd></dl>
+
+<div class="section" id="shared-memory-and-thread-synchronization">
+<span id="hsa-shared-memory"></span><h2>5.3.1. Shared memory and thread synchronization<a class="headerlink" href="#shared-memory-and-thread-synchronization" title="Permalink to this headline">¶</a></h2>
+<p>A limited amount of shared memory can be allocated on the device to speed
+up access to data, when necessary.  That memory will be shared (i.e. both
+readable and writable) amongst all workitems  belonging to a given group
+and has faster access times than regular device memory.  It also allows
+workitems to cooperate on a given solution.  You can think of it as a
+manually-managed data cache.</p>
+<p>The memory is allocated once for the duration of the kernel, unlike
+traditional dynamic memory management.</p>
+<dl class="function">
+<dt id="numba.hsa.shared.array">
+<code class="descclassname">numba.hsa.shared.</code><code class="descname">array</code><span class="sig-paren">(</span><em>shape</em>, <em>type</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.hsa.shared.array" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allocate a shared array of the given <em>shape</em> and <em>type</em> on the device.
+This function must be called on the device (i.e. from a kernel or
+device function).  <em>shape</em> is either an integer or a tuple of integers
+representing the array&#8217;s dimensions.  <em>type</em> is a <a class="reference internal" href="../reference/types.html#numba-types"><span class="std std-ref">Numba type</span></a>
+of the elements needing to be stored in the array.</p>
+<p>The returned array-like object can be read and written to like any normal
+device array (e.g. through indexing).</p>
+<p>A common pattern is to have each workitem populate one element in the
+shared array and then wait for all workitems to finish using :func:`
+.barrier`.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.hsa.barrier">
+<code class="descclassname">numba.hsa.</code><code class="descname">barrier</code><span class="sig-paren">(</span><em>scope</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.hsa.barrier" title="Permalink to this definition">¶</a></dt>
+<dd><p>The <code class="docutils literal"><span class="pre">scope</span></code> argument specifies the level of synchronization.  Set <code class="docutils literal"><span class="pre">scope</span></code>
+to <code class="docutils literal"><span class="pre">1</span></code> to synchronize all workitems in the same workgroup.</p>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="examples.html#hsa-matmul"><span class="std std-ref">Matrix multiplication example</span></a>.</p>
+</div>
+</div>
+</div>
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        
+      </div><!-- /row -->
+
+      <!-- row -->
+      <div class="row footer-relbar">
+<div id="navbar-related" class=" related navbar navbar-default" role="navigation" aria-label="related navigation">
+  <div class="navbar-inner">
+    <ul class="nav navbar-nav ">
+        <li><a href="../index.html">Numba 0.31.0-py2.7-macosx-10.6-x86_64.egg documentation</a></li>
+    </ul>
+<ul class="nav navbar-nav pull-right hidden-xs hidden-sm">
+      
+        <li><a href="kernels.html" title="5.2. Writing HSA Kernels" >previous</a></li>
+        <li><a href="device-functions.html" title="5.4. Writing Device Functions" >next</a></li>
+        <li><a href="../py-modindex.html" title="Python Module Index" >modules</a></li>
+        <li><a href="../genindex.html" title="General Index" >index</a></li>
+        <li><a href="index.html" >5. Numba for HSA APUs</a></li>
+        <li><a href="#">top</a></li> 
+      
+    </ul>
+  </div>
+</div>
+      </div><!-- /row -->
+
+      <!-- footer -->
+      <footer role="contentinfo">
+          &copy; Copyright 2012-2015, Continuum Analytics.
+        Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.1.
+      </footer>
+      <!-- /footer -->
+
+    </div>
+    <!-- /container -->
+
+  </body>
+</html>
