@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     
-    <title>6.3. Example: an interval type &mdash; Numba 0.32.0.dev0+9.g3ee3107-py2.7-linux-x86_64.egg documentation</title>
+    <title>6.3. Example: an interval type &mdash; Numba 0.32.0.dev0+13.g9657df6-py2.7-linux-x86_64.egg documentation</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
@@ -34,7 +34,7 @@
 <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
             URL_ROOT:    '../',
-            VERSION:     '0.32.0.dev0+9.g3ee3107-py2.7-linux-x86_64.egg',
+            VERSION:     '0.32.0.dev0+13.g9657df6-py2.7-linux-x86_64.egg',
             COLLAPSE_INDEX: false,
             FILE_SUFFIX: '.html',
             HAS_SOURCE:  true
@@ -57,7 +57,7 @@
     });
   });
 </script>
-    <link rel="top" title="Numba 0.32.0.dev0+9.g3ee3107-py2.7-linux-x86_64.egg documentation" href="../index.html" />
+    <link rel="top" title="Numba 0.32.0.dev0+13.g9657df6-py2.7-linux-x86_64.egg documentation" href="../index.html" />
     <link rel="up" title="6. Extending Numba" href="index.html" />
     <link rel="next" title="7. Developer Manual" href="../developer/index.html" />
     <link rel="prev" title="6.2. Low-level extension API" href="low-level.html" /> 
@@ -71,7 +71,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="../index.html">Numba 0.32.0.dev0+9.g3ee3107-py2.7-linux-x86_64.egg documentation</a>
+          <a class="brand" href="../index.html">Numba 0.32.0.dev0+13.g9657df6-py2.7-linux-x86_64.egg documentation</a>
           <div class="nav-collapse collapse">
             <ul class="nav pull-right">
               
@@ -432,7 +432,9 @@ gets the LLVM value out of the wrapper.</p>
 get the error <em>&#8220;cannot convert Interval to native value&#8221;</em>.  This is because
 Numba doesn&#8217;t yet know how to make a native interval value from a Python
 <code class="docutils literal"><span class="pre">Interval</span></code> instance.  Let&#8217;s teach it how to do it:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="nd">@unbox</span><span class="p">(</span><span class="n">IntervalType</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">numba.extending</span> <span class="kn">import</span> <span class="n">unbox</span><span class="p">,</span> <span class="n">NativeValue</span>
+
+<span class="nd">@unbox</span><span class="p">(</span><span class="n">IntervalType</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">unbox_interval</span><span class="p">(</span><span class="n">typ</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">c</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Convert a Interval object to a native interval structure.</span>
@@ -461,7 +463,9 @@ may have happened when unboxing the object (try passing <code class="docutils li
 for example).</p>
 <p>We also want to do the reverse operation, called <em>boxing</em>, so as to return
 interval values from Numba functions:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="nd">@box</span><span class="p">(</span><span class="n">IntervalType</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">numba.extending</span> <span class="kn">import</span> <span class="n">box</span>
+
+<span class="nd">@box</span><span class="p">(</span><span class="n">IntervalType</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">box_interval</span><span class="p">(</span><span class="n">typ</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="n">c</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Convert a native interval structure to an Interval object.</span>
@@ -484,7 +488,9 @@ interval values from Numba functions:</p>
 <p><a class="reference internal" href="../glossary.html#term-nopython-mode"><span class="xref std std-term">nopython mode</span></a> functions are now able to make use of Interval objects
 and the various operations you have defined on them.  You can try for
 example the following functions:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="nd">@jit</span><span class="p">(</span><span class="n">nopython</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">jit</span>
+
+<span class="nd">@jit</span><span class="p">(</span><span class="n">nopython</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">inside_interval</span><span class="p">(</span><span class="n">interval</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">interval</span><span class="o">.</span><span class="n">lo</span> <span class="o">&lt;=</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">interval</span><span class="o">.</span><span class="n">hi</span>
 
@@ -540,7 +546,7 @@ convenience function</li>
         <li><a href="../py-modindex.html" title="Python Module Index" >modules</a></li>
         <li><a href="../developer/index.html" title="7. Developer Manual" >next</a></li>
         <li><a href="low-level.html" title="6.2. Low-level extension API" >previous</a></li>
-        <li><a href="../index.html">Numba 0.32.0.dev0+9.g3ee3107-py2.7-linux-x86_64.egg documentation</a></li>
+        <li><a href="../index.html">Numba 0.32.0.dev0+13.g9657df6-py2.7-linux-x86_64.egg documentation</a></li>
         <li><a href="index.html" >6. Extending Numba</a></li> 
       
     </ul>
