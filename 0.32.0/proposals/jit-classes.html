@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+
+
+
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+    <title>8.2.2. NBEP 3: JIT Classes &mdash; Numba 0.32.0-py2.7-macosx-10.6-x86_64.egg documentation</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    
+
+<link rel="stylesheet" href="../_static/css/basicstrap-base.css" type="text/css" />
+<link rel="stylesheet" id="current-theme" href="../_static/css/bootstrap3/bootstrap.min.css" type="text/css" />
+<link rel="stylesheet" id="current-adjust-theme" type="text/css" />
+
+<link rel="stylesheet" href="../_static/css/font-awesome.min.css">
+
+<style type="text/css">
+  body {
+    padding-top: 60px;
+    padding-bottom: 40px;
+  }
+</style>
+
+<link rel="stylesheet" href="../_static/css/basicstrap.css" type="text/css" />
+<link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+<script type="text/javascript">
+  var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:    '../',
+            VERSION:     '0.32.0-py2.7-macosx-10.6-x86_64.egg',
+            COLLAPSE_INDEX: false,
+            FILE_SUFFIX: '.html',
+            HAS_SOURCE:  true
+  };
+</script>
+    <script type="text/javascript" src="../_static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/bootstrap3.min.js"></script>
+<script type="text/javascript" src="../_static/js/jquery.cookie.min.js"></script>
+<script type="text/javascript" src="../_static/js/basicstrap.js"></script>
+<script type="text/javascript">
+</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="Numba 0.32.0-py2.7-macosx-10.6-x86_64.egg documentation" href="../index.html" />
+    <link rel="up" title="8. Numba Enhancement Proposals" href="index.html" />
+    <link rel="next" title="8.2.3. NBEP 4: Defining C callbacks" href="cfunc.html" />
+    <link rel="prev" title="8.2.1. NBEP 2: Extension points" href="extension-points.html" /> 
+  </head>
+  <body role="document">
+    <div id="navbar-top" class="navbar navbar-fixed-top navbar-default" role="navigation" aria-label="top navigation">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="../index.html">Numba 0.32.0-py2.7-macosx-10.6-x86_64.egg documentation</a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+              <li class="dropdown visible-xs">
+                <a role="button" id="localToc" data-toggle="dropdown" data-target="#" href="#">Table Of Contents <b class="caret"></b></a>
+                <ul class="dropdown-menu localtoc sp-localtoc" role="menu" aria-labelledby="localToc">
+                <ul>
+<li><a class="reference internal" href="#">8.2.2. NBEP 3: JIT Classes</a><ul>
+<li><a class="reference internal" href="#introduction">8.2.2.1. Introduction</a></li>
+<li><a class="reference internal" href="#proposal-jit-classes">8.2.2.2. Proposal: jit-classes</a><ul>
+<li><a class="reference internal" href="#storage-model">8.2.2.2.1. Storage model</a></li>
+<li><a class="reference internal" href="#methods">8.2.2.2.2. Methods</a></li>
+<li><a class="reference internal" href="#reference-count-and-destructor">8.2.2.2.3. Reference count and destructor</a></li>
+<li><a class="reference internal" href="#type-inference">8.2.2.2.4. Type inference</a><ul>
+<li><a class="reference internal" href="#example-typing-function-using-an-ordereddict">8.2.2.2.4.1. Example: typing function using an OrderedDict</a></li>
+<li><a class="reference internal" href="#example-typing-function-using-a-list-of-2-tuples">8.2.2.2.4.2. Example: typing function using a list of 2-tuples</a></li>
+<li><a class="reference internal" href="#creating-multiple-jitclasses-from-a-single-class-object">8.2.2.2.4.3. Creating multiple jitclasses from a single class object</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#usage-from-the-interpreter">8.2.2.2.5. Usage from the Interpreter</a></li>
+<li><a class="reference internal" href="#support-for-property-staticmethod-and-classmethod">8.2.2.2.6. Support for property, staticmethod and classmethod</a></li>
+<li><a class="reference internal" href="#inheritance">8.2.2.2.7. Inheritance</a></li>
+<li><a class="reference internal" href="#supported-targets">8.2.2.2.8. Supported targets</a></li>
+<li><a class="reference internal" href="#other-properties">8.2.2.2.9. Other properties</a></li>
+<li><a class="reference internal" href="#future-enhancements">8.2.2.2.10. Future enhancements</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+                </ul>
+              </li>
+
+            
+              <li><a href="extension-points.html" title="8.2.1. NBEP 2: Extension points" accesskey="P">previous </a></li>
+              <li><a href="cfunc.html" title="8.2.3. NBEP 4: Defining C callbacks" accesskey="N">next </a></li>
+              <li><a href="../py-modindex.html" title="Python Module Index" >modules </a></li>
+              <li><a href="../genindex.html" title="General Index" accesskey="I">index </a></li>
+              <li><a href="index.html" accesskey="U">8. Numba Enhancement Proposals</a></li>
+            
+            <li class="visible-xs"><a href="../_sources/proposals/jit-classes.rst.txt" rel="nofollow">Show Source</a></li>
+
+            <li class="visible-xs">
+                <form class="search form-search form-inline navbar-form navbar-right sp-searchbox" action="../search.html" method="get">
+                  <div class="input-append input-group">
+                    <input type="text" class="search-query form-control" name="q" placeholder="Search...">
+                    <span class="input-group-btn">
+                    <input type="submit" class="btn" value="Go" />
+                    </span>
+                  </div>
+                  <input type="hidden" name="check_keywords" value="yes" />
+                  <input type="hidden" name="area" value="default" />
+                </form>
+            </li>
+
+            
+
+          </ul>
+
+        </div>
+      </div>
+    </div>
+    
+
+    <!-- container -->
+    <div class="container-fluid">
+
+      <!-- row -->
+      <div class="row">
+         
+<div class="col-md-3 hidden-xs" id="sidebar-wrapper">
+  <div class="sidebar hidden-xs" role="navigation" aria-label="main navigation">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">8.2.2. NBEP 3: JIT Classes</a><ul>
+<li><a class="reference internal" href="#introduction">8.2.2.1. Introduction</a></li>
+<li><a class="reference internal" href="#proposal-jit-classes">8.2.2.2. Proposal: jit-classes</a><ul>
+<li><a class="reference internal" href="#storage-model">8.2.2.2.1. Storage model</a></li>
+<li><a class="reference internal" href="#methods">8.2.2.2.2. Methods</a></li>
+<li><a class="reference internal" href="#reference-count-and-destructor">8.2.2.2.3. Reference count and destructor</a></li>
+<li><a class="reference internal" href="#type-inference">8.2.2.2.4. Type inference</a><ul>
+<li><a class="reference internal" href="#example-typing-function-using-an-ordereddict">8.2.2.2.4.1. Example: typing function using an OrderedDict</a></li>
+<li><a class="reference internal" href="#example-typing-function-using-a-list-of-2-tuples">8.2.2.2.4.2. Example: typing function using a list of 2-tuples</a></li>
+<li><a class="reference internal" href="#creating-multiple-jitclasses-from-a-single-class-object">8.2.2.2.4.3. Creating multiple jitclasses from a single class object</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#usage-from-the-interpreter">8.2.2.2.5. Usage from the Interpreter</a></li>
+<li><a class="reference internal" href="#support-for-property-staticmethod-and-classmethod">8.2.2.2.6. Support for property, staticmethod and classmethod</a></li>
+<li><a class="reference internal" href="#inheritance">8.2.2.2.7. Inheritance</a></li>
+<li><a class="reference internal" href="#supported-targets">8.2.2.2.8. Supported targets</a></li>
+<li><a class="reference internal" href="#other-properties">8.2.2.2.9. Other properties</a></li>
+<li><a class="reference internal" href="#future-enhancements">8.2.2.2.10. Future enhancements</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="extension-points.html"
+                        title="previous chapter">8.2.1. NBEP 2: Extension points</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="cfunc.html"
+                        title="next chapter">8.2.3. NBEP 4: Defining C callbacks</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/proposals/jit-classes.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" role="search">
+  <h3>Quick search</h3>
+  <form class="search form-inline" action="../search.html" method="get">
+      <div class="input-append input-group">
+        <input type="text" class="search-query form-control" name="q" placeholder="Search...">
+        <span class="input-group-btn">
+        <input type="submit" class="btn" value="Go" />
+        </span>
+      </div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+  </div>
+</div> 
+        
+
+        <div class="col-md-9" id="content-wrapper">
+          <div class="document" role="main">
+            <div class="documentwrapper">
+              <div class="bodywrapper">
+                <div class="body">
+                  
+  <div class="section" id="nbep-3-jit-classes">
+<h1>8.2.2. NBEP 3: JIT Classes<a class="headerlink" href="#nbep-3-jit-classes" title="Permalink to this headline">¶</a></h1>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Author:</th><td class="field-body">Siu Kwan Lam</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Date:</th><td class="field-body">Dec 2015</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Status:</th><td class="field-body">Draft</td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="introduction">
+<h2>8.2.2.1. Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<p>Numba does not yet support user-defined classes.
+Classes provide useful abstraction and promote modularity when used
+right.  In the simplest sense, a class specifies the set of data and
+operations as attributes and methods, respectively.
+A class instance is an instantiation of that class.
+This proposal will focus on supporting this simple usecase of classes&#8211;with
+just attributes and methods.  Other features, such as class methods, static
+methods, and inheritance are deferred to another proposal, but we believe
+these features can be easily implemented given the foundation described here.</p>
+</div>
+<div class="section" id="proposal-jit-classes">
+<h2>8.2.2.2. Proposal: jit-classes<a class="headerlink" href="#proposal-jit-classes" title="Permalink to this headline">¶</a></h2>
+<p>A JIT-classes is more restricted than a Python class.
+We will focus on the following operations on a class and its instance:</p>
+<ul class="simple">
+<li>Instantiation: create an instance of a class using the class object as the
+constructor: <code class="docutils literal"><span class="pre">cls(*args,</span> <span class="pre">**kwargs)</span></code></li>
+<li>Destruction: remove resources allocated during instantiation and release
+all references to other objects.</li>
+<li>Attribute access: loading and storing attributes using <code class="docutils literal"><span class="pre">instance.attr</span></code>
+syntax.</li>
+<li>Method access: loading methods using <code class="docutils literal"><span class="pre">instance.method</span></code> syntax.</li>
+</ul>
+<p>With these operations, a class object (not the instance) does not need to be
+materialize. Using the class object as a constructor is fully resolved (a
+runtime implementation is picked) during the typing phase in the compiler.
+This means <strong>a class object will not be first class</strong>.  On the other hand,
+implementating a first-class class object will require an
+&#8220;interface&#8221; type, or the type of class.</p>
+<p>The instantiation of a class will allocate resources for storing the data
+attributes.  This is described in the &#8220;Storage model&#8221; section.  Methods are
+never stored in the instance.  They are information attached to the class.
+Since a class object only exists in the type domain, the methods will also be
+fully resolved at the typing phase.  Again, numba do not have first-class
+function value and each function type maps uniquely to each function
+implementation (this needs to be changed to support function value as argument).</p>
+<p>A class instance can contain other NRT reference-counted object as attributes.
+To properly clean up an instance, a destructor is called when the reference
+count of the instance is dropped to zero.  This is described in the
+&#8220;Reference count and descructor&#8221; section.</p>
+<div class="section" id="storage-model">
+<h3>8.2.2.2.1. Storage model<a class="headerlink" href="#storage-model" title="Permalink to this headline">¶</a></h3>
+<p>For compatibility with C, attributes are stored in a simple plain-old-data
+structure.  Each attribute are stored in a user-defined order in a padded
+(for proper alignment), contiguous memory region. An instance that contains
+three fields of int32, float32, complex64 will be compatible with the following
+C structure:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">struct</span> <span class="p">{</span>
+    <span class="n">int32</span>     <span class="n">field0</span><span class="p">;</span>
+    <span class="n">float32</span>   <span class="n">field1</span><span class="p">;</span>
+    <span class="n">complex64</span> <span class="n">field2</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>This will also be comptabile with an aligned numpy structure dtype.</p>
+</div>
+<div class="section" id="methods">
+<h3>8.2.2.2.2. Methods<a class="headerlink" href="#methods" title="Permalink to this headline">¶</a></h3>
+<p>Methods are regular function that can be bounded to an instance.
+They can be compiled as regular function by numba.
+The operation <code class="docutils literal"><span class="pre">getattr(instance,</span> <span class="pre">name)</span></code> (getting an attribute <code class="docutils literal"><span class="pre">name</span></code> from
+<code class="docutils literal"><span class="pre">instance</span></code>) binds the instance to the requested method at runtime.</p>
+<p>The special <code class="docutils literal"><span class="pre">__init__</span></code> method is also handled like regular functions.</p>
+<p><code class="docutils literal"><span class="pre">__del__</span></code> is not supported at this time.</p>
+</div>
+<div class="section" id="reference-count-and-destructor">
+<h3>8.2.2.2.3. Reference count and destructor<a class="headerlink" href="#reference-count-and-destructor" title="Permalink to this headline">¶</a></h3>
+<p>An instance of jit-class is reference-counted by NRT. Since it may contain
+other NRT tracked object, it must call a destructor when its reference count
+dropped to zero.  The destructor will decrement the reference count of all
+attributes by one.</p>
+<p>At this time, there is no support for user defined <code class="docutils literal"><span class="pre">__del__</span></code> method.</p>
+<p>Proper cleanup for cyclic reference is not handled at this time.
+Cycles will cause memory leak.</p>
+</div>
+<div class="section" id="type-inference">
+<h3>8.2.2.2.4. Type inference<a class="headerlink" href="#type-inference" title="Permalink to this headline">¶</a></h3>
+<p>So far we have not described the type of the attributes or the methods.
+Type information is necessary to materailize the instance (e.g. allocate the
+storage).  The simplest way is to let user provide the type of each attributes
+as well as the ordering; for instance:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">dct</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+<span class="n">dct</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">int32</span>
+<span class="n">dct</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">float32</span>
+</pre></div>
+</div>
+<p>Allowing user to supply an ordered dictionary will provide the name, ordering
+and types of the attributes.  However, this statically typed semantic is not as
+flexible as the Python semantic which behaves like a generic class.</p>
+<p>Inferring the type of attributes is difficult.  In a previous attempt to
+implement JIT classes, the <code class="docutils literal"><span class="pre">__init__</span></code> method is specialized to capture
+the type stored into the attributes.  Since the method can contain arbitrary
+logic, the problem can become a dependent typing problem if types are assigned
+conditionally depending on the value. (Very few languages implement dependent
+typing and those that does are mostly theorem provers.)</p>
+<div class="section" id="example-typing-function-using-an-ordereddict">
+<h4>8.2.2.2.4.1. Example: typing function using an OrderedDict<a class="headerlink" href="#example-typing-function-using-an-ordereddict" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">spec</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+<span class="n">spec</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">numba</span><span class="o">.</span><span class="n">int32</span>
+<span class="n">spec</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">numba</span><span class="o">.</span><span class="n">float32</span>
+
+<span class="nd">@jitclass</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Vec</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">x</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">y</span>
+
+    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dx</span><span class="p">,</span> <span class="n">dy</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">+=</span> <span class="n">dx</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">+=</span> <span class="n">dy</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="example-typing-function-using-a-list-of-2-tuples">
+<h4>8.2.2.2.4.2. Example: typing function using a list of 2-tuples<a class="headerlink" href="#example-typing-function-using-a-list-of-2-tuples" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">spec</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">numba</span><span class="o">.</span><span class="n">int32</span><span class="p">),</span>
+        <span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">numba</span><span class="o">.</span><span class="n">float32</span><span class="p">)]</span>
+
+<span class="nd">@jitclass</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Vec</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="o">...</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="creating-multiple-jitclasses-from-a-single-class-object">
+<h4>8.2.2.2.4.3. Creating multiple jitclasses from a single class object<a class="headerlink" href="#creating-multiple-jitclasses-from-a-single-class-object" title="Permalink to this headline">¶</a></h4>
+<p>The <cite>jitclass(spec)</cite> decorator creates a new jitclass type even when applied to
+the same class object and the same type specification.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Vec</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+  <span class="o">...</span>
+
+<span class="n">Vec1</span> <span class="o">=</span> <span class="n">jitclass</span><span class="p">(</span><span class="n">spec</span><span class="p">)(</span><span class="n">Vec</span><span class="p">)</span>
+<span class="n">Vec2</span> <span class="o">=</span> <span class="n">jitclass</span><span class="p">(</span><span class="n">spec</span><span class="p">)(</span><span class="n">Vec</span><span class="p">)</span>
+<span class="c1"># Vec1 and Vec2 are two different jitclass types</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="usage-from-the-interpreter">
+<h3>8.2.2.2.5. Usage from the Interpreter<a class="headerlink" href="#usage-from-the-interpreter" title="Permalink to this headline">¶</a></h3>
+<p>When constructing a new instance of a jitclass, a &#8220;box&#8221; is created that wraps
+the underlying jitclass instance from numba.  Attributes and methods are
+accessible from the interpreter.  The actual implementation will be in numba
+compiled code.  Any Python object is converted to its native
+representation for consumption in numba.  Similarly, the returned value is
+converted to its Python representation.  As a result, there may be overhead in
+manipulating jitclass instances in the interpreter.  This overhead is minimal
+and should be easily amortized by more efficient computation in the compiled
+methods.</p>
+</div>
+<div class="section" id="support-for-property-staticmethod-and-classmethod">
+<h3>8.2.2.2.6. Support for property, staticmethod and classmethod<a class="headerlink" href="#support-for-property-staticmethod-and-classmethod" title="Permalink to this headline">¶</a></h3>
+<p>The use of <code class="docutils literal"><span class="pre">property</span></code> is accepted for getter and setter only.  Deleter is not
+supported.</p>
+<p>The use of <code class="docutils literal"><span class="pre">staticmethod</span></code> is not supported.</p>
+<p>The use of <code class="docutils literal"><span class="pre">classmethod</span></code> is not supported.</p>
+</div>
+<div class="section" id="inheritance">
+<h3>8.2.2.2.7. Inheritance<a class="headerlink" href="#inheritance" title="Permalink to this headline">¶</a></h3>
+<p>Class inhertance is not considered in this proposal.  The only accepted base
+class for a jitclass is <cite>object</cite>.</p>
+</div>
+<div class="section" id="supported-targets">
+<h3>8.2.2.2.8. Supported targets<a class="headerlink" href="#supported-targets" title="Permalink to this headline">¶</a></h3>
+<p>Only the CPU target (including the parallel target) is supported.
+GPUs (e.g. CUDA and HSA) targets are supported via an immutable version of the
+jitclass instance, which will be described in a separate NBEP.</p>
+</div>
+<div class="section" id="other-properties">
+<h3>8.2.2.2.9. Other properties<a class="headerlink" href="#other-properties" title="Permalink to this headline">¶</a></h3>
+<p>Given:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">spec</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">numba</span><span class="o">.</span><span class="n">int32</span><span class="p">),</span>
+        <span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">numba</span><span class="o">.</span><span class="n">float32</span><span class="p">)]</span>
+
+<span class="nd">@jitclass</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Vec</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="o">...</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">isinstance(Vec(1,</span> <span class="pre">2),</span> <span class="pre">Vec)</span></code> is True.</li>
+<li><code class="docutils literal"><span class="pre">type(Vec(1,</span> <span class="pre">2))</span></code> may not be <code class="docutils literal"><span class="pre">Vec</span></code>.</li>
+</ul>
+</div>
+<div class="section" id="future-enhancements">
+<h3>8.2.2.2.10. Future enhancements<a class="headerlink" href="#future-enhancements" title="Permalink to this headline">¶</a></h3>
+<p>This proposal has only described the basic semantic and functionality of a
+jitclass.  Additional features will be described in future enhancement
+proposals.</p>
+</div>
+</div>
+</div>
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        
+      </div><!-- /row -->
+
+      <!-- row -->
+      <div class="row footer-relbar">
+<div id="navbar-related" class=" related navbar navbar-default" role="navigation" aria-label="related navigation">
+  <div class="navbar-inner">
+    <ul class="nav navbar-nav ">
+        <li><a href="../index.html">Numba 0.32.0-py2.7-macosx-10.6-x86_64.egg documentation</a></li>
+    </ul>
+<ul class="nav navbar-nav pull-right hidden-xs hidden-sm">
+      
+        <li><a href="extension-points.html" title="8.2.1. NBEP 2: Extension points" >previous</a></li>
+        <li><a href="cfunc.html" title="8.2.3. NBEP 4: Defining C callbacks" >next</a></li>
+        <li><a href="../py-modindex.html" title="Python Module Index" >modules</a></li>
+        <li><a href="../genindex.html" title="General Index" >index</a></li>
+        <li><a href="index.html" >8. Numba Enhancement Proposals</a></li>
+        <li><a href="#">top</a></li> 
+      
+    </ul>
+  </div>
+</div>
+      </div><!-- /row -->
+
+      <!-- footer -->
+      <footer role="contentinfo">
+          &copy; Copyright 2012-2015, Continuum Analytics.
+        Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.1.
+      </footer>
+      <!-- /footer -->
+
+    </div>
+    <!-- /container -->
+
+  </body>
+</html>

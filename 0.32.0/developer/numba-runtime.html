@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+
+
+
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+    <title>7.5. Notes on Numba Runtime &mdash; Numba 0.32.0-py2.7-macosx-10.6-x86_64.egg documentation</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    
+
+<link rel="stylesheet" href="../_static/css/basicstrap-base.css" type="text/css" />
+<link rel="stylesheet" id="current-theme" href="../_static/css/bootstrap3/bootstrap.min.css" type="text/css" />
+<link rel="stylesheet" id="current-adjust-theme" type="text/css" />
+
+<link rel="stylesheet" href="../_static/css/font-awesome.min.css">
+
+<style type="text/css">
+  body {
+    padding-top: 60px;
+    padding-bottom: 40px;
+  }
+</style>
+
+<link rel="stylesheet" href="../_static/css/basicstrap.css" type="text/css" />
+<link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+<script type="text/javascript">
+  var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:    '../',
+            VERSION:     '0.32.0-py2.7-macosx-10.6-x86_64.egg',
+            COLLAPSE_INDEX: false,
+            FILE_SUFFIX: '.html',
+            HAS_SOURCE:  true
+  };
+</script>
+    <script type="text/javascript" src="../_static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/bootstrap3.min.js"></script>
+<script type="text/javascript" src="../_static/js/jquery.cookie.min.js"></script>
+<script type="text/javascript" src="../_static/js/basicstrap.js"></script>
+<script type="text/javascript">
+</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="Numba 0.32.0-py2.7-macosx-10.6-x86_64.egg documentation" href="../index.html" />
+    <link rel="up" title="7. Developer Manual" href="index.html" />
+    <link rel="next" title="7.6. Using the Numba Rewrite Pass for Fun and Optimization" href="rewrites.html" />
+    <link rel="prev" title="7.4. Notes on generators" href="generators.html" /> 
+  </head>
+  <body role="document">
+    <div id="navbar-top" class="navbar navbar-fixed-top navbar-default" role="navigation" aria-label="top navigation">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="../index.html">Numba 0.32.0-py2.7-macosx-10.6-x86_64.egg documentation</a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+              <li class="dropdown visible-xs">
+                <a role="button" id="localToc" data-toggle="dropdown" data-target="#" href="#">Table Of Contents <b class="caret"></b></a>
+                <ul class="dropdown-menu localtoc sp-localtoc" role="menu" aria-labelledby="localToc">
+                <ul>
+<li><a class="reference internal" href="#">7.5. Notes on Numba Runtime</a><ul>
+<li><a class="reference internal" href="#memory-management">7.5.1. Memory Management</a><ul>
+<li><a class="reference internal" href="#cooperating-with-cpython">7.5.1.1. Cooperating with CPython</a></li>
+<li><a class="reference internal" href="#compiler-side-cooperation">7.5.1.2. Compiler-side Cooperation</a></li>
+<li><a class="reference internal" href="#optimizations">7.5.1.3. Optimizations</a></li>
+<li><a class="reference internal" href="#quirks">7.5.1.4. Quirks</a></li>
+<li><a class="reference internal" href="#debugging-leaks">7.5.1.5. Debugging Leaks</a></li>
+<li><a class="reference internal" href="#debugging-leaks-in-c">7.5.1.6. Debugging Leaks in C</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#recursion-support">7.5.2. Recursion Support</a></li>
+<li><a class="reference internal" href="#future-plan">7.5.3. Future Plan</a></li>
+</ul>
+</li>
+</ul>
+
+                </ul>
+              </li>
+
+            
+              <li><a href="generators.html" title="7.4. Notes on generators" accesskey="P">previous </a></li>
+              <li><a href="rewrites.html" title="7.6. Using the Numba Rewrite Pass for Fun and Optimization" accesskey="N">next </a></li>
+              <li><a href="../py-modindex.html" title="Python Module Index" >modules </a></li>
+              <li><a href="../genindex.html" title="General Index" accesskey="I">index </a></li>
+              <li><a href="index.html" accesskey="U">7. Developer Manual</a></li>
+            
+            <li class="visible-xs"><a href="../_sources/developer/numba-runtime.rst.txt" rel="nofollow">Show Source</a></li>
+
+            <li class="visible-xs">
+                <form class="search form-search form-inline navbar-form navbar-right sp-searchbox" action="../search.html" method="get">
+                  <div class="input-append input-group">
+                    <input type="text" class="search-query form-control" name="q" placeholder="Search...">
+                    <span class="input-group-btn">
+                    <input type="submit" class="btn" value="Go" />
+                    </span>
+                  </div>
+                  <input type="hidden" name="check_keywords" value="yes" />
+                  <input type="hidden" name="area" value="default" />
+                </form>
+            </li>
+
+            
+
+          </ul>
+
+        </div>
+      </div>
+    </div>
+    
+
+    <!-- container -->
+    <div class="container-fluid">
+
+      <!-- row -->
+      <div class="row">
+         
+<div class="col-md-3 hidden-xs" id="sidebar-wrapper">
+  <div class="sidebar hidden-xs" role="navigation" aria-label="main navigation">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">7.5. Notes on Numba Runtime</a><ul>
+<li><a class="reference internal" href="#memory-management">7.5.1. Memory Management</a><ul>
+<li><a class="reference internal" href="#cooperating-with-cpython">7.5.1.1. Cooperating with CPython</a></li>
+<li><a class="reference internal" href="#compiler-side-cooperation">7.5.1.2. Compiler-side Cooperation</a></li>
+<li><a class="reference internal" href="#optimizations">7.5.1.3. Optimizations</a></li>
+<li><a class="reference internal" href="#quirks">7.5.1.4. Quirks</a></li>
+<li><a class="reference internal" href="#debugging-leaks">7.5.1.5. Debugging Leaks</a></li>
+<li><a class="reference internal" href="#debugging-leaks-in-c">7.5.1.6. Debugging Leaks in C</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#recursion-support">7.5.2. Recursion Support</a></li>
+<li><a class="reference internal" href="#future-plan">7.5.3. Future Plan</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="generators.html"
+                        title="previous chapter">7.4. Notes on generators</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="rewrites.html"
+                        title="next chapter">7.6. Using the Numba Rewrite Pass for Fun and Optimization</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/developer/numba-runtime.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" role="search">
+  <h3>Quick search</h3>
+  <form class="search form-inline" action="../search.html" method="get">
+      <div class="input-append input-group">
+        <input type="text" class="search-query form-control" name="q" placeholder="Search...">
+        <span class="input-group-btn">
+        <input type="submit" class="btn" value="Go" />
+        </span>
+      </div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+  </div>
+</div> 
+        
+
+        <div class="col-md-9" id="content-wrapper">
+          <div class="document" role="main">
+            <div class="documentwrapper">
+              <div class="bodywrapper">
+                <div class="body">
+                  
+  <div class="section" id="notes-on-numba-runtime">
+<span id="arch-numba-runtime"></span><h1>7.5. Notes on Numba Runtime<a class="headerlink" href="#notes-on-numba-runtime" title="Permalink to this headline">¶</a></h1>
+<p>The <em>Numba Runtime (NRT)</em> provides the language runtime to the <em>nopython mode</em>
+Python subset.  NRT is a standalone C library with a Python binding.  This
+allows NPM runtime feature to be used without the GIL.  Currently, the only
+language feature implemented in NRT is memory management.</p>
+<div class="section" id="memory-management">
+<h2>7.5.1. Memory Management<a class="headerlink" href="#memory-management" title="Permalink to this headline">¶</a></h2>
+<p>NRT implements memory management for NPM code.  It uses <em>atomic reference count</em>
+for threadsafe, deterministic memory management.  NRT maintains a separate
+<code class="docutils literal"><span class="pre">MemInfo</span></code> structure for storing information about each allocation.</p>
+<div class="section" id="cooperating-with-cpython">
+<h3>7.5.1.1. Cooperating with CPython<a class="headerlink" href="#cooperating-with-cpython" title="Permalink to this headline">¶</a></h3>
+<p>For NRT to cooperate with CPython, the NRT python binding provides adaptors for
+converting python objects that export a memory region.  When such an
+object is used as an argument to a NPM function, a new <code class="docutils literal"><span class="pre">MemInfo</span></code> is created
+and it acquires a reference to the Python object.  When a NPM value is returned
+to the Python interpreter, the associated <code class="docutils literal"><span class="pre">MemInfo</span></code> (if any) is checked.  If
+the <code class="docutils literal"><span class="pre">MemInfo</span></code> references a Python object, the underlying Python object is
+released and returned instead.  Otherwise, the <code class="docutils literal"><span class="pre">MemInfo</span></code> is wrapped in a
+Python object and returned.  Additional process maybe required depending on
+the type.</p>
+<p>The current implementation supports Numpy array and any buffer-exporting types.</p>
+</div>
+<div class="section" id="compiler-side-cooperation">
+<h3>7.5.1.2. Compiler-side Cooperation<a class="headerlink" href="#compiler-side-cooperation" title="Permalink to this headline">¶</a></h3>
+<p>NRT reference counting requires the compiler to emit incref/decref operations
+according to the usage.  When the reference count drops to zero, the compiler
+must call the destructor routine in NRT.</p>
+</div>
+<div class="section" id="optimizations">
+<span id="nrt-refct-opt-pass"></span><h3>7.5.1.3. Optimizations<a class="headerlink" href="#optimizations" title="Permalink to this headline">¶</a></h3>
+<p>The compiler is allowed to emit incref/decref operations naively.  It relies
+on an optimization pass that to remove the redundant reference count
+operations.</p>
+<p>The optimization pass runs on block level to avoid control flow analysis.
+It depends on LLVM function optimization pass to simplify the control flow,
+stack-to-register, and simplify instructions.  It works by matching and
+removing incref and decref pairs within each block.</p>
+</div>
+<div class="section" id="quirks">
+<h3>7.5.1.4. Quirks<a class="headerlink" href="#quirks" title="Permalink to this headline">¶</a></h3>
+<p>Since the <a class="reference internal" href="#nrt-refct-opt-pass">refcount optimization pass</a> requires LLVM
+function optimization pass, the pass works on the LLVM IR as text.  The
+optimized IR is then materialized again as a new LLVM in-memory bitcode object.</p>
+</div>
+<div class="section" id="debugging-leaks">
+<h3>7.5.1.5. Debugging Leaks<a class="headerlink" href="#debugging-leaks" title="Permalink to this headline">¶</a></h3>
+<p>To debug reference leaks in NRT MemInfo, each MemInfo python object has a
+<code class="docutils literal"><span class="pre">.refcount</span></code> attribute for inspection.  To get the MemInfo from a ndarray
+allocated by NRT, use the <code class="docutils literal"><span class="pre">.base</span></code> attribute.</p>
+<p>To debug memory leaks in NRT, the <code class="docutils literal"><span class="pre">numba.runtime.rtsys</span></code> defines
+<code class="docutils literal"><span class="pre">.get_allocation_stats()</span></code>.  It returns a namedtuple containing the
+number of allocation and deallocation since the start of the program.
+Checking that the allocation and deallocation counters are matching is the
+simplest way to know if the NRT is leaking.</p>
+</div>
+<div class="section" id="debugging-leaks-in-c">
+<h3>7.5.1.6. Debugging Leaks in C<a class="headerlink" href="#debugging-leaks-in-c" title="Permalink to this headline">¶</a></h3>
+<p>The start of <a class="reference external" href="https://github.com/numba/numba/blob/master/numba/runtime/nrt.h">numba/runtime/nrt.h</a>
+has these lines:</p>
+<div class="highlight-C"><div class="highlight"><pre><span></span><span class="cm">/* Debugging facilities - enabled at compile-time */</span>
+<span class="cm">/* #undef NDEBUG */</span>
+<span class="cp">#if 0</span><span class="c"></span>
+<span class="c">#   define NRT_Debug(X) X</span>
+<span class="cp">#else</span>
+<span class="cp">#   define NRT_Debug(X) if (0) { X; }</span>
+<span class="cp">#endif</span>
+</pre></div>
+</div>
+<p>Undefining NDEBUG (uncomment the <code class="docutils literal"><span class="pre">#undef</span> <span class="pre">NDEBUG</span></code> line) enables the assertion
+check in NRT.</p>
+<p>Enabling the NRT_Debug (replace <code class="docutils literal"><span class="pre">#if</span> <span class="pre">0</span></code> with <code class="docutils literal"><span class="pre">#if</span> <span class="pre">1</span></code>) turns on
+debug print inside NRT.</p>
+</div>
+</div>
+<div class="section" id="recursion-support">
+<h2>7.5.2. Recursion Support<a class="headerlink" href="#recursion-support" title="Permalink to this headline">¶</a></h2>
+<p>During the compilation of a pair of mutually recursive functions, one of the
+functions will contain unresolved symbol references since the compiler handles
+one function at a time.  The memory for the unresolved symbols is allocated and
+initialized to the address of the <em>unresolved symbol abort</em> function
+(<code class="docutils literal"><span class="pre">nrt_unresolved_abort</span></code>) just before the machine code is
+generated by LLVM.  These symbols are tracked and resolved as new functions are
+compiled.  If a bug prevents the resolution of these symbols,
+the abort function will be called, raising a <code class="docutils literal"><span class="pre">RuntimeError</span></code> exception.</p>
+<p>The <em>unresolved symbol abort</em> function is defined in the NRT with a zero-argument
+signature. The caller is safe to call it with arbitrary number of
+arguments.  Therefore, it is safe to be used inplace of the intended callee.</p>
+</div>
+<div class="section" id="future-plan">
+<h2>7.5.3. Future Plan<a class="headerlink" href="#future-plan" title="Permalink to this headline">¶</a></h2>
+<p>The plan for NRT is to make a standalone shared library that can be linked to
+Numba compiled code, including use within the Python interpreter and without
+the Python interpreter.  To make that work, we will be doing some refactoring:</p>
+<ul class="simple">
+<li>numba NPM code references statically compiled code in &#8220;helperlib.c&#8221;.  Those
+functions should be moved to NRT.</li>
+</ul>
+</div>
+</div>
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        
+      </div><!-- /row -->
+
+      <!-- row -->
+      <div class="row footer-relbar">
+<div id="navbar-related" class=" related navbar navbar-default" role="navigation" aria-label="related navigation">
+  <div class="navbar-inner">
+    <ul class="nav navbar-nav ">
+        <li><a href="../index.html">Numba 0.32.0-py2.7-macosx-10.6-x86_64.egg documentation</a></li>
+    </ul>
+<ul class="nav navbar-nav pull-right hidden-xs hidden-sm">
+      
+        <li><a href="generators.html" title="7.4. Notes on generators" >previous</a></li>
+        <li><a href="rewrites.html" title="7.6. Using the Numba Rewrite Pass for Fun and Optimization" >next</a></li>
+        <li><a href="../py-modindex.html" title="Python Module Index" >modules</a></li>
+        <li><a href="../genindex.html" title="General Index" >index</a></li>
+        <li><a href="index.html" >7. Developer Manual</a></li>
+        <li><a href="#">top</a></li> 
+      
+    </ul>
+  </div>
+</div>
+      </div><!-- /row -->
+
+      <!-- footer -->
+      <footer role="contentinfo">
+          &copy; Copyright 2012-2015, Continuum Analytics.
+        Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.1.
+      </footer>
+      <!-- /footer -->
+
+    </div>
+    <!-- /container -->
+
+  </body>
+</html>
