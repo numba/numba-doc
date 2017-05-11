@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+
+
+
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+    <title>7.2. Numba architecture &mdash; Numba 0.33.0-py2.7-macosx-10.6-x86_64.egg documentation</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    
+
+<link rel="stylesheet" href="../_static/css/basicstrap-base.css" type="text/css" />
+<link rel="stylesheet" id="current-theme" href="../_static/css/bootstrap3/bootstrap.min.css" type="text/css" />
+<link rel="stylesheet" id="current-adjust-theme" type="text/css" />
+
+<link rel="stylesheet" href="../_static/css/font-awesome.min.css">
+
+<style type="text/css">
+  body {
+    padding-top: 60px;
+    padding-bottom: 40px;
+  }
+</style>
+
+<link rel="stylesheet" href="../_static/css/basicstrap.css" type="text/css" />
+<link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+<script type="text/javascript">
+  var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:    '../',
+            VERSION:     '0.33.0-py2.7-macosx-10.6-x86_64.egg',
+            COLLAPSE_INDEX: false,
+            FILE_SUFFIX: '.html',
+            HAS_SOURCE:  true
+  };
+</script>
+    <script type="text/javascript" src="../_static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/bootstrap3.min.js"></script>
+<script type="text/javascript" src="../_static/js/jquery.cookie.min.js"></script>
+<script type="text/javascript" src="../_static/js/basicstrap.js"></script>
+<script type="text/javascript">
+</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="Numba 0.33.0-py2.7-macosx-10.6-x86_64.egg documentation" href="../index.html" />
+    <link rel="up" title="7. Developer Manual" href="index.html" />
+    <link rel="next" title="7.3. Polymorphic dispatching" href="dispatching.html" />
+    <link rel="prev" title="7.1. Contributing to Numba" href="contributing.html" /> 
+  </head>
+  <body role="document">
+    <div id="navbar-top" class="navbar navbar-fixed-top navbar-default" role="navigation" aria-label="top navigation">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="../index.html">Numba 0.33.0-py2.7-macosx-10.6-x86_64.egg documentation</a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+              <li class="dropdown visible-xs">
+                <a role="button" id="localToc" data-toggle="dropdown" data-target="#" href="#">Table Of Contents <b class="caret"></b></a>
+                <ul class="dropdown-menu localtoc sp-localtoc" role="menu" aria-labelledby="localToc">
+                <ul>
+<li><a class="reference internal" href="#">7.2. Numba architecture</a><ul>
+<li><a class="reference internal" href="#introduction">7.2.1. Introduction</a></li>
+<li><a class="reference internal" href="#compiler-architecture">7.2.2. Compiler architecture</a></li>
+<li><a class="reference internal" href="#contexts">7.2.3. Contexts</a></li>
+<li><a class="reference internal" href="#compiler-stages">7.2.4. Compiler stages</a><ul>
+<li><a class="reference internal" href="#stage-1-analyze-bytecode">7.2.4.1. Stage 1: Analyze bytecode</a></li>
+<li><a class="reference internal" href="#stage-2-generate-the-numba-ir">7.2.4.2. Stage 2: Generate the Numba IR</a></li>
+<li><a class="reference internal" href="#stage-3-macro-expansion">7.2.4.3. Stage 3: Macro expansion</a></li>
+<li><a class="reference internal" href="#stage-4-rewrite-untyped-ir">7.2.4.4. Stage 4: Rewrite untyped IR</a></li>
+<li><a class="reference internal" href="#stage-5-infer-types">7.2.4.5. Stage 5: Infer types</a></li>
+<li><a class="reference internal" href="#stage-6-rewrite-typed-ir">7.2.4.6. Stage 6: Rewrite typed IR</a></li>
+<li><a class="reference internal" href="#stage-7a-generate-nopython-llvm-ir">7.2.4.7. Stage 7a: Generate nopython LLVM IR</a></li>
+<li><a class="reference internal" href="#stage-7b-generate-object-mode-llvm-ir">7.2.4.8. Stage 7b: Generate object mode LLVM IR</a></li>
+<li><a class="reference internal" href="#stage-8-compile-llvm-ir-to-machine-code">7.2.4.9. Stage 8: Compile LLVM IR to machine code</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+                </ul>
+              </li>
+
+            
+              <li><a href="contributing.html" title="7.1. Contributing to Numba" accesskey="P">previous </a></li>
+              <li><a href="dispatching.html" title="7.3. Polymorphic dispatching" accesskey="N">next </a></li>
+              <li><a href="../py-modindex.html" title="Python Module Index" >modules </a></li>
+              <li><a href="../genindex.html" title="General Index" accesskey="I">index </a></li>
+              <li><a href="index.html" accesskey="U">7. Developer Manual</a></li>
+            
+            <li class="visible-xs"><a href="../_sources/developer/architecture.rst.txt" rel="nofollow">Show Source</a></li>
+
+            <li class="visible-xs">
+                <form class="search form-search form-inline navbar-form navbar-right sp-searchbox" action="../search.html" method="get">
+                  <div class="input-append input-group">
+                    <input type="text" class="search-query form-control" name="q" placeholder="Search...">
+                    <span class="input-group-btn">
+                    <input type="submit" class="btn" value="Go" />
+                    </span>
+                  </div>
+                  <input type="hidden" name="check_keywords" value="yes" />
+                  <input type="hidden" name="area" value="default" />
+                </form>
+            </li>
+
+            
+
+          </ul>
+
+        </div>
+      </div>
+    </div>
+    
+
+    <!-- container -->
+    <div class="container-fluid">
+
+      <!-- row -->
+      <div class="row">
+         
+<div class="col-md-3 hidden-xs" id="sidebar-wrapper">
+  <div class="sidebar hidden-xs" role="navigation" aria-label="main navigation">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">7.2. Numba architecture</a><ul>
+<li><a class="reference internal" href="#introduction">7.2.1. Introduction</a></li>
+<li><a class="reference internal" href="#compiler-architecture">7.2.2. Compiler architecture</a></li>
+<li><a class="reference internal" href="#contexts">7.2.3. Contexts</a></li>
+<li><a class="reference internal" href="#compiler-stages">7.2.4. Compiler stages</a><ul>
+<li><a class="reference internal" href="#stage-1-analyze-bytecode">7.2.4.1. Stage 1: Analyze bytecode</a></li>
+<li><a class="reference internal" href="#stage-2-generate-the-numba-ir">7.2.4.2. Stage 2: Generate the Numba IR</a></li>
+<li><a class="reference internal" href="#stage-3-macro-expansion">7.2.4.3. Stage 3: Macro expansion</a></li>
+<li><a class="reference internal" href="#stage-4-rewrite-untyped-ir">7.2.4.4. Stage 4: Rewrite untyped IR</a></li>
+<li><a class="reference internal" href="#stage-5-infer-types">7.2.4.5. Stage 5: Infer types</a></li>
+<li><a class="reference internal" href="#stage-6-rewrite-typed-ir">7.2.4.6. Stage 6: Rewrite typed IR</a></li>
+<li><a class="reference internal" href="#stage-7a-generate-nopython-llvm-ir">7.2.4.7. Stage 7a: Generate nopython LLVM IR</a></li>
+<li><a class="reference internal" href="#stage-7b-generate-object-mode-llvm-ir">7.2.4.8. Stage 7b: Generate object mode LLVM IR</a></li>
+<li><a class="reference internal" href="#stage-8-compile-llvm-ir-to-machine-code">7.2.4.9. Stage 8: Compile LLVM IR to machine code</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="contributing.html"
+                        title="previous chapter">7.1. Contributing to Numba</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="dispatching.html"
+                        title="next chapter">7.3. Polymorphic dispatching</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/developer/architecture.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" role="search">
+  <h3>Quick search</h3>
+  <form class="search form-inline" action="../search.html" method="get">
+      <div class="input-append input-group">
+        <input type="text" class="search-query form-control" name="q" placeholder="Search...">
+        <span class="input-group-btn">
+        <input type="submit" class="btn" value="Go" />
+        </span>
+      </div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+  </div>
+</div> 
+        
+
+        <div class="col-md-9" id="content-wrapper">
+          <div class="document" role="main">
+            <div class="documentwrapper">
+              <div class="bodywrapper">
+                <div class="body">
+                  
+  <div class="section" id="numba-architecture">
+<span id="architecture"></span><h1>7.2. Numba architecture<a class="headerlink" href="#numba-architecture" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="introduction">
+<h2>7.2.1. Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<p>Numba is a compiler for Python bytecode with optional type-specialization.</p>
+<p>Suppose you enter a function like this into the standard Python interpreter
+(henceforward referred to as &#8220;CPython&#8221;):</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
+</pre></div>
+</div>
+<p>The interpreter will immediately parse the function and convert it into a
+bytecode representation that describes how the CPython interpreter should
+execute the function at a low level.  For the example above, it looks
+something like this:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">dis</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dis</span><span class="o">.</span><span class="n">dis</span><span class="p">(</span><span class="n">add</span><span class="p">)</span>
+<span class="go">2           0 LOAD_FAST                0 (a)</span>
+<span class="go">            3 LOAD_FAST                1 (b)</span>
+<span class="go">            6 BINARY_ADD</span>
+<span class="go">            7 RETURN_VALUE</span>
+</pre></div>
+</div>
+<p>CPython uses a stack-based interpreter (much like an HP calculator), so the
+code first pushes two local variables onto the stack.  The <code class="docutils literal"><span class="pre">BINARY_ADD</span></code>
+opcode pops the top two arguments off the stack and makes a Python C API
+function call that is equivalent to calling <code class="docutils literal"><span class="pre">a.__add__(b)</span></code>.  The result is
+then pushed onto the top of the interpreter stack.  Finally, the
+<code class="docutils literal"><span class="pre">RETURN_VALUE</span></code> opcode returns value on the top of the stack as the result of
+the function call.</p>
+<p>Numba can take this bytecode and compile it to machine code that performs the
+same operations as the CPython interpreter, treating <code class="docutils literal"><span class="pre">a</span></code> and <code class="docutils literal"><span class="pre">b</span></code> as
+generic Python objects.  The full semantics of Python are preserved, and the
+compiled function can be used with any kind of objects that have the add
+operator defined.  When a Numba function is compiled this way, we say that it
+has been compiled in <a class="reference internal" href="../glossary.html#term-object-mode"><span class="xref std std-term">object mode</span></a>, because the code still manipulates
+Python objects.</p>
+<p>Numba code compiled in object mode is not much faster than executing the
+original Python function in the CPython interpreter.  However, if we
+specialize the function to only run with certain data types, Numba can
+generate much shorter and more efficient code that manipulates the data
+natively without any calls into the Python C API.  When code has been compiled
+for specific data types so that the function body no longer relies on the
+Python runtime, we say the function has been compiled in <a class="reference internal" href="../glossary.html#term-nopython-mode"><span class="xref std std-term">nopython mode</span></a>.
+Numeric code compiled in nopython mode can be hundreds of times faster
+than the original Python.</p>
+</div>
+<div class="section" id="compiler-architecture">
+<h2>7.2.2. Compiler architecture<a class="headerlink" href="#compiler-architecture" title="Permalink to this headline">¶</a></h2>
+<p>Like many compilers, Numba can be conceptually divided into a
+<em>frontend</em> and a <em>backend</em>.</p>
+<p>The Numba <em>frontend</em> comprises the stages which analyze the Python bytecode,
+translate it to <a class="reference internal" href="../glossary.html#term-numba-ir"><span class="xref std std-term">Numba IR</span></a> and perform various transformations and
+analysis steps on the IR.  One of the key steps is <a class="reference internal" href="../glossary.html#term-type-inference"><span class="xref std std-term">type inference</span></a>.
+The frontend must succeed in typing all variables unambiguously in order
+for the backend to generate code in <a class="reference internal" href="../glossary.html#term-nopython-mode"><span class="xref std std-term">nopython mode</span></a>, because the
+backend uses type information to match appropriate code generators with
+the values they operate on.</p>
+<p>The Numba <em>backend</em> walks the Numba IR resulting from the frontend analyses
+and exploits the type information deduced by the type inference phase to
+produce the right LLVM code for each encountered operation.  After LLVM
+code is produced, the LLVM library is asked to optimize it and generate
+native processor code for the final, native function.</p>
+<p>There are other pieces besides the compiler frontend and backend, such
+as the caching machinery for JIT functions.  Those pieces are not considered
+in this document.</p>
+</div>
+<div class="section" id="contexts">
+<h2>7.2.3. Contexts<a class="headerlink" href="#contexts" title="Permalink to this headline">¶</a></h2>
+<p>Numba is quite flexible, allowing it to generate code for different hardware
+architectures like CPUs and GPUs.  In order to support these different
+applications, Numba uses a <em>typing context</em> and a <em>target context</em>.</p>
+<p>A <em>typing context</em> is used in the compiler frontend to perform type inference
+on operations and values in the function.  Similar typing contexts could be
+used for many architectures because for nearly all cases, typing inference
+is hardware-independent.  However, Numba currently has a different typing
+context for each target.</p>
+<p>A <em>target context</em> is used to generate the specific instruction sequence
+required to operate on the Numba types identified during type inference.
+Target contexts are architecture-specific and are flexible in defining
+the execution model and available Python APIs.  For example, Numba has a &#8220;cpu&#8221;
+and a &#8220;cuda&#8221; context for those two kinds of architecture, and a &#8220;parallel&#8221;
+context which produces multithreaded CPU code.</p>
+</div>
+<div class="section" id="compiler-stages">
+<h2>7.2.4. Compiler stages<a class="headerlink" href="#compiler-stages" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference internal" href="../reference/jit-compilation.html#numba.jit" title="numba.jit"><code class="xref py py-func docutils literal"><span class="pre">jit()</span></code></a> decorator in Numba ultimately calls
+<code class="docutils literal"><span class="pre">numba.compiler.compile_extra()</span></code> which compiles the Python function in a
+multi-stage process, described below.</p>
+<div class="section" id="stage-1-analyze-bytecode">
+<h3>7.2.4.1. Stage 1: Analyze bytecode<a class="headerlink" href="#stage-1-analyze-bytecode" title="Permalink to this headline">¶</a></h3>
+<p>At the start of compilation, the function bytecode is passed to an instance of
+the Numba interpreter (<code class="docutils literal"><span class="pre">numba.interpreter</span></code>).  The interpreter object
+analyzes the bytecode to find the control flow graph (<code class="docutils literal"><span class="pre">numba.controlflow</span></code>).
+The control flow graph describes the ways that execution can move from one
+block to the next inside the function as a result of loops and branches.</p>
+<p>The data flow analysis (<code class="docutils literal"><span class="pre">numba.dataflow</span></code>) takes the control flow graph and
+traces how values get pushed and popped off the Python interpreter stack for
+different code paths.  This is important to understand the lifetimes of
+variables on the stack, which are needed in Stage 2.</p>
+<p>If you set the environment variable <code class="docutils literal"><span class="pre">NUMBA_DUMP_CFG</span></code> to 1, Numba will dump
+the results of the control flow graph analysis to the screen.  Our <code class="docutils literal"><span class="pre">add()</span></code>
+example is pretty boring, since there is only one statement block:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">CFG</span> <span class="n">adjacency</span> <span class="n">lists</span><span class="p">:</span>
+<span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="p">[]}</span>
+<span class="n">CFG</span> <span class="n">dominators</span><span class="p">:</span>
+<span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="nb">set</span><span class="p">([</span><span class="mi">0</span><span class="p">])}</span>
+<span class="n">CFG</span> <span class="n">post</span><span class="o">-</span><span class="n">dominators</span><span class="p">:</span>
+<span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="nb">set</span><span class="p">([</span><span class="mi">0</span><span class="p">])}</span>
+<span class="n">CFG</span> <span class="n">back</span> <span class="n">edges</span><span class="p">:</span> <span class="p">[]</span>
+<span class="n">CFG</span> <span class="n">loops</span><span class="p">:</span>
+<span class="p">{}</span>
+<span class="n">CFG</span> <span class="n">node</span><span class="o">-</span><span class="n">to</span><span class="o">-</span><span class="n">loops</span><span class="p">:</span>
+<span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="p">[]}</span>
+</pre></div>
+</div>
+<p>A function with more complex flow control will have a more interesting
+control flow graph.  This function:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">doloops</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="n">acc</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        <span class="n">acc</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">10</span><span class="p">:</span>
+            <span class="k">break</span>
+    <span class="k">return</span> <span class="n">acc</span>
+</pre></div>
+</div>
+<p>compiles to this bytecode:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span> <span class="mi">9</span>           <span class="mi">0</span> <span class="n">LOAD_CONST</span>               <span class="mi">1</span> <span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+             <span class="mi">3</span> <span class="n">STORE_FAST</span>               <span class="mi">1</span> <span class="p">(</span><span class="n">acc</span><span class="p">)</span>
+
+<span class="mi">10</span>           <span class="mi">6</span> <span class="n">SETUP_LOOP</span>              <span class="mi">46</span> <span class="p">(</span><span class="n">to</span> <span class="mi">55</span><span class="p">)</span>
+             <span class="mi">9</span> <span class="n">LOAD_GLOBAL</span>              <span class="mi">0</span> <span class="p">(</span><span class="nb">range</span><span class="p">)</span>
+            <span class="mi">12</span> <span class="n">LOAD_FAST</span>                <span class="mi">0</span> <span class="p">(</span><span class="n">n</span><span class="p">)</span>
+            <span class="mi">15</span> <span class="n">CALL_FUNCTION</span>            <span class="mi">1</span>
+            <span class="mi">18</span> <span class="n">GET_ITER</span>
+       <span class="o">&gt;&gt;</span>   <span class="mi">19</span> <span class="n">FOR_ITER</span>                <span class="mi">32</span> <span class="p">(</span><span class="n">to</span> <span class="mi">54</span><span class="p">)</span>
+            <span class="mi">22</span> <span class="n">STORE_FAST</span>               <span class="mi">2</span> <span class="p">(</span><span class="n">i</span><span class="p">)</span>
+
+<span class="mi">11</span>          <span class="mi">25</span> <span class="n">LOAD_FAST</span>                <span class="mi">1</span> <span class="p">(</span><span class="n">acc</span><span class="p">)</span>
+            <span class="mi">28</span> <span class="n">LOAD_CONST</span>               <span class="mi">2</span> <span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            <span class="mi">31</span> <span class="n">INPLACE_ADD</span>
+            <span class="mi">32</span> <span class="n">STORE_FAST</span>               <span class="mi">1</span> <span class="p">(</span><span class="n">acc</span><span class="p">)</span>
+
+<span class="mi">12</span>          <span class="mi">35</span> <span class="n">LOAD_FAST</span>                <span class="mi">0</span> <span class="p">(</span><span class="n">n</span><span class="p">)</span>
+            <span class="mi">38</span> <span class="n">LOAD_CONST</span>               <span class="mi">3</span> <span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+            <span class="mi">41</span> <span class="n">COMPARE_OP</span>               <span class="mi">2</span> <span class="p">(</span><span class="o">==</span><span class="p">)</span>
+            <span class="mi">44</span> <span class="n">POP_JUMP_IF_FALSE</span>       <span class="mi">19</span>
+
+<span class="mi">13</span>          <span class="mi">47</span> <span class="n">BREAK_LOOP</span>
+            <span class="mi">48</span> <span class="n">JUMP_ABSOLUTE</span>           <span class="mi">19</span>
+            <span class="mi">51</span> <span class="n">JUMP_ABSOLUTE</span>           <span class="mi">19</span>
+       <span class="o">&gt;&gt;</span>   <span class="mi">54</span> <span class="n">POP_BLOCK</span>
+
+<span class="mi">14</span>     <span class="o">&gt;&gt;</span>   <span class="mi">55</span> <span class="n">LOAD_FAST</span>                <span class="mi">1</span> <span class="p">(</span><span class="n">acc</span><span class="p">)</span>
+            <span class="mi">58</span> <span class="n">RETURN_VALUE</span>
+</pre></div>
+</div>
+<p>The corresponding CFG for this bytecode is:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">CFG</span> <span class="n">adjacency</span> <span class="n">lists</span><span class="p">:</span>
+<span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="p">[</span><span class="mi">6</span><span class="p">],</span> <span class="mi">6</span><span class="p">:</span> <span class="p">[</span><span class="mi">19</span><span class="p">],</span> <span class="mi">19</span><span class="p">:</span> <span class="p">[</span><span class="mi">54</span><span class="p">,</span> <span class="mi">22</span><span class="p">],</span> <span class="mi">22</span><span class="p">:</span> <span class="p">[</span><span class="mi">19</span><span class="p">,</span> <span class="mi">47</span><span class="p">],</span> <span class="mi">47</span><span class="p">:</span> <span class="p">[</span><span class="mi">55</span><span class="p">],</span> <span class="mi">54</span><span class="p">:</span> <span class="p">[</span><span class="mi">55</span><span class="p">],</span> <span class="mi">55</span><span class="p">:</span> <span class="p">[]}</span>
+<span class="n">CFG</span> <span class="n">dominators</span><span class="p">:</span>
+<span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="nb">set</span><span class="p">([</span><span class="mi">0</span><span class="p">]),</span>
+ <span class="mi">6</span><span class="p">:</span> <span class="nb">set</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">6</span><span class="p">]),</span>
+ <span class="mi">19</span><span class="p">:</span> <span class="nb">set</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">19</span><span class="p">]),</span>
+ <span class="mi">22</span><span class="p">:</span> <span class="nb">set</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">19</span><span class="p">,</span> <span class="mi">22</span><span class="p">]),</span>
+ <span class="mi">47</span><span class="p">:</span> <span class="nb">set</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">19</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="mi">47</span><span class="p">]),</span>
+ <span class="mi">54</span><span class="p">:</span> <span class="nb">set</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">19</span><span class="p">,</span> <span class="mi">54</span><span class="p">]),</span>
+ <span class="mi">55</span><span class="p">:</span> <span class="nb">set</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">19</span><span class="p">,</span> <span class="mi">55</span><span class="p">])}</span>
+<span class="n">CFG</span> <span class="n">post</span><span class="o">-</span><span class="n">dominators</span><span class="p">:</span>
+<span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="nb">set</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">19</span><span class="p">,</span> <span class="mi">55</span><span class="p">]),</span>
+ <span class="mi">6</span><span class="p">:</span> <span class="nb">set</span><span class="p">([</span><span class="mi">6</span><span class="p">,</span> <span class="mi">19</span><span class="p">,</span> <span class="mi">55</span><span class="p">]),</span>
+ <span class="mi">19</span><span class="p">:</span> <span class="nb">set</span><span class="p">([</span><span class="mi">19</span><span class="p">,</span> <span class="mi">55</span><span class="p">]),</span>
+ <span class="mi">22</span><span class="p">:</span> <span class="nb">set</span><span class="p">([</span><span class="mi">22</span><span class="p">,</span> <span class="mi">55</span><span class="p">]),</span>
+ <span class="mi">47</span><span class="p">:</span> <span class="nb">set</span><span class="p">([</span><span class="mi">47</span><span class="p">,</span> <span class="mi">55</span><span class="p">]),</span>
+ <span class="mi">54</span><span class="p">:</span> <span class="nb">set</span><span class="p">([</span><span class="mi">54</span><span class="p">,</span> <span class="mi">55</span><span class="p">]),</span>
+ <span class="mi">55</span><span class="p">:</span> <span class="nb">set</span><span class="p">([</span><span class="mi">55</span><span class="p">])}</span>
+<span class="n">CFG</span> <span class="n">back</span> <span class="n">edges</span><span class="p">:</span> <span class="p">[(</span><span class="mi">22</span><span class="p">,</span> <span class="mi">19</span><span class="p">)]</span>
+<span class="n">CFG</span> <span class="n">loops</span><span class="p">:</span>
+<span class="p">{</span><span class="mi">19</span><span class="p">:</span> <span class="n">Loop</span><span class="p">(</span><span class="n">entries</span><span class="o">=</span><span class="nb">set</span><span class="p">([</span><span class="mi">6</span><span class="p">]),</span> <span class="n">exits</span><span class="o">=</span><span class="nb">set</span><span class="p">([</span><span class="mi">54</span><span class="p">,</span> <span class="mi">47</span><span class="p">]),</span> <span class="n">header</span><span class="o">=</span><span class="mi">19</span><span class="p">,</span> <span class="n">body</span><span class="o">=</span><span class="nb">set</span><span class="p">([</span><span class="mi">19</span><span class="p">,</span> <span class="mi">22</span><span class="p">]))}</span>
+<span class="n">CFG</span> <span class="n">node</span><span class="o">-</span><span class="n">to</span><span class="o">-</span><span class="n">loops</span><span class="p">:</span>
+<span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="p">[],</span> <span class="mi">6</span><span class="p">:</span> <span class="p">[],</span> <span class="mi">19</span><span class="p">:</span> <span class="p">[</span><span class="mi">19</span><span class="p">],</span> <span class="mi">22</span><span class="p">:</span> <span class="p">[</span><span class="mi">19</span><span class="p">],</span> <span class="mi">47</span><span class="p">:</span> <span class="p">[],</span> <span class="mi">54</span><span class="p">:</span> <span class="p">[],</span> <span class="mi">55</span><span class="p">:</span> <span class="p">[]}</span>
+</pre></div>
+</div>
+<p>The numbers in the CFG refer to the bytecode offsets shown just to the left
+of the opcode names above.</p>
+</div>
+<div class="section" id="stage-2-generate-the-numba-ir">
+<span id="arch-generate-numba-ir"></span><h3>7.2.4.2. Stage 2: Generate the Numba IR<a class="headerlink" href="#stage-2-generate-the-numba-ir" title="Permalink to this headline">¶</a></h3>
+<p>Once the control flow and data analyses are complete, the Numba interpreter
+can step through the bytecode and translate it into an Numba-internal
+intermediate representation.  This translation process changes the function
+from a stack machine representation (used by the Python interpreter) to a
+register machine representation (used by LLVM).</p>
+<p>Although the IR is stored in memory as a tree of objects, it can be serialized
+to a string for debugging.  If you set the environment variable
+<code class="docutils literal"><span class="pre">NUMBA_DUMP_IR</span></code> equal to 1, the Numba IR will be dumped to the screen.  For
+the <code class="docutils literal"><span class="pre">add()</span></code> function described above, the Numba IR looks like:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>label 0:
+    a = arg(0, name=a)                       [&#39;a&#39;]
+    b = arg(1, name=b)                       [&#39;b&#39;]
+    $0.3 = a + b                             [&#39;$0.3&#39;, &#39;a&#39;, &#39;b&#39;]
+    del b                                    []
+    del a                                    []
+    $0.4 = cast(value=$0.3)                  [&#39;$0.3&#39;, &#39;$0.4&#39;]
+    del $0.3                                 []
+    return $0.4                              [&#39;$0.4&#39;]
+</pre></div>
+</div>
+<p>The <code class="docutils literal"><span class="pre">del</span></code> instructions are produced by <a class="reference internal" href="live_variable_analysis.html#live-variable-analysis"><span class="std std-ref">Live Variable Analysis</span></a>.
+Those instructions ensure references are not leaked.
+In <a class="reference internal" href="../glossary.html#term-nopython-mode"><span class="xref std std-term">nopython mode</span></a>, some objects are tracked by the numba runtime and
+some are not.  For tracked objects, a dereference operation is emitted;
+otherwise, the instruction is an no-op.
+In <a class="reference internal" href="../glossary.html#term-object-mode"><span class="xref std std-term">object mode</span></a> each variable contains an owned reference to a PyObject.</p>
+</div>
+<div class="section" id="stage-3-macro-expansion">
+<h3>7.2.4.3. Stage 3: Macro expansion<a class="headerlink" href="#stage-3-macro-expansion" title="Permalink to this headline">¶</a></h3>
+<p>Now that the function has been translated into the Numba IR, macro expansion can
+be performed. Macro expansion converts specific attributes that are known to
+Numba into IR nodes representing function calls. This is initiated in the
+<code class="docutils literal"><span class="pre">numba.compiler.translate_stage</span></code> function, and is implemented in
+<code class="docutils literal"><span class="pre">numba.macro</span></code>.</p>
+<p>Examples of attributes that are macro-expanded include the CUDA instrinsics for
+grid, block and thread dimensions and indices. For example, the assignment to
+<code class="docutils literal"><span class="pre">tx</span></code> in the following function:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="nd">@cuda</span><span class="o">.</span><span class="n">jit</span><span class="p">(</span><span class="n">argtypes</span><span class="o">=</span><span class="p">[</span><span class="n">f4</span><span class="p">[:]])</span>
+<span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
+    <span class="n">tx</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">threadIdx</span><span class="o">.</span><span class="n">x</span>
+</pre></div>
+</div>
+<p>has the following representation after translation to Numba IR:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>$0.1 = global(cuda: &lt;module &#39;numba.cuda&#39; from &#39;...&#39;&gt;) [&#39;$0.1&#39;]
+$0.2 = getattr(value=$0.1, attr=threadIdx) [&#39;$0.1&#39;, &#39;$0.2&#39;]
+del $0.1                                 []
+$0.3 = getattr(value=$0.2, attr=x)       [&#39;$0.2&#39;, &#39;$0.3&#39;]
+del $0.2                                 []
+tx = $0.3                                [&#39;$0.3&#39;, &#39;tx&#39;]
+</pre></div>
+</div>
+<p>After macro expansion, the <code class="docutils literal"><span class="pre">$0.3</span> <span class="pre">=</span> <span class="pre">getattr(value=$0.2,</span> <span class="pre">attr=x)</span></code> IR node is
+translated into:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>$0.3 = call tid.x(, )                    [&#39;$0.3&#39;]
+</pre></div>
+</div>
+<p>which represents an instance of the <code class="docutils literal"><span class="pre">Intrinsic</span></code> IR node for calling the
+<code class="docutils literal"><span class="pre">tid.x</span></code> intrinsic function.</p>
+</div>
+<div class="section" id="stage-4-rewrite-untyped-ir">
+<span id="rewrite-untyped-ir"></span><h3>7.2.4.4. Stage 4: Rewrite untyped IR<a class="headerlink" href="#stage-4-rewrite-untyped-ir" title="Permalink to this headline">¶</a></h3>
+<p>Before running type inference, it may be desired to run certain
+transformations on the Numba IR.  One such example is to detect <code class="docutils literal"><span class="pre">raise</span></code>
+statements which have an implicitly constant argument, so as to
+support them in <a class="reference internal" href="../glossary.html#term-nopython-mode"><span class="xref std std-term">nopython mode</span></a>.  Let&#8217;s say you compile the
+following function with Numba:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+   <span class="k">if</span> <span class="n">x</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+      <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;x cannot be zero&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If you set the <span class="target" id="index-0"></span><a class="reference internal" href="../reference/envvars.html#envvar-NUMBA_DUMP_IR"><code class="xref std std-envvar docutils literal"><span class="pre">NUMBA_DUMP_IR</span></code></a> environment variable to <code class="docutils literal"><span class="pre">1</span></code>,
+you&#8217;ll see the IR being rewritten before the type inference phase:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>REWRITING:
+    del $0.3                                 []
+    $12.1 = global(ValueError: &lt;class &#39;ValueError&#39;&gt;) [&#39;$12.1&#39;]
+    $const12.2 = const(str, x cannot be zero) [&#39;$const12.2&#39;]
+    $12.3 = call $12.1($const12.2)           [&#39;$12.1&#39;, &#39;$12.3&#39;, &#39;$const12.2&#39;]
+    del $const12.2                           []
+    del $12.1                                []
+    raise $12.3                              [&#39;$12.3&#39;]
+____________________________________________________________
+    del $0.3                                 []
+    $12.1 = global(ValueError: &lt;class &#39;ValueError&#39;&gt;) [&#39;$12.1&#39;]
+    $const12.2 = const(str, x cannot be zero) [&#39;$const12.2&#39;]
+    $12.3 = call $12.1($const12.2)           [&#39;$12.1&#39;, &#39;$12.3&#39;, &#39;$const12.2&#39;]
+    del $const12.2                           []
+    del $12.1                                []
+    raise &lt;class &#39;ValueError&#39;&gt;(&#39;x cannot be zero&#39;) []
+</pre></div>
+</div>
+</div>
+<div class="section" id="stage-5-infer-types">
+<span id="arch-type-inference"></span><h3>7.2.4.5. Stage 5: Infer types<a class="headerlink" href="#stage-5-infer-types" title="Permalink to this headline">¶</a></h3>
+<p>Now that the Numba IR has been generated and macro-expanded, type analysis
+can be performed.  The types of the function arguments can be taken either
+from the explicit function signature given in the <code class="docutils literal"><span class="pre">&#64;jit</span></code> decorator
+(such as <code class="docutils literal"><span class="pre">&#64;jit('float64(float64,</span> <span class="pre">float64)')</span></code>), or they can be taken from
+the types of the actual function arguments if compilation is happening
+when the function is first called.</p>
+<p>The type inference engine is found in <code class="docutils literal"><span class="pre">numba.typeinfer</span></code>.  Its job is to
+assign a type to every intermediate variable in the Numba IR.  The result of
+this pass can be seen by setting the <span class="target" id="index-1"></span><a class="reference internal" href="../reference/envvars.html#envvar-NUMBA_DUMP_ANNOTATION"><code class="xref std std-envvar docutils literal"><span class="pre">NUMBA_DUMP_ANNOTATION</span></code></a>
+environment variable to 1:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="o">-----------------------------------</span><span class="n">ANNOTATION</span><span class="o">-----------------------------------</span>
+<span class="c1"># File: archex.py</span>
+<span class="c1"># --- LINE 4 ---</span>
+
+<span class="nd">@jit</span><span class="p">(</span><span class="n">nopython</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+<span class="c1"># --- LINE 5 ---</span>
+
+<span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+
+    <span class="c1"># --- LINE 6 ---</span>
+    <span class="c1"># label 0</span>
+    <span class="c1">#   a = arg(0, name=a)  :: int64</span>
+    <span class="c1">#   b = arg(1, name=b)  :: int64</span>
+    <span class="c1">#   $0.3 = a + b  :: int64</span>
+    <span class="c1">#   del b</span>
+    <span class="c1">#   del a</span>
+    <span class="c1">#   $0.4 = cast(value=$0.3)  :: int64</span>
+    <span class="c1">#   del $0.3</span>
+    <span class="c1">#   return $0.4</span>
+
+    <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
+</pre></div>
+</div>
+<p>If type inference fails to find a consistent type assignment for all the
+intermediate variables, it will label every variable as type <code class="docutils literal"><span class="pre">pyobject</span></code> and
+fall back to object mode.  Type inference can fail when unsupported Python
+types, language features, or functions are used in the function body.</p>
+</div>
+<div class="section" id="stage-6-rewrite-typed-ir">
+<span id="rewrite-typed-ir"></span><h3>7.2.4.6. Stage 6: Rewrite typed IR<a class="headerlink" href="#stage-6-rewrite-typed-ir" title="Permalink to this headline">¶</a></h3>
+<p>This pass&#8217;s purpose is to perform any high-level optimizations that still
+require, or could at least benefit from, Numba IR type information.</p>
+<p>One example of a problem domain that isn&#8217;t as easily optimized once
+lowered is the domain of multidimensional array operations.  When
+Numba lowers an array operation, Numba treats the operation like a
+full ufunc kernel.  During lowering a single array operation, Numba
+generates an inline broadcasting loop that creates a new result array.
+Then Numba generates an application loop that applies the operator
+over the array inputs.  Recognizing and rewriting these loops once
+they are lowered into LLVM is hard, if not impossible.</p>
+<p>An example pair of optimizations in the domain of array operators is
+loop fusion and shortcut deforestation.  When the optimizer
+recognizes that the output of one array operator is being fed into
+another array operator, and only to that array operator, it can fuse
+the two loops into a single loop.  The optimizer can further eliminate
+the temporary array allocated for the initial operation by directly
+feeding the result of the first operation into the second, skipping
+the store and load to the intermediate array.  This elimination is
+known as shortcut deforestation.  Numba currently uses the rewrite
+pass to implement these array optimizations.  For more information,
+please consult the &#8220;<a class="reference internal" href="rewrites.html#case-study-array-expressions"><span class="std std-ref">Case study: Array Expressions</span></a>&#8221; subsection,
+later in this document.</p>
+<p>One can see the result of rewriting by setting the
+<span class="target" id="index-2"></span><a class="reference internal" href="../reference/envvars.html#envvar-NUMBA_DUMP_IR"><code class="xref std std-envvar docutils literal"><span class="pre">NUMBA_DUMP_IR</span></code></a> environment variable to a non-zero value (such
+as 1).  The following example shows the output of the rewrite pass as
+it recognizes an array expression consisting of a multiply and add,
+and outputs a fused kernel as a special operator, <code class="xref py py-func docutils literal"><span class="pre">arrayexpr()</span></code>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>______________________________________________________________________
+REWRITING:
+a0 = arg(0, name=a0)                     [&#39;a0&#39;]
+a1 = arg(1, name=a1)                     [&#39;a1&#39;]
+a2 = arg(2, name=a2)                     [&#39;a2&#39;]
+$0.3 = a0 * a1                           [&#39;$0.3&#39;, &#39;a0&#39;, &#39;a1&#39;]
+del a1                                   []
+del a0                                   []
+$0.5 = $0.3 + a2                         [&#39;$0.3&#39;, &#39;$0.5&#39;, &#39;a2&#39;]
+del a2                                   []
+del $0.3                                 []
+$0.6 = cast(value=$0.5)                  [&#39;$0.5&#39;, &#39;$0.6&#39;]
+del $0.5                                 []
+return $0.6                              [&#39;$0.6&#39;]
+____________________________________________________________
+a0 = arg(0, name=a0)                     [&#39;a0&#39;]
+a1 = arg(1, name=a1)                     [&#39;a1&#39;]
+a2 = arg(2, name=a2)                     [&#39;a2&#39;]
+$0.5 = arrayexpr(ty=array(float64, 1d, C), expr=(&#39;+&#39;, [(&#39;*&#39;, [Var(a0, test.py (14)), Var(a1, test.py (14))]), Var(a2, test.py (14))])) [&#39;$0.5&#39;, &#39;a0&#39;, &#39;a1&#39;, &#39;a2&#39;]
+del a0                                   []
+del a1                                   []
+del a2                                   []
+$0.6 = cast(value=$0.5)                  [&#39;$0.5&#39;, &#39;$0.6&#39;]
+del $0.5                                 []
+return $0.6                              [&#39;$0.6&#39;]
+______________________________________________________________________
+</pre></div>
+</div>
+<p>Following this rewrite, Numba lowers the array expression into a new
+ufunc-like function that is inlined into a single loop that only
+allocates a single result array.</p>
+</div>
+<div class="section" id="stage-7a-generate-nopython-llvm-ir">
+<h3>7.2.4.7. Stage 7a: Generate nopython LLVM IR<a class="headerlink" href="#stage-7a-generate-nopython-llvm-ir" title="Permalink to this headline">¶</a></h3>
+<p>If type inference succeeds in finding a Numba type for every intermediate
+variable, then Numba can (potentially) generate specialized native code.  This
+process is called <a class="reference internal" href="../glossary.html#term-lowering"><span class="xref std std-term">lowering</span></a>.  The Numba IR tree is translated into
+LLVM IR by using helper classes from <a class="reference external" href="http://llvmlite.pydata.org/">llvmlite</a>.
+The  machine-generated LLVM IR can seem unnecessarily verbose, but the LLVM
+toolchain is able to optimize it quite easily into compact, efficient code.</p>
+<p>The basic lowering algorithm is generic, but the specifics of how particular
+Numba IR nodes are translated to LLVM instructions is handled by the
+target context selected for compilation.  The default target context is
+the &#8220;cpu&#8221; context, defined in <code class="docutils literal"><span class="pre">numba.targets.cpu</span></code>.</p>
+<p>The LLVM IR can be displayed by setting the <span class="target" id="index-3"></span><a class="reference internal" href="../reference/envvars.html#envvar-NUMBA_DUMP_LLVM"><code class="xref std std-envvar docutils literal"><span class="pre">NUMBA_DUMP_LLVM</span></code></a> environment
+variable to 1.  For the &#8220;cpu&#8221; context, our <code class="docutils literal"><span class="pre">add()</span></code> example would look like:</p>
+<div class="highlight-llvm"><div class="highlight"><pre><span></span><span class="k">define</span> <span class="k">i32</span> <span class="vg">@&quot;__main__.add$1.int64.int64&quot;</span><span class="p">(</span><span class="k">i64</span><span class="p">*</span> <span class="nv">%&quot;retptr&quot;</span><span class="p">,</span>
+                                         <span class="p">{</span><span class="k">i8</span><span class="p">*,</span> <span class="k">i32</span><span class="p">}**</span> <span class="nv">%&quot;excinfo&quot;</span><span class="p">,</span>
+                                         <span class="k">i8</span><span class="p">*</span> <span class="nv">%&quot;env&quot;</span><span class="p">,</span>
+                                         <span class="k">i64</span> <span class="nv">%&quot;arg.a&quot;</span><span class="p">,</span> <span class="k">i64</span> <span class="nv">%&quot;arg.b&quot;</span><span class="p">)</span>
+<span class="p">{</span>
+   <span class="nl">entry:</span>
+     <span class="nv">%&quot;a&quot;</span> <span class="p">=</span> <span class="k">alloca</span> <span class="k">i64</span>
+     <span class="nv">%&quot;b&quot;</span> <span class="p">=</span> <span class="k">alloca</span> <span class="k">i64</span>
+     <span class="nv">%&quot;$0.3&quot;</span> <span class="p">=</span> <span class="k">alloca</span> <span class="k">i64</span>
+     <span class="nv">%&quot;$0.4&quot;</span> <span class="p">=</span> <span class="k">alloca</span> <span class="k">i64</span>
+     <span class="k">br</span> <span class="kt">label</span> <span class="nv">%&quot;B0&quot;</span>
+   <span class="nl">B0:</span>
+     <span class="k">store</span> <span class="k">i64</span> <span class="nv">%&quot;arg.a&quot;</span><span class="p">,</span> <span class="k">i64</span><span class="p">*</span> <span class="nv">%&quot;a&quot;</span>
+     <span class="k">store</span> <span class="k">i64</span> <span class="nv">%&quot;arg.b&quot;</span><span class="p">,</span> <span class="k">i64</span><span class="p">*</span> <span class="nv">%&quot;b&quot;</span>
+     <span class="nv">%&quot;.8&quot;</span> <span class="p">=</span> <span class="k">load</span> <span class="k">i64</span><span class="p">*</span> <span class="nv">%&quot;a&quot;</span>
+     <span class="nv">%&quot;.9&quot;</span> <span class="p">=</span> <span class="k">load</span> <span class="k">i64</span><span class="p">*</span> <span class="nv">%&quot;b&quot;</span>
+     <span class="nv">%&quot;.10&quot;</span> <span class="p">=</span> <span class="k">add</span> <span class="k">i64</span> <span class="nv">%&quot;.8&quot;</span><span class="p">,</span> <span class="nv">%&quot;.9&quot;</span>
+     <span class="k">store</span> <span class="k">i64</span> <span class="nv">%&quot;.10&quot;</span><span class="p">,</span> <span class="k">i64</span><span class="p">*</span> <span class="nv">%&quot;$0.3&quot;</span>
+     <span class="nv">%&quot;.12&quot;</span> <span class="p">=</span> <span class="k">load</span> <span class="k">i64</span><span class="p">*</span> <span class="nv">%&quot;$0.3&quot;</span>
+     <span class="k">store</span> <span class="k">i64</span> <span class="nv">%&quot;.12&quot;</span><span class="p">,</span> <span class="k">i64</span><span class="p">*</span> <span class="nv">%&quot;$0.4&quot;</span>
+     <span class="nv">%&quot;.14&quot;</span> <span class="p">=</span> <span class="k">load</span> <span class="k">i64</span><span class="p">*</span> <span class="nv">%&quot;$0.4&quot;</span>
+     <span class="k">store</span> <span class="k">i64</span> <span class="nv">%&quot;.14&quot;</span><span class="p">,</span> <span class="k">i64</span><span class="p">*</span> <span class="nv">%&quot;retptr&quot;</span>
+     <span class="k">ret</span> <span class="k">i32</span> <span class="m">0</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The post-optimization LLVM IR can be output by setting
+<span class="target" id="index-4"></span><a class="reference internal" href="../reference/envvars.html#envvar-NUMBA_DUMP_OPTIMIZED"><code class="xref std std-envvar docutils literal"><span class="pre">NUMBA_DUMP_OPTIMIZED</span></code></a> to 1.  The optimizer shortens the code
+generated above quite significantly:</p>
+<div class="highlight-llvm"><div class="highlight"><pre><span></span><span class="k">define</span> <span class="k">i32</span> <span class="vg">@&quot;__main__.add$1.int64.int64&quot;</span><span class="p">(</span><span class="k">i64</span><span class="p">*</span> <span class="k">nocapture</span> <span class="nv">%retptr</span><span class="p">,</span>
+                                         <span class="p">{</span> <span class="k">i8</span><span class="p">*,</span> <span class="k">i32</span> <span class="p">}**</span> <span class="k">nocapture</span> <span class="k">readnone</span> <span class="nv">%excinfo</span><span class="p">,</span>
+                                         <span class="k">i8</span><span class="p">*</span> <span class="k">nocapture</span> <span class="k">readnone</span> <span class="nv">%env</span><span class="p">,</span>
+                                         <span class="k">i64</span> <span class="nv">%arg.a</span><span class="p">,</span> <span class="k">i64</span> <span class="nv">%arg.b</span><span class="p">)</span>
+<span class="p">{</span>
+   <span class="nl">entry:</span>
+     <span class="nv">%.10</span> <span class="p">=</span> <span class="k">add</span> <span class="k">i64</span> <span class="nv">%arg.b</span><span class="p">,</span> <span class="nv">%arg.a</span>
+     <span class="k">store</span> <span class="k">i64</span> <span class="nv">%.10</span><span class="p">,</span> <span class="k">i64</span><span class="p">*</span> <span class="nv">%retptr</span><span class="p">,</span> <span class="k">align</span> <span class="m">8</span>
+     <span class="k">ret</span> <span class="k">i32</span> <span class="m">0</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="stage-7b-generate-object-mode-llvm-ir">
+<h3>7.2.4.8. Stage 7b: Generate object mode LLVM IR<a class="headerlink" href="#stage-7b-generate-object-mode-llvm-ir" title="Permalink to this headline">¶</a></h3>
+<p>If type inference fails to find Numba types for all values inside a function,
+the function will be compiled in object mode.  The generated LLVM will be
+significantly longer, as the compiled code will need to make calls to the
+<a class="reference external" href="https://docs.python.org/3/c-api/">Python C API</a> to perform basically all
+operations.  The optimized LLVM for our example <code class="docutils literal"><span class="pre">add()</span></code> function is:</p>
+<div class="highlight-llvm"><div class="highlight"><pre><span></span><span class="vg">@PyExc_SystemError</span> <span class="p">=</span> <span class="k">external</span> <span class="k">global</span> <span class="k">i8</span>
+<span class="vg">@&quot;.const.Numba_internal_error:_object_mode_function_called_without_an_environment&quot;</span> <span class="p">=</span> <span class="k">internal</span> <span class="k">constant</span> <span class="p">[</span><span class="m">73</span> <span class="k">x</span> <span class="k">i8</span><span class="p">]</span> <span class="k">c</span><span class="s">&quot;Numba internal error: object mode function called without an environment\00&quot;</span>
+<span class="vg">@&quot;.const.name_&#39;a&#39;_is_not_defined&quot;</span> <span class="p">=</span> <span class="k">internal</span> <span class="k">constant</span> <span class="p">[</span><span class="m">24</span> <span class="k">x</span> <span class="k">i8</span><span class="p">]</span> <span class="k">c</span><span class="s">&quot;name &#39;a&#39; is not defined\00&quot;</span>
+<span class="vg">@PyExc_NameError</span> <span class="p">=</span> <span class="k">external</span> <span class="k">global</span> <span class="k">i8</span>
+<span class="vg">@&quot;.const.name_&#39;b&#39;_is_not_defined&quot;</span> <span class="p">=</span> <span class="k">internal</span> <span class="k">constant</span> <span class="p">[</span><span class="m">24</span> <span class="k">x</span> <span class="k">i8</span><span class="p">]</span> <span class="k">c</span><span class="s">&quot;name &#39;b&#39; is not defined\00&quot;</span>
+
+<span class="k">define</span> <span class="k">i32</span> <span class="vg">@&quot;__main__.add$1.pyobject.pyobject&quot;</span><span class="p">(</span><span class="k">i8</span><span class="p">**</span> <span class="k">nocapture</span> <span class="nv">%retptr</span><span class="p">,</span> <span class="p">{</span> <span class="k">i8</span><span class="p">*,</span> <span class="k">i32</span> <span class="p">}**</span> <span class="k">nocapture</span> <span class="k">readnone</span> <span class="nv">%excinfo</span><span class="p">,</span> <span class="k">i8</span><span class="p">*</span> <span class="k">readnone</span> <span class="nv">%env</span><span class="p">,</span> <span class="k">i8</span><span class="p">*</span> <span class="nv">%arg.a</span><span class="p">,</span> <span class="k">i8</span><span class="p">*</span> <span class="nv">%arg.b</span><span class="p">)</span> <span class="p">{</span>
+<span class="nl">entry:</span>
+  <span class="nv">%.6</span> <span class="p">=</span> <span class="k">icmp</span> <span class="k">eq</span> <span class="k">i8</span><span class="p">*</span> <span class="nv">%env</span><span class="p">,</span> <span class="k">null</span>
+  <span class="k">br</span> <span class="k">i1</span> <span class="nv">%.6</span><span class="p">,</span> <span class="kt">label</span> <span class="nv">%entry.if</span><span class="p">,</span> <span class="kt">label</span> <span class="nv">%entry.endif</span><span class="p">,</span> <span class="nv">!prof</span> <span class="nv nv-Anonymous">!0</span>
+
+<span class="nl">entry.if:</span>                                         <span class="c">; preds = %entry</span>
+  <span class="k">tail</span> <span class="k">call</span> <span class="kt">void</span> <span class="vg">@PyErr_SetString</span><span class="p">(</span><span class="k">i8</span><span class="p">*</span> <span class="vg">@PyExc_SystemError</span><span class="p">,</span> <span class="k">i8</span><span class="p">*</span> <span class="k">getelementptr</span> <span class="k">inbounds</span> <span class="p">([</span><span class="m">73</span> <span class="k">x</span> <span class="k">i8</span><span class="p">]*</span> <span class="vg">@&quot;.const.Numba_internal_error:_object_mode_function_called_without_an_environment&quot;</span><span class="p">,</span> <span class="k">i64</span> <span class="m">0</span><span class="p">,</span> <span class="k">i64</span> <span class="m">0</span><span class="p">))</span>
+  <span class="k">ret</span> <span class="k">i32</span> <span class="m">-1</span>
+
+<span class="nl">entry.endif:</span>                                      <span class="c">; preds = %entry</span>
+  <span class="k">tail</span> <span class="k">call</span> <span class="kt">void</span> <span class="vg">@Py_IncRef</span><span class="p">(</span><span class="k">i8</span><span class="p">*</span> <span class="nv">%arg.a</span><span class="p">)</span>
+  <span class="k">tail</span> <span class="k">call</span> <span class="kt">void</span> <span class="vg">@Py_IncRef</span><span class="p">(</span><span class="k">i8</span><span class="p">*</span> <span class="nv">%arg.b</span><span class="p">)</span>
+  <span class="nv">%.21</span> <span class="p">=</span> <span class="k">icmp</span> <span class="k">eq</span> <span class="k">i8</span><span class="p">*</span> <span class="nv">%arg.a</span><span class="p">,</span> <span class="k">null</span>
+  <span class="k">br</span> <span class="k">i1</span> <span class="nv">%.21</span><span class="p">,</span> <span class="kt">label</span> <span class="nv">%B0.if</span><span class="p">,</span> <span class="kt">label</span> <span class="nv">%B0.endif</span><span class="p">,</span> <span class="nv">!prof</span> <span class="nv nv-Anonymous">!0</span>
+
+<span class="nl">B0.if:</span>                                            <span class="c">; preds = %entry.endif</span>
+  <span class="k">tail</span> <span class="k">call</span> <span class="kt">void</span> <span class="vg">@PyErr_SetString</span><span class="p">(</span><span class="k">i8</span><span class="p">*</span> <span class="vg">@PyExc_NameError</span><span class="p">,</span> <span class="k">i8</span><span class="p">*</span> <span class="k">getelementptr</span> <span class="k">inbounds</span> <span class="p">([</span><span class="m">24</span> <span class="k">x</span> <span class="k">i8</span><span class="p">]*</span> <span class="vg">@&quot;.const.name_&#39;a&#39;_is_not_defined&quot;</span><span class="p">,</span> <span class="k">i64</span> <span class="m">0</span><span class="p">,</span> <span class="k">i64</span> <span class="m">0</span><span class="p">))</span>
+  <span class="k">tail</span> <span class="k">call</span> <span class="kt">void</span> <span class="vg">@Py_DecRef</span><span class="p">(</span><span class="k">i8</span><span class="p">*</span> <span class="k">null</span><span class="p">)</span>
+  <span class="k">tail</span> <span class="k">call</span> <span class="kt">void</span> <span class="vg">@Py_DecRef</span><span class="p">(</span><span class="k">i8</span><span class="p">*</span> <span class="nv">%arg.b</span><span class="p">)</span>
+  <span class="k">ret</span> <span class="k">i32</span> <span class="m">-1</span>
+
+<span class="nl">B0.endif:</span>                                         <span class="c">; preds = %entry.endif</span>
+  <span class="nv">%.30</span> <span class="p">=</span> <span class="k">icmp</span> <span class="k">eq</span> <span class="k">i8</span><span class="p">*</span> <span class="nv">%arg.b</span><span class="p">,</span> <span class="k">null</span>
+  <span class="k">br</span> <span class="k">i1</span> <span class="nv">%.30</span><span class="p">,</span> <span class="kt">label</span> <span class="nv">%B0.endif1</span><span class="p">,</span> <span class="kt">label</span> <span class="nv">%B0.endif1.1</span><span class="p">,</span> <span class="nv">!prof</span> <span class="nv nv-Anonymous">!0</span>
+
+<span class="nl">B0.endif1:</span>                                        <span class="c">; preds = %B0.endif</span>
+  <span class="k">tail</span> <span class="k">call</span> <span class="kt">void</span> <span class="vg">@PyErr_SetString</span><span class="p">(</span><span class="k">i8</span><span class="p">*</span> <span class="vg">@PyExc_NameError</span><span class="p">,</span> <span class="k">i8</span><span class="p">*</span> <span class="k">getelementptr</span> <span class="k">inbounds</span> <span class="p">([</span><span class="m">24</span> <span class="k">x</span> <span class="k">i8</span><span class="p">]*</span> <span class="vg">@&quot;.const.name_&#39;b&#39;_is_not_defined&quot;</span><span class="p">,</span> <span class="k">i64</span> <span class="m">0</span><span class="p">,</span> <span class="k">i64</span> <span class="m">0</span><span class="p">))</span>
+  <span class="k">tail</span> <span class="k">call</span> <span class="kt">void</span> <span class="vg">@Py_DecRef</span><span class="p">(</span><span class="k">i8</span><span class="p">*</span> <span class="nv">%arg.a</span><span class="p">)</span>
+  <span class="k">tail</span> <span class="k">call</span> <span class="kt">void</span> <span class="vg">@Py_DecRef</span><span class="p">(</span><span class="k">i8</span><span class="p">*</span> <span class="k">null</span><span class="p">)</span>
+  <span class="k">ret</span> <span class="k">i32</span> <span class="m">-1</span>
+
+<span class="nl">B0.endif1.1:</span>                                      <span class="c">; preds = %B0.endif</span>
+  <span class="nv">%.38</span> <span class="p">=</span> <span class="k">tail</span> <span class="k">call</span> <span class="k">i8</span><span class="p">*</span> <span class="vg">@PyNumber_Add</span><span class="p">(</span><span class="k">i8</span><span class="p">*</span> <span class="nv">%arg.a</span><span class="p">,</span> <span class="k">i8</span><span class="p">*</span> <span class="nv">%arg.b</span><span class="p">)</span>
+  <span class="nv">%.39</span> <span class="p">=</span> <span class="k">icmp</span> <span class="k">eq</span> <span class="k">i8</span><span class="p">*</span> <span class="nv">%.38</span><span class="p">,</span> <span class="k">null</span>
+  <span class="k">br</span> <span class="k">i1</span> <span class="nv">%.39</span><span class="p">,</span> <span class="kt">label</span> <span class="nv">%B0.endif1.1.if</span><span class="p">,</span> <span class="kt">label</span> <span class="nv">%B0.endif1.1.endif</span><span class="p">,</span> <span class="nv">!prof</span> <span class="nv nv-Anonymous">!0</span>
+
+<span class="nl">B0.endif1.1.if:</span>                                   <span class="c">; preds = %B0.endif1.1</span>
+  <span class="k">tail</span> <span class="k">call</span> <span class="kt">void</span> <span class="vg">@Py_DecRef</span><span class="p">(</span><span class="k">i8</span><span class="p">*</span> <span class="nv">%arg.a</span><span class="p">)</span>
+  <span class="k">tail</span> <span class="k">call</span> <span class="kt">void</span> <span class="vg">@Py_DecRef</span><span class="p">(</span><span class="k">i8</span><span class="p">*</span> <span class="nv">%arg.b</span><span class="p">)</span>
+  <span class="k">ret</span> <span class="k">i32</span> <span class="m">-1</span>
+
+<span class="nl">B0.endif1.1.endif:</span>                                <span class="c">; preds = %B0.endif1.1</span>
+  <span class="k">tail</span> <span class="k">call</span> <span class="kt">void</span> <span class="vg">@Py_DecRef</span><span class="p">(</span><span class="k">i8</span><span class="p">*</span> <span class="nv">%arg.b</span><span class="p">)</span>
+  <span class="k">tail</span> <span class="k">call</span> <span class="kt">void</span> <span class="vg">@Py_DecRef</span><span class="p">(</span><span class="k">i8</span><span class="p">*</span> <span class="nv">%arg.a</span><span class="p">)</span>
+  <span class="k">tail</span> <span class="k">call</span> <span class="kt">void</span> <span class="vg">@Py_IncRef</span><span class="p">(</span><span class="k">i8</span><span class="p">*</span> <span class="nv">%.38</span><span class="p">)</span>
+  <span class="k">tail</span> <span class="k">call</span> <span class="kt">void</span> <span class="vg">@Py_DecRef</span><span class="p">(</span><span class="k">i8</span><span class="p">*</span> <span class="nv">%.38</span><span class="p">)</span>
+  <span class="k">store</span> <span class="k">i8</span><span class="p">*</span> <span class="nv">%.38</span><span class="p">,</span> <span class="k">i8</span><span class="p">**</span> <span class="nv">%retptr</span><span class="p">,</span> <span class="k">align</span> <span class="m">8</span>
+  <span class="k">ret</span> <span class="k">i32</span> <span class="m">0</span>
+<span class="p">}</span>
+
+<span class="k">declare</span> <span class="kt">void</span> <span class="vg">@PyErr_SetString</span><span class="p">(</span><span class="k">i8</span><span class="p">*,</span> <span class="k">i8</span><span class="p">*)</span>
+
+<span class="k">declare</span> <span class="kt">void</span> <span class="vg">@Py_IncRef</span><span class="p">(</span><span class="k">i8</span><span class="p">*)</span>
+
+<span class="k">declare</span> <span class="kt">void</span> <span class="vg">@Py_DecRef</span><span class="p">(</span><span class="k">i8</span><span class="p">*)</span>
+
+<span class="k">declare</span> <span class="k">i8</span><span class="p">*</span> <span class="vg">@PyNumber_Add</span><span class="p">(</span><span class="k">i8</span><span class="p">*,</span> <span class="k">i8</span><span class="p">*)</span>
+</pre></div>
+</div>
+<p>The careful reader might notice several unnecessary calls to <code class="docutils literal"><span class="pre">Py_IncRef</span></code>
+and <code class="docutils literal"><span class="pre">Py_DecRef</span></code> in the generated code.  Currently Numba isn&#8217;t able to
+optimize those away.</p>
+<p>Object mode compilation will also attempt to identify loops which can be
+extracted and statically-typed for &#8220;nopython&#8221; compilation.  This process is
+called <em>loop-lifting</em>, and results in the creation of a hidden nopython mode
+function just containing the loop which is then called from the original
+function.  Loop-lifting helps improve the performance of functions that
+need to access uncompilable code (such as I/O or plotting code) but still
+contain a time-intensive section of compilable code.</p>
+</div>
+<div class="section" id="stage-8-compile-llvm-ir-to-machine-code">
+<h3>7.2.4.9. Stage 8: Compile LLVM IR to machine code<a class="headerlink" href="#stage-8-compile-llvm-ir-to-machine-code" title="Permalink to this headline">¶</a></h3>
+<p>In both <a class="reference internal" href="../glossary.html#term-object-mode"><span class="xref std std-term">object mode</span></a> and <a class="reference internal" href="../glossary.html#term-nopython-mode"><span class="xref std std-term">nopython mode</span></a>, the generated LLVM IR
+is compiled by the LLVM JIT compiler and the machine code is loaded into
+memory.  A Python wrapper is also created (defined in
+<code class="docutils literal"><span class="pre">numba.dispatcher.Dispatcher</span></code>) which can do the dynamic dispatch to the
+correct version of the compiled function if multiple type specializations
+were generated (for example, for both <code class="docutils literal"><span class="pre">float32</span></code> and <code class="docutils literal"><span class="pre">float64</span></code> versions
+of the same function).</p>
+<p>The machine assembly code generated by LLVM can be dumped to the screen by
+setting the <span class="target" id="index-5"></span><a class="reference internal" href="../reference/envvars.html#envvar-NUMBA_DUMP_ASSEMBLY"><code class="xref std std-envvar docutils literal"><span class="pre">NUMBA_DUMP_ASSEMBLY</span></code></a> environment variable to 1:</p>
+<div class="highlight-gas"><div class="highlight"><pre><span></span>        <span class="na">.globl</span>  <span class="no">__main__.add$1.int64.int64</span>
+        <span class="na">.align</span>  <span class="mi">16</span><span class="p">,</span> <span class="mi">0x90</span>
+        <span class="na">.type</span>   <span class="no">__main__.add$1.int64.int64</span><span class="p">,</span><span class="na">@function</span>
+<span class="nl">__main__.add$1.int64.int64:</span>
+        <span class="nf">addq</span>    <span class="nv">%r8</span><span class="p">,</span> <span class="nv">%rcx</span>
+        <span class="nf">movq</span>    <span class="nv">%rcx</span><span class="p">,</span> <span class="p">(</span><span class="nv">%rdi</span><span class="p">)</span>
+        <span class="nf">xorl</span>    <span class="nv">%eax</span><span class="p">,</span> <span class="nv">%eax</span>
+        <span class="nf">retq</span>
+</pre></div>
+</div>
+<p>The assembly output will also include the generated wrapper function that
+translates the Python arguments to native data types.</p>
+</div>
+</div>
+</div>
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        
+      </div><!-- /row -->
+
+      <!-- row -->
+      <div class="row footer-relbar">
+<div id="navbar-related" class=" related navbar navbar-default" role="navigation" aria-label="related navigation">
+  <div class="navbar-inner">
+    <ul class="nav navbar-nav ">
+        <li><a href="../index.html">Numba 0.33.0-py2.7-macosx-10.6-x86_64.egg documentation</a></li>
+    </ul>
+<ul class="nav navbar-nav pull-right hidden-xs hidden-sm">
+      
+        <li><a href="contributing.html" title="7.1. Contributing to Numba" >previous</a></li>
+        <li><a href="dispatching.html" title="7.3. Polymorphic dispatching" >next</a></li>
+        <li><a href="../py-modindex.html" title="Python Module Index" >modules</a></li>
+        <li><a href="../genindex.html" title="General Index" >index</a></li>
+        <li><a href="index.html" >7. Developer Manual</a></li>
+        <li><a href="#">top</a></li> 
+      
+    </ul>
+  </div>
+</div>
+      </div><!-- /row -->
+
+      <!-- footer -->
+      <footer role="contentinfo">
+          &copy; Copyright 2012-2015, Continuum Analytics.
+        Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.1.
+      </footer>
+      <!-- /footer -->
+
+    </div>
+    <!-- /container -->
+
+  </body>
+</html>

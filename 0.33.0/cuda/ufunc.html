@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+
+
+
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+    <title>3.13. CUDA Ufuncs and Generalized Ufuncs &mdash; Numba 0.33.0-py2.7-macosx-10.6-x86_64.egg documentation</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    
+
+<link rel="stylesheet" href="../_static/css/basicstrap-base.css" type="text/css" />
+<link rel="stylesheet" id="current-theme" href="../_static/css/bootstrap3/bootstrap.min.css" type="text/css" />
+<link rel="stylesheet" id="current-adjust-theme" type="text/css" />
+
+<link rel="stylesheet" href="../_static/css/font-awesome.min.css">
+
+<style type="text/css">
+  body {
+    padding-top: 60px;
+    padding-bottom: 40px;
+  }
+</style>
+
+<link rel="stylesheet" href="../_static/css/basicstrap.css" type="text/css" />
+<link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+<script type="text/javascript">
+  var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:    '../',
+            VERSION:     '0.33.0-py2.7-macosx-10.6-x86_64.egg',
+            COLLAPSE_INDEX: false,
+            FILE_SUFFIX: '.html',
+            HAS_SOURCE:  true
+  };
+</script>
+    <script type="text/javascript" src="../_static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/bootstrap3.min.js"></script>
+<script type="text/javascript" src="../_static/js/jquery.cookie.min.js"></script>
+<script type="text/javascript" src="../_static/js/basicstrap.js"></script>
+<script type="text/javascript">
+</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="Numba 0.33.0-py2.7-macosx-10.6-x86_64.egg documentation" href="../index.html" />
+    <link rel="up" title="3. Numba for CUDA GPUs" href="index.html" />
+    <link rel="next" title="3.14. Sharing CUDA Memory" href="ipc.html" />
+    <link rel="prev" title="3.12. GPU Reduction" href="reduction.html" /> 
+  </head>
+  <body role="document">
+    <div id="navbar-top" class="navbar navbar-fixed-top navbar-default" role="navigation" aria-label="top navigation">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="../index.html">Numba 0.33.0-py2.7-macosx-10.6-x86_64.egg documentation</a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+              <li class="dropdown visible-xs">
+                <a role="button" id="localToc" data-toggle="dropdown" data-target="#" href="#">Table Of Contents <b class="caret"></b></a>
+                <ul class="dropdown-menu localtoc sp-localtoc" role="menu" aria-labelledby="localToc">
+                <ul>
+<li><a class="reference internal" href="#">3.13. CUDA Ufuncs and Generalized Ufuncs</a><ul>
+<li><a class="reference internal" href="#example-basic-example">3.13.1. Example: Basic Example</a></li>
+<li><a class="reference internal" href="#example-calling-device-functions">3.13.2. Example: Calling Device Functions</a></li>
+<li><a class="reference internal" href="#generalized-cuda-ufuncs">3.13.3. Generalized CUDA ufuncs</a></li>
+</ul>
+</li>
+</ul>
+
+                </ul>
+              </li>
+
+            
+              <li><a href="reduction.html" title="3.12. GPU Reduction" accesskey="P">previous </a></li>
+              <li><a href="ipc.html" title="3.14. Sharing CUDA Memory" accesskey="N">next </a></li>
+              <li><a href="../py-modindex.html" title="Python Module Index" >modules </a></li>
+              <li><a href="../genindex.html" title="General Index" accesskey="I">index </a></li>
+              <li><a href="index.html" accesskey="U">3. Numba for CUDA GPUs</a></li>
+            
+            <li class="visible-xs"><a href="../_sources/cuda/ufunc.rst.txt" rel="nofollow">Show Source</a></li>
+
+            <li class="visible-xs">
+                <form class="search form-search form-inline navbar-form navbar-right sp-searchbox" action="../search.html" method="get">
+                  <div class="input-append input-group">
+                    <input type="text" class="search-query form-control" name="q" placeholder="Search...">
+                    <span class="input-group-btn">
+                    <input type="submit" class="btn" value="Go" />
+                    </span>
+                  </div>
+                  <input type="hidden" name="check_keywords" value="yes" />
+                  <input type="hidden" name="area" value="default" />
+                </form>
+            </li>
+
+            
+
+          </ul>
+
+        </div>
+      </div>
+    </div>
+    
+
+    <!-- container -->
+    <div class="container-fluid">
+
+      <!-- row -->
+      <div class="row">
+         
+<div class="col-md-3 hidden-xs" id="sidebar-wrapper">
+  <div class="sidebar hidden-xs" role="navigation" aria-label="main navigation">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">3.13. CUDA Ufuncs and Generalized Ufuncs</a><ul>
+<li><a class="reference internal" href="#example-basic-example">3.13.1. Example: Basic Example</a></li>
+<li><a class="reference internal" href="#example-calling-device-functions">3.13.2. Example: Calling Device Functions</a></li>
+<li><a class="reference internal" href="#generalized-cuda-ufuncs">3.13.3. Generalized CUDA ufuncs</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="reduction.html"
+                        title="previous chapter">3.12. GPU Reduction</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="ipc.html"
+                        title="next chapter">3.14. Sharing CUDA Memory</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/cuda/ufunc.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" role="search">
+  <h3>Quick search</h3>
+  <form class="search form-inline" action="../search.html" method="get">
+      <div class="input-append input-group">
+        <input type="text" class="search-query form-control" name="q" placeholder="Search...">
+        <span class="input-group-btn">
+        <input type="submit" class="btn" value="Go" />
+        </span>
+      </div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+  </div>
+</div> 
+        
+
+        <div class="col-md-9" id="content-wrapper">
+          <div class="document" role="main">
+            <div class="documentwrapper">
+              <div class="bodywrapper">
+                <div class="body">
+                  
+  <div class="section" id="cuda-ufuncs-and-generalized-ufuncs">
+<h1>3.13. CUDA Ufuncs and Generalized Ufuncs<a class="headerlink" href="#cuda-ufuncs-and-generalized-ufuncs" title="Permalink to this headline">¶</a></h1>
+<p>This page describes the CUDA ufunc-like object.</p>
+<p>To support the programming pattern of CUDA programs, CUDA Vectorize and
+GUVectorize cannot produce a conventional ufunc.  Instead, a ufunc-like
+object is returned.  This object is a close analog but not fully
+compatible with a regular NumPy ufunc.  The CUDA ufunc adds support for
+passing intra-device arrays (already on the GPU device) to reduce
+traffic over the PCI-express bus.  It also accepts a <cite>stream</cite> keyword
+for launching in asynchronous mode.</p>
+<div class="section" id="example-basic-example">
+<h2>3.13.1. Example: Basic Example<a class="headerlink" href="#example-basic-example" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">from</span> <span class="nn">numba</span> <span class="k">import</span> <span class="n">vectorize</span><span class="p">,</span> <span class="n">cuda</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="nd">@vectorize</span><span class="p">([</span><span class="s1">&#39;float32(float32, float32, float32)&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;float64(float64, float64, float64)&#39;</span><span class="p">],</span>
+           <span class="n">target</span><span class="o">=</span><span class="s1">&#39;cuda&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">cu_discriminant</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">b</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">-</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">a</span> <span class="o">*</span> <span class="n">c</span><span class="p">)</span>
+
+<span class="n">N</span> <span class="o">=</span> <span class="mi">1</span><span class="n">e</span><span class="o">+</span><span class="mi">4</span>
+<span class="n">dtype</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span>
+
+<span class="c1"># prepare the input</span>
+<span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">N</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+<span class="n">B</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">N</span><span class="p">)</span> <span class="o">+</span> <span class="mi">10</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+<span class="n">C</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">N</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+
+<span class="n">D</span> <span class="o">=</span> <span class="n">cu_discriminant</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">C</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">D</span><span class="p">)</span>  <span class="c1"># print result</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="example-calling-device-functions">
+<h2>3.13.2. Example: Calling Device Functions<a class="headerlink" href="#example-calling-device-functions" title="Permalink to this headline">¶</a></h2>
+<p>All CUDA ufunc kernels have the ability to call other CUDA device functions:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">numba</span> <span class="k">import</span> <span class="n">vectorize</span><span class="p">,</span> <span class="n">cuda</span>
+
+<span class="c1"># define a device function</span>
+<span class="nd">@cuda</span><span class="o">.</span><span class="n">jit</span><span class="p">(</span><span class="s1">&#39;float32(float32, float32, float32)&#39;</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">inline</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">cu_device_fn</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">**</span> <span class="n">y</span> <span class="o">/</span> <span class="n">z</span>
+
+<span class="c1"># define a ufunc that calls our device function</span>
+<span class="nd">@vectorize</span><span class="p">([</span><span class="s1">&#39;float32(float32, float32, float32)&#39;</span><span class="p">],</span> <span class="n">target</span><span class="o">=</span><span class="s1">&#39;cuda&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">cu_ufunc</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">cu_device_fn</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="generalized-cuda-ufuncs">
+<h2>3.13.3. Generalized CUDA ufuncs<a class="headerlink" href="#generalized-cuda-ufuncs" title="Permalink to this headline">¶</a></h2>
+<p>Generalized ufuncs may be executed on the GPU using CUDA, analogous to
+the CUDA ufunc functionality.  This may be accomplished as follows:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">numba</span> <span class="k">import</span> <span class="n">guvectorize</span>
+
+<span class="nd">@guvectorize</span><span class="p">([</span><span class="s1">&#39;void(float32[:,:], float32[:,:], float32[:,:])&#39;</span><span class="p">],</span>
+             <span class="s1">&#39;(m,n),(n,p)-&gt;(m,p)&#39;</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="s1">&#39;cuda&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">matmulcore</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">C</span><span class="p">):</span>
+    <span class="o">...</span>
+</pre></div>
+</div>
+<p>There are times when the gufunc kernel uses too many of a GPU&#8217;s
+resources, which can cause the kernel launch to fail.  The user can
+explicitly control the maximum size of the thread block by setting
+the <cite>max_blocksize</cite> attribute on the compiled gufunc object.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">numba</span> <span class="k">import</span> <span class="n">guvectorize</span>
+
+<span class="nd">@guvectorize</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="s1">&#39;cuda&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">very_complex_kernel</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">C</span><span class="p">):</span>
+    <span class="o">...</span>
+
+<span class="n">very_complex_kernel</span><span class="o">.</span><span class="n">max_blocksize</span> <span class="o">=</span> <span class="mi">32</span>  <span class="c1"># limits to 32 threads per block</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        
+      </div><!-- /row -->
+
+      <!-- row -->
+      <div class="row footer-relbar">
+<div id="navbar-related" class=" related navbar navbar-default" role="navigation" aria-label="related navigation">
+  <div class="navbar-inner">
+    <ul class="nav navbar-nav ">
+        <li><a href="../index.html">Numba 0.33.0-py2.7-macosx-10.6-x86_64.egg documentation</a></li>
+    </ul>
+<ul class="nav navbar-nav pull-right hidden-xs hidden-sm">
+      
+        <li><a href="reduction.html" title="3.12. GPU Reduction" >previous</a></li>
+        <li><a href="ipc.html" title="3.14. Sharing CUDA Memory" >next</a></li>
+        <li><a href="../py-modindex.html" title="Python Module Index" >modules</a></li>
+        <li><a href="../genindex.html" title="General Index" >index</a></li>
+        <li><a href="index.html" >3. Numba for CUDA GPUs</a></li>
+        <li><a href="#">top</a></li> 
+      
+    </ul>
+  </div>
+</div>
+      </div><!-- /row -->
+
+      <!-- footer -->
+      <footer role="contentinfo">
+          &copy; Copyright 2012-2015, Continuum Analytics.
+        Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.1.
+      </footer>
+      <!-- /footer -->
+
+    </div>
+    <!-- /container -->
+
+  </body>
+</html>
