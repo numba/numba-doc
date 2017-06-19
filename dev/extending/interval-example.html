@@ -7,120 +7,92 @@
   <head>
     <meta charset="utf-8" />
     
-    <title>6.3. Example: an interval type &mdash; Numba 0.33.0-py2.7-macosx-10.6-x86_64.egg documentation</title>
+    <title>6.3. Example: an interval type &mdash; Numba 0.34.0.dev0+406.gb3f4e4c-py2.7-linux-x86_64.egg documentation</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
 
     
-
 <link rel="stylesheet" href="../_static/css/basicstrap-base.css" type="text/css" />
-<link rel="stylesheet" id="current-theme" href="../_static/css/bootstrap3/bootstrap.min.css" type="text/css" />
-<link rel="stylesheet" id="current-adjust-theme" type="text/css" />
-
+<link rel="stylesheet" href="../_static/css/bootstrap.min.css" type="text/css" />
 <link rel="stylesheet" href="../_static/css/font-awesome.min.css">
-
+<!--[if IE 7]>
+<link rel="stylesheet" href="../_static/css/font-awesome-ie7.min.css">
+<![endif]-->
 <style type="text/css">
   body {
     padding-top: 60px;
     padding-bottom: 40px;
   }
+}
 </style>
-
-<link rel="stylesheet" href="../_static/css/basicstrap.css" type="text/css" />
+<link rel="stylesheet" href="../_static/basicstrap.css" type="text/css" />
 <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+<link rel="stylesheet" href="../_static/css/bootstrap-responsive.min.css" type="text/css" />
     
 <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
             URL_ROOT:    '../',
-            VERSION:     '0.33.0-py2.7-macosx-10.6-x86_64.egg',
+            VERSION:     '0.34.0.dev0+406.gb3f4e4c-py2.7-linux-x86_64.egg',
             COLLAPSE_INDEX: false,
             FILE_SUFFIX: '.html',
             HAS_SOURCE:  true
   };
 </script>
-    <script type="text/javascript" src="../_static/js/jquery.min.js"></script>
-    <script type="text/javascript" src="../_static/underscore.js"></script>
-    <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="../_static/js/bootstrap3.min.js"></script>
-<script type="text/javascript" src="../_static/js/jquery.cookie.min.js"></script>
-<script type="text/javascript" src="../_static/js/basicstrap.js"></script>
+<script type="text/javascript" src="../_static/js/jquery.min.js"></script>
+<script type="text/javascript" src="../_static/underscore.js"></script>
+<script type="text/javascript" src="../_static/doctools.js"></script>
+<script type="text/javascript" src="../_static/js/bootstrap.min.js"></script>
 <script type="text/javascript">
+  $(document).ready(function(){
+    $('.show-sidebar').click(function(e) {
+       e.preventDefault();
+       if ($(".show-sidebar").html() == "Open Table Of Contents") {
+          $('.for-mobile').removeClass('hidden-phone');
+          $(".show-sidebar").html("Close Table Of Contents");
+       } else {
+          $(".show-sidebar").html("Open Table Of Contents");
+       }
+    });
+  });
 </script>
-    <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="Numba 0.33.0-py2.7-macosx-10.6-x86_64.egg documentation" href="../index.html" />
+    <link rel="top" title="Numba 0.34.0.dev0+406.gb3f4e4c-py2.7-linux-x86_64.egg documentation" href="../index.html" />
     <link rel="up" title="6. Extending Numba" href="index.html" />
     <link rel="next" title="7. Developer Manual" href="../developer/index.html" />
     <link rel="prev" title="6.2. Low-level extension API" href="low-level.html" /> 
   </head>
-  <body role="document">
-    <div id="navbar-top" class="navbar navbar-fixed-top navbar-default" role="navigation" aria-label="top navigation">
-      <div class="container-fluid">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-            <span class="sr-only">Toggle navigation</span>
+  <body>
+    <div class="navbar navbar-fixed-top ">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="../index.html">Numba 0.33.0-py2.7-macosx-10.6-x86_64.egg documentation</a>
-        </div>
-        <div class="navbar-collapse collapse">
-          <ul class="nav navbar-nav navbar-right">
-              <li class="dropdown visible-xs">
-                <a role="button" id="localToc" data-toggle="dropdown" data-target="#" href="#">Table Of Contents <b class="caret"></b></a>
-                <ul class="dropdown-menu localtoc sp-localtoc" role="menu" aria-labelledby="localToc">
-                <ul>
-<li><a class="reference internal" href="#">6.3. Example: an interval type</a><ul>
-<li><a class="reference internal" href="#extending-the-typing-layer">6.3.1. Extending the typing layer</a><ul>
-<li><a class="reference internal" href="#creating-a-new-numba-type">6.3.1.1. Creating a new Numba type</a></li>
-<li><a class="reference internal" href="#type-inference-for-python-values">6.3.1.2. Type inference for Python values</a></li>
-<li><a class="reference internal" href="#type-inference-for-operations">6.3.1.3. Type inference for operations</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#extending-the-lowering-layer">6.3.2. Extending the lowering layer</a><ul>
-<li><a class="reference internal" href="#defining-the-data-model-for-native-intervals">6.3.2.1. Defining the data model for native intervals</a></li>
-<li><a class="reference internal" href="#exposing-data-model-attributes">6.3.2.2. Exposing data model attributes</a></li>
-<li><a class="reference internal" href="#exposing-a-property">6.3.2.3. Exposing a property</a></li>
-<li><a class="reference internal" href="#implementing-the-constructor">6.3.2.4. Implementing the constructor</a></li>
-<li><a class="reference internal" href="#boxing-and-unboxing">6.3.2.5. Boxing and unboxing</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#using-it">6.3.3. Using it</a></li>
-<li><a class="reference internal" href="#conclusion">6.3.4. Conclusion</a></li>
-</ul>
-</li>
-</ul>
-
-                </ul>
-              </li>
-
-            
-              <li><a href="low-level.html" title="6.2. Low-level extension API" accesskey="P">previous </a></li>
-              <li><a href="../developer/index.html" title="7. Developer Manual" accesskey="N">next </a></li>
-              <li><a href="../py-modindex.html" title="Python Module Index" >modules </a></li>
-              <li><a href="../genindex.html" title="General Index" accesskey="I">index </a></li>
-              <li><a href="index.html" accesskey="U">6. Extending Numba</a></li>
-            
-            <li class="visible-xs"><a href="../_sources/extending/interval-example.rst.txt" rel="nofollow">Show Source</a></li>
-
-            <li class="visible-xs">
-                <form class="search form-search form-inline navbar-form navbar-right sp-searchbox" action="../search.html" method="get">
-                  <div class="input-append input-group">
-                    <input type="text" class="search-query form-control" name="q" placeholder="Search...">
-                    <span class="input-group-btn">
-                    <input type="submit" class="btn" value="Go" />
-                    </span>
-                  </div>
-                  <input type="hidden" name="check_keywords" value="yes" />
-                  <input type="hidden" name="area" value="default" />
-                </form>
-            </li>
-
-            
-
-          </ul>
-
+          </a>
+          <a class="brand" href="../index.html">Numba 0.34.0.dev0+406.gb3f4e4c-py2.7-linux-x86_64.egg documentation</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav pull-right">
+              
+                <li>
+                <a href="../genindex.html" title="General Index" accesskey="I">index</a>
+                </li>
+                <li>
+                <a href="../py-modindex.html" title="Python Module Index" >modules</a>
+                </li>
+                <li>
+                <a href="../developer/index.html" title="7. Developer Manual" accesskey="N">next</a>
+                </li>
+                <li>
+                <a href="low-level.html" title="6.2. Low-level extension API" accesskey="P">previous</a>
+                </li>
+                <li>
+                <a href="index.html" accesskey="U">6. Extending Numba</a>
+                </li>
+              
+            </ul>
+          </div>
         </div>
       </div>
     </div>
@@ -129,11 +101,13 @@
     <!-- container -->
     <div class="container-fluid">
 
-      <!-- row -->
-      <div class="row">
-         
-<div class="col-md-3 hidden-xs" id="sidebar-wrapper">
-  <div class="sidebar hidden-xs" role="navigation" aria-label="main navigation">
+
+      
+      <div class="row-fluid hidden-desktop hidden-tablet">
+      
+<div class="span3 ">
+  <a class="visible-phone btn btn-small show-sidebar" data-toggle="collapse" data-target=".for-mobile">Open Table Of Contents</a>
+  <div class="for-mobile sidebar hidden-phone">
   <h3><a href="../index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">6.3. Example: an interval type</a><ul>
@@ -166,18 +140,76 @@
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="../_sources/extending/interval-example.rst.txt"
+      <li><a href="../_sources/extending/interval-example.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
-<div id="searchbox" role="search">
+<div id="searchbox">
   <h3>Quick search</h3>
-  <form class="search form-inline" action="../search.html" method="get">
-      <div class="input-append input-group">
-        <input type="text" class="search-query form-control" name="q" placeholder="Search...">
-        <span class="input-group-btn">
+  <form class="search form-search" action="../search.html" method="get">
+      <div class="input-append">
+        <input type="text" class="search-query" name="q">
         <input type="submit" class="btn" value="Go" />
-        </span>
+      </div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+  </div>
+</div>
+      </div>
+      
+
+      <!-- row -->
+      <div class="row-fluid">
+         
+<div class="span3 visible-desktop visible-tablet">
+  <div class=" sidebar hidden-phone">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">6.3. Example: an interval type</a><ul>
+<li><a class="reference internal" href="#extending-the-typing-layer">6.3.1. Extending the typing layer</a><ul>
+<li><a class="reference internal" href="#creating-a-new-numba-type">6.3.1.1. Creating a new Numba type</a></li>
+<li><a class="reference internal" href="#type-inference-for-python-values">6.3.1.2. Type inference for Python values</a></li>
+<li><a class="reference internal" href="#type-inference-for-operations">6.3.1.3. Type inference for operations</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#extending-the-lowering-layer">6.3.2. Extending the lowering layer</a><ul>
+<li><a class="reference internal" href="#defining-the-data-model-for-native-intervals">6.3.2.1. Defining the data model for native intervals</a></li>
+<li><a class="reference internal" href="#exposing-data-model-attributes">6.3.2.2. Exposing data model attributes</a></li>
+<li><a class="reference internal" href="#exposing-a-property">6.3.2.3. Exposing a property</a></li>
+<li><a class="reference internal" href="#implementing-the-constructor">6.3.2.4. Implementing the constructor</a></li>
+<li><a class="reference internal" href="#boxing-and-unboxing">6.3.2.5. Boxing and unboxing</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#using-it">6.3.3. Using it</a></li>
+<li><a class="reference internal" href="#conclusion">6.3.4. Conclusion</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="low-level.html"
+                        title="previous chapter">6.2. Low-level extension API</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../developer/index.html"
+                        title="next chapter">7. Developer Manual</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/extending/interval-example.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox">
+  <h3>Quick search</h3>
+  <form class="search form-search" action="../search.html" method="get">
+      <div class="input-append">
+        <input type="text" class="search-query" name="q">
+        <input type="submit" class="btn" value="Go" />
       </div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
@@ -190,8 +222,8 @@
 </div> 
         
 
-        <div class="col-md-9" id="content-wrapper">
-          <div class="document" role="main">
+        <div class="span9">
+          <div class="document">
             <div class="documentwrapper">
               <div class="bodywrapper">
                 <div class="body">
@@ -206,11 +238,11 @@ currently support so as to allow:</p>
 <li>Constructing and returning a new instance of the class from a Numba function</li>
 </ul>
 <p>(all the above in <a class="reference internal" href="../glossary.html#term-nopython-mode"><span class="xref std std-term">nopython mode</span></a>)</p>
-<p>We will mix APIs from the <a class="reference internal" href="high-level.html#high-level-extending"><span class="std std-ref">high-level extension API</span></a>
-and the <a class="reference internal" href="low-level.html#low-level-extending"><span class="std std-ref">low-level extension API</span></a>, depending on what is
+<p>We will mix APIs from the <a class="reference internal" href="high-level.html#high-level-extending"><span>high-level extension API</span></a>
+and the <a class="reference internal" href="low-level.html#low-level-extending"><span>low-level extension API</span></a>, depending on what is
 available for a given task.</p>
 <p>The starting point for our example is the following pure Python class:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Interval</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Interval</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A half-open interval on the real number line.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -219,7 +251,7 @@ available for a given task.</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">hi</span> <span class="o">=</span> <span class="n">hi</span>
 
     <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s1">&#39;Interval(</span><span class="si">%f</span><span class="s1">, </span><span class="si">%f</span><span class="s1">)&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lo</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">hi</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s">&#39;Interval(</span><span class="si">%f</span><span class="s">, </span><span class="si">%f</span><span class="s">)&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lo</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">hi</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">width</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -237,11 +269,11 @@ granularity as well as various meta-information not available with regular
 Python types.</p>
 <p>We first create a type class <code class="docutils literal"><span class="pre">IntervalType</span></code> and, since we don&#8217;t need the
 type to be parametric, we instantiate a single type instance <code class="docutils literal"><span class="pre">interval_type</span></code>:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">numba</span> <span class="k">import</span> <span class="n">types</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">types</span>
 
 <span class="k">class</span> <span class="nc">IntervalType</span><span class="p">(</span><span class="n">types</span><span class="o">.</span><span class="n">Type</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">IntervalType</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Interval&#39;</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">IntervalType</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&#39;Interval&#39;</span><span class="p">)</span>
 
 <span class="n">interval_type</span> <span class="o">=</span> <span class="n">IntervalType</span><span class="p">()</span>
 </pre></div>
@@ -253,9 +285,9 @@ type to be parametric, we instantiate a single type instance <code class="docuti
 how to infer some Python values as instances of that type.  In this example,
 it is trivial: any instance of the <code class="docutils literal"><span class="pre">Interval</span></code> class should be treated as
 belonging to the type <code class="docutils literal"><span class="pre">interval_type</span></code>:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">numba.extending</span> <span class="k">import</span> <span class="n">typeof_impl</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">numba.extending</span> <span class="kn">import</span> <span class="n">typeof_impl</span>
 
-<span class="nd">@typeof_impl</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">Interval</span><span class="p">)</span>
+<span class="nd">@typeof_impl.register</span><span class="p">(</span><span class="n">Interval</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">typeof_index</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">c</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">interval_type</span>
 </pre></div>
@@ -268,7 +300,7 @@ to <code class="docutils literal"><span class="pre">interval_type</span></code> 
 <p>We want to be able to construct interval objects from Numba functions, so
 we must teach Numba to recognize the two-argument <code class="docutils literal"><span class="pre">Interval(lo,</span> <span class="pre">hi)</span></code>
 constructor.  The arguments should be floating-point numbers:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">numba.extending</span> <span class="k">import</span> <span class="n">type_callable</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">numba.extending</span> <span class="kn">import</span> <span class="n">type_callable</span>
 
 <span class="nd">@type_callable</span><span class="p">(</span><span class="n">Interval</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">type_interval</span><span class="p">(</span><span class="n">context</span><span class="p">):</span>
@@ -305,14 +337,14 @@ a tailored native representation, also called a <em>data model</em>.</p>
 <p>A common case of data model is an immutable struct-like data model, that
 is akin to a C <code class="docutils literal"><span class="pre">struct</span></code>.  Our interval datatype conveniently falls in
 that category, and here is a possible data model for it:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">numba.extending</span> <span class="k">import</span> <span class="n">models</span><span class="p">,</span> <span class="n">register_model</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">numba.extending</span> <span class="kn">import</span> <span class="n">models</span><span class="p">,</span> <span class="n">register_model</span>
 
 <span class="nd">@register_model</span><span class="p">(</span><span class="n">IntervalType</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">IntervalModel</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">StructModel</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dmm</span><span class="p">,</span> <span class="n">fe_type</span><span class="p">):</span>
         <span class="n">members</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="p">(</span><span class="s1">&#39;lo&#39;</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">float64</span><span class="p">),</span>
-            <span class="p">(</span><span class="s1">&#39;hi&#39;</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">float64</span><span class="p">),</span>
+            <span class="p">(</span><span class="s">&#39;lo&#39;</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">float64</span><span class="p">),</span>
+            <span class="p">(</span><span class="s">&#39;hi&#39;</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">float64</span><span class="p">),</span>
             <span class="p">]</span>
         <span class="n">models</span><span class="o">.</span><span class="n">StructModel</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dmm</span><span class="p">,</span> <span class="n">fe_type</span><span class="p">,</span> <span class="n">members</span><span class="p">)</span>
 </pre></div>
@@ -332,10 +364,10 @@ stored and passed on the stack or in registers like immutable types do.</p>
 <p>We want the data model attributes <code class="docutils literal"><span class="pre">lo</span></code> and <code class="docutils literal"><span class="pre">hi</span></code> to be exposed under
 the same names for use in Numba functions.  Numba provides a convenience
 function to do exactly that:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">numba.extending</span> <span class="k">import</span> <span class="n">make_attribute_wrapper</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">numba.extending</span> <span class="kn">import</span> <span class="n">make_attribute_wrapper</span>
 
-<span class="n">make_attribute_wrapper</span><span class="p">(</span><span class="n">IntervalType</span><span class="p">,</span> <span class="s1">&#39;lo&#39;</span><span class="p">,</span> <span class="s1">&#39;lo&#39;</span><span class="p">)</span>
-<span class="n">make_attribute_wrapper</span><span class="p">(</span><span class="n">IntervalType</span><span class="p">,</span> <span class="s1">&#39;hi&#39;</span><span class="p">,</span> <span class="s1">&#39;hi&#39;</span><span class="p">)</span>
+<span class="n">make_attribute_wrapper</span><span class="p">(</span><span class="n">IntervalType</span><span class="p">,</span> <span class="s">&#39;lo&#39;</span><span class="p">,</span> <span class="s">&#39;lo&#39;</span><span class="p">)</span>
+<span class="n">make_attribute_wrapper</span><span class="p">(</span><span class="n">IntervalType</span><span class="p">,</span> <span class="s">&#39;hi&#39;</span><span class="p">,</span> <span class="s">&#39;hi&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>This will expose the attributes in read-only mode.  As mentioned above,
@@ -346,9 +378,9 @@ writable attributes don&#8217;t fit in this model.</p>
 <p>As the <code class="docutils literal"><span class="pre">width</span></code> property is computed rather than stored in the structure,
 we cannot simply expose it like we did for <code class="docutils literal"><span class="pre">lo</span></code> and <code class="docutils literal"><span class="pre">hi</span></code>.  We have to
 re-implement it explicitly:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">numba.extending</span> <span class="k">import</span> <span class="n">overload_attribute</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">numba.extending</span> <span class="kn">import</span> <span class="n">overload_attribute</span>
 
-<span class="nd">@overload_attribute</span><span class="p">(</span><span class="n">IntervalType</span><span class="p">,</span> <span class="s2">&quot;width&quot;</span><span class="p">)</span>
+<span class="nd">@overload_attribute</span><span class="p">(</span><span class="n">IntervalType</span><span class="p">,</span> <span class="s">&quot;width&quot;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">get_width</span><span class="p">(</span><span class="n">interval</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">getter</span><span class="p">(</span><span class="n">interval</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">interval</span><span class="o">.</span><span class="n">hi</span> <span class="o">-</span> <span class="n">interval</span><span class="o">.</span><span class="n">lo</span>
@@ -363,8 +395,8 @@ single API.</p>
 <div class="section" id="implementing-the-constructor">
 <h3>6.3.2.4. Implementing the constructor<a class="headerlink" href="#implementing-the-constructor" title="Permalink to this headline">¶</a></h3>
 <p>Now we want to implement the two-argument <code class="docutils literal"><span class="pre">Interval</span></code> constructor:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">numba.extending</span> <span class="k">import</span> <span class="n">lower_builtin</span>
-<span class="kn">from</span> <span class="nn">numba</span> <span class="k">import</span> <span class="n">cgutils</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">numba.extending</span> <span class="kn">import</span> <span class="n">lower_builtin</span>
+<span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">cgutils</span>
 
 <span class="nd">@lower_builtin</span><span class="p">(</span><span class="n">Interval</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">Float</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">Float</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">impl_interval</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">builder</span><span class="p">,</span> <span class="n">sig</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
@@ -400,15 +432,15 @@ gets the LLVM value out of the wrapper.</p>
 get the error <em>&#8220;cannot convert Interval to native value&#8221;</em>.  This is because
 Numba doesn&#8217;t yet know how to make a native interval value from a Python
 <code class="docutils literal"><span class="pre">Interval</span></code> instance.  Let&#8217;s teach it how to do it:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">numba.extending</span> <span class="k">import</span> <span class="n">unbox</span><span class="p">,</span> <span class="n">NativeValue</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">numba.extending</span> <span class="kn">import</span> <span class="n">unbox</span><span class="p">,</span> <span class="n">NativeValue</span>
 
 <span class="nd">@unbox</span><span class="p">(</span><span class="n">IntervalType</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">unbox_interval</span><span class="p">(</span><span class="n">typ</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">c</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Convert a Interval object to a native interval structure.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">lo_obj</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">pyapi</span><span class="o">.</span><span class="n">object_getattr_string</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="s2">&quot;lo&quot;</span><span class="p">)</span>
-    <span class="n">hi_obj</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">pyapi</span><span class="o">.</span><span class="n">object_getattr_string</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="s2">&quot;hi&quot;</span><span class="p">)</span>
+    <span class="n">lo_obj</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">pyapi</span><span class="o">.</span><span class="n">object_getattr_string</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="s">&quot;lo&quot;</span><span class="p">)</span>
+    <span class="n">hi_obj</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">pyapi</span><span class="o">.</span><span class="n">object_getattr_string</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="s">&quot;hi&quot;</span><span class="p">)</span>
     <span class="n">interval</span> <span class="o">=</span> <span class="n">cgutils</span><span class="o">.</span><span class="n">create_struct_proxy</span><span class="p">(</span><span class="n">typ</span><span class="p">)(</span><span class="n">c</span><span class="o">.</span><span class="n">context</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">builder</span><span class="p">)</span>
     <span class="n">interval</span><span class="o">.</span><span class="n">lo</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">pyapi</span><span class="o">.</span><span class="n">float_as_double</span><span class="p">(</span><span class="n">lo_obj</span><span class="p">)</span>
     <span class="n">interval</span><span class="o">.</span><span class="n">hi</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">pyapi</span><span class="o">.</span><span class="n">float_as_double</span><span class="p">(</span><span class="n">hi_obj</span><span class="p">)</span>
@@ -431,7 +463,7 @@ may have happened when unboxing the object (try passing <code class="docutils li
 for example).</p>
 <p>We also want to do the reverse operation, called <em>boxing</em>, so as to return
 interval values from Numba functions:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">numba.extending</span> <span class="k">import</span> <span class="n">box</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">numba.extending</span> <span class="kn">import</span> <span class="n">box</span>
 
 <span class="nd">@box</span><span class="p">(</span><span class="n">IntervalType</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">box_interval</span><span class="p">(</span><span class="n">typ</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="n">c</span><span class="p">):</span>
@@ -456,17 +488,17 @@ interval values from Numba functions:</p>
 <p><a class="reference internal" href="../glossary.html#term-nopython-mode"><span class="xref std std-term">nopython mode</span></a> functions are now able to make use of Interval objects
 and the various operations you have defined on them.  You can try for
 example the following functions:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">numba</span> <span class="k">import</span> <span class="n">jit</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">jit</span>
 
-<span class="nd">@jit</span><span class="p">(</span><span class="n">nopython</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="nd">@jit</span><span class="p">(</span><span class="n">nopython</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">inside_interval</span><span class="p">(</span><span class="n">interval</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">interval</span><span class="o">.</span><span class="n">lo</span> <span class="o">&lt;=</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">interval</span><span class="o">.</span><span class="n">hi</span>
 
-<span class="nd">@jit</span><span class="p">(</span><span class="n">nopython</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="nd">@jit</span><span class="p">(</span><span class="n">nopython</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">interval_width</span><span class="p">(</span><span class="n">interval</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">interval</span><span class="o">.</span><span class="n">width</span>
 
-<span class="nd">@jit</span><span class="p">(</span><span class="n">nopython</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="nd">@jit</span><span class="p">(</span><span class="n">nopython</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">sum_intervals</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">Interval</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">lo</span> <span class="o">+</span> <span class="n">j</span><span class="o">.</span><span class="n">lo</span><span class="p">,</span> <span class="n">i</span><span class="o">.</span><span class="n">hi</span> <span class="o">+</span> <span class="n">j</span><span class="o">.</span><span class="n">hi</span><span class="p">)</span>
 </pre></div>
@@ -505,20 +537,17 @@ convenience function</li>
       </div><!-- /row -->
 
       <!-- row -->
-      <div class="row footer-relbar">
-<div id="navbar-related" class=" related navbar navbar-default" role="navigation" aria-label="related navigation">
+      <div class="row-fluid">
+<div class="related navbar ">
   <div class="navbar-inner">
-    <ul class="nav navbar-nav ">
-        <li><a href="../index.html">Numba 0.33.0-py2.7-macosx-10.6-x86_64.egg documentation</a></li>
-    </ul>
-<ul class="nav navbar-nav pull-right hidden-xs hidden-sm">
+    <ul class="nav pull-right">
       
-        <li><a href="low-level.html" title="6.2. Low-level extension API" >previous</a></li>
-        <li><a href="../developer/index.html" title="7. Developer Manual" >next</a></li>
-        <li><a href="../py-modindex.html" title="Python Module Index" >modules</a></li>
         <li><a href="../genindex.html" title="General Index" >index</a></li>
-        <li><a href="index.html" >6. Extending Numba</a></li>
-        <li><a href="#">top</a></li> 
+        <li><a href="../py-modindex.html" title="Python Module Index" >modules</a></li>
+        <li><a href="../developer/index.html" title="7. Developer Manual" >next</a></li>
+        <li><a href="low-level.html" title="6.2. Low-level extension API" >previous</a></li>
+        <li><a href="../index.html">Numba 0.34.0.dev0+406.gb3f4e4c-py2.7-linux-x86_64.egg documentation</a></li>
+        <li><a href="index.html" >6. Extending Numba</a></li> 
       
     </ul>
   </div>
@@ -526,9 +555,9 @@ convenience function</li>
       </div><!-- /row -->
 
       <!-- footer -->
-      <footer role="contentinfo">
+      <footer>
           &copy; Copyright 2012-2015, Continuum Analytics.
-        Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.1.
+        Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.1.
       </footer>
       <!-- /footer -->
 

@@ -7,109 +7,92 @@
   <head>
     <meta charset="utf-8" />
     
-    <title>3.14. Sharing CUDA Memory &mdash; Numba 0.33.0-py2.7-macosx-10.6-x86_64.egg documentation</title>
+    <title>3.14. Sharing CUDA Memory &mdash; Numba 0.34.0.dev0+406.gb3f4e4c-py2.7-linux-x86_64.egg documentation</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
 
     
-
 <link rel="stylesheet" href="../_static/css/basicstrap-base.css" type="text/css" />
-<link rel="stylesheet" id="current-theme" href="../_static/css/bootstrap3/bootstrap.min.css" type="text/css" />
-<link rel="stylesheet" id="current-adjust-theme" type="text/css" />
-
+<link rel="stylesheet" href="../_static/css/bootstrap.min.css" type="text/css" />
 <link rel="stylesheet" href="../_static/css/font-awesome.min.css">
-
+<!--[if IE 7]>
+<link rel="stylesheet" href="../_static/css/font-awesome-ie7.min.css">
+<![endif]-->
 <style type="text/css">
   body {
     padding-top: 60px;
     padding-bottom: 40px;
   }
+}
 </style>
-
-<link rel="stylesheet" href="../_static/css/basicstrap.css" type="text/css" />
+<link rel="stylesheet" href="../_static/basicstrap.css" type="text/css" />
 <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+<link rel="stylesheet" href="../_static/css/bootstrap-responsive.min.css" type="text/css" />
     
 <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
             URL_ROOT:    '../',
-            VERSION:     '0.33.0-py2.7-macosx-10.6-x86_64.egg',
+            VERSION:     '0.34.0.dev0+406.gb3f4e4c-py2.7-linux-x86_64.egg',
             COLLAPSE_INDEX: false,
             FILE_SUFFIX: '.html',
             HAS_SOURCE:  true
   };
 </script>
-    <script type="text/javascript" src="../_static/js/jquery.min.js"></script>
-    <script type="text/javascript" src="../_static/underscore.js"></script>
-    <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="../_static/js/bootstrap3.min.js"></script>
-<script type="text/javascript" src="../_static/js/jquery.cookie.min.js"></script>
-<script type="text/javascript" src="../_static/js/basicstrap.js"></script>
+<script type="text/javascript" src="../_static/js/jquery.min.js"></script>
+<script type="text/javascript" src="../_static/underscore.js"></script>
+<script type="text/javascript" src="../_static/doctools.js"></script>
+<script type="text/javascript" src="../_static/js/bootstrap.min.js"></script>
 <script type="text/javascript">
+  $(document).ready(function(){
+    $('.show-sidebar').click(function(e) {
+       e.preventDefault();
+       if ($(".show-sidebar").html() == "Open Table Of Contents") {
+          $('.for-mobile').removeClass('hidden-phone');
+          $(".show-sidebar").html("Close Table Of Contents");
+       } else {
+          $(".show-sidebar").html("Open Table Of Contents");
+       }
+    });
+  });
 </script>
-    <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="Numba 0.33.0-py2.7-macosx-10.6-x86_64.egg documentation" href="../index.html" />
+    <link rel="top" title="Numba 0.34.0.dev0+406.gb3f4e4c-py2.7-linux-x86_64.egg documentation" href="../index.html" />
     <link rel="up" title="3. Numba for CUDA GPUs" href="index.html" />
     <link rel="next" title="3.15. CUDA Frequently Asked Questions" href="faq.html" />
     <link rel="prev" title="3.13. CUDA Ufuncs and Generalized Ufuncs" href="ufunc.html" /> 
   </head>
-  <body role="document">
-    <div id="navbar-top" class="navbar navbar-fixed-top navbar-default" role="navigation" aria-label="top navigation">
-      <div class="container-fluid">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-            <span class="sr-only">Toggle navigation</span>
+  <body>
+    <div class="navbar navbar-fixed-top ">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="../index.html">Numba 0.33.0-py2.7-macosx-10.6-x86_64.egg documentation</a>
-        </div>
-        <div class="navbar-collapse collapse">
-          <ul class="nav navbar-nav navbar-right">
-              <li class="dropdown visible-xs">
-                <a role="button" id="localToc" data-toggle="dropdown" data-target="#" href="#">Table Of Contents <b class="caret"></b></a>
-                <ul class="dropdown-menu localtoc sp-localtoc" role="menu" aria-labelledby="localToc">
-                <ul>
-<li><a class="reference internal" href="#">3.14. Sharing CUDA Memory</a><ul>
-<li><a class="reference internal" href="#sharing-between-process">3.14.1. Sharing between process</a><ul>
-<li><a class="reference internal" href="#export-device-array-to-another-process">3.14.1.1. Export device array to another process</a></li>
-<li><a class="reference internal" href="#import-ipc-memory-from-another-process">3.14.1.2. Import IPC memory from another process</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-
-                </ul>
-              </li>
-
-            
-              <li><a href="ufunc.html" title="3.13. CUDA Ufuncs and Generalized Ufuncs" accesskey="P">previous </a></li>
-              <li><a href="faq.html" title="3.15. CUDA Frequently Asked Questions" accesskey="N">next </a></li>
-              <li><a href="../py-modindex.html" title="Python Module Index" >modules </a></li>
-              <li><a href="../genindex.html" title="General Index" accesskey="I">index </a></li>
-              <li><a href="index.html" accesskey="U">3. Numba for CUDA GPUs</a></li>
-            
-            <li class="visible-xs"><a href="../_sources/cuda/ipc.rst.txt" rel="nofollow">Show Source</a></li>
-
-            <li class="visible-xs">
-                <form class="search form-search form-inline navbar-form navbar-right sp-searchbox" action="../search.html" method="get">
-                  <div class="input-append input-group">
-                    <input type="text" class="search-query form-control" name="q" placeholder="Search...">
-                    <span class="input-group-btn">
-                    <input type="submit" class="btn" value="Go" />
-                    </span>
-                  </div>
-                  <input type="hidden" name="check_keywords" value="yes" />
-                  <input type="hidden" name="area" value="default" />
-                </form>
-            </li>
-
-            
-
-          </ul>
-
+          </a>
+          <a class="brand" href="../index.html">Numba 0.34.0.dev0+406.gb3f4e4c-py2.7-linux-x86_64.egg documentation</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav pull-right">
+              
+                <li>
+                <a href="../genindex.html" title="General Index" accesskey="I">index</a>
+                </li>
+                <li>
+                <a href="../py-modindex.html" title="Python Module Index" >modules</a>
+                </li>
+                <li>
+                <a href="faq.html" title="3.15. CUDA Frequently Asked Questions" accesskey="N">next</a>
+                </li>
+                <li>
+                <a href="ufunc.html" title="3.13. CUDA Ufuncs and Generalized Ufuncs" accesskey="P">previous</a>
+                </li>
+                <li>
+                <a href="index.html" accesskey="U">3. Numba for CUDA GPUs</a>
+                </li>
+              
+            </ul>
+          </div>
         </div>
       </div>
     </div>
@@ -118,11 +101,13 @@
     <!-- container -->
     <div class="container-fluid">
 
-      <!-- row -->
-      <div class="row">
-         
-<div class="col-md-3 hidden-xs" id="sidebar-wrapper">
-  <div class="sidebar hidden-xs" role="navigation" aria-label="main navigation">
+
+      
+      <div class="row-fluid hidden-desktop hidden-tablet">
+      
+<div class="span3 ">
+  <a class="visible-phone btn btn-small show-sidebar" data-toggle="collapse" data-target=".for-mobile">Open Table Of Contents</a>
+  <div class="for-mobile sidebar hidden-phone">
   <h3><a href="../index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">3.14. Sharing CUDA Memory</a><ul>
@@ -144,18 +129,65 @@
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="../_sources/cuda/ipc.rst.txt"
+      <li><a href="../_sources/cuda/ipc.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
-<div id="searchbox" role="search">
+<div id="searchbox">
   <h3>Quick search</h3>
-  <form class="search form-inline" action="../search.html" method="get">
-      <div class="input-append input-group">
-        <input type="text" class="search-query form-control" name="q" placeholder="Search...">
-        <span class="input-group-btn">
+  <form class="search form-search" action="../search.html" method="get">
+      <div class="input-append">
+        <input type="text" class="search-query" name="q">
         <input type="submit" class="btn" value="Go" />
-        </span>
+      </div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+  </div>
+</div>
+      </div>
+      
+
+      <!-- row -->
+      <div class="row-fluid">
+         
+<div class="span3 visible-desktop visible-tablet">
+  <div class=" sidebar hidden-phone">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">3.14. Sharing CUDA Memory</a><ul>
+<li><a class="reference internal" href="#sharing-between-process">3.14.1. Sharing between process</a><ul>
+<li><a class="reference internal" href="#export-device-array-to-another-process">3.14.1.1. Export device array to another process</a></li>
+<li><a class="reference internal" href="#import-ipc-memory-from-another-process">3.14.1.2. Import IPC memory from another process</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="ufunc.html"
+                        title="previous chapter">3.13. CUDA Ufuncs and Generalized Ufuncs</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="faq.html"
+                        title="next chapter">3.15. CUDA Frequently Asked Questions</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/cuda/ipc.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox">
+  <h3>Quick search</h3>
+  <form class="search form-search" action="../search.html" method="get">
+      <div class="input-append">
+        <input type="text" class="search-query" name="q">
+        <input type="submit" class="btn" value="Go" />
       </div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
@@ -168,8 +200,8 @@
 </div> 
         
 
-        <div class="col-md-9" id="content-wrapper">
-          <div class="document" role="main">
+        <div class="span9">
+          <div class="document">
             <div class="documentwrapper">
               <div class="bodywrapper">
                 <div class="body">
@@ -189,8 +221,8 @@ the CUDA IPC API.  To do so, use the <code class="docutils literal"><span class=
 array to get a <code class="docutils literal"><span class="pre">IpcArrayHandle</span></code> object, which can be transferred to another
 process.</p>
 <dl class="method">
-<dt id="numba.cuda.cudadrv.devicearray.DeviceNDArray.get_ipc_handle">
-<code class="descclassname">DeviceNDArray.</code><code class="descname">get_ipc_handle</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#numba.cuda.cudadrv.devicearray.DeviceNDArray.get_ipc_handle" title="Permalink to this definition">¶</a></dt>
+<dt>
+<code class="descclassname">DeviceNDArray.</code><code class="descname">get_ipc_handle</code><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
 <dd><p>Returns a <em>IpcArrayHandle</em> object that is safe to serialize and transfer
 to another process to share the local allocation.</p>
 <p>Note: this feature is only available on Linux.</p>
@@ -208,10 +240,10 @@ destination can no longer use the shared array object.  (Note: the
 underlying weakref to the resource is now dead.)</p>
 <p>This object implements the context-manager interface that calls the
 <em>.open()</em> and <em>.close()</em> method automatically:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">the_ipc_array_handle</span> <span class="k">as</span> <span class="n">ipc_array</span><span class="p">:</span>
-    <span class="c1"># use ipc_array here as a normal gpu array object</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">with</span> <span class="n">the_ipc_array_handle</span> <span class="k">as</span> <span class="n">ipc_array</span><span class="p">:</span>
+    <span class="c"># use ipc_array here as a normal gpu array object</span>
     <span class="n">some_code</span><span class="p">(</span><span class="n">ipc_array</span><span class="p">)</span>
-<span class="c1"># ipc_array is dead at this point</span>
+<span class="c"># ipc_array is dead at this point</span>
 </pre></div>
 </div>
 <dl class="method">
@@ -261,20 +293,17 @@ C contiguous array.</p>
       </div><!-- /row -->
 
       <!-- row -->
-      <div class="row footer-relbar">
-<div id="navbar-related" class=" related navbar navbar-default" role="navigation" aria-label="related navigation">
+      <div class="row-fluid">
+<div class="related navbar ">
   <div class="navbar-inner">
-    <ul class="nav navbar-nav ">
-        <li><a href="../index.html">Numba 0.33.0-py2.7-macosx-10.6-x86_64.egg documentation</a></li>
-    </ul>
-<ul class="nav navbar-nav pull-right hidden-xs hidden-sm">
+    <ul class="nav pull-right">
       
-        <li><a href="ufunc.html" title="3.13. CUDA Ufuncs and Generalized Ufuncs" >previous</a></li>
-        <li><a href="faq.html" title="3.15. CUDA Frequently Asked Questions" >next</a></li>
-        <li><a href="../py-modindex.html" title="Python Module Index" >modules</a></li>
         <li><a href="../genindex.html" title="General Index" >index</a></li>
-        <li><a href="index.html" >3. Numba for CUDA GPUs</a></li>
-        <li><a href="#">top</a></li> 
+        <li><a href="../py-modindex.html" title="Python Module Index" >modules</a></li>
+        <li><a href="faq.html" title="3.15. CUDA Frequently Asked Questions" >next</a></li>
+        <li><a href="ufunc.html" title="3.13. CUDA Ufuncs and Generalized Ufuncs" >previous</a></li>
+        <li><a href="../index.html">Numba 0.34.0.dev0+406.gb3f4e4c-py2.7-linux-x86_64.egg documentation</a></li>
+        <li><a href="index.html" >3. Numba for CUDA GPUs</a></li> 
       
     </ul>
   </div>
@@ -282,9 +311,9 @@ C contiguous array.</p>
       </div><!-- /row -->
 
       <!-- footer -->
-      <footer role="contentinfo">
+      <footer>
           &copy; Copyright 2012-2015, Continuum Analytics.
-        Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.1.
+        Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.1.
       </footer>
       <!-- /footer -->
 

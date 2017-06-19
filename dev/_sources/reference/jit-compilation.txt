@@ -5,7 +5,7 @@ Just-in-Time compilation
 JIT functions
 -------------
 
-.. decorator:: numba.jit(signature=None, nopython=False, nogil=False, cache=False, forceobj=False, locals={})
+.. decorator:: numba.jit(signature=None, nopython=False, nogil=False, cache=False, forceobj=False, error_model='python', locals={})
 
    Compile the decorated function on-the-fly to produce efficient machine
    code.  All parameters all optional.
@@ -66,6 +66,11 @@ JIT functions
    allowed to write to it, though, it falls back to a platform-specific
    user-wide cache directory (such as ``$HOME/.cache/numba`` on Unix
    platforms).
+
+   The *error_model* option controls the divide-by-zero behavior.
+   Setting it to 'python' causes divide-by-zero to raise exception like CPython.
+   Setting it to 'numpy' causes divide-by-zero to set the result to *+/-inf* or
+   *nan*.
 
    Not all functions can be cached, since some functionality cannot be
    always persisted to disk.  When a function cannot be cached, a
@@ -156,6 +161,29 @@ Dispatcher objects
       human-readable native assembler code for the function.  If the
       signature keyword is specified a string corresponding to that
       individual signature is returned.
+
+   .. method:: inspect_cfg(signature=None, show_wrapped)
+
+      Return a dictionary keying compiled function signatures to the
+      control-flow graph objects for the function.  If the signature keyword is
+      specified a string corresponding to that individual signature is returned.
+
+      The control-flow graph objects can be stringified (``str`` or ``repr``)
+      to get the textual representation of the graph in DOT format.  Or, use
+      its ``.display(filename=None, view=False)`` method to plot the graph.
+      The *filename* option can be set to a specific path for the rendered
+      output to write to.  If *view* option is True, the plot is opened by
+      the system default application for the image format (PDF). In IPython
+      notebook, the returned object can be plot inlined.
+
+      Usage::
+
+        @jit
+        def foo():
+          ...
+
+        # opens the CFG in system default application
+        foo.inspect_cfg(foo.signatures[0]).display(view=True)
 
    .. method:: recompile()
 

@@ -7,113 +7,92 @@
   <head>
     <meta charset="utf-8" />
     
-    <title>5.2. Writing HSA Kernels &mdash; Numba 0.33.0-py2.7-macosx-10.6-x86_64.egg documentation</title>
+    <title>5.2. Writing HSA Kernels &mdash; Numba 0.34.0.dev0+406.gb3f4e4c-py2.7-linux-x86_64.egg documentation</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
 
     
-
 <link rel="stylesheet" href="../_static/css/basicstrap-base.css" type="text/css" />
-<link rel="stylesheet" id="current-theme" href="../_static/css/bootstrap3/bootstrap.min.css" type="text/css" />
-<link rel="stylesheet" id="current-adjust-theme" type="text/css" />
-
+<link rel="stylesheet" href="../_static/css/bootstrap.min.css" type="text/css" />
 <link rel="stylesheet" href="../_static/css/font-awesome.min.css">
-
+<!--[if IE 7]>
+<link rel="stylesheet" href="../_static/css/font-awesome-ie7.min.css">
+<![endif]-->
 <style type="text/css">
   body {
     padding-top: 60px;
     padding-bottom: 40px;
   }
+}
 </style>
-
-<link rel="stylesheet" href="../_static/css/basicstrap.css" type="text/css" />
+<link rel="stylesheet" href="../_static/basicstrap.css" type="text/css" />
 <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+<link rel="stylesheet" href="../_static/css/bootstrap-responsive.min.css" type="text/css" />
     
 <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
             URL_ROOT:    '../',
-            VERSION:     '0.33.0-py2.7-macosx-10.6-x86_64.egg',
+            VERSION:     '0.34.0.dev0+406.gb3f4e4c-py2.7-linux-x86_64.egg',
             COLLAPSE_INDEX: false,
             FILE_SUFFIX: '.html',
             HAS_SOURCE:  true
   };
 </script>
-    <script type="text/javascript" src="../_static/js/jquery.min.js"></script>
-    <script type="text/javascript" src="../_static/underscore.js"></script>
-    <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="../_static/js/bootstrap3.min.js"></script>
-<script type="text/javascript" src="../_static/js/jquery.cookie.min.js"></script>
-<script type="text/javascript" src="../_static/js/basicstrap.js"></script>
+<script type="text/javascript" src="../_static/js/jquery.min.js"></script>
+<script type="text/javascript" src="../_static/underscore.js"></script>
+<script type="text/javascript" src="../_static/doctools.js"></script>
+<script type="text/javascript" src="../_static/js/bootstrap.min.js"></script>
 <script type="text/javascript">
+  $(document).ready(function(){
+    $('.show-sidebar').click(function(e) {
+       e.preventDefault();
+       if ($(".show-sidebar").html() == "Open Table Of Contents") {
+          $('.for-mobile').removeClass('hidden-phone');
+          $(".show-sidebar").html("Close Table Of Contents");
+       } else {
+          $(".show-sidebar").html("Open Table Of Contents");
+       }
+    });
+  });
 </script>
-    <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="Numba 0.33.0-py2.7-macosx-10.6-x86_64.egg documentation" href="../index.html" />
+    <link rel="top" title="Numba 0.34.0.dev0+406.gb3f4e4c-py2.7-linux-x86_64.egg documentation" href="../index.html" />
     <link rel="up" title="5. Numba for HSA APUs" href="index.html" />
     <link rel="next" title="5.3. Memory management" href="memory.html" />
     <link rel="prev" title="5.1. Overview" href="overview.html" /> 
   </head>
-  <body role="document">
-    <div id="navbar-top" class="navbar navbar-fixed-top navbar-default" role="navigation" aria-label="top navigation">
-      <div class="container-fluid">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-            <span class="sr-only">Toggle navigation</span>
+  <body>
+    <div class="navbar navbar-fixed-top ">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="../index.html">Numba 0.33.0-py2.7-macosx-10.6-x86_64.egg documentation</a>
-        </div>
-        <div class="navbar-collapse collapse">
-          <ul class="nav navbar-nav navbar-right">
-              <li class="dropdown visible-xs">
-                <a role="button" id="localToc" data-toggle="dropdown" data-target="#" href="#">Table Of Contents <b class="caret"></b></a>
-                <ul class="dropdown-menu localtoc sp-localtoc" role="menu" aria-labelledby="localToc">
-                <ul>
-<li><a class="reference internal" href="#">5.2. Writing HSA Kernels</a><ul>
-<li><a class="reference internal" href="#introduction">5.2.1. Introduction</a></li>
-<li><a class="reference internal" href="#introduction-for-cuda-programmers">5.2.2. Introduction for CUDA Programmers</a></li>
-<li><a class="reference internal" href="#kernel-declaration">5.2.3. Kernel declaration</a></li>
-<li><a class="reference internal" href="#kernel-invocation">5.2.4. Kernel invocation</a><ul>
-<li><a class="reference internal" href="#choosing-the-workgroup-size">5.2.4.1. Choosing the workgroup size</a></li>
-<li><a class="reference internal" href="#multi-dimensional-workgroup-and-grid">5.2.4.2. Multi-dimensional workgroup and grid</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#workitem-positioning">5.2.5. WorkItem positioning</a></li>
-</ul>
-</li>
-</ul>
-
-                </ul>
-              </li>
-
-            
-              <li><a href="overview.html" title="5.1. Overview" accesskey="P">previous </a></li>
-              <li><a href="memory.html" title="5.3. Memory management" accesskey="N">next </a></li>
-              <li><a href="../py-modindex.html" title="Python Module Index" >modules </a></li>
-              <li><a href="../genindex.html" title="General Index" accesskey="I">index </a></li>
-              <li><a href="index.html" accesskey="U">5. Numba for HSA APUs</a></li>
-            
-            <li class="visible-xs"><a href="../_sources/hsa/kernels.rst.txt" rel="nofollow">Show Source</a></li>
-
-            <li class="visible-xs">
-                <form class="search form-search form-inline navbar-form navbar-right sp-searchbox" action="../search.html" method="get">
-                  <div class="input-append input-group">
-                    <input type="text" class="search-query form-control" name="q" placeholder="Search...">
-                    <span class="input-group-btn">
-                    <input type="submit" class="btn" value="Go" />
-                    </span>
-                  </div>
-                  <input type="hidden" name="check_keywords" value="yes" />
-                  <input type="hidden" name="area" value="default" />
-                </form>
-            </li>
-
-            
-
-          </ul>
-
+          </a>
+          <a class="brand" href="../index.html">Numba 0.34.0.dev0+406.gb3f4e4c-py2.7-linux-x86_64.egg documentation</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav pull-right">
+              
+                <li>
+                <a href="../genindex.html" title="General Index" accesskey="I">index</a>
+                </li>
+                <li>
+                <a href="../py-modindex.html" title="Python Module Index" >modules</a>
+                </li>
+                <li>
+                <a href="memory.html" title="5.3. Memory management" accesskey="N">next</a>
+                </li>
+                <li>
+                <a href="overview.html" title="5.1. Overview" accesskey="P">previous</a>
+                </li>
+                <li>
+                <a href="index.html" accesskey="U">5. Numba for HSA APUs</a>
+                </li>
+              
+            </ul>
+          </div>
         </div>
       </div>
     </div>
@@ -122,11 +101,13 @@
     <!-- container -->
     <div class="container-fluid">
 
-      <!-- row -->
-      <div class="row">
-         
-<div class="col-md-3 hidden-xs" id="sidebar-wrapper">
-  <div class="sidebar hidden-xs" role="navigation" aria-label="main navigation">
+
+      
+      <div class="row-fluid hidden-desktop hidden-tablet">
+      
+<div class="span3 ">
+  <a class="visible-phone btn btn-small show-sidebar" data-toggle="collapse" data-target=".for-mobile">Open Table Of Contents</a>
+  <div class="for-mobile sidebar hidden-phone">
   <h3><a href="../index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">5.2. Writing HSA Kernels</a><ul>
@@ -152,18 +133,69 @@
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="../_sources/hsa/kernels.rst.txt"
+      <li><a href="../_sources/hsa/kernels.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
-<div id="searchbox" role="search">
+<div id="searchbox">
   <h3>Quick search</h3>
-  <form class="search form-inline" action="../search.html" method="get">
-      <div class="input-append input-group">
-        <input type="text" class="search-query form-control" name="q" placeholder="Search...">
-        <span class="input-group-btn">
+  <form class="search form-search" action="../search.html" method="get">
+      <div class="input-append">
+        <input type="text" class="search-query" name="q">
         <input type="submit" class="btn" value="Go" />
-        </span>
+      </div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+  </div>
+</div>
+      </div>
+      
+
+      <!-- row -->
+      <div class="row-fluid">
+         
+<div class="span3 visible-desktop visible-tablet">
+  <div class=" sidebar hidden-phone">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">5.2. Writing HSA Kernels</a><ul>
+<li><a class="reference internal" href="#introduction">5.2.1. Introduction</a></li>
+<li><a class="reference internal" href="#introduction-for-cuda-programmers">5.2.2. Introduction for CUDA Programmers</a></li>
+<li><a class="reference internal" href="#kernel-declaration">5.2.3. Kernel declaration</a></li>
+<li><a class="reference internal" href="#kernel-invocation">5.2.4. Kernel invocation</a><ul>
+<li><a class="reference internal" href="#choosing-the-workgroup-size">5.2.4.1. Choosing the workgroup size</a></li>
+<li><a class="reference internal" href="#multi-dimensional-workgroup-and-grid">5.2.4.2. Multi-dimensional workgroup and grid</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#workitem-positioning">5.2.5. WorkItem positioning</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="overview.html"
+                        title="previous chapter">5.1. Overview</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="memory.html"
+                        title="next chapter">5.3. Memory management</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/hsa/kernels.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox">
+  <h3>Quick search</h3>
+  <form class="search form-search" action="../search.html" method="get">
+      <div class="input-append">
+        <input type="text" class="search-query" name="q">
+        <input type="submit" class="btn" value="Go" />
       </div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
@@ -176,8 +208,8 @@
 </div> 
         
 
-        <div class="col-md-9" id="content-wrapper">
-          <div class="document" role="main">
+        <div class="span9">
+          <div class="document">
             <div class="documentwrapper">
               <div class="bodywrapper">
                 <div class="body">
@@ -225,19 +257,19 @@ times with different workgroup sizes or grid sizes).</li>
 </ul>
 <p>At first sight, writing a HSA kernel with Numba looks very much like
 writing a <a class="reference internal" href="../glossary.html#term-jit-function"><span class="xref std std-term">JIT function</span></a> for the CPU:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="nd">@hsa</span><span class="o">.</span><span class="n">jit</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@hsa.jit</span>
 <span class="k">def</span> <span class="nf">increment_by_one</span><span class="p">(</span><span class="n">an_array</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Increment all array elements by one.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># code elided here; read further for different implementations</span>
+    <span class="c"># code elided here; read further for different implementations</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="kernel-invocation">
 <span id="hsa-kernel-invocation"></span><h2>5.2.4. Kernel invocation<a class="headerlink" href="#kernel-invocation" title="Permalink to this headline">¶</a></h2>
 <p>A kernel is typically launched in the following way:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">itempergroup</span> <span class="o">=</span> <span class="mi">32</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">itempergroup</span> <span class="o">=</span> <span class="mi">32</span>
 <span class="n">groupperrange</span> <span class="o">=</span> <span class="p">(</span><span class="n">an_array</span><span class="o">.</span><span class="n">size</span> <span class="o">+</span> <span class="p">(</span><span class="n">itempergroup</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span> <span class="o">//</span> <span class="n">itempergroup</span>
 <span class="n">increment_by_one</span><span class="p">[</span><span class="n">groupperrange</span><span class="p">,</span> <span class="n">itempergroup</span><span class="p">](</span><span class="n">an_array</span><span class="p">)</span>
 </pre></div>
@@ -261,7 +293,7 @@ number of workitem needed by a kernel.  The workgroup size (i.e. number of
 workitem per workgroup) is often crucial:</p>
 <ul>
 <li><p class="first">On the software side, the workgroup size determines how many threads
-share a given area of <a class="reference internal" href="memory.html#hsa-shared-memory"><span class="std std-ref">shared memory</span></a>.</p>
+share a given area of <a class="reference internal" href="memory.html#hsa-shared-memory"><span>shared memory</span></a>.</p>
 </li>
 <li><dl class="first docutils">
 <dt>On the hardware side, the workgroup size must be large enough for full</dt>
@@ -290,18 +322,18 @@ may define more complex responsibilities, but the underlying principle
 is the same).</p>
 <p>One way is for the thread to determines its position in the grid and
 workgroup and manually compute the corresponding array position:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="nd">@hsa</span><span class="o">.</span><span class="n">jit</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@hsa.jit</span>
 <span class="k">def</span> <span class="nf">increment_by_one</span><span class="p">(</span><span class="n">an_array</span><span class="p">):</span>
-    <span class="c1"># workitem id in a 1D workgroup</span>
+    <span class="c"># workitem id in a 1D workgroup</span>
     <span class="n">tx</span> <span class="o">=</span> <span class="n">hsa</span><span class="o">.</span><span class="n">get_local_id</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-    <span class="c1"># workgroup id in a 1D grid</span>
+    <span class="c"># workgroup id in a 1D grid</span>
     <span class="n">ty</span> <span class="o">=</span> <span class="n">hsa</span><span class="o">.</span><span class="n">get_group_id</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-    <span class="c1"># workgroup size, i.e. number of workitem per workgroup</span>
+    <span class="c"># workgroup size, i.e. number of workitem per workgroup</span>
     <span class="n">bw</span> <span class="o">=</span> <span class="n">hsa</span><span class="o">.</span><span class="n">get_local_size</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-    <span class="c1"># Compute flattened index inside the array</span>
+    <span class="c"># Compute flattened index inside the array</span>
     <span class="n">pos</span> <span class="o">=</span> <span class="n">tx</span> <span class="o">+</span> <span class="n">ty</span> <span class="o">*</span> <span class="n">bw</span>
-    <span class="c1"># The above is equivalent to pos = hsa.get_global_id(0)</span>
-    <span class="k">if</span> <span class="n">pos</span> <span class="o">&lt;</span> <span class="n">an_array</span><span class="o">.</span><span class="n">size</span><span class="p">:</span>  <span class="c1"># Check array boundaries</span>
+    <span class="c"># The above is equivalent to pos = hsa.get_global_id(0)</span>
+    <span class="k">if</span> <span class="n">pos</span> <span class="o">&lt;</span> <span class="n">an_array</span><span class="o">.</span><span class="n">size</span><span class="p">:</span>  <span class="c"># Check array boundaries</span>
         <span class="n">an_array</span><span class="p">[</span><span class="n">pos</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
 </pre></div>
 </div>
@@ -362,20 +394,17 @@ even if they belong to different workgroups (i.e. each workgroups is &#8220;full
       </div><!-- /row -->
 
       <!-- row -->
-      <div class="row footer-relbar">
-<div id="navbar-related" class=" related navbar navbar-default" role="navigation" aria-label="related navigation">
+      <div class="row-fluid">
+<div class="related navbar ">
   <div class="navbar-inner">
-    <ul class="nav navbar-nav ">
-        <li><a href="../index.html">Numba 0.33.0-py2.7-macosx-10.6-x86_64.egg documentation</a></li>
-    </ul>
-<ul class="nav navbar-nav pull-right hidden-xs hidden-sm">
+    <ul class="nav pull-right">
       
-        <li><a href="overview.html" title="5.1. Overview" >previous</a></li>
-        <li><a href="memory.html" title="5.3. Memory management" >next</a></li>
-        <li><a href="../py-modindex.html" title="Python Module Index" >modules</a></li>
         <li><a href="../genindex.html" title="General Index" >index</a></li>
-        <li><a href="index.html" >5. Numba for HSA APUs</a></li>
-        <li><a href="#">top</a></li> 
+        <li><a href="../py-modindex.html" title="Python Module Index" >modules</a></li>
+        <li><a href="memory.html" title="5.3. Memory management" >next</a></li>
+        <li><a href="overview.html" title="5.1. Overview" >previous</a></li>
+        <li><a href="../index.html">Numba 0.34.0.dev0+406.gb3f4e4c-py2.7-linux-x86_64.egg documentation</a></li>
+        <li><a href="index.html" >5. Numba for HSA APUs</a></li> 
       
     </ul>
   </div>
@@ -383,9 +412,9 @@ even if they belong to different workgroups (i.e. each workgroups is &#8220;full
       </div><!-- /row -->
 
       <!-- footer -->
-      <footer role="contentinfo">
+      <footer>
           &copy; Copyright 2012-2015, Continuum Analytics.
-        Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.1.
+        Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.1.
       </footer>
       <!-- /footer -->
 
