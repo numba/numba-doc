@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     
-    <title>1.9. Automatic parallelization with @jit &mdash; Numba 0.34.0.dev0+426.g39b79ce-py2.7-linux-x86_64.egg documentation</title>
+    <title>1.9. Automatic parallelization with @jit &mdash; Numba 0.34.0.dev0+500.g7277300-py2.7-linux-x86_64.egg documentation</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
@@ -34,7 +34,7 @@
 <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
             URL_ROOT:    '../',
-            VERSION:     '0.34.0.dev0+426.g39b79ce-py2.7-linux-x86_64.egg',
+            VERSION:     '0.34.0.dev0+500.g7277300-py2.7-linux-x86_64.egg',
             COLLAPSE_INDEX: false,
             FILE_SUFFIX: '.html',
             HAS_SOURCE:  true
@@ -57,7 +57,7 @@
     });
   });
 </script>
-    <link rel="top" title="Numba 0.34.0.dev0+426.g39b79ce-py2.7-linux-x86_64.egg documentation" href="../index.html" />
+    <link rel="top" title="Numba 0.34.0.dev0+500.g7277300-py2.7-linux-x86_64.egg documentation" href="../index.html" />
     <link rel="up" title="1. User Manual" href="index.html" />
     <link rel="next" title="1.10. Troubleshooting and tips" href="troubleshoot.html" />
     <link rel="prev" title="1.8. Compiling code ahead of time" href="pycc.html" /> 
@@ -71,7 +71,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="../index.html">Numba 0.34.0.dev0+426.g39b79ce-py2.7-linux-x86_64.egg documentation</a>
+          <a class="brand" href="../index.html">Numba 0.34.0.dev0+500.g7277300-py2.7-linux-x86_64.egg documentation</a>
           <div class="nav-collapse collapse">
             <ul class="nav pull-right">
               
@@ -112,7 +112,8 @@
   <ul>
 <li><a class="reference internal" href="#">1.9. Automatic parallelization with <code class="docutils literal"><span class="pre">&#64;jit</span></code></a><ul>
 <li><a class="reference internal" href="#supported-operations">1.9.1. Supported Operations</a></li>
-<li><a class="reference internal" href="#examples">1.9.2. Examples</a></li>
+<li><a class="reference internal" href="#explicit-parallel-loops">1.9.2. Explicit Parallel Loops</a></li>
+<li><a class="reference internal" href="#examples">1.9.3. Examples</a></li>
 </ul>
 </li>
 </ul>
@@ -158,7 +159,8 @@
   <ul>
 <li><a class="reference internal" href="#">1.9. Automatic parallelization with <code class="docutils literal"><span class="pre">&#64;jit</span></code></a><ul>
 <li><a class="reference internal" href="#supported-operations">1.9.1. Supported Operations</a></li>
-<li><a class="reference internal" href="#examples">1.9.2. Examples</a></li>
+<li><a class="reference internal" href="#explicit-parallel-loops">1.9.2. Explicit Parallel Loops</a></li>
+<li><a class="reference internal" href="#examples">1.9.3. Examples</a></li>
 </ul>
 </li>
 </ul>
@@ -251,8 +253,27 @@ not supported, nor is the reduction across a selected dimension.</p>
 </li>
 </ol>
 </div>
+<div class="section" id="explicit-parallel-loops">
+<h2>1.9.2. Explicit Parallel Loops<a class="headerlink" href="#explicit-parallel-loops" title="Permalink to this headline">¶</a></h2>
+<p>Another experimental feature of this module is support for explicit parallel
+loops. One can use Numba&#8217;s <code class="docutils literal"><span class="pre">prange</span></code> instead of <code class="docutils literal"><span class="pre">range</span></code> to specify that a
+loop can be parallelized. The user is required to make sure that the loop does
+not have cross iteration dependencies except the supported reductions.
+Currently, reductions on scalar values are supported and are inferred from
+in-place operations. The example below demonstrates a parallel loop with a
+reduction (<code class="docutils literal"><span class="pre">A</span></code> is a one-dimensional Numpy array):</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">njit</span><span class="p">,</span> <span class="n">prange</span>
+<span class="nd">@njit</span><span class="p">(</span><span class="n">parallel</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">prange_test</span><span class="p">(</span><span class="n">A</span><span class="p">):</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">prange</span><span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+        <span class="n">s</span> <span class="o">+=</span> <span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">s</span>
+</pre></div>
+</div>
+</div>
 <div class="section" id="examples">
-<h2>1.9.2. Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<h2>1.9.3. Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
 <p>In this section, we give an example of how this feature helps
 parallelize Logistic Regression:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="nd">@numba.jit</span><span class="p">(</span><span class="n">nopython</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">parallel</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
@@ -313,7 +334,7 @@ computation that can be parallelized, which was both tedious and challenging.</p
         <li><a href="../py-modindex.html" title="Python Module Index" >modules</a></li>
         <li><a href="troubleshoot.html" title="1.10. Troubleshooting and tips" >next</a></li>
         <li><a href="pycc.html" title="1.8. Compiling code ahead of time" >previous</a></li>
-        <li><a href="../index.html">Numba 0.34.0.dev0+426.g39b79ce-py2.7-linux-x86_64.egg documentation</a></li>
+        <li><a href="../index.html">Numba 0.34.0.dev0+500.g7277300-py2.7-linux-x86_64.egg documentation</a></li>
         <li><a href="index.html" >1. User Manual</a></li> 
       
     </ul>
