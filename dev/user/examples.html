@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+
+
+
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+    <title>1.12. Examples &mdash; Numba 0.34.0.dev0+426.g39b79ce-py2.7-linux-x86_64.egg documentation</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    
+<link rel="stylesheet" href="../_static/css/basicstrap-base.css" type="text/css" />
+<link rel="stylesheet" href="../_static/css/bootstrap.min.css" type="text/css" />
+<link rel="stylesheet" href="../_static/css/font-awesome.min.css">
+<!--[if IE 7]>
+<link rel="stylesheet" href="../_static/css/font-awesome-ie7.min.css">
+<![endif]-->
+<style type="text/css">
+  body {
+    padding-top: 60px;
+    padding-bottom: 40px;
+  }
+}
+</style>
+<link rel="stylesheet" href="../_static/basicstrap.css" type="text/css" />
+<link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+<link rel="stylesheet" href="../_static/css/bootstrap-responsive.min.css" type="text/css" />
+    
+<script type="text/javascript">
+  var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:    '../',
+            VERSION:     '0.34.0.dev0+426.g39b79ce-py2.7-linux-x86_64.egg',
+            COLLAPSE_INDEX: false,
+            FILE_SUFFIX: '.html',
+            HAS_SOURCE:  true
+  };
+</script>
+<script type="text/javascript" src="../_static/js/jquery.min.js"></script>
+<script type="text/javascript" src="../_static/underscore.js"></script>
+<script type="text/javascript" src="../_static/doctools.js"></script>
+<script type="text/javascript" src="../_static/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+  $(document).ready(function(){
+    $('.show-sidebar').click(function(e) {
+       e.preventDefault();
+       if ($(".show-sidebar").html() == "Open Table Of Contents") {
+          $('.for-mobile').removeClass('hidden-phone');
+          $(".show-sidebar").html("Close Table Of Contents");
+       } else {
+          $(".show-sidebar").html("Open Table Of Contents");
+       }
+    });
+  });
+</script>
+    <link rel="top" title="Numba 0.34.0.dev0+426.g39b79ce-py2.7-linux-x86_64.egg documentation" href="../index.html" />
+    <link rel="up" title="1. User Manual" href="index.html" />
+    <link rel="next" title="2. Reference Manual" href="../reference/index.html" />
+    <link rel="prev" title="1.11. Frequently Asked Questions" href="faq.html" /> 
+  </head>
+  <body>
+    <div class="navbar navbar-fixed-top ">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="../index.html">Numba 0.34.0.dev0+426.g39b79ce-py2.7-linux-x86_64.egg documentation</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav pull-right">
+              
+                <li>
+                <a href="../genindex.html" title="General Index" accesskey="I">index</a>
+                </li>
+                <li>
+                <a href="../py-modindex.html" title="Python Module Index" >modules</a>
+                </li>
+                <li>
+                <a href="../reference/index.html" title="2. Reference Manual" accesskey="N">next</a>
+                </li>
+                <li>
+                <a href="faq.html" title="1.11. Frequently Asked Questions" accesskey="P">previous</a>
+                </li>
+                <li>
+                <a href="index.html" accesskey="U">1. User Manual</a>
+                </li>
+              
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <!-- container -->
+    <div class="container-fluid">
+
+
+      
+      <div class="row-fluid hidden-desktop hidden-tablet">
+      
+<div class="span3 ">
+  <a class="visible-phone btn btn-small show-sidebar" data-toggle="collapse" data-target=".for-mobile">Open Table Of Contents</a>
+  <div class="for-mobile sidebar hidden-phone">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">1.12. Examples</a><ul>
+<li><a class="reference internal" href="#mandelbrot">1.12.1. Mandelbrot</a></li>
+<li><a class="reference internal" href="#moving-average">1.12.2. Moving average</a></li>
+<li><a class="reference internal" href="#multi-threading">1.12.3. Multi-threading</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="faq.html"
+                        title="previous chapter">1.11. Frequently Asked Questions</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../reference/index.html"
+                        title="next chapter">2. Reference Manual</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/user/examples.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox">
+  <h3>Quick search</h3>
+  <form class="search form-search" action="../search.html" method="get">
+      <div class="input-append">
+        <input type="text" class="search-query" name="q">
+        <input type="submit" class="btn" value="Go" />
+      </div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+  </div>
+</div>
+      </div>
+      
+
+      <!-- row -->
+      <div class="row-fluid">
+         
+<div class="span3 visible-desktop visible-tablet">
+  <div class=" sidebar hidden-phone">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">1.12. Examples</a><ul>
+<li><a class="reference internal" href="#mandelbrot">1.12.1. Mandelbrot</a></li>
+<li><a class="reference internal" href="#moving-average">1.12.2. Moving average</a></li>
+<li><a class="reference internal" href="#multi-threading">1.12.3. Multi-threading</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="faq.html"
+                        title="previous chapter">1.11. Frequently Asked Questions</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../reference/index.html"
+                        title="next chapter">2. Reference Manual</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/user/examples.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox">
+  <h3>Quick search</h3>
+  <form class="search form-search" action="../search.html" method="get">
+      <div class="input-append">
+        <input type="text" class="search-query" name="q">
+        <input type="submit" class="btn" value="Go" />
+      </div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+  </div>
+</div> 
+        
+
+        <div class="span9">
+          <div class="document">
+            <div class="documentwrapper">
+              <div class="bodywrapper">
+                <div class="body">
+                  
+  <div class="section" id="examples">
+<h1>1.12. Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="mandelbrot">
+<h2>1.12.1. Mandelbrot<a class="headerlink" href="#mandelbrot" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><div class="highlight"><pre><span class="c">#! /usr/bin/env python</span>
+<span class="c"># -*- coding: utf-8 -*-</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">absolute_import</span>
+
+<span class="kn">from</span> <span class="nn">timeit</span> <span class="kn">import</span> <span class="n">default_timer</span> <span class="k">as</span> <span class="n">timer</span>
+<span class="kn">from</span> <span class="nn">matplotlib.pylab</span> <span class="kn">import</span> <span class="n">imshow</span><span class="p">,</span> <span class="n">jet</span><span class="p">,</span> <span class="n">show</span><span class="p">,</span> <span class="n">ion</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">jit</span>
+
+
+<span class="nd">@jit</span>
+<span class="k">def</span> <span class="nf">mandel</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">max_iters</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Given the real and imaginary parts of a complex number,</span>
+<span class="sd">    determine if it is a candidate for membership in the Mandelbrot</span>
+<span class="sd">    set given a fixed number of iterations.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="nb">complex</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="mf">0.0j</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_iters</span><span class="p">):</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="n">z</span><span class="o">*</span><span class="n">z</span> <span class="o">+</span> <span class="n">c</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">z</span><span class="o">.</span><span class="n">real</span><span class="o">*</span><span class="n">z</span><span class="o">.</span><span class="n">real</span> <span class="o">+</span> <span class="n">z</span><span class="o">.</span><span class="n">imag</span><span class="o">*</span><span class="n">z</span><span class="o">.</span><span class="n">imag</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">4</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">i</span>
+
+    <span class="k">return</span> <span class="mi">255</span>
+
+<span class="nd">@jit</span>
+<span class="k">def</span> <span class="nf">create_fractal</span><span class="p">(</span><span class="n">min_x</span><span class="p">,</span> <span class="n">max_x</span><span class="p">,</span> <span class="n">min_y</span><span class="p">,</span> <span class="n">max_y</span><span class="p">,</span> <span class="n">image</span><span class="p">,</span> <span class="n">iters</span><span class="p">):</span>
+    <span class="n">height</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">width</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="n">pixel_size_x</span> <span class="o">=</span> <span class="p">(</span><span class="n">max_x</span> <span class="o">-</span> <span class="n">min_x</span><span class="p">)</span> <span class="o">/</span> <span class="n">width</span>
+    <span class="n">pixel_size_y</span> <span class="o">=</span> <span class="p">(</span><span class="n">max_y</span> <span class="o">-</span> <span class="n">min_y</span><span class="p">)</span> <span class="o">/</span> <span class="n">height</span>
+    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">width</span><span class="p">):</span>
+        <span class="n">real</span> <span class="o">=</span> <span class="n">min_x</span> <span class="o">+</span> <span class="n">x</span> <span class="o">*</span> <span class="n">pixel_size_x</span>
+        <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">height</span><span class="p">):</span>
+            <span class="n">imag</span> <span class="o">=</span> <span class="n">min_y</span> <span class="o">+</span> <span class="n">y</span> <span class="o">*</span> <span class="n">pixel_size_y</span>
+            <span class="n">color</span> <span class="o">=</span> <span class="n">mandel</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">iters</span><span class="p">)</span>
+            <span class="n">image</span><span class="p">[</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">]</span> <span class="o">=</span> <span class="n">color</span>
+
+    <span class="k">return</span> <span class="n">image</span>
+
+<span class="n">image</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">500</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">750</span> <span class="o">*</span> <span class="mi">2</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
+<span class="n">s</span> <span class="o">=</span> <span class="n">timer</span><span class="p">()</span>
+<span class="n">create_fractal</span><span class="p">(</span><span class="o">-</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">image</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+<span class="n">e</span> <span class="o">=</span> <span class="n">timer</span><span class="p">()</span>
+<span class="k">print</span><span class="p">(</span><span class="n">e</span> <span class="o">-</span> <span class="n">s</span><span class="p">)</span>
+<span class="n">imshow</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+<span class="c">#jet()</span>
+<span class="c">#ion()</span>
+<span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="moving-average">
+<span id="example-movemean"></span><h2>1.12.2. Moving average<a class="headerlink" href="#moving-average" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><div class="highlight"><pre><span class="c">#!/usr/bin/env python</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">A moving average function using @guvectorize.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">guvectorize</span>
+
+<span class="nd">@guvectorize</span><span class="p">([</span><span class="s">&#39;void(float64[:], intp[:], float64[:])&#39;</span><span class="p">],</span> <span class="s">&#39;(n),()-&gt;(n)&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">move_mean</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">window_arr</span><span class="p">,</span> <span class="n">out</span><span class="p">):</span>
+    <span class="n">window_width</span> <span class="o">=</span> <span class="n">window_arr</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">asum</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">window_width</span><span class="p">):</span>
+        <span class="n">asum</span> <span class="o">+=</span> <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">out</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">asum</span> <span class="o">/</span> <span class="n">count</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">window_width</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">)):</span>
+        <span class="n">asum</span> <span class="o">+=</span> <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">a</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="n">window_width</span><span class="p">]</span>
+        <span class="n">out</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">asum</span> <span class="o">/</span> <span class="n">count</span>
+
+<span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">move_mean</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="multi-threading">
+<h2>1.12.3. Multi-threading<a class="headerlink" href="#multi-threading" title="Permalink to this headline">¶</a></h2>
+<p>The code below showcases the potential performance improvement when
+using the <a class="reference internal" href="jit.html#jit-nogil"><span>nogil</span></a> feature.  For example, on a 4-core machine,
+I get the following results printed out:</p>
+<div class="highlight-python"><div class="highlight"><pre>numpy (1 thread)       145 ms
+numba (1 thread)       128 ms
+numba (4 threads)       35 ms
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Under Python 3, you can use the standard <a class="reference external" href="https://docs.python.org/3/library/concurrent.futures.html">concurrent.futures</a> module
+rather than spawn threads and dispatch tasks by hand.</p>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="c">#!/usr/bin/env python</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">absolute_import</span>
+
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">threading</span>
+<span class="kn">from</span> <span class="nn">timeit</span> <span class="kn">import</span> <span class="n">repeat</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">jit</span>
+
+<span class="n">nthreads</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">size</span> <span class="o">=</span> <span class="mi">10</span><span class="o">**</span><span class="mi">6</span>
+
+<span class="k">def</span> <span class="nf">func_np</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Control function using Numpy.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mf">2.1</span> <span class="o">*</span> <span class="n">a</span> <span class="o">+</span> <span class="mf">3.2</span> <span class="o">*</span> <span class="n">b</span><span class="p">)</span>
+
+<span class="nd">@jit</span><span class="p">(</span><span class="s">&#39;void(double[:], double[:], double[:])&#39;</span><span class="p">,</span> <span class="n">nopython</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">nogil</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">inner_func_nb</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function under test.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">)):</span>
+        <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mf">2.1</span> <span class="o">*</span> <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="mf">3.2</span> <span class="o">*</span> <span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+<span class="k">def</span> <span class="nf">timefunc</span><span class="p">(</span><span class="n">correct</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Benchmark *func* and print out its runtime.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="mi">20</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="s">&quot; &quot;</span><span class="p">)</span>
+    <span class="c"># Make sure the function is compiled before we start the benchmark</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">correct</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">correct</span><span class="p">),</span> <span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">correct</span><span class="p">)</span>
+    <span class="c"># time it</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">&#39;{:&gt;5.0f} ms&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">repeat</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">),</span>
+                                          <span class="n">number</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">res</span>
+
+<span class="k">def</span> <span class="nf">make_singlethread</span><span class="p">(</span><span class="n">inner_func</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Run the given function inside a single thread.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
+        <span class="n">length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">length</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+        <span class="n">inner_func</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span>
+    <span class="k">return</span> <span class="n">func</span>
+
+<span class="k">def</span> <span class="nf">make_multithread</span><span class="p">(</span><span class="n">inner_func</span><span class="p">,</span> <span class="n">numthreads</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Run the given function inside *numthreads* threads, splitting its</span>
+<span class="sd">    arguments into equal-sized chunks.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">func_mt</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
+        <span class="n">length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">length</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="p">(</span><span class="n">result</span><span class="p">,)</span> <span class="o">+</span> <span class="n">args</span>
+        <span class="n">chunklen</span> <span class="o">=</span> <span class="p">(</span><span class="n">length</span> <span class="o">+</span> <span class="n">numthreads</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">//</span> <span class="n">numthreads</span>
+        <span class="c"># Create argument tuples for each input chunk</span>
+        <span class="n">chunks</span> <span class="o">=</span> <span class="p">[[</span><span class="n">arg</span><span class="p">[</span><span class="n">i</span> <span class="o">*</span> <span class="n">chunklen</span><span class="p">:(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">chunklen</span><span class="p">]</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">]</span>
+                  <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">numthreads</span><span class="p">)]</span>
+        <span class="c"># Spawn one thread per chunk</span>
+        <span class="n">threads</span> <span class="o">=</span> <span class="p">[</span><span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">inner_func</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="n">chunk</span><span class="p">)</span>
+                   <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">chunks</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">thread</span> <span class="ow">in</span> <span class="n">threads</span><span class="p">:</span>
+            <span class="n">thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">thread</span> <span class="ow">in</span> <span class="n">threads</span><span class="p">:</span>
+            <span class="n">thread</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">result</span>
+    <span class="k">return</span> <span class="n">func_mt</span>
+
+
+<span class="n">func_nb</span> <span class="o">=</span> <span class="n">make_singlethread</span><span class="p">(</span><span class="n">inner_func_nb</span><span class="p">)</span>
+<span class="n">func_nb_mt</span> <span class="o">=</span> <span class="n">make_multithread</span><span class="p">(</span><span class="n">inner_func_nb</span><span class="p">,</span> <span class="n">nthreads</span><span class="p">)</span>
+
+<span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">size</span><span class="p">)</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">size</span><span class="p">)</span>
+
+<span class="n">correct</span> <span class="o">=</span> <span class="n">timefunc</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="s">&quot;numpy (1 thread)&quot;</span><span class="p">,</span> <span class="n">func_np</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+<span class="n">timefunc</span><span class="p">(</span><span class="n">correct</span><span class="p">,</span> <span class="s">&quot;numba (1 thread)&quot;</span><span class="p">,</span> <span class="n">func_nb</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+<span class="n">timefunc</span><span class="p">(</span><span class="n">correct</span><span class="p">,</span> <span class="s">&quot;numba (</span><span class="si">%d</span><span class="s"> threads)&quot;</span> <span class="o">%</span> <span class="n">nthreads</span><span class="p">,</span> <span class="n">func_nb_mt</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        
+      </div><!-- /row -->
+
+      <!-- row -->
+      <div class="row-fluid">
+<div class="related navbar ">
+  <div class="navbar-inner">
+    <ul class="nav pull-right">
+      
+        <li><a href="../genindex.html" title="General Index" >index</a></li>
+        <li><a href="../py-modindex.html" title="Python Module Index" >modules</a></li>
+        <li><a href="../reference/index.html" title="2. Reference Manual" >next</a></li>
+        <li><a href="faq.html" title="1.11. Frequently Asked Questions" >previous</a></li>
+        <li><a href="../index.html">Numba 0.34.0.dev0+426.g39b79ce-py2.7-linux-x86_64.egg documentation</a></li>
+        <li><a href="index.html" >1. User Manual</a></li> 
+      
+    </ul>
+  </div>
+</div>
+      </div><!-- /row -->
+
+      <!-- footer -->
+      <footer>
+          &copy; Copyright 2012-2015, Continuum Analytics.
+        Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.1.
+      </footer>
+      <!-- /footer -->
+
+    </div>
+    <!-- /container -->
+
+  </body>
+</html>

@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+
+
+
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+    <title>2.1. Types and signatures &mdash; Numba 0.34.0.dev0+426.g39b79ce-py2.7-linux-x86_64.egg documentation</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    
+<link rel="stylesheet" href="../_static/css/basicstrap-base.css" type="text/css" />
+<link rel="stylesheet" href="../_static/css/bootstrap.min.css" type="text/css" />
+<link rel="stylesheet" href="../_static/css/font-awesome.min.css">
+<!--[if IE 7]>
+<link rel="stylesheet" href="../_static/css/font-awesome-ie7.min.css">
+<![endif]-->
+<style type="text/css">
+  body {
+    padding-top: 60px;
+    padding-bottom: 40px;
+  }
+}
+</style>
+<link rel="stylesheet" href="../_static/basicstrap.css" type="text/css" />
+<link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+<link rel="stylesheet" href="../_static/css/bootstrap-responsive.min.css" type="text/css" />
+    
+<script type="text/javascript">
+  var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:    '../',
+            VERSION:     '0.34.0.dev0+426.g39b79ce-py2.7-linux-x86_64.egg',
+            COLLAPSE_INDEX: false,
+            FILE_SUFFIX: '.html',
+            HAS_SOURCE:  true
+  };
+</script>
+<script type="text/javascript" src="../_static/js/jquery.min.js"></script>
+<script type="text/javascript" src="../_static/underscore.js"></script>
+<script type="text/javascript" src="../_static/doctools.js"></script>
+<script type="text/javascript" src="../_static/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+  $(document).ready(function(){
+    $('.show-sidebar').click(function(e) {
+       e.preventDefault();
+       if ($(".show-sidebar").html() == "Open Table Of Contents") {
+          $('.for-mobile').removeClass('hidden-phone');
+          $(".show-sidebar").html("Close Table Of Contents");
+       } else {
+          $(".show-sidebar").html("Open Table Of Contents");
+       }
+    });
+  });
+</script>
+    <link rel="top" title="Numba 0.34.0.dev0+426.g39b79ce-py2.7-linux-x86_64.egg documentation" href="../index.html" />
+    <link rel="up" title="2. Reference Manual" href="index.html" />
+    <link rel="next" title="2.2. Just-in-Time compilation" href="jit-compilation.html" />
+    <link rel="prev" title="2. Reference Manual" href="index.html" /> 
+  </head>
+  <body>
+    <div class="navbar navbar-fixed-top ">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="../index.html">Numba 0.34.0.dev0+426.g39b79ce-py2.7-linux-x86_64.egg documentation</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav pull-right">
+              
+                <li>
+                <a href="../genindex.html" title="General Index" accesskey="I">index</a>
+                </li>
+                <li>
+                <a href="../py-modindex.html" title="Python Module Index" >modules</a>
+                </li>
+                <li>
+                <a href="jit-compilation.html" title="2.2. Just-in-Time compilation" accesskey="N">next</a>
+                </li>
+                <li>
+                <a href="index.html" title="2. Reference Manual" accesskey="P">previous</a>
+                </li>
+                <li>
+                <a href="index.html" accesskey="U">2. Reference Manual</a>
+                </li>
+              
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <!-- container -->
+    <div class="container-fluid">
+
+
+      
+      <div class="row-fluid hidden-desktop hidden-tablet">
+      
+<div class="span3 ">
+  <a class="visible-phone btn btn-small show-sidebar" data-toggle="collapse" data-target=".for-mobile">Open Table Of Contents</a>
+  <div class="for-mobile sidebar hidden-phone">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">2.1. Types and signatures</a><ul>
+<li><a class="reference internal" href="#rationale">2.1.1. Rationale</a></li>
+<li><a class="reference internal" href="#signatures">2.1.2. Signatures</a></li>
+<li><a class="reference internal" href="#basic-types">2.1.3. Basic types</a><ul>
+<li><a class="reference internal" href="#numbers">2.1.3.1. Numbers</a></li>
+<li><a class="reference internal" href="#arrays">2.1.3.2. Arrays</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#advanced-types">2.1.4. Advanced types</a><ul>
+<li><a class="reference internal" href="#inference">2.1.4.1. Inference</a></li>
+<li><a class="reference internal" href="#numpy-scalars">2.1.4.2. Numpy scalars</a></li>
+<li><a class="reference internal" href="#id1">2.1.4.3. Arrays</a></li>
+<li><a class="reference internal" href="#optional-types">2.1.4.4. Optional types</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">2. Reference Manual</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="jit-compilation.html"
+                        title="next chapter">2.2. Just-in-Time compilation</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/reference/types.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox">
+  <h3>Quick search</h3>
+  <form class="search form-search" action="../search.html" method="get">
+      <div class="input-append">
+        <input type="text" class="search-query" name="q">
+        <input type="submit" class="btn" value="Go" />
+      </div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+  </div>
+</div>
+      </div>
+      
+
+      <!-- row -->
+      <div class="row-fluid">
+         
+<div class="span3 visible-desktop visible-tablet">
+  <div class=" sidebar hidden-phone">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">2.1. Types and signatures</a><ul>
+<li><a class="reference internal" href="#rationale">2.1.1. Rationale</a></li>
+<li><a class="reference internal" href="#signatures">2.1.2. Signatures</a></li>
+<li><a class="reference internal" href="#basic-types">2.1.3. Basic types</a><ul>
+<li><a class="reference internal" href="#numbers">2.1.3.1. Numbers</a></li>
+<li><a class="reference internal" href="#arrays">2.1.3.2. Arrays</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#advanced-types">2.1.4. Advanced types</a><ul>
+<li><a class="reference internal" href="#inference">2.1.4.1. Inference</a></li>
+<li><a class="reference internal" href="#numpy-scalars">2.1.4.2. Numpy scalars</a></li>
+<li><a class="reference internal" href="#id1">2.1.4.3. Arrays</a></li>
+<li><a class="reference internal" href="#optional-types">2.1.4.4. Optional types</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">2. Reference Manual</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="jit-compilation.html"
+                        title="next chapter">2.2. Just-in-Time compilation</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/reference/types.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox">
+  <h3>Quick search</h3>
+  <form class="search form-search" action="../search.html" method="get">
+      <div class="input-append">
+        <input type="text" class="search-query" name="q">
+        <input type="submit" class="btn" value="Go" />
+      </div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+  </div>
+</div> 
+        
+
+        <div class="span9">
+          <div class="document">
+            <div class="documentwrapper">
+              <div class="bodywrapper">
+                <div class="body">
+                  
+  <div class="section" id="types-and-signatures">
+<span id="numba-types"></span><h1>2.1. Types and signatures<a class="headerlink" href="#types-and-signatures" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="rationale">
+<h2>2.1.1. Rationale<a class="headerlink" href="#rationale" title="Permalink to this headline">¶</a></h2>
+<p>As an optimizing compiler, Numba needs to decide on the type of each
+variable to generate efficient machine code.  Python&#8217;s standard types
+are not precise enough for that, so we had to develop our own fine-grained
+type system.</p>
+<p>You will encounter Numba types mainly when trying to inspect the results
+of Numba&#8217;s type inference, for <a class="reference internal" href="envvars.html#numba-envvars"><span>debugging</span></a> or
+<a class="reference internal" href="../developer/architecture.html#architecture"><span>educational</span></a> purposes.  However, you need to use
+types explicitly if compiling code <a class="reference internal" href="../user/pycc.html#pycc"><span>ahead-of-time</span></a>.</p>
+</div>
+<div class="section" id="signatures">
+<h2>2.1.2. Signatures<a class="headerlink" href="#signatures" title="Permalink to this headline">¶</a></h2>
+<p>A signature specifies the type of a function.  Exactly which kind
+of signature is allowed depends on the context (<a class="reference internal" href="../glossary.html#term-aot"><span class="xref std std-term">AOT</span></a> or <a class="reference internal" href="../glossary.html#term-jit"><span class="xref std std-term">JIT</span></a>
+compilation), but signatures always involve some representation of Numba
+types to specifiy the concrete types for the function&#8217;s arguments and,
+if required, the function&#8217;s return type.</p>
+<p>An example function signature would be the string <code class="docutils literal"><span class="pre">&quot;f8(i4,</span> <span class="pre">i4)&quot;</span></code>
+(or the equivalent <code class="docutils literal"><span class="pre">&quot;float64(int32,</span> <span class="pre">int32)&quot;</span></code>) which specifies a
+function taking two 32-bit integers and returning a double-precision float.</p>
+</div>
+<div class="section" id="basic-types">
+<h2>2.1.3. Basic types<a class="headerlink" href="#basic-types" title="Permalink to this headline">¶</a></h2>
+<p>The most basic types can be expressed through simple expressions.  The
+symbols below refer to attributes of the main <code class="docutils literal"><span class="pre">numba</span></code> module (so if
+you read &#8220;boolean&#8221;, it means that symbol can be accessed as <code class="docutils literal"><span class="pre">numba.boolean</span></code>).
+Many types are available both as a canonical name and a shorthand alias,
+following Numpy&#8217;s conventions.</p>
+<div class="section" id="numbers">
+<h3>2.1.3.1. Numbers<a class="headerlink" href="#numbers" title="Permalink to this headline">¶</a></h3>
+<p>The following table contains the elementary numeric types currently defined
+by Numba and their aliases.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="29%" />
+<col width="14%" />
+<col width="58%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Type name(s)</th>
+<th class="head">Shorthand</th>
+<th class="head">Comments</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>boolean</td>
+<td>b1</td>
+<td>represented as a byte</td>
+</tr>
+<tr class="row-odd"><td>uint8, byte</td>
+<td>u1</td>
+<td>8-bit unsigned byte</td>
+</tr>
+<tr class="row-even"><td>uint16</td>
+<td>u2</td>
+<td>16-bit unsigned integer</td>
+</tr>
+<tr class="row-odd"><td>uint32</td>
+<td>u4</td>
+<td>32-bit unsigned integer</td>
+</tr>
+<tr class="row-even"><td>uint64</td>
+<td>u8</td>
+<td>64-bit unsigned integer</td>
+</tr>
+<tr class="row-odd"><td>int8, char</td>
+<td>i1</td>
+<td>8-bit signed byte</td>
+</tr>
+<tr class="row-even"><td>int16</td>
+<td>i2</td>
+<td>16-bit signed integer</td>
+</tr>
+<tr class="row-odd"><td>int32</td>
+<td>i4</td>
+<td>32-bit signed integer</td>
+</tr>
+<tr class="row-even"><td>int64</td>
+<td>i8</td>
+<td>64-bit signed integer</td>
+</tr>
+<tr class="row-odd"><td>intc</td>
+<td>&#8211;</td>
+<td>C int-sized integer</td>
+</tr>
+<tr class="row-even"><td>uintc</td>
+<td>&#8211;</td>
+<td>C int-sized unsigned integer</td>
+</tr>
+<tr class="row-odd"><td>intp</td>
+<td>&#8211;</td>
+<td>pointer-sized integer</td>
+</tr>
+<tr class="row-even"><td>uintp</td>
+<td>&#8211;</td>
+<td>pointer-sized unsigned integer</td>
+</tr>
+<tr class="row-odd"><td>float32</td>
+<td>f4</td>
+<td>single-precision floating-point number</td>
+</tr>
+<tr class="row-even"><td>float64, double</td>
+<td>f8</td>
+<td>double-precision floating-point number</td>
+</tr>
+<tr class="row-odd"><td>complex64</td>
+<td>c8</td>
+<td>single-precision complex number</td>
+</tr>
+<tr class="row-even"><td>complex128</td>
+<td>c16</td>
+<td>double-precision complex number</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="arrays">
+<h3>2.1.3.2. Arrays<a class="headerlink" href="#arrays" title="Permalink to this headline">¶</a></h3>
+<p>The easy way to declare array types is to subscript an elementary type
+according to the number of dimensions.  For example a 1-dimension
+single-precision array:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">numba</span><span class="o">.</span><span class="n">float32</span><span class="p">[:]</span>
+<span class="go">array(float32, 1d, A)</span>
+</pre></div>
+</div>
+<p>or a 3-dimension array of the same underlying type:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">numba</span><span class="o">.</span><span class="n">float32</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">:]</span>
+<span class="go">array(float32, 3d, A)</span>
+</pre></div>
+</div>
+<p>This syntax defines array types with no particular layout (producing code
+that accepts both non-contiguous and contiguous arrays), but you can
+specify a particular contiguity by using the <code class="docutils literal"><span class="pre">::1</span></code> index either at
+the beginning or the end of the index specification:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">numba</span><span class="o">.</span><span class="n">float32</span><span class="p">[::</span><span class="mi">1</span><span class="p">]</span>
+<span class="go">array(float32, 1d, C)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">numba</span><span class="o">.</span><span class="n">float32</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">::</span><span class="mi">1</span><span class="p">]</span>
+<span class="go">array(float32, 3d, C)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">numba</span><span class="o">.</span><span class="n">float32</span><span class="p">[::</span><span class="mi">1</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span>
+<span class="go">array(float32, 3d, F)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="advanced-types">
+<h2>2.1.4. Advanced types<a class="headerlink" href="#advanced-types" title="Permalink to this headline">¶</a></h2>
+<p>For more advanced declarations, you have to explicitly call helper
+functions or classes provided by Numba.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">The APIs documented here are not guaranteed to be stable.  Unless
+necessary, it is recommended to let Numba infer argument types by using
+the <a class="reference internal" href="../user/jit.html#jit-lazy"><span>signature-less variant of &#64;jit</span></a>.</p>
+</div>
+<div class="section" id="inference">
+<h3>2.1.4.1. Inference<a class="headerlink" href="#inference" title="Permalink to this headline">¶</a></h3>
+<dl class="function">
+<dt id="numba.typeof">
+<code class="descclassname">numba.</code><code class="descname">typeof</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.typeof" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a Numba type accurately describing the given Python <em>value</em>.
+<code class="docutils literal"><span class="pre">ValueError</span></code> is raised if the value isn&#8217;t supported in
+<a class="reference internal" href="../glossary.html#term-nopython-mode"><span class="xref std std-term">nopython mode</span></a>.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">numba</span><span class="o">.</span><span class="n">typeof</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
+<span class="go">array(float64, 1d, C)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">numba</span><span class="o">.</span><span class="n">typeof</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">))</span>
+<span class="go">(int64, float64)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">numba</span><span class="o">.</span><span class="n">typeof</span><span class="p">([</span><span class="mi">0</span><span class="p">])</span>
+<span class="go">reflected list(int64)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+<div class="section" id="numpy-scalars">
+<h3>2.1.4.2. Numpy scalars<a class="headerlink" href="#numpy-scalars" title="Permalink to this headline">¶</a></h3>
+<p>Instead of using <a class="reference internal" href="#numba.typeof" title="numba.typeof"><code class="xref py py-func docutils literal"><span class="pre">typeof()</span></code></a>, non-trivial scalars such as
+structured types can also be constructed programmatically.</p>
+<dl class="function">
+<dt id="numba.from_dtype">
+<code class="descclassname">numba.</code><code class="descname">from_dtype</code><span class="sig-paren">(</span><em>dtype</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.from_dtype" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a Numba type corresponding to the given Numpy <em>dtype</em>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">struct_dtype</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dtype</span><span class="p">([(</span><span class="s">&#39;row&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;col&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ty</span> <span class="o">=</span> <span class="n">numba</span><span class="o">.</span><span class="n">from_dtype</span><span class="p">(</span><span class="n">struct_dtype</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ty</span>
+<span class="go">Record([(&#39;row&#39;, &#39;&lt;f8&#39;), (&#39;col&#39;, &#39;&lt;f8&#39;)])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ty</span><span class="p">[:,</span> <span class="p">:]</span>
+<span class="go">unaligned array(Record([(&#39;row&#39;, &#39;&lt;f8&#39;), (&#39;col&#39;, &#39;&lt;f8&#39;)]), 2d, A)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.types.NPDatetime">
+<em class="property">class </em><code class="descclassname">numba.types.</code><code class="descname">NPDatetime</code><span class="sig-paren">(</span><em>unit</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.types.NPDatetime" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a Numba type for Numpy datetimes of the given <em>unit</em>.  <em>unit</em>
+should be a string amongst the codes recognized by Numpy (e.g.
+<code class="docutils literal"><span class="pre">Y</span></code>, <code class="docutils literal"><span class="pre">M</span></code>, <code class="docutils literal"><span class="pre">D</span></code>, etc.).</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.types.NPTimedelta">
+<em class="property">class </em><code class="descclassname">numba.types.</code><code class="descname">NPTimedelta</code><span class="sig-paren">(</span><em>unit</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.types.NPTimedelta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a Numba type for Numpy timedeltas of the given <em>unit</em>.  <em>unit</em>
+should be a string amongst the codes recognized by Numpy (e.g.
+<code class="docutils literal"><span class="pre">Y</span></code>, <code class="docutils literal"><span class="pre">M</span></code>, <code class="docutils literal"><span class="pre">D</span></code>, etc.).</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last">Numpy <a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/arrays.datetime.html#datetime-units">datetime units</a>.</p>
+</div>
+</dd></dl>
+
+</div>
+<div class="section" id="id1">
+<h3>2.1.4.3. Arrays<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="numba.types.Array">
+<em class="property">class </em><code class="descclassname">numba.types.</code><code class="descname">Array</code><span class="sig-paren">(</span><em>dtype</em>, <em>ndim</em>, <em>layout</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.types.Array" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create an array type.  <em>dtype</em> should be a Numba type.  <em>ndim</em> is the
+number of dimensions of the array (a positive integer).  <em>layout</em>
+is a string giving the layout of the array: <code class="docutils literal"><span class="pre">A</span></code> means any layout, <code class="docutils literal"><span class="pre">C</span></code>
+means C-contiguous and <code class="docutils literal"><span class="pre">F</span></code> means Fortran-contiguous.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="optional-types">
+<h3>2.1.4.4. Optional types<a class="headerlink" href="#optional-types" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="numba.optional">
+<em class="property">class </em><code class="descclassname">numba.</code><code class="descname">optional</code><span class="sig-paren">(</span><em>typ</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.optional" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create an optional type based on the underlying Numba type <em>typ</em>.
+The optional type will allow any value of either <em>typ</em> or <code class="xref py py-const docutils literal"><span class="pre">None</span></code>.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="nd">@jit</span><span class="p">((</span><span class="n">optional</span><span class="p">(</span><span class="n">intp</span><span class="p">),))</span>
+<span class="gp">... </span><span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">x</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="p">(</span><span class="bp">None</span><span class="p">)</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        
+      </div><!-- /row -->
+
+      <!-- row -->
+      <div class="row-fluid">
+<div class="related navbar ">
+  <div class="navbar-inner">
+    <ul class="nav pull-right">
+      
+        <li><a href="../genindex.html" title="General Index" >index</a></li>
+        <li><a href="../py-modindex.html" title="Python Module Index" >modules</a></li>
+        <li><a href="jit-compilation.html" title="2.2. Just-in-Time compilation" >next</a></li>
+        <li><a href="index.html" title="2. Reference Manual" >previous</a></li>
+        <li><a href="../index.html">Numba 0.34.0.dev0+426.g39b79ce-py2.7-linux-x86_64.egg documentation</a></li>
+        <li><a href="index.html" >2. Reference Manual</a></li> 
+      
+    </ul>
+  </div>
+</div>
+      </div><!-- /row -->
+
+      <!-- footer -->
+      <footer>
+          &copy; Copyright 2012-2015, Continuum Analytics.
+        Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.1.
+      </footer>
+      <!-- /footer -->
+
+    </div>
+    <!-- /container -->
+
+  </body>
+</html>
