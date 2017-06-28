@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     
-    <title>10. Release Notes &mdash; Numba 0.34.0.dev0+505.g152724b-py2.7-linux-x86_64.egg documentation</title>
+    <title>10. Release Notes &mdash; Numba 0.34.0.dev0+508.g11ae5f1-py2.7-linux-x86_64.egg documentation</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
@@ -34,7 +34,7 @@
 <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
             URL_ROOT:    './',
-            VERSION:     '0.34.0.dev0+505.g152724b-py2.7-linux-x86_64.egg',
+            VERSION:     '0.34.0.dev0+508.g11ae5f1-py2.7-linux-x86_64.egg',
             COLLAPSE_INDEX: false,
             FILE_SUFFIX: '.html',
             HAS_SOURCE:  true
@@ -57,7 +57,7 @@
     });
   });
 </script>
-    <link rel="top" title="Numba 0.34.0.dev0+505.g152724b-py2.7-linux-x86_64.egg documentation" href="index.html" />
+    <link rel="top" title="Numba 0.34.0.dev0+508.g11ae5f1-py2.7-linux-x86_64.egg documentation" href="index.html" />
     <link rel="prev" title="9. Glossary" href="glossary.html" /> 
   </head>
   <body>
@@ -69,7 +69,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="index.html">Numba 0.34.0.dev0+505.g152724b-py2.7-linux-x86_64.egg documentation</a>
+          <a class="brand" href="index.html">Numba 0.34.0.dev0+508.g11ae5f1-py2.7-linux-x86_64.egg documentation</a>
           <div class="nav-collapse collapse">
             <ul class="nav pull-right">
               
@@ -103,7 +103,7 @@
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">10. Release Notes</a><ul>
-<li><a class="reference internal" href="#version-0-34-0-dev">10.1. Version 0.34.0.dev</a></li>
+<li><a class="reference internal" href="#version-0-34-0">10.1. Version 0.34.0</a></li>
 <li><a class="reference internal" href="#version-0-33-0">10.2. Version 0.33.0</a></li>
 <li><a class="reference internal" href="#version-0-32-0">10.3. Version 0.32.0</a></li>
 <li><a class="reference internal" href="#version-0-31-0">10.4. Version 0.31.0</a></li>
@@ -195,7 +195,7 @@
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">10. Release Notes</a><ul>
-<li><a class="reference internal" href="#version-0-34-0-dev">10.1. Version 0.34.0.dev</a></li>
+<li><a class="reference internal" href="#version-0-34-0">10.1. Version 0.34.0</a></li>
 <li><a class="reference internal" href="#version-0-33-0">10.2. Version 0.33.0</a></li>
 <li><a class="reference internal" href="#version-0-32-0">10.3. Version 0.32.0</a></li>
 <li><a class="reference internal" href="#version-0-31-0">10.4. Version 0.31.0</a></li>
@@ -286,9 +286,84 @@
                   
   <div class="section" id="release-notes">
 <h1>10. Release Notes<a class="headerlink" href="#release-notes" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="version-0-34-0-dev">
-<h2>10.1. Version 0.34.0.dev<a class="headerlink" href="#version-0-34-0-dev" title="Permalink to this headline">¶</a></h2>
-<p>In development.</p>
+<div class="section" id="version-0-34-0">
+<h2>10.1. Version 0.34.0<a class="headerlink" href="#version-0-34-0" title="Permalink to this headline">¶</a></h2>
+<p>This release adds a significant set of new features arising from combined work
+with Intel on ParallelAccelerator technology. It also adds list comprehension
+and closure support, support for Numpy 1.13 and a new, faster, CUDA reduction
+algorithm. For Linux users this release is the first to be built on Centos 6,
+which will be the new base platform for future releases. Finally a number of
+thread-safety, type inference and other smaller enhancements and bugs have been
+fixed.</p>
+<p>ParallelAccelerator features:</p>
+<dl class="docutils">
+<dt>NOTE: The ParallelAccelerator technology is under active development and should</dt>
+<dd>be considered experimental.</dd>
+</dl>
+<p>The ParallelAccelerator technology is accessed via a new &#8220;nopython&#8221; mode option
+&#8220;parallel&#8221;. The ParallelAccelerator technology attempts to identify operations
+which have parallel semantics (for instance adding a scalar to a vector), fuse
+together adjacent such operations, and then parallelize their execution across
+a number of CPU cores. This is essentially auto-parallelization.</p>
+<p>In addition to the auto-parallelization feature, explicit loop based
+parallelism is made available through the use of <cite>prange</cite> in place of <cite>range</cite>
+as a loop iterator.</p>
+<p>More information and examples on both auto-parallelization and <cite>prange</cite> are
+available in the documentation and examples directory respectively.</p>
+<p>As part of the necessary work for ParallelAccelerator, support for closures
+and list comprehensions is added:</p>
+<ul class="simple">
+<li>PR #2318: Transfer ParallelAccelerator technology to Numba</li>
+<li>PR #2379: ParallelAccelerator Core Improvements</li>
+<li>PR #2367: Add support for len(range(...))</li>
+<li>PR #2369: List comprehension</li>
+<li>PR #2391: Explicit Parallel Loop Support (prange)</li>
+</ul>
+<p>The ParallelAccelerator features are available on all supported platforms and
+Python versions with the exceptions of (with view of supporting in a future
+release):</p>
+<ul class="simple">
+<li>The combination of Windows operating systems with Python 2.7.</li>
+<li>Systems running 32 bit Python.</li>
+</ul>
+<p>CUDA support enhancements:</p>
+<ul class="simple">
+<li>PR #2377: New GPU reduction algorithm</li>
+</ul>
+<p>CUDA support fixes:</p>
+<ul class="simple">
+<li>PR #2397: Fix #2393, always set alignment of cuda static memory regions</li>
+</ul>
+<p>Misc Fixes:</p>
+<ul class="simple">
+<li>PR #2373, Issue #2372: 32-bit compatibility fix for parfor related code</li>
+<li>PR #2376: Fix #2375 missing stdint.h for py2.7 vc9</li>
+<li>PR #2378: Fix deadlock in parallel gufunc when kernel acquires the GIL.</li>
+<li>PR #2382: Forbid unsafe casting in bitwise operation</li>
+<li>PR #2385: docs: fix Sphinx errors</li>
+<li>PR #2396: Use 64-bit RHS operand for shift</li>
+<li>PR #2404: Fix threadsafety logic issue in ufunc compilation cache.</li>
+<li>PR #2424: Ensure consistent iteration order of blocks for type inference.</li>
+<li>PR #2425: Guard code to prevent the use of &#8216;parallel&#8217; on win32 + py27</li>
+<li>PR #2426: Basic test for Enum member type recovery.</li>
+<li>PR #2433: Fix up the parfors tests with respect to windows py2.7</li>
+</ul>
+<p>Misc Enhancements:</p>
+<ul class="simple">
+<li>PR #2366: Improvements to IR utils</li>
+<li>PR #2388: Update README.rst to indicate the proper version of LLVM</li>
+<li>PR #2394: Upgrade to llvmlite 0.19.*</li>
+<li>PR #2395: Update llvmlite version to 0.19</li>
+<li>PR #2406: Expose environment object to ufuncs</li>
+<li>PR #2407: Expose environment object to target-context inside lowerer</li>
+<li>PR #2413: Add flags to pass through to conda build for buildbot</li>
+<li>PR #2414: Add cross compile flags to local recipe</li>
+<li>PR #2415: A few cleanups for rewrites</li>
+<li>PR #2418: Add getitem support for Enum classes</li>
+<li>PR #2419: Add support for returning enums in vectorize</li>
+<li>PR #2421: Add copyright notice for Intel contributed files.</li>
+<li>PR #2422: Patch code base to work with np 1.13 release</li>
+</ul>
 </div>
 <div class="section" id="version-0-33-0">
 <h2>10.2. Version 0.33.0<a class="headerlink" href="#version-0-33-0" title="Permalink to this headline">¶</a></h2>
@@ -1700,7 +1775,7 @@ binary ufuncs + methods (reduce, accumulate, reduceat, outer)</li>
         <li><a href="genindex.html" title="General Index" >index</a></li>
         <li><a href="py-modindex.html" title="Python Module Index" >modules</a></li>
         <li><a href="glossary.html" title="9. Glossary" >previous</a></li>
-        <li><a href="index.html">Numba 0.34.0.dev0+505.g152724b-py2.7-linux-x86_64.egg documentation</a></li> 
+        <li><a href="index.html">Numba 0.34.0.dev0+508.g11ae5f1-py2.7-linux-x86_64.egg documentation</a></li> 
       
     </ul>
   </div>
