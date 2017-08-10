@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>7.2. Numba architecture &mdash; Numba 0.34.0+95.g57d6bd3-py2.7-linux-x86_64.egg documentation</title>
+    <title>7.2. Numba architecture &mdash; Numba 0.35.0.dev0+106.gf8acd64-py2.7-linux-x86_64.egg documentation</title>
     
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.34.0+95.g57d6bd3-py2.7-linux-x86_64.egg',
+        VERSION:     '0.35.0.dev0+106.gf8acd64-py2.7-linux-x86_64.egg',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,7 +26,7 @@
     <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="Numba 0.34.0+95.g57d6bd3-py2.7-linux-x86_64.egg documentation" href="../index.html" />
+    <link rel="top" title="Numba 0.35.0.dev0+106.gf8acd64-py2.7-linux-x86_64.egg documentation" href="../index.html" />
     <link rel="up" title="7. Developer Manual" href="index.html" />
     <link rel="next" title="7.3. Polymorphic dispatching" href="dispatching.html" />
     <link rel="prev" title="7.1. Contributing to Numba" href="contributing.html" />
@@ -49,7 +49,7 @@
         </button>
         <a class="navbar-brand" href="../index.html"><span><img src="../_static/numba_blue_icon_rgb.png"></span>
           Numba</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.34</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.35</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -98,10 +98,11 @@
 <li><a class="reference internal" href="#stage-3-macro-expansion">7.2.4.3. Stage 3: Macro expansion</a></li>
 <li><a class="reference internal" href="#stage-4-rewrite-untyped-ir">7.2.4.4. Stage 4: Rewrite untyped IR</a></li>
 <li><a class="reference internal" href="#stage-5-infer-types">7.2.4.5. Stage 5: Infer types</a></li>
-<li><a class="reference internal" href="#stage-6-rewrite-typed-ir">7.2.4.6. Stage 6: Rewrite typed IR</a></li>
-<li><a class="reference internal" href="#stage-7a-generate-nopython-llvm-ir">7.2.4.7. Stage 7a: Generate nopython LLVM IR</a></li>
-<li><a class="reference internal" href="#stage-7b-generate-object-mode-llvm-ir">7.2.4.8. Stage 7b: Generate object mode LLVM IR</a></li>
-<li><a class="reference internal" href="#stage-8-compile-llvm-ir-to-machine-code">7.2.4.9. Stage 8: Compile LLVM IR to machine code</a></li>
+<li><a class="reference internal" href="#stage-6a-rewrite-typed-ir">7.2.4.6. Stage 6a: Rewrite typed IR</a></li>
+<li><a class="reference internal" href="#stage-6b-perform-automatic-parallelization">7.2.4.7. Stage 6b: Perform Automatic Parallelization</a></li>
+<li><a class="reference internal" href="#stage-7a-generate-nopython-llvm-ir">7.2.4.8. Stage 7a: Generate nopython LLVM IR</a></li>
+<li><a class="reference internal" href="#stage-7b-generate-object-mode-llvm-ir">7.2.4.9. Stage 7b: Generate object mode LLVM IR</a></li>
+<li><a class="reference internal" href="#stage-8-compile-llvm-ir-to-machine-code">7.2.4.10. Stage 8: Compile LLVM IR to machine code</a></li>
 </ul>
 </li>
 </ul>
@@ -247,7 +248,7 @@ multi-stage process, described below.</p>
 <p>At the start of compilation, the function bytecode is passed to an instance of
 the Numba interpreter (<code class="docutils literal"><span class="pre">numba.interpreter</span></code>).  The interpreter object
 analyzes the bytecode to find the control flow graph (<code class="docutils literal"><span class="pre">numba.controlflow</span></code>).
-The control flow graph describes the ways that execution can move from one
+The control flow graph (CFG) describes the ways that execution can move from one
 block to the next inside the function as a result of loops and branches.</p>
 <p>The data flow analysis (<code class="docutils literal"><span class="pre">numba.dataflow</span></code>) takes the control flow graph and
 traces how values get pushed and popped off the Python interpreter stack for
@@ -376,7 +377,7 @@ be performed. Macro expansion converts specific attributes that are known to
 Numba into IR nodes representing function calls. This is initiated in the
 <code class="docutils literal"><span class="pre">numba.compiler.translate_stage</span></code> function, and is implemented in
 <code class="docutils literal"><span class="pre">numba.macro</span></code>.</p>
-<p>Examples of attributes that are macro-expanded include the CUDA instrinsics for
+<p>Examples of attributes that are macro-expanded include the CUDA intrinsics for
 grid, block and thread dimensions and indices. For example, the assignment to
 <code class="docutils literal"><span class="pre">tx</span></code> in the following function:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="nd">@cuda.jit</span><span class="p">(</span><span class="n">argtypes</span><span class="o">=</span><span class="p">[</span><span class="n">f4</span><span class="p">[:]])</span>
@@ -475,8 +476,8 @@ intermediate variables, it will label every variable as type <code class="docuti
 fall back to object mode.  Type inference can fail when unsupported Python
 types, language features, or functions are used in the function body.</p>
 </div>
-<div class="section" id="stage-6-rewrite-typed-ir">
-<span id="rewrite-typed-ir"></span><h3>7.2.4.6. Stage 6: Rewrite typed IR<a class="headerlink" href="#stage-6-rewrite-typed-ir" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="stage-6a-rewrite-typed-ir">
+<span id="rewrite-typed-ir"></span><h3>7.2.4.6. Stage 6a: Rewrite typed IR<a class="headerlink" href="#stage-6a-rewrite-typed-ir" title="Permalink to this headline">¶</a></h3>
 <p>This pass&#8217;s purpose is to perform any high-level optimizations that still
 require, or could at least benefit from, Numba IR type information.</p>
 <p>One example of a problem domain that isn&#8217;t as easily optimized once
@@ -536,19 +537,210 @@ ______________________________________________________________________
 ufunc-like function that is inlined into a single loop that only
 allocates a single result array.</p>
 </div>
+<div class="section" id="stage-6b-perform-automatic-parallelization">
+<span id="parallel-accelerator"></span><h3>7.2.4.7. Stage 6b: Perform Automatic Parallelization<a class="headerlink" href="#stage-6b-perform-automatic-parallelization" title="Permalink to this headline">¶</a></h3>
+<p>This pass is only performed if the parallel option in the <a class="reference internal" href="../reference/jit-compilation.html#numba.jit" title="numba.jit"><code class="xref py py-func docutils literal"><span class="pre">jit()</span></code></a>
+decorator is set to True.  This pass find parallelism implicit in the
+semantics of operations in the Numba IR and replaces those operations
+with explicitly parallel representations of those operations using a
+special <cite>parfor</cite> operator.  Then, optimizations are performed to maximize
+the number of parfors that are adjacent to each other such that they can
+then be fused together into one parfor that takes only one pass over the
+data and will thus typically have better cache performance.  Finally,
+during lowering, these parfor operators are converted to a form similar
+to guvectorize to implement the actual parallelism.  All these processes
+are described in more detail in the following paragraphs.
+The automatic parallelization pass has a number of sub-passes.</p>
+<ol class="arabic">
+<li><dl class="first docutils">
+<dt>CFG Simplification</dt>
+<dd><p class="first last">Sometimes Numba IR will contain chains of blocks containing no loops which
+are merged in this sub-pass into single blocks.  This sub-pass simplifies
+subsequent analysis of the IR.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Numpy canonicalization</dt>
+<dd><p class="first last">Some Numpy operations can be written as operations on Numpy objects (e.g.
+<code class="docutils literal"><span class="pre">arr.sum()</span></code>), or as calls to Numpy taking those objects (e.g.
+<code class="docutils literal"><span class="pre">numpy.sum(arr)</span></code>).  This sub-pass converts all such operations to the
+latter form for cleaner subsequent analysis.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Array analysis</dt>
+<dd><p class="first last">A critical requirement for later parfor fusion is that parfors have
+identical iteration spaces and these iteration spaces typically correspond
+to the sizes of the dimensions of Numpy arrays.  In this sub-pass, the IR is
+analyzed to determine equivalence classes for the dimensions of Numpy
+arrays.  Consider the example, <code class="docutils literal"><span class="pre">a</span> <span class="pre">=</span> <span class="pre">b</span> <span class="pre">+</span> <span class="pre">1</span></code>, where <cite>a</cite> and <cite>b</cite> are both
+Numpy arrays.  Here, we know that each dimension of <cite>a</cite> must have the same
+equivalence class as the corresponding dimension of <cite>b</cite>.  Typically,
+routines rich in Numpy operations will enable equivalence classes to be
+fully known for all arrays created within a function.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><code class="docutils literal"><span class="pre">prange()</span></code> to parfor</dt>
+<dd><p class="first">The use of prange (<a class="reference internal" href="../user/parallel.html#numba-prange"><span>Explicit Parallel Loops</span></a>) in a for loop is an explicit
+indication from the programmer that all iterations of the for loop can
+execute in parallel.  In this sub-pass, we analyze the CFG to locate loops
+and to convert those loops controlled by a prange object to the explici
+<cite>parfor</cite> operator.  Each explicit parfor operator consists of:</p>
+<ol class="loweralpha simple">
+<li>A list of loop nest information that describes the iteration space of the
+parfor.  Each entry in the loop nest list contains an indexing variable,
+the start of the range, the end of the range, and the step value for each
+iteration.</li>
+<li>An initialization (init) block which contains instructions to be executed
+one time before the parfor begins executing.</li>
+<li>A loop body comprising a set of basic blocks that correspond to the body
+of the loop and compute one point in the iteration space.</li>
+<li>The index variables used for each dimension of the iteration space.</li>
+</ol>
+<p class="last">For parfor <code class="docutils literal"><span class="pre">pranges</span></code>, the loop nest is a single entry where the start,
+stop, and step fields come from the specified <code class="docutils literal"><span class="pre">prange</span></code>.  The init block is
+empty for <code class="docutils literal"><span class="pre">prange</span></code> parfors and the loop body is the set of blocks in the
+loop minus the loop header.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Numpy to parfor</dt>
+<dd><p class="first">In this sub-pass, Numpy functions such as <code class="docutils literal"><span class="pre">ones</span></code>, <code class="docutils literal"><span class="pre">zeros</span></code>, <code class="docutils literal"><span class="pre">dot</span></code>, most
+of the random number generating functions, arrayexprs (from Section
+<a class="reference internal" href="#rewrite-typed-ir"><span>Stage 6a: Rewrite typed IR</span></a>), and Numpy reductions are converted to parfors.
+Generally, this conversion creates the loop nest list, whose length is equal
+to the number of dimensions of the left-hand side of the assignment
+instruction in the IR.  The number and size of the dimensions of the
+left-hand-side array is taken from the array analysis information generated
+in sub-pass 3 above.  An instruction to create the result Numpy array is
+generated and stored in the new parfor&#8217;s init block.  A basic block is
+created for the loop body and an instruction is generated and added to the
+end of that block to store the result of the computation into the array at
+the current point in the iteration space.  The result stored into the array
+depends on the operation that is being converted.  For example, for <code class="docutils literal"><span class="pre">ones</span></code>,
+the value stored is a constant 1.  For calls to generate a random array, the
+value comes from a call to the same random number function but with the size
+parameter dropped and therefore returning a scalar.  For arrayexpr operators,
+the arrayexpr tree is converted to Numba IR and the value at the root of that
+expression tree is used to write into the output array.</p>
+<p class="last">For reductions, the loop nest list is similarly created using the array
+analysis information for the array being reduced.  In the init block, the
+initial value is assigned to the reduction variable.  The loop body consists
+of a single block in which the next value in the iteration space is fetched
+and the reduction operation is applied to that value and the current
+reduction value and the result stored back into the reduction value.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Simplification</dt>
+<dd><p class="first last">Performs a copy propagation and dead code elimination pass.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Fusion</dt>
+<dd><p class="first">This sub-pass first processes each basic block and does a reordering of the
+instructions within the block with the goal of pushing parfors lower in the
+block and lifting non-parfors towards the start of the block.  In practice,
+this approach does a good job of getting parfors adjacent to each other in
+the IR, which enables more parfors to then be fused.  During parfor fusion,
+each basic block is repeatedly scanned until no further fusion is possible.
+During this scan, each set of adjacent instructions are considered.
+Adjacent instructions are fused together if:</p>
+<ol class="loweralpha simple">
+<li>they are both parfors</li>
+<li>the parfors&#8217; loop nests are the same size and the array equivalence
+classes for each dimension of the loop nests are the same, and</li>
+<li>the first parfor does not create a reduction variable used by the
+second parfor.</li>
+</ol>
+<p class="last">The two parfors are fused together by adding the second parfor&#8217;s init block
+to the first&#8217;s, merging the two parfors&#8217; loop bodies together and replacing
+the instances of the second parfor&#8217;s loop index variables in the second
+parfor&#8217;s body with the loop index variables for the first parfor.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Push call objects and compute parfor parameters</dt>
+<dd><p class="first">In the lowering phase described in Section <a class="reference internal" href="#lowering"><span>Stage 7a: Generate nopython LLVM IR</span></a>, each parfor
+becomes a separate function executed in parallel in <code class="docutils literal"><span class="pre">guvectorize</span></code>
+(<a class="reference internal" href="../user/vectorize.html#guvectorize"><span>The &#64;guvectorize decorator</span></a>) style.  Since parfors may use variables defined
+previously in a function, when those parfors become separate functions,
+those variables must be passed to the parfor function as parameters.  In
+this sub-pass, a use-def scan is made over each parfor body and liveness
+information is used to determine which variables are used but not defined by
+the parfor.  That list of variables is stored here in the parfor for use
+during lowering.  Function variables are a special case in this process
+since function variables cannot be passed to functions compiled in nopython
+mode.  Instead, for function variables, this sub-pass pushes the assignment
+instruction to the function variable into the parfor body so that those do
+not need to be passed as parameters.</p>
+<p>To see the intermediate IR between the above sub-passes and other debugging
+information, set the <span class="target" id="index-3"></span><a class="reference internal" href="../reference/envvars.html#envvar-NUMBA_DEBUG_ARRAY_OPT"><code class="xref std std-envvar docutils literal"><span class="pre">NUMBA_DEBUG_ARRAY_OPT</span></code></a> environment variable to
+1. For the example in Section <a class="reference internal" href="#rewrite-typed-ir"><span>Stage 6a: Rewrite typed IR</span></a>, the following IR with
+a parfor is generated during this stage:</p>
+<div class="last highlight-python"><div class="highlight"><pre>______________________________________________________________________
+label 0:
+    a0 = arg(0, name=a0)                     [&#39;a0&#39;]
+    a0_sh_attr0.0 = getattr(attr=shape, value=a0) [&#39;a0&#39;, &#39;a0_sh_attr0.0&#39;]
+    $consta00.1 = const(int, 0)              [&#39;$consta00.1&#39;]
+    a0size0.2 = static_getitem(value=a0_sh_attr0.0, index_var=$consta00.1, index=0) [&#39;$consta00.1&#39;, &#39;a0_sh_attr0.0&#39;, &#39;a0size0.2&#39;]
+    a1 = arg(1, name=a1)                     [&#39;a1&#39;]
+    a1_sh_attr0.3 = getattr(attr=shape, value=a1) [&#39;a1&#39;, &#39;a1_sh_attr0.3&#39;]
+    $consta10.4 = const(int, 0)              [&#39;$consta10.4&#39;]
+    a1size0.5 = static_getitem(value=a1_sh_attr0.3, index_var=$consta10.4, index=0) [&#39;$consta10.4&#39;, &#39;a1_sh_attr0.3&#39;, &#39;a1size0.5&#39;]
+    a2 = arg(2, name=a2)                     [&#39;a2&#39;]
+    a2_sh_attr0.6 = getattr(attr=shape, value=a2) [&#39;a2&#39;, &#39;a2_sh_attr0.6&#39;]
+    $consta20.7 = const(int, 0)              [&#39;$consta20.7&#39;]
+    a2size0.8 = static_getitem(value=a2_sh_attr0.6, index_var=$consta20.7, index=0) [&#39;$consta20.7&#39;, &#39;a2_sh_attr0.6&#39;, &#39;a2size0.8&#39;]
+---begin parfor 0---
+index_var =  parfor_index.9
+LoopNest(index_variable=parfor_index.9, range=0,a0size0.2,1 correlation=5)
+init block:
+    $np_g_var.10 = global(np: &lt;module &#39;numpy&#39; from &#39;/usr/local/lib/python3.5/dist-packages/numpy/__init__.py&#39;&gt;) [&#39;$np_g_var.10&#39;]
+    $empty_attr_attr.11 = getattr(attr=empty, value=$np_g_var.10) [&#39;$empty_attr_attr.11&#39;, &#39;$np_g_var.10&#39;]
+    $np_typ_var.12 = getattr(attr=float64, value=$np_g_var.10) [&#39;$np_g_var.10&#39;, &#39;$np_typ_var.12&#39;]
+    $0.5 = call $empty_attr_attr.11(a0size0.2, $np_typ_var.12, kws=(), func=$empty_attr_attr.11, vararg=None, args=[Var(a0size0.2, test2.py (7)), Var($np_typ_var.12, test2.py (7))]) [&#39;$0.5&#39;, &#39;$empty_attr_attr.11&#39;, &#39;$np_typ_var.12&#39;, &#39;a0size0.2&#39;]
+label 1:
+    $arg_out_var.15 = getitem(value=a0, index=parfor_index.9) [&#39;$arg_out_var.15&#39;, &#39;a0&#39;, &#39;parfor_index.9&#39;]
+    $arg_out_var.16 = getitem(value=a1, index=parfor_index.9) [&#39;$arg_out_var.16&#39;, &#39;a1&#39;, &#39;parfor_index.9&#39;]
+    $arg_out_var.14 = $arg_out_var.15 * $arg_out_var.16 [&#39;$arg_out_var.14&#39;, &#39;$arg_out_var.15&#39;, &#39;$arg_out_var.16&#39;]
+    $arg_out_var.17 = getitem(value=a2, index=parfor_index.9) [&#39;$arg_out_var.17&#39;, &#39;a2&#39;, &#39;parfor_index.9&#39;]
+    $expr_out_var.13 = $arg_out_var.14 + $arg_out_var.17 [&#39;$arg_out_var.14&#39;, &#39;$arg_out_var.17&#39;, &#39;$expr_out_var.13&#39;]
+    $0.5[parfor_index.9] = $expr_out_var.13  [&#39;$0.5&#39;, &#39;$expr_out_var.13&#39;, &#39;parfor_index.9&#39;]
+----end parfor 0----
+    $0.6 = cast(value=$0.5)                  [&#39;$0.5&#39;, &#39;$0.6&#39;]
+    return $0.6                              [&#39;$0.6&#39;]
+______________________________________________________________________
+</pre></div>
+</div>
+</dd>
+</dl>
+</li>
+</ol>
+<blockquote>
+<div></div></blockquote>
+</div>
 <div class="section" id="stage-7a-generate-nopython-llvm-ir">
-<h3>7.2.4.7. Stage 7a: Generate nopython LLVM IR<a class="headerlink" href="#stage-7a-generate-nopython-llvm-ir" title="Permalink to this headline">¶</a></h3>
+<span id="lowering"></span><h3>7.2.4.8. Stage 7a: Generate nopython LLVM IR<a class="headerlink" href="#stage-7a-generate-nopython-llvm-ir" title="Permalink to this headline">¶</a></h3>
 <p>If type inference succeeds in finding a Numba type for every intermediate
 variable, then Numba can (potentially) generate specialized native code.  This
 process is called <a class="reference internal" href="../glossary.html#term-lowering"><span class="xref std std-term">lowering</span></a>.  The Numba IR tree is translated into
 LLVM IR by using helper classes from <a class="reference external" href="http://llvmlite.pydata.org/">llvmlite</a>.
-The  machine-generated LLVM IR can seem unnecessarily verbose, but the LLVM
+The machine-generated LLVM IR can seem unnecessarily verbose, but the LLVM
 toolchain is able to optimize it quite easily into compact, efficient code.</p>
 <p>The basic lowering algorithm is generic, but the specifics of how particular
 Numba IR nodes are translated to LLVM instructions is handled by the
 target context selected for compilation.  The default target context is
 the &#8220;cpu&#8221; context, defined in <code class="docutils literal"><span class="pre">numba.targets.cpu</span></code>.</p>
-<p>The LLVM IR can be displayed by setting the <span class="target" id="index-3"></span><a class="reference internal" href="../reference/envvars.html#envvar-NUMBA_DUMP_LLVM"><code class="xref std std-envvar docutils literal"><span class="pre">NUMBA_DUMP_LLVM</span></code></a> environment
+<p>The LLVM IR can be displayed by setting the <span class="target" id="index-4"></span><a class="reference internal" href="../reference/envvars.html#envvar-NUMBA_DUMP_LLVM"><code class="xref std std-envvar docutils literal"><span class="pre">NUMBA_DUMP_LLVM</span></code></a> environment
 variable to 1.  For the &#8220;cpu&#8221; context, our <code class="docutils literal"><span class="pre">add()</span></code> example would look like:</p>
 <div class="highlight-llvm"><div class="highlight"><pre><span class="k">define</span> <span class="k">i32</span> <span class="vg">@&quot;__main__.add$1.int64.int64&quot;</span><span class="p">(</span><span class="k">i64</span><span class="p">*</span> <span class="nv">%&quot;retptr&quot;</span><span class="p">,</span>
                                          <span class="p">{</span><span class="k">i8</span><span class="p">*,</span> <span class="k">i32</span><span class="p">}**</span> <span class="nv">%&quot;excinfo&quot;</span><span class="p">,</span>
@@ -577,7 +769,7 @@ variable to 1.  For the &#8220;cpu&#8221; context, our <code class="docutils lit
 </pre></div>
 </div>
 <p>The post-optimization LLVM IR can be output by setting
-<span class="target" id="index-4"></span><a class="reference internal" href="../reference/envvars.html#envvar-NUMBA_DUMP_OPTIMIZED"><code class="xref std std-envvar docutils literal"><span class="pre">NUMBA_DUMP_OPTIMIZED</span></code></a> to 1.  The optimizer shortens the code
+<span class="target" id="index-5"></span><a class="reference internal" href="../reference/envvars.html#envvar-NUMBA_DUMP_OPTIMIZED"><code class="xref std std-envvar docutils literal"><span class="pre">NUMBA_DUMP_OPTIMIZED</span></code></a> to 1.  The optimizer shortens the code
 generated above quite significantly:</p>
 <div class="highlight-llvm"><div class="highlight"><pre><span class="k">define</span> <span class="k">i32</span> <span class="vg">@&quot;__main__.add$1.int64.int64&quot;</span><span class="p">(</span><span class="k">i64</span><span class="p">*</span> <span class="k">nocapture</span> <span class="nv">%retptr</span><span class="p">,</span>
                                          <span class="p">{</span> <span class="k">i8</span><span class="p">*,</span> <span class="k">i32</span> <span class="p">}**</span> <span class="k">nocapture</span> <span class="k">readnone</span> <span class="nv">%excinfo</span><span class="p">,</span>
@@ -591,9 +783,96 @@ generated above quite significantly:</p>
 <span class="p">}</span>
 </pre></div>
 </div>
+<p>If created during <a class="reference internal" href="#parallel-accelerator"><span>Stage 6b: Perform Automatic Parallelization</span></a>, parfor operations are
+lowered in the following manner.  First, instructions in the parfor&#8217;s init
+block are lowered into the existing function using the normal lowering code.
+Second, the loop body of the parfor is turned into a separate GUFunc.
+Third, code is emitted for the current function to call the parallel GUFunc.</p>
+<p>To create a GUFunc from the parfor body, the signature of the GUFunc is
+created by taking the parfor parameters as identified in step 9 of
+Stage <a class="reference internal" href="#parallel-accelerator"><span>Stage 6b: Perform Automatic Parallelization</span></a> and adding to that a special <cite>schedule</cite>
+parameter, across which the GUFunc will be parallelized.  The schedule
+parameter is in effect a static schedule mapping portions of the parfor
+iteration space to Numba threads and so the length of the schedule
+array is the same as the number of configured Numba threads.  To make
+this process easier and somewhat less dependent on changes to Numba IR,
+this stage creates a Python function as text that contains the parameters
+to the GUFunc and iteration code that takes the current schedule entry
+and loops through the specified portion of the iteration space.  In the
+body of that loop, a special sentinel is inserted for subsequent easy
+location.  This code that handles the processing of the iteration space
+is then <code class="docutils literal"><span class="pre">eval</span></code>&#8216;ed into existence and the Numba compiler&#8217;s run_frontend
+function is called to generate IR.  That IR is scanned to locate the
+sentinel and the sentinel is replaced with the loop body of the parfor.
+Then, the process of creating the parallel GUFunc is completed by
+compiling this merged IR with the Numba compiler&#8217;s <code class="docutils literal"><span class="pre">compile_ir</span></code> function.</p>
+<p>To call the parallel GUFunc, the static schedule must be created.
+Code is inserted to call a function named <code class="docutils literal"><span class="pre">do_scheduling.</span></code>  This function
+is called with the size of each of the parfor&#8217;s dimensions and the number
+<cite>N</cite> of configured Numba threads (<span class="target" id="index-6"></span><a class="reference internal" href="../reference/envvars.html#envvar-NUMBA_NUM_THREADS"><code class="xref std std-envvar docutils literal"><span class="pre">NUMBA_NUM_THREADS</span></code></a>).
+The <code class="docutils literal"><span class="pre">do_scheduling</span></code> function will divide
+the iteration space into N approximately equal sized regions (linear for
+1D, rectangular for 2D, or hyperrectangles for 3+D) and the resulting
+schedule is passed to the parallel GUFunc.  The number of threads
+dedicated to a given dimension of the full iteration space is roughly
+proportional to the ratio of the size of the given dimension to the sum
+of the sizes of all the dimensions of the iteration space.</p>
+<p>Parallel reductions are not natively provided by GUFuncs but the parfor
+lowering strategy allows us to use GUFuncs in a way that reductions can
+be performed in parallel.  To accomplish this, for each reduction variable
+computed by a parfor, the parallel GUFunc and the code that calls it are
+modified to make the scalar reduction variable into an array of reduction
+variables whose length is equal to the number of Numba threads.  In addition,
+the GUFunc still contains a scalar version of the reduction variable that
+is updated by the parfor body during each iteration.  One time at the
+end of the GUFunc this local reduction variable is copied into the
+reduction array.  In this way, false sharing of the reduction array is
+prevented.  Code is also inserted into the main
+function after the parallel GUFunc has returned that does a reduction
+across this smaller reduction array and this final reduction value is
+then stored into the original scalar reduction variable.</p>
+<p>The GUFunc corresponding to the example from Section <a class="reference internal" href="#parallel-accelerator"><span>Stage 6b: Perform Automatic Parallelization</span></a>
+can be seen below:</p>
+<div class="highlight-python"><div class="highlight"><pre>______________________________________________________________________
+label 0:
+    sched.29 = arg(0, name=sched)            [&#39;sched.29&#39;]
+    a0 = arg(1, name=a0)                     [&#39;a0&#39;]
+    a1 = arg(2, name=a1)                     [&#39;a1&#39;]
+    a2 = arg(3, name=a2)                     [&#39;a2&#39;]
+    _0_5 = arg(4, name=_0_5)                 [&#39;_0_5&#39;]
+    $3.1.24 = global(range: &lt;class &#39;range&#39;&gt;) [&#39;$3.1.24&#39;]
+    $const3.3.21 = const(int, 0)             [&#39;$const3.3.21&#39;]
+    $3.4.23 = getitem(value=sched.29, index=$const3.3.21) [&#39;$3.4.23&#39;, &#39;$const3.3.21&#39;, &#39;sched.29&#39;]
+    $const3.6.28 = const(int, 1)             [&#39;$const3.6.28&#39;]
+    $3.7.27 = getitem(value=sched.29, index=$const3.6.28) [&#39;$3.7.27&#39;, &#39;$const3.6.28&#39;, &#39;sched.29&#39;]
+    $const3.8.32 = const(int, 1)             [&#39;$const3.8.32&#39;]
+    $3.9.31 = $3.7.27 + $const3.8.32         [&#39;$3.7.27&#39;, &#39;$3.9.31&#39;, &#39;$const3.8.32&#39;]
+    $3.10.36 = call $3.1.24($3.4.23, $3.9.31, kws=[], func=$3.1.24, vararg=None, args=[Var($3.4.23, &lt;string&gt; (2)), Var($3.9.31, &lt;string&gt; (2))]) [&#39;$3.1.24&#39;, &#39;$3.10.36&#39;, &#39;$3.4.23&#39;, &#39;$3.9.31&#39;]
+    $3.11.30 = getiter(value=$3.10.36)       [&#39;$3.10.36&#39;, &#39;$3.11.30&#39;]
+    jump 1                                   []
+label 1:
+    $28.2.35 = iternext(value=$3.11.30)      [&#39;$28.2.35&#39;, &#39;$3.11.30&#39;]
+    $28.3.25 = pair_first(value=$28.2.35)    [&#39;$28.2.35&#39;, &#39;$28.3.25&#39;]
+    $28.4.40 = pair_second(value=$28.2.35)   [&#39;$28.2.35&#39;, &#39;$28.4.40&#39;]
+    branch $28.4.40, 2, 3                    [&#39;$28.4.40&#39;]
+label 2:
+    $arg_out_var.15 = getitem(value=a0, index=$28.3.25) [&#39;$28.3.25&#39;, &#39;$arg_out_var.15&#39;, &#39;a0&#39;]
+    $arg_out_var.16 = getitem(value=a1, index=$28.3.25) [&#39;$28.3.25&#39;, &#39;$arg_out_var.16&#39;, &#39;a1&#39;]
+    $arg_out_var.14 = $arg_out_var.15 * $arg_out_var.16 [&#39;$arg_out_var.14&#39;, &#39;$arg_out_var.15&#39;, &#39;$arg_out_var.16&#39;]
+    $arg_out_var.17 = getitem(value=a2, index=$28.3.25) [&#39;$28.3.25&#39;, &#39;$arg_out_var.17&#39;, &#39;a2&#39;]
+    $expr_out_var.13 = $arg_out_var.14 + $arg_out_var.17 [&#39;$arg_out_var.14&#39;, &#39;$arg_out_var.17&#39;, &#39;$expr_out_var.13&#39;]
+    _0_5[$28.3.25] = $expr_out_var.13        [&#39;$28.3.25&#39;, &#39;$expr_out_var.13&#39;, &#39;_0_5&#39;]
+    jump 1                                   []
+label 3:
+    $const44.1.33 = const(NoneType, None)    [&#39;$const44.1.33&#39;]
+    $44.2.39 = cast(value=$const44.1.33)     [&#39;$44.2.39&#39;, &#39;$const44.1.33&#39;]
+    return $44.2.39                          [&#39;$44.2.39&#39;]
+______________________________________________________________________
+</pre></div>
+</div>
 </div>
 <div class="section" id="stage-7b-generate-object-mode-llvm-ir">
-<h3>7.2.4.8. Stage 7b: Generate object mode LLVM IR<a class="headerlink" href="#stage-7b-generate-object-mode-llvm-ir" title="Permalink to this headline">¶</a></h3>
+<h3>7.2.4.9. Stage 7b: Generate object mode LLVM IR<a class="headerlink" href="#stage-7b-generate-object-mode-llvm-ir" title="Permalink to this headline">¶</a></h3>
 <p>If type inference fails to find Numba types for all values inside a function,
 the function will be compiled in object mode.  The generated LLVM will be
 significantly longer, as the compiled code will need to make calls to the
@@ -676,7 +955,7 @@ need to access uncompilable code (such as I/O or plotting code) but still
 contain a time-intensive section of compilable code.</p>
 </div>
 <div class="section" id="stage-8-compile-llvm-ir-to-machine-code">
-<h3>7.2.4.9. Stage 8: Compile LLVM IR to machine code<a class="headerlink" href="#stage-8-compile-llvm-ir-to-machine-code" title="Permalink to this headline">¶</a></h3>
+<h3>7.2.4.10. Stage 8: Compile LLVM IR to machine code<a class="headerlink" href="#stage-8-compile-llvm-ir-to-machine-code" title="Permalink to this headline">¶</a></h3>
 <p>In both <a class="reference internal" href="../glossary.html#term-object-mode"><span class="xref std std-term">object mode</span></a> and <a class="reference internal" href="../glossary.html#term-nopython-mode"><span class="xref std std-term">nopython mode</span></a>, the generated LLVM IR
 is compiled by the LLVM JIT compiler and the machine code is loaded into
 memory.  A Python wrapper is also created (defined in
@@ -685,7 +964,7 @@ correct version of the compiled function if multiple type specializations
 were generated (for example, for both <code class="docutils literal"><span class="pre">float32</span></code> and <code class="docutils literal"><span class="pre">float64</span></code> versions
 of the same function).</p>
 <p>The machine assembly code generated by LLVM can be dumped to the screen by
-setting the <span class="target" id="index-5"></span><a class="reference internal" href="../reference/envvars.html#envvar-NUMBA_DUMP_ASSEMBLY"><code class="xref std std-envvar docutils literal"><span class="pre">NUMBA_DUMP_ASSEMBLY</span></code></a> environment variable to 1:</p>
+setting the <span class="target" id="index-7"></span><a class="reference internal" href="../reference/envvars.html#envvar-NUMBA_DUMP_ASSEMBLY"><code class="xref std std-envvar docutils literal"><span class="pre">NUMBA_DUMP_ASSEMBLY</span></code></a> environment variable to 1:</p>
 <div class="highlight-gas"><div class="highlight"><pre>        <span class="na">.globl</span>  <span class="no">__main__.add$1.int64.int64</span>
         <span class="na">.align</span>  <span class="mi">16</span><span class="p">,</span> <span class="mi">0x90</span>
         <span class="na">.type</span>   <span class="no">__main__.add$1.int64.int64</span><span class="p">,</span><span class="na">@function</span>
