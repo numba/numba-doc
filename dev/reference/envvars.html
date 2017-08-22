@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>2.5. Environment variables &mdash; Numba 0.35.0.dev0+184.gcc48330-py2.7-linux-x86_64.egg documentation</title>
+    <title>2.5. Environment variables &mdash; Numba 0.35.0.dev0+190.gbcf4338-py2.7-linux-x86_64.egg documentation</title>
     
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.35.0.dev0+184.gcc48330-py2.7-linux-x86_64.egg',
+        VERSION:     '0.35.0.dev0+190.gbcf4338-py2.7-linux-x86_64.egg',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,7 +26,7 @@
     <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="Numba 0.35.0.dev0+184.gcc48330-py2.7-linux-x86_64.egg documentation" href="../index.html" />
+    <link rel="top" title="Numba 0.35.0.dev0+190.gbcf4338-py2.7-linux-x86_64.egg documentation" href="../index.html" />
     <link rel="up" title="2. Reference Manual" href="index.html" />
     <link rel="next" title="2.6. Supported Python features" href="pysupported.html" />
     <link rel="prev" title="2.4. Utilities" href="utils.html" />
@@ -310,6 +310,30 @@ breaking everything at once.  Otherwise, please don&#8217;t use this.</p>
 as if it performs no operation, and the invocation of decorated functions
 calls the original Python function instead of a compiled version.  This
 can be useful if you want to run the Python debugger over your code.</p>
+</dd></dl>
+
+<dl class="envvar">
+<dt id="envvar-NUMBA_CPU_NAMEandNUMBA_CPU_FEATURES">
+<code class="descname">NUMBA_CPU_NAME and NUMBA_CPU_FEATURES</code><a class="headerlink" href="#envvar-NUMBA_CPU_NAMEandNUMBA_CPU_FEATURES" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override CPU and CPU features detection.
+By setting <code class="docutils literal"><span class="pre">NUMBA_CPU_NAME=generic</span></code>, a generic CPU model is picked
+for the CPU architecture and the feature list (<code class="docutils literal"><span class="pre">NUMBA_CPU_FEATURES</span></code>)
+defaults to empty.  CPU features must be listed with the format
+<code class="docutils literal"><span class="pre">+feature1,-feature2</span></code> where <code class="docutils literal"><span class="pre">+</span></code> indicates enable and <code class="docutils literal"><span class="pre">-</span></code> indicates
+disable. For example, <code class="docutils literal"><span class="pre">+sse,+sse2,-avx,-avx2</span></code> enables SSE and SSE2, and
+disables AVX and AVX2.</p>
+<p>These settings are passed to LLVM for configuring the compilation target.
+To get a list of available options, use the <code class="docutils literal"><span class="pre">llc</span></code> commandline tool
+from LLVM, for example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">llc</span> <span class="o">-</span><span class="n">march</span><span class="o">=</span><span class="n">x86</span> <span class="o">-</span><span class="n">mattr</span><span class="o">=</span><span class="n">help</span>
+</pre></div>
+</div>
+<div class="admonition tip">
+<p class="first admonition-title">Tip</p>
+<p class="last">To force all caching functions (<code class="docutils literal"><span class="pre">&#64;jit(cache=True)</span></code>) to emit
+portable code (portable within the same architecture and OS),
+simply set <code class="docutils literal"><span class="pre">NUMBA_CPU_NAME=generic</span></code>.</p>
+</div>
 </dd></dl>
 
 </div>
