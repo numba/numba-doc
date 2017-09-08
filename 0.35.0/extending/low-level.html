@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>6.2. Low-level extension API &#8212; Numba 0.35.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.35.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="6.3. Example: an interval type" href="interval-example.html" />
+    <link rel="prev" title="6.1. High-level extension API" href="high-level.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body role="document">
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html"><span><img src="../_static/numba_blue_icon_rgb.png"></span>
+          Numba</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.35</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../user/index.html">1. User Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/index.html">2. Reference Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cuda/index.html">3. Numba for CUDA GPUs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cuda-reference/index.html">4. CUDA Python Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hsa/index.html">5. Numba for HSA APUs</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">6. Extending Numba</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer/index.html">7. Developer Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../proposals/index.html">8. Numba Enhancement Proposals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">9. Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release-notes.html">10. Release Notes</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">6.2. Low-level extension API</a><ul>
+<li><a class="reference internal" href="#typing">6.2.1. Typing</a></li>
+<li><a class="reference internal" href="#lowering">6.2.2. Lowering</a><ul>
+<li><a class="reference internal" href="#native-operations">6.2.2.1. Native operations</a></li>
+<li><a class="reference internal" href="#constants">6.2.2.2. Constants</a></li>
+<li><a class="reference internal" href="#boxing-and-unboxing">6.2.2.3. Boxing and unboxing</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+  <li>
+    <a href="high-level.html" title="Previous Chapter: 6.1. High-level extension API"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; 6.1. High-lev...</span>
+    </a>
+  </li>
+  <li>
+    <a href="interval-example.html" title="Next Chapter: 6.3. Example: an interval type"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">6.3. Example:... &raquo;</span>
+    </a>
+  </li>
+              
+            
+            
+            
+            
+              <li class="hidden-sm">
+<div id="sourcelink">
+  <a href="../_sources/extending/low-level.rst.txt"
+     rel="nofollow">Source</a>
+</div></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <div class="section" id="low-level-extension-api">
+<span id="low-level-extending"></span><h1>6.2. Low-level extension API<a class="headerlink" href="#low-level-extension-api" title="Permalink to this headline">¶</a></h1>
+<p>This extension API is available through the <a class="reference internal" href="index.html#module-numba.extending" title="numba.extending"><code class="xref py py-mod docutils literal"><span class="pre">numba.extending</span></code></a> module.
+It allows you to hook directly into the Numba compilation chain.  As such,
+it distinguished between several compilation phases:</p>
+<ul class="simple">
+<li>The <a class="reference internal" href="../glossary.html#term-typing"><span class="xref std std-term">typing</span></a> phase deduces the types of variables in a compiled
+function by looking at the operations performed.</li>
+<li>The <a class="reference internal" href="../glossary.html#term-lowering"><span class="xref std std-term">lowering</span></a> phase converts high-level Python operations into
+low-level LLVM code.  This phase exploits the typing information derived
+by the typing phase.</li>
+<li><em>Boxing</em> and <em>unboxing</em> convert Python objects into native values, and
+vice-versa.  They occur at the boundaries of calling a Numba function
+from the Python interpreter.</li>
+</ul>
+<div class="section" id="typing">
+<h2>6.2.1. Typing<a class="headerlink" href="#typing" title="Permalink to this headline">¶</a></h2>
+<p>Type inference &#8211; or simply <em>typing</em> &#8211; is the process of assigning
+Numba types to all values involved in a function, so as to enable
+efficient code generation.  Broadly speaking, typing comes in two flavours:
+typing plain Python <em>values</em> (e.g. function arguments or global variables)
+and typing <em>operations</em> (or <em>functions</em>) on known value types.</p>
+<dl class="function">
+<dt id="typeof_impl.register">
+<code class="descclassname">&#64;</code><code class="descclassname">typeof_impl.</code><code class="descname">register</code><span class="sig-paren">(</span><em>cls</em><span class="sig-paren">)</span><a class="headerlink" href="#typeof_impl.register" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register the decorated function as typing Python values of class <em>cls</em>.
+The decorated function will be called with the signature <code class="docutils literal"><span class="pre">(val,</span> <span class="pre">c)</span></code>
+where <em>val</em> is the Python value being typed and <em>c</em> is a context
+object.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="type_callable">
+<code class="descclassname">&#64;</code><code class="descname">type_callable</code><span class="sig-paren">(</span><em>func</em><span class="sig-paren">)</span><a class="headerlink" href="#type_callable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register the decorated function as typing the callable <em>func</em>.
+<em>func</em> can be either an actual Python callable or a string denoting
+a operation internally known to Numba (for example <code class="docutils literal"><span class="pre">'getitem'</span></code>).
+The decorated function is called with a single <em>context</em> argument
+and must return a typer function.  The typer function should have
+the same signature as the function being typed, and it is called
+with the Numba <em>types</em> of the function arguments; it should return
+either the Numba type of the function&#8217;s return value, or <code class="docutils literal"><span class="pre">None</span></code>
+if inference failed.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="lowering">
+<h2>6.2.2. Lowering<a class="headerlink" href="#lowering" title="Permalink to this headline">¶</a></h2>
+<p>The following decorators all take a type specification of some kind.
+A type specification is usually a type class (such as <code class="docutils literal"><span class="pre">types.Float</span></code>)
+or a specific type instance (such as <code class="docutils literal"><span class="pre">types.float64</span></code>).  Some values
+have a special meaning:</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">types.Any</span></code> matches any type; this allows doing your own dispatching
+inside the implementation</li>
+<li><code class="docutils literal"><span class="pre">types.VarArg(&lt;some</span> <span class="pre">type&gt;)</span></code> matches any number of arguments of the
+given type; it can only appear as the last type specification when
+describing a function&#8217;s arguments.</li>
+</ul>
+<p>A <em>context</em> argument in the following APIs is a target context providing
+various utility methods for code generation (such as creating a constant,
+converting from a type to another, looking up the implementation of a
+specific function, etc.).  A <em>builder</em> argument is a
+<a class="reference external" href="http://llvmlite.pydata.org/en/latest/user-guide/ir/ir-builder.html#llvmlite.ir.IRBuilder" title="(in llvmlite v0.20.0)"><code class="xref py py-class docutils literal"><span class="pre">llvmlite.ir.IRBuilder</span></code></a> instance for the LLVM code being generated.</p>
+<p>A <em>signature</em> is an object specifying the concrete type of an operation.
+The <code class="docutils literal"><span class="pre">args</span></code> attribute of the signature is a tuple of the argument types.
+The <code class="docutils literal"><span class="pre">return_type</span></code> attribute of the signature is the type that the
+operation should return.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>Numba always reasons on Numba types, but the values being passed
+around during lowering are LLVM values: they don&#8217;t hold the required
+type information, which is why Numba types are passed explicitly too.</p>
+<p class="last">LLVM has its own, very low-level type system: you can access the LLVM
+type of a value by looking up its <code class="docutils literal"><span class="pre">.type</span></code> attribute.</p>
+</div>
+<div class="section" id="native-operations">
+<h3>6.2.2.1. Native operations<a class="headerlink" href="#native-operations" title="Permalink to this headline">¶</a></h3>
+<dl class="function">
+<dt id="lower_builtin">
+<code class="descclassname">&#64;</code><code class="descname">lower_builtin</code><span class="sig-paren">(</span><em>func</em>, <em>typespec</em>, <em>...</em><span class="sig-paren">)</span><a class="headerlink" href="#lower_builtin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register the decorated function as implementing the callable <em>func</em>
+for the arguments described by the given Numba <em>typespecs</em>.
+As with <a class="reference internal" href="#type_callable" title="type_callable"><code class="xref py py-func docutils literal"><span class="pre">type_callable()</span></code></a>, <em>func</em> can be either an actual Python
+callable or a string denoting a operation internally known to Numba
+(for example <code class="docutils literal"><span class="pre">'getitem'</span></code>).</p>
+<p>The decorated function is called with four arguments
+<code class="docutils literal"><span class="pre">(context,</span> <span class="pre">builder,</span> <span class="pre">sig,</span> <span class="pre">args)</span></code>.  <code class="docutils literal"><span class="pre">sig</span></code> is the concrete signature
+the callable is being invoked with.  <code class="docutils literal"><span class="pre">args</span></code> is a tuple of the values
+of the arguments the callable is being invoked with; each value in
+<code class="docutils literal"><span class="pre">args</span></code> corresponds to a type in <code class="docutils literal"><span class="pre">sig.args</span></code>.  The function
+must return a value compatible with the type <code class="docutils literal"><span class="pre">sig.return_type</span></code>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="lower_getattr">
+<code class="descclassname">&#64;</code><code class="descname">lower_getattr</code><span class="sig-paren">(</span><em>typespec</em>, <em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#lower_getattr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register the decorated function as implementing the attribute <em>name</em>
+of the given <em>typespec</em>.  The decorated function is called with four
+arguments <code class="docutils literal"><span class="pre">(context,</span> <span class="pre">builder,</span> <span class="pre">typ,</span> <span class="pre">value)</span></code>.  <em>typ</em> is the concrete
+type the attribute is being looked up on.  <em>value</em> is the value the
+attribute is being looked up on.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="lower_getattr_generic">
+<code class="descclassname">&#64;</code><code class="descname">lower_getattr_generic</code><span class="sig-paren">(</span><em>typespec</em><span class="sig-paren">)</span><a class="headerlink" href="#lower_getattr_generic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register the decorated function as a fallback for attribute lookup
+on a given <em>typespec</em>.  Any attribute that does not have a corresponding
+<a class="reference internal" href="#lower_getattr" title="lower_getattr"><code class="xref py py-func docutils literal"><span class="pre">lower_getattr()</span></code></a> declaration will go through
+<a class="reference internal" href="#lower_getattr_generic" title="lower_getattr_generic"><code class="xref py py-func docutils literal"><span class="pre">lower_getattr_generic()</span></code></a>.  The decorated function is called with
+five arguments <code class="docutils literal"><span class="pre">(context,</span> <span class="pre">builder,</span> <span class="pre">typ,</span> <span class="pre">value,</span> <span class="pre">name)</span></code>.  <em>typ</em>
+and <em>value</em> are as in <a class="reference internal" href="#lower_getattr" title="lower_getattr"><code class="xref py py-func docutils literal"><span class="pre">lower_getattr()</span></code></a>.  <em>name</em> is the name
+of the attribute being looked up.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="lower_cast">
+<code class="descclassname">&#64;</code><code class="descname">lower_cast</code><span class="sig-paren">(</span><em>fromspec</em>, <em>tospec</em><span class="sig-paren">)</span><a class="headerlink" href="#lower_cast" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register the decorated function as converting from types described by
+<em>fromspec</em> to types described by <em>tospec</em>.  The decorated function
+is called with five arguments <code class="docutils literal"><span class="pre">(context,</span> <span class="pre">builder,</span> <span class="pre">fromty,</span> <span class="pre">toty,</span> <span class="pre">value)</span></code>.
+<em>fromty</em> and <em>toty</em> are the concrete types being converted from and to,
+respectively.  <em>value</em> is the value being converted.  The function
+must return a value compatible with the type <code class="docutils literal"><span class="pre">toty</span></code>.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="constants">
+<h3>6.2.2.2. Constants<a class="headerlink" href="#constants" title="Permalink to this headline">¶</a></h3>
+<dl class="function">
+<dt id="lower_constant">
+<code class="descclassname">&#64;</code><code class="descname">lower_constant</code><span class="sig-paren">(</span><em>typespec</em><span class="sig-paren">)</span><a class="headerlink" href="#lower_constant" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register the decorated function as implementing the creation of
+constants for the Numba <em>typespec</em>.  The decorated function
+is called with four arguments <code class="docutils literal"><span class="pre">(context,</span> <span class="pre">builder,</span> <span class="pre">ty,</span> <span class="pre">pyval)</span></code>.
+<em>ty</em> is the concrete type to create a constant for.  <em>pyval</em>
+is the Python value to convert into a LLVM constant.
+The function must return a value compatible with the type <code class="docutils literal"><span class="pre">ty</span></code>.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="boxing-and-unboxing">
+<h3>6.2.2.3. Boxing and unboxing<a class="headerlink" href="#boxing-and-unboxing" title="Permalink to this headline">¶</a></h3>
+<p>In these functions, <em>c</em> is a convenience object with several attributes:</p>
+<ul class="simple">
+<li>its <code class="docutils literal"><span class="pre">context</span></code> attribute is a target context as above</li>
+<li>its <code class="docutils literal"><span class="pre">builder</span></code> attribute is a <a class="reference external" href="http://llvmlite.pydata.org/en/latest/user-guide/ir/ir-builder.html#llvmlite.ir.IRBuilder" title="(in llvmlite v0.20.0)"><code class="xref py py-class docutils literal"><span class="pre">llvmlite.ir.IRBuilder</span></code></a> as above</li>
+<li>its <code class="docutils literal"><span class="pre">pyapi</span></code> attribute is an object giving access to a subset of the
+<a class="reference external" href="https://docs.python.org/3/c-api/index.html">Python interpreter&#8217;s C API</a></li>
+</ul>
+<p>An object, as opposed to a native value, is a <code class="docutils literal"><span class="pre">PyObject</span> <span class="pre">*</span></code> pointer.
+Such pointers can be produced or processed by the methods in the <code class="docutils literal"><span class="pre">pyapi</span></code>
+object.</p>
+<dl class="function">
+<dt id="box">
+<code class="descclassname">&#64;</code><code class="descname">box</code><span class="sig-paren">(</span><em>typespec</em><span class="sig-paren">)</span><a class="headerlink" href="#box" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register the decorated function as boxing values matching the <em>typespec</em>.
+The decorated function is called with three arguments <code class="docutils literal"><span class="pre">(typ,</span> <span class="pre">val,</span> <span class="pre">c)</span></code>.
+<em>typ</em> is the concrete type being boxed.  <em>val</em> is the value being
+boxed.  The function should return a Python object, or NULL to signal
+an error.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="unbox">
+<code class="descclassname">&#64;</code><code class="descname">unbox</code><span class="sig-paren">(</span><em>typespec</em><span class="sig-paren">)</span><a class="headerlink" href="#unbox" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register the decorated function as unboxing values matching the <em>typespec</em>.
+The decorated function is called with three arguments <code class="docutils literal"><span class="pre">(typ,</span> <span class="pre">obj,</span> <span class="pre">c)</span></code>.
+<em>typ</em> is the concrete type being unboxed.  <em>obj</em> is the Python object
+(a <code class="docutils literal"><span class="pre">PyObject</span> <span class="pre">*</span></code> pointer, in C terms) being unboxed.  The function
+should return a <code class="docutils literal"><span class="pre">NativeValue</span></code> object giving the unboxing result value
+and an optional error bit.</p>
+</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2012, Anaconda, Inc..<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.1.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>
