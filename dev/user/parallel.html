@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>1.9. Automatic parallelization with @jit &mdash; Numba 0.35.0+10.g143f70e-py2.7-linux-x86_64.egg documentation</title>
+    <title>1.9. Automatic parallelization with @jit &mdash; Numba 0.36.0.dev0+87.g0c167c4-py2.7-linux-x86_64.egg documentation</title>
     
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.35.0+10.g143f70e-py2.7-linux-x86_64.egg',
+        VERSION:     '0.36.0.dev0+87.g0c167c4-py2.7-linux-x86_64.egg',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,7 +26,7 @@
     <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="Numba 0.35.0+10.g143f70e-py2.7-linux-x86_64.egg documentation" href="../index.html" />
+    <link rel="top" title="Numba 0.36.0.dev0+87.g0c167c4-py2.7-linux-x86_64.egg documentation" href="../index.html" />
     <link rel="up" title="1. User Manual" href="index.html" />
     <link rel="next" title="1.10. Troubleshooting and tips" href="troubleshoot.html" />
     <link rel="prev" title="1.8. Compiling code ahead of time" href="pycc.html" />
@@ -49,7 +49,7 @@
         </button>
         <a class="navbar-brand" href="../index.html"><span><img src="../_static/numba_blue_icon_rgb.png"></span>
           Numba</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.35</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.36</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -177,7 +177,8 @@ arrays and scalars, as well as Numpy ufuncs. They are often called
 </ul>
 </div></blockquote>
 </li>
-<li><p class="first">Numpy reduction functions <code class="docutils literal"><span class="pre">sum</span></code> and <code class="docutils literal"><span class="pre">prod</span></code>.</p>
+<li><p class="first">Numpy reduction functions <code class="docutils literal"><span class="pre">sum</span></code>, <code class="docutils literal"><span class="pre">prod</span></code>, <code class="docutils literal"><span class="pre">min</span></code>, <code class="docutils literal"><span class="pre">max</span></code>, <code class="docutils literal"><span class="pre">argmin</span></code>,
+and <code class="docutils literal"><span class="pre">argmax</span></code>.</p>
 </li>
 <li><p class="first">Numpy array creation functions <code class="docutils literal"><span class="pre">zeros</span></code>, <code class="docutils literal"><span class="pre">ones</span></code>, and several
 random functions (rand, randn, ranf, random_sample, sample, random,
@@ -193,6 +194,9 @@ when operands have matching dimension and size. The full semantics of
 Numpy broadcast between arrays with mixed dimensionality or size is
 not supported, nor is the reduction across a selected dimension.</p>
 </li>
+<li><p class="first">The <code class="docutils literal"><span class="pre">reduce</span></code> operator of <code class="docutils literal"><span class="pre">functools</span></code> is supported for specifying parallel
+reductions on 1D Numpy arrays but the initial value argument is mandatory.</p>
+</li>
 </ol>
 </div>
 <div class="section" id="explicit-parallel-loops">
@@ -200,9 +204,13 @@ not supported, nor is the reduction across a selected dimension.</p>
 <p>Another experimental feature of this module is support for explicit parallel
 loops. One can use Numba&#8217;s <code class="docutils literal"><span class="pre">prange</span></code> instead of <code class="docutils literal"><span class="pre">range</span></code> to specify that a
 loop can be parallelized. The user is required to make sure that the loop does
-not have cross iteration dependencies except the supported reductions.
-Currently, reductions on scalar values are supported and are inferred from
-in-place operations. The example below demonstrates a parallel loop with a
+not have cross iteration dependencies except the supported reductions.</p>
+<p>A reductions is inferred automatically if a variable is updated by a binary
+function/operator using its previous value in the loop body. The initial value
+of the reduction is inferred automatically for <code class="docutils literal"><span class="pre">+=</span></code> and <code class="docutils literal"><span class="pre">*=</span></code> operators.
+For other functions/operators, the reduction variable should hold the initial
+value right before entering the <code class="docutils literal"><span class="pre">prange</span></code> loop.</p>
+<p>The example below demonstrates a parallel loop with a
 reduction (<code class="docutils literal"><span class="pre">A</span></code> is a one-dimensional Numpy array):</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">njit</span><span class="p">,</span> <span class="n">prange</span>
 <span class="nd">@njit</span><span class="p">(</span><span class="n">parallel</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
