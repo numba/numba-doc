@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>7.2. Numba architecture &mdash; Numba 0.36.0.dev0+343.gf86c615-py2.7-linux-x86_64.egg documentation</title>
+    <title>7.2. Numba architecture &mdash; Numba 0.36.0.dev0+407.gbdeeaf8-py2.7-linux-x86_64.egg documentation</title>
     
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.36.0.dev0+343.gf86c615-py2.7-linux-x86_64.egg',
+        VERSION:     '0.36.0.dev0+407.gbdeeaf8-py2.7-linux-x86_64.egg',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,7 +26,7 @@
     <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="Numba 0.36.0.dev0+343.gf86c615-py2.7-linux-x86_64.egg documentation" href="../index.html" />
+    <link rel="top" title="Numba 0.36.0.dev0+407.gbdeeaf8-py2.7-linux-x86_64.egg documentation" href="../index.html" />
     <link rel="up" title="7. Developer Manual" href="index.html" />
     <link rel="next" title="7.3. Polymorphic dispatching" href="dispatching.html" />
     <link rel="prev" title="7.1. Contributing to Numba" href="contributing.html" />
@@ -539,8 +539,8 @@ allocates a single result array.</p>
 </div>
 <div class="section" id="stage-6b-perform-automatic-parallelization">
 <span id="parallel-accelerator"></span><h3>7.2.4.7. Stage 6b: Perform Automatic Parallelization<a class="headerlink" href="#stage-6b-perform-automatic-parallelization" title="Permalink to this headline">¶</a></h3>
-<p>This pass is only performed if the parallel option in the <a class="reference internal" href="../reference/jit-compilation.html#numba.jit" title="numba.jit"><code class="xref py py-func docutils literal"><span class="pre">jit()</span></code></a>
-decorator is set to True.  This pass find parallelism implicit in the
+<p>This pass is only performed if the <code class="docutils literal"><span class="pre">parallel</span></code> option in the <a class="reference internal" href="../reference/jit-compilation.html#numba.jit" title="numba.jit"><code class="xref py py-func docutils literal"><span class="pre">jit()</span></code></a>
+decorator is set to <code class="docutils literal"><span class="pre">True</span></code>.  This pass find parallelism implicit in the
 semantics of operations in the Numba IR and replaces those operations
 with explicitly parallel representations of those operations using a
 special <cite>parfor</cite> operator.  Then, optimizations are performed to maximize
@@ -548,9 +548,22 @@ the number of parfors that are adjacent to each other such that they can
 then be fused together into one parfor that takes only one pass over the
 data and will thus typically have better cache performance.  Finally,
 during lowering, these parfor operators are converted to a form similar
-to guvectorize to implement the actual parallelism.  All these processes
-are described in more detail in the following paragraphs.
-The automatic parallelization pass has a number of sub-passes.</p>
+to guvectorize to implement the actual parallelism.</p>
+<p>The automatic parallelization pass has a number of sub-passes, many of
+which are controllable using a dictionary of options passed via the
+<code class="docutils literal"><span class="pre">parallel</span></code> keyword argument to <a class="reference internal" href="../reference/jit-compilation.html#numba.jit" title="numba.jit"><code class="xref py py-func docutils literal"><span class="pre">jit()</span></code></a>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span> <span class="s">&#39;comprehension&#39;</span><span class="p">:</span> <span class="bp">True</span><span class="o">/</span><span class="bp">False</span><span class="p">,</span>  <span class="c"># parallel comprehension</span>
+  <span class="s">&#39;prange&#39;</span><span class="p">:</span>        <span class="bp">True</span><span class="o">/</span><span class="bp">False</span><span class="p">,</span>  <span class="c"># parallel for-loop</span>
+  <span class="s">&#39;numpy&#39;</span><span class="p">:</span>         <span class="bp">True</span><span class="o">/</span><span class="bp">False</span><span class="p">,</span>  <span class="c"># parallel numpy calls</span>
+  <span class="s">&#39;reduction&#39;</span><span class="p">:</span>     <span class="bp">True</span><span class="o">/</span><span class="bp">False</span><span class="p">,</span>  <span class="c"># parallel reduce calls</span>
+  <span class="s">&#39;setitem&#39;</span><span class="p">:</span>       <span class="bp">True</span><span class="o">/</span><span class="bp">False</span><span class="p">,</span>  <span class="c"># parallel setitem</span>
+  <span class="s">&#39;stencil&#39;</span><span class="p">:</span>       <span class="bp">True</span><span class="o">/</span><span class="bp">False</span><span class="p">,</span>  <span class="c"># parallel stencils</span>
+  <span class="s">&#39;fusion&#39;</span><span class="p">:</span>        <span class="bp">True</span><span class="o">/</span><span class="bp">False</span><span class="p">,</span>  <span class="c"># enable fusion or not</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The default is set to <cite>True</cite> for all of them. The sub-passes are
+described in more detail in the following paragraphs.</p>
 <ol class="arabic">
 <li><dl class="first docutils">
 <dt>CFG Simplification</dt>
@@ -571,15 +584,36 @@ latter form for cleaner subsequent analysis.</p>
 </li>
 <li><dl class="first docutils">
 <dt>Array analysis</dt>
-<dd><p class="first last">A critical requirement for later parfor fusion is that parfors have
+<dd><p class="first">A critical requirement for later parfor fusion is that parfors have
 identical iteration spaces and these iteration spaces typically correspond
 to the sizes of the dimensions of Numpy arrays.  In this sub-pass, the IR is
 analyzed to determine equivalence classes for the dimensions of Numpy
-arrays.  Consider the example, <code class="docutils literal"><span class="pre">a</span> <span class="pre">=</span> <span class="pre">b</span> <span class="pre">+</span> <span class="pre">1</span></code>, where <cite>a</cite> and <cite>b</cite> are both
-Numpy arrays.  Here, we know that each dimension of <cite>a</cite> must have the same
-equivalence class as the corresponding dimension of <cite>b</cite>.  Typically,
+arrays.  Consider the example, <code class="docutils literal"><span class="pre">a</span> <span class="pre">=</span> <span class="pre">b</span> <span class="pre">+</span> <span class="pre">1</span></code>, where <code class="docutils literal"><span class="pre">a</span></code> and <code class="docutils literal"><span class="pre">b</span></code> are both
+Numpy arrays.  Here, we know that each dimension of <code class="docutils literal"><span class="pre">a</span></code> must have the same
+equivalence class as the corresponding dimension of <code class="docutils literal"><span class="pre">b</span></code>.  Typically,
 routines rich in Numpy operations will enable equivalence classes to be
 fully known for all arrays created within a function.</p>
+<p>Array analysis will also reason about size equivalvence for slice selection,
+and boolean array masking (one dimensional only). For example, it is able to
+infer that <code class="docutils literal"><span class="pre">a[1</span> <span class="pre">:</span> <span class="pre">n-1]</span></code> is of the same size as <code class="docutils literal"><span class="pre">b[0</span> <span class="pre">:</span> <span class="pre">n-2]</span></code>.</p>
+<p>Array analysis may also insert safety assumptions to ensure pre-conditions
+related to array sizes are met before an operation can be parallelized.
+For example, <code class="docutils literal"><span class="pre">np.dot(X,</span> <span class="pre">w)</span></code> between a 2-D matrix <code class="docutils literal"><span class="pre">X</span></code> and a 1-D vector <code class="docutils literal"><span class="pre">w</span></code>
+requires that the second dimension of <code class="docutils literal"><span class="pre">X</span></code> is of the same size as <code class="docutils literal"><span class="pre">w</span></code>.
+Usually this kind of runtime check is automatically inserted, but if array
+analysis can infer such equivalence, it will skip them.</p>
+<p>Users can even help array analysis by turning implicit knowledge about
+array sizes into explicit assertions. For example, in the code below:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@numba.njit</span><span class="p">(</span><span class="n">parallel</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">logistic_regression</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">iterations</span><span class="p">):</span>
+    <span class="k">assert</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="n">Y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">w</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">iterations</span><span class="p">):</span>
+        <span class="n">w</span> <span class="o">-=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(((</span><span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">Y</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">w</span><span class="p">)))</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">*</span> <span class="n">Y</span><span class="p">),</span> <span class="n">X</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">w</span>
+</pre></div>
+</div>
+<p class="last">Making the explicit assertion helps eliminate all bounds checks in the
+rest of the function.</p>
 </dd>
 </dl>
 </li>
@@ -588,7 +622,7 @@ fully known for all arrays created within a function.</p>
 <dd><p class="first">The use of prange (<a class="reference internal" href="../user/parallel.html#numba-prange"><span>Explicit Parallel Loops</span></a>) in a for loop is an explicit
 indication from the programmer that all iterations of the for loop can
 execute in parallel.  In this sub-pass, we analyze the CFG to locate loops
-and to convert those loops controlled by a prange object to the explici
+and to convert those loops controlled by a prange object to the explicit
 <cite>parfor</cite> operator.  Each explicit parfor operator consists of:</p>
 <ol class="loweralpha simple">
 <li>A list of loop nest information that describes the iteration space of the
@@ -601,10 +635,16 @@ one time before the parfor begins executing.</li>
 of the loop and compute one point in the iteration space.</li>
 <li>The index variables used for each dimension of the iteration space.</li>
 </ol>
-<p class="last">For parfor <code class="docutils literal"><span class="pre">pranges</span></code>, the loop nest is a single entry where the start,
-stop, and step fields come from the specified <code class="docutils literal"><span class="pre">prange</span></code>.  The init block is
-empty for <code class="docutils literal"><span class="pre">prange</span></code> parfors and the loop body is the set of blocks in the
+<p>For parfor <cite>pranges</cite>, the loop nest is a single entry where the start,
+stop, and step fields come from the specified <cite>prange</cite>.  The init block is
+empty for <cite>prange</cite> parfors and the loop body is the set of blocks in the
 loop minus the loop header.</p>
+<p>With parallelization on, array comprehensions (<a class="reference internal" href="../reference/pysupported.html#pysupported-comprehension"><span>List comprehension</span></a>)
+will also be translated to prange so as to run in parallel. This behavior
+be disabled by setting <code class="docutils literal"><span class="pre">parallel={'comprehension':</span> <span class="pre">False}</span></code>.</p>
+<p class="last">Likewise, the overall <cite>prange</cite> to <cite>parfor</cite> translation can be disabled by
+setting <code class="docutils literal"><span class="pre">parallel={'prange':</span> <span class="pre">False}</span></code>, in which case <cite>prange</cite> is treated the
+same as <cite>range</cite>.</p>
 </dd>
 </dl>
 </li>
@@ -627,13 +667,38 @@ the value stored is a constant 1.  For calls to generate a random array, the
 value comes from a call to the same random number function but with the size
 parameter dropped and therefore returning a scalar.  For arrayexpr operators,
 the arrayexpr tree is converted to Numba IR and the value at the root of that
-expression tree is used to write into the output array.</p>
-<p class="last">For reductions, the loop nest list is similarly created using the array
+expression tree is used to write into the output array. The translation from
+Numpy functions and arrayexpr operators to <cite>parfor</cite> can be disabled by
+setting <code class="docutils literal"><span class="pre">parallel={'numpy':</span> <span class="pre">False}</span></code>.</p>
+<p>For reductions, the loop nest list is similarly created using the array
 analysis information for the array being reduced.  In the init block, the
 initial value is assigned to the reduction variable.  The loop body consists
 of a single block in which the next value in the iteration space is fetched
 and the reduction operation is applied to that value and the current
-reduction value and the result stored back into the reduction value.</p>
+reduction value and the result stored back into the reduction value.
+The translation of reduction functions to <cite>parfor</cite> can be disabled by
+setting <code class="docutils literal"><span class="pre">parallel={'reduction':</span> <span class="pre">False}</span></code>.</p>
+<p class="last">Setting the <span class="target" id="index-3"></span><a class="reference internal" href="../reference/envvars.html#envvar-NUMBA_DEBUG_ARRAY_OPT_STATS"><code class="xref std std-envvar docutils literal"><span class="pre">NUMBA_DEBUG_ARRAY_OPT_STATS</span></code></a> environment variable to
+1 will show some statistics about parfor conversions in general.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Setitem to parfor</dt>
+<dd><p class="first">Setting a range of array elements using a slice or boolean array selection
+can also run in parallel.  Statement such as <code class="docutils literal"><span class="pre">A[P]</span> <span class="pre">=</span> <span class="pre">B[Q]</span></code>
+(or a simpler case <code class="docutils literal"><span class="pre">A[P]</span> <span class="pre">=</span> <span class="pre">c</span></code>, where <code class="docutils literal"><span class="pre">c</span></code> is a scalar) is translated to
+<cite>parfor</cite> if one of the following conditions is met:</p>
+<blockquote>
+<div><ol class="loweralpha simple">
+<li><code class="docutils literal"><span class="pre">P</span></code> and <code class="docutils literal"><span class="pre">Q</span></code> are slices or multi-dimensional selector involving
+scalar and slices, and <code class="docutils literal"><span class="pre">A[P]</span></code> and <code class="docutils literal"><span class="pre">B[Q]</span></code> are considered size
+equivalent by array analysis. Only 2-value slice/range is supported,
+3-value with a step will not be translated to <cite>parfor</cite>.</li>
+<li><code class="docutils literal"><span class="pre">P</span></code> and <code class="docutils literal"><span class="pre">Q</span></code> are the same boolean array.</li>
+</ol>
+</div></blockquote>
+<p class="last">This translation can be disabled by setting <code class="docutils literal"><span class="pre">parallel={'setitem':</span> <span class="pre">False}</span></code>.</p>
 </dd>
 </dl>
 </li>
@@ -660,10 +725,13 @@ classes for each dimension of the loop nests are the same, and</li>
 <li>the first parfor does not create a reduction variable used by the
 second parfor.</li>
 </ol>
-<p class="last">The two parfors are fused together by adding the second parfor&#8217;s init block
+<p>The two parfors are fused together by adding the second parfor&#8217;s init block
 to the first&#8217;s, merging the two parfors&#8217; loop bodies together and replacing
 the instances of the second parfor&#8217;s loop index variables in the second
-parfor&#8217;s body with the loop index variables for the first parfor.</p>
+parfor&#8217;s body with the loop index variables for the first parfor.
+Fusion can be disabled by setting <code class="docutils literal"><span class="pre">parallel={'fusion':</span> <span class="pre">False}</span></code>.</p>
+<p class="last">Setting the <span class="target" id="index-4"></span><a class="reference internal" href="../reference/envvars.html#envvar-NUMBA_DEBUG_ARRAY_OPT_STATS"><code class="xref std std-envvar docutils literal"><span class="pre">NUMBA_DEBUG_ARRAY_OPT_STATS</span></code></a> environment variable to
+1 will show some statistics about parfor fusions.</p>
 </dd>
 </dl>
 </li>
@@ -683,7 +751,7 @@ mode.  Instead, for function variables, this sub-pass pushes the assignment
 instruction to the function variable into the parfor body so that those do
 not need to be passed as parameters.</p>
 <p>To see the intermediate IR between the above sub-passes and other debugging
-information, set the <span class="target" id="index-3"></span><a class="reference internal" href="../reference/envvars.html#envvar-NUMBA_DEBUG_ARRAY_OPT"><code class="xref std std-envvar docutils literal"><span class="pre">NUMBA_DEBUG_ARRAY_OPT</span></code></a> environment variable to
+information, set the <span class="target" id="index-5"></span><a class="reference internal" href="../reference/envvars.html#envvar-NUMBA_DEBUG_ARRAY_OPT"><code class="xref std std-envvar docutils literal"><span class="pre">NUMBA_DEBUG_ARRAY_OPT</span></code></a> environment variable to
 1. For the example in Section <a class="reference internal" href="#rewrite-typed-ir"><span>Stage 6a: Rewrite typed IR</span></a>, the following IR with
 a parfor is generated during this stage:</p>
 <div class="last highlight-python"><div class="highlight"><pre>______________________________________________________________________
@@ -740,7 +808,7 @@ toolchain is able to optimize it quite easily into compact, efficient code.</p>
 Numba IR nodes are translated to LLVM instructions is handled by the
 target context selected for compilation.  The default target context is
 the &#8220;cpu&#8221; context, defined in <code class="docutils literal"><span class="pre">numba.targets.cpu</span></code>.</p>
-<p>The LLVM IR can be displayed by setting the <span class="target" id="index-4"></span><a class="reference internal" href="../reference/envvars.html#envvar-NUMBA_DUMP_LLVM"><code class="xref std std-envvar docutils literal"><span class="pre">NUMBA_DUMP_LLVM</span></code></a> environment
+<p>The LLVM IR can be displayed by setting the <span class="target" id="index-6"></span><a class="reference internal" href="../reference/envvars.html#envvar-NUMBA_DUMP_LLVM"><code class="xref std std-envvar docutils literal"><span class="pre">NUMBA_DUMP_LLVM</span></code></a> environment
 variable to 1.  For the &#8220;cpu&#8221; context, our <code class="docutils literal"><span class="pre">add()</span></code> example would look like:</p>
 <div class="highlight-llvm"><div class="highlight"><pre><span class="k">define</span> <span class="k">i32</span> <span class="vg">@&quot;__main__.add$1.int64.int64&quot;</span><span class="p">(</span><span class="k">i64</span><span class="p">*</span> <span class="nv">%&quot;retptr&quot;</span><span class="p">,</span>
                                          <span class="p">{</span><span class="k">i8</span><span class="p">*,</span> <span class="k">i32</span><span class="p">}**</span> <span class="nv">%&quot;excinfo&quot;</span><span class="p">,</span>
@@ -769,7 +837,7 @@ variable to 1.  For the &#8220;cpu&#8221; context, our <code class="docutils lit
 </pre></div>
 </div>
 <p>The post-optimization LLVM IR can be output by setting
-<span class="target" id="index-5"></span><a class="reference internal" href="../reference/envvars.html#envvar-NUMBA_DUMP_OPTIMIZED"><code class="xref std std-envvar docutils literal"><span class="pre">NUMBA_DUMP_OPTIMIZED</span></code></a> to 1.  The optimizer shortens the code
+<span class="target" id="index-7"></span><a class="reference internal" href="../reference/envvars.html#envvar-NUMBA_DUMP_OPTIMIZED"><code class="xref std std-envvar docutils literal"><span class="pre">NUMBA_DUMP_OPTIMIZED</span></code></a> to 1.  The optimizer shortens the code
 generated above quite significantly:</p>
 <div class="highlight-llvm"><div class="highlight"><pre><span class="k">define</span> <span class="k">i32</span> <span class="vg">@&quot;__main__.add$1.int64.int64&quot;</span><span class="p">(</span><span class="k">i64</span><span class="p">*</span> <span class="k">nocapture</span> <span class="nv">%retptr</span><span class="p">,</span>
                                          <span class="p">{</span> <span class="k">i8</span><span class="p">*,</span> <span class="k">i32</span> <span class="p">}**</span> <span class="k">nocapture</span> <span class="k">readnone</span> <span class="nv">%excinfo</span><span class="p">,</span>
@@ -809,7 +877,7 @@ compiling this merged IR with the Numba compiler&#8217;s <code class="docutils l
 <p>To call the parallel GUFunc, the static schedule must be created.
 Code is inserted to call a function named <code class="docutils literal"><span class="pre">do_scheduling.</span></code>  This function
 is called with the size of each of the parfor&#8217;s dimensions and the number
-<cite>N</cite> of configured Numba threads (<span class="target" id="index-6"></span><a class="reference internal" href="../reference/envvars.html#envvar-NUMBA_NUM_THREADS"><code class="xref std std-envvar docutils literal"><span class="pre">NUMBA_NUM_THREADS</span></code></a>).
+<cite>N</cite> of configured Numba threads (<span class="target" id="index-8"></span><a class="reference internal" href="../reference/envvars.html#envvar-NUMBA_NUM_THREADS"><code class="xref std std-envvar docutils literal"><span class="pre">NUMBA_NUM_THREADS</span></code></a>).
 The <code class="docutils literal"><span class="pre">do_scheduling</span></code> function will divide
 the iteration space into N approximately equal sized regions (linear for
 1D, rectangular for 2D, or hyperrectangles for 3+D) and the resulting
@@ -964,7 +1032,7 @@ correct version of the compiled function if multiple type specializations
 were generated (for example, for both <code class="docutils literal"><span class="pre">float32</span></code> and <code class="docutils literal"><span class="pre">float64</span></code> versions
 of the same function).</p>
 <p>The machine assembly code generated by LLVM can be dumped to the screen by
-setting the <span class="target" id="index-7"></span><a class="reference internal" href="../reference/envvars.html#envvar-NUMBA_DUMP_ASSEMBLY"><code class="xref std std-envvar docutils literal"><span class="pre">NUMBA_DUMP_ASSEMBLY</span></code></a> environment variable to 1:</p>
+setting the <span class="target" id="index-9"></span><a class="reference internal" href="../reference/envvars.html#envvar-NUMBA_DUMP_ASSEMBLY"><code class="xref std std-envvar docutils literal"><span class="pre">NUMBA_DUMP_ASSEMBLY</span></code></a> environment variable to 1:</p>
 <div class="highlight-gas"><div class="highlight"><pre>        <span class="na">.globl</span>  <span class="no">__main__.add$1.int64.int64</span>
         <span class="na">.align</span>  <span class="mi">16</span><span class="p">,</span> <span class="mi">0x90</span>
         <span class="na">.type</span>   <span class="no">__main__.add$1.int64.int64</span><span class="p">,</span><span class="na">@function</span>
