@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>1.3. Compiling Python code with @jit &#8212; Numba 0.36.1-py2.7-macosx-10.6-x86_64.egg documentation</title>
+    
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.36.1-py2.7-macosx-10.6-x86_64.egg',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="1.4. Flexible specializations with @generated_jit" href="generated-jit.html" />
+    <link rel="prev" title="1.2. Getting started" href="installing.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body role="document">
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html"><span><img src="../_static/numba_blue_icon_rgb.png"></span>
+          Numba</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.36</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">1. User Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/index.html">2. Reference Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cuda/index.html">3. Numba for CUDA GPUs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cuda-reference/index.html">4. CUDA Python Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hsa/index.html">5. Numba for HSA APUs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../extending/index.html">6. Extending Numba</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer/index.html">7. Developer Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../proposals/index.html">8. Numba Enhancement Proposals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">9. Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release-notes.html">10. Release Notes</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">1.3. Compiling Python code with <code class="docutils literal"><span class="pre">&#64;jit</span></code></a><ul>
+<li><a class="reference internal" href="#basic-usage">1.3.1. Basic usage</a><ul>
+<li><a class="reference internal" href="#lazy-compilation">1.3.1.1. Lazy compilation</a></li>
+<li><a class="reference internal" href="#eager-compilation">1.3.1.2. Eager compilation</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#calling-and-inlining-other-functions">1.3.2. Calling and inlining other functions</a></li>
+<li><a class="reference internal" href="#signature-specifications">1.3.3. Signature specifications</a></li>
+<li><a class="reference internal" href="#compilation-options">1.3.4. Compilation options</a><ul>
+<li><a class="reference internal" href="#nopython">1.3.4.1. <code class="docutils literal"><span class="pre">nopython</span></code></a></li>
+<li><a class="reference internal" href="#nogil">1.3.4.2. <code class="docutils literal"><span class="pre">nogil</span></code></a></li>
+<li><a class="reference internal" href="#cache">1.3.4.3. <code class="docutils literal"><span class="pre">cache</span></code></a></li>
+<li><a class="reference internal" href="#parallel">1.3.4.4. <code class="docutils literal"><span class="pre">parallel</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+  <li>
+    <a href="installing.html" title="Previous Chapter: 1.2. Getting started"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; 1.2. Getting ...</span>
+    </a>
+  </li>
+  <li>
+    <a href="generated-jit.html" title="Next Chapter: 1.4. Flexible specializations with @generated_jit"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">1.4. Flexible... &raquo;</span>
+    </a>
+  </li>
+              
+            
+            
+            
+            
+              <li class="hidden-sm">
+<div id="sourcelink">
+  <a href="../_sources/user/jit.rst.txt"
+     rel="nofollow">Source</a>
+</div></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <div class="section" id="compiling-python-code-with-jit">
+<span id="jit"></span><h1>1.3. Compiling Python code with <code class="docutils literal"><span class="pre">&#64;jit</span></code><a class="headerlink" href="#compiling-python-code-with-jit" title="Permalink to this headline">¶</a></h1>
+<p>Numba provides several utilities for code generation, but its central
+feature is the <a class="reference internal" href="../reference/jit-compilation.html#numba.jit" title="numba.jit"><code class="xref py py-func docutils literal"><span class="pre">numba.jit()</span></code></a> decorator.  Using this decorator, you can mark
+a function for optimization by Numba&#8217;s JIT compiler.  Various invocation
+modes trigger differing compilation options and behaviours.</p>
+<div class="section" id="basic-usage">
+<h2>1.3.1. Basic usage<a class="headerlink" href="#basic-usage" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="lazy-compilation">
+<span id="jit-lazy"></span><h3>1.3.1.1. Lazy compilation<a class="headerlink" href="#lazy-compilation" title="Permalink to this headline">¶</a></h3>
+<p>The recommended way to use the <code class="docutils literal"><span class="pre">&#64;jit</span></code> decorator is to let Numba decide
+when and how to optimize:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">numba</span> <span class="k">import</span> <span class="n">jit</span>
+
+<span class="nd">@jit</span>
+<span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="c1"># A somewhat trivial example</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
+</pre></div>
+</div>
+<p>In this mode, compilation will be deferred until the first function
+execution.  Numba will infer the argument types at call time, and generate
+optimized code based on this information.  Numba will also be able to
+compile separate specializations depending on the input types.  For example,
+calling the <code class="docutils literal"><span class="pre">f()</span></code> function above with integer or complex numbers will
+generate different code paths:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="go">3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="go">(2+1j)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="eager-compilation">
+<h3>1.3.1.2. Eager compilation<a class="headerlink" href="#eager-compilation" title="Permalink to this headline">¶</a></h3>
+<p>You can also tell Numba the function signature you are expecting.  The
+function <code class="docutils literal"><span class="pre">f()</span></code> would now look like:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">numba</span> <span class="k">import</span> <span class="n">jit</span><span class="p">,</span> <span class="n">int32</span>
+
+<span class="nd">@jit</span><span class="p">(</span><span class="n">int32</span><span class="p">(</span><span class="n">int32</span><span class="p">,</span> <span class="n">int32</span><span class="p">))</span>
+<span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="c1"># A somewhat trivial example</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">int32(int32,</span> <span class="pre">int32)</span></code> is the function&#8217;s signature.  In this case, the
+corresponding specialization will be compiled by the <code class="docutils literal"><span class="pre">&#64;jit</span></code> decorator,
+and no other specialization will be allowed. This is useful if you want
+fine-grained control over types chosen by the compiler (for example,
+to use single-precision floats).</p>
+<p>If you omit the return type, e.g. by writing <code class="docutils literal"><span class="pre">(int32,</span> <span class="pre">int32)</span></code> instead of
+<code class="docutils literal"><span class="pre">int32(int32,</span> <span class="pre">int32)</span></code>, Numba will try to infer it for you.  Function
+signatures can also be strings, and you can pass several of them as a list;
+see the <a class="reference internal" href="../reference/jit-compilation.html#numba.jit" title="numba.jit"><code class="xref py py-func docutils literal"><span class="pre">numba.jit()</span></code></a> documentation for more details.</p>
+<p>Of course, the compiled function gives the expected results:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+<span class="go">3</span>
+</pre></div>
+</div>
+<p>and if we specified <code class="docutils literal"><span class="pre">int32</span></code> as return type, the higher-order bits get
+discarded:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="mi">31</span><span class="p">,</span> <span class="mi">2</span><span class="o">**</span><span class="mi">31</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+<span class="go">1</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="calling-and-inlining-other-functions">
+<h2>1.3.2. Calling and inlining other functions<a class="headerlink" href="#calling-and-inlining-other-functions" title="Permalink to this headline">¶</a></h2>
+<p>Numba-compiled functions can call other compiled functions.  The function
+calls may even be inlined in the native code, depending on optimizer
+heuristics.  For example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="nd">@jit</span>
+<span class="k">def</span> <span class="nf">square</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">**</span> <span class="mi">2</span>
+
+<span class="nd">@jit</span>
+<span class="k">def</span> <span class="nf">hypot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">square</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="n">square</span><span class="p">(</span><span class="n">y</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal"><span class="pre">&#64;jit</span></code> decorator <em>must</em> be added to any such library function,
+otherwise Numba may generate much slower code.</p>
+</div>
+<div class="section" id="signature-specifications">
+<h2>1.3.3. Signature specifications<a class="headerlink" href="#signature-specifications" title="Permalink to this headline">¶</a></h2>
+<p>Explicit <code class="docutils literal"><span class="pre">&#64;jit</span></code> signatures can use a number of types.  Here are some
+common ones:</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">void</span></code> is the return type of functions returning nothing (which
+actually return <code class="xref py py-const docutils literal"><span class="pre">None</span></code> when called from Python)</li>
+<li><code class="docutils literal"><span class="pre">intp</span></code> and <code class="docutils literal"><span class="pre">uintp</span></code> are pointer-sized integers (signed and unsigned,
+respectively)</li>
+<li><code class="docutils literal"><span class="pre">intc</span></code> and <code class="docutils literal"><span class="pre">uintc</span></code> are equivalent to C <code class="docutils literal"><span class="pre">int</span></code> and <code class="docutils literal"><span class="pre">unsigned</span> <span class="pre">int</span></code>
+integer types</li>
+<li><code class="docutils literal"><span class="pre">int8</span></code>, <code class="docutils literal"><span class="pre">uint8</span></code>, <code class="docutils literal"><span class="pre">int16</span></code>, <code class="docutils literal"><span class="pre">uint16</span></code>, <code class="docutils literal"><span class="pre">int32</span></code>, <code class="docutils literal"><span class="pre">uint32</span></code>,
+<code class="docutils literal"><span class="pre">int64</span></code>, <code class="docutils literal"><span class="pre">uint64</span></code> are fixed-width integers of the corresponding bit
+width (signed and unsigned)</li>
+<li><code class="docutils literal"><span class="pre">float32</span></code> and <code class="docutils literal"><span class="pre">float64</span></code> are single- and double-precision floating-point
+numbers, respectively</li>
+<li><code class="docutils literal"><span class="pre">complex64</span></code> and <code class="docutils literal"><span class="pre">complex128</span></code> are single- and double-precision complex
+numbers, respectively</li>
+<li>array types can be specified by indexing any numeric type, e.g. <code class="docutils literal"><span class="pre">float32[:]</span></code>
+for a one-dimensional single-precision array or <code class="docutils literal"><span class="pre">int8[:,:]</span></code> for a
+two-dimensional array of 8-bit integers.</li>
+</ul>
+</div>
+<div class="section" id="compilation-options">
+<h2>1.3.4. Compilation options<a class="headerlink" href="#compilation-options" title="Permalink to this headline">¶</a></h2>
+<p>A number of keyword-only arguments can be passed to the <code class="docutils literal"><span class="pre">&#64;jit</span></code> decorator.</p>
+<div class="section" id="nopython">
+<span id="jit-nopython"></span><h3>1.3.4.1. <code class="docutils literal"><span class="pre">nopython</span></code><a class="headerlink" href="#nopython" title="Permalink to this headline">¶</a></h3>
+<p>Numba has two compilation modes: <a class="reference internal" href="../glossary.html#term-nopython-mode"><span class="xref std std-term">nopython mode</span></a> and
+<a class="reference internal" href="../glossary.html#term-object-mode"><span class="xref std std-term">object mode</span></a>.  The former produces much faster code, but has
+limitations that can force Numba to fall back to the latter.  To prevent
+Numba from falling back, and instead raise an error, pass <code class="docutils literal"><span class="pre">nopython=True</span></code>.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="nd">@jit</span><span class="p">(</span><span class="n">nopython</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="troubleshoot.html#numba-troubleshooting"><span class="std std-ref">Troubleshooting and tips</span></a></p>
+</div>
+</div>
+<div class="section" id="nogil">
+<span id="jit-nogil"></span><h3>1.3.4.2. <code class="docutils literal"><span class="pre">nogil</span></code><a class="headerlink" href="#nogil" title="Permalink to this headline">¶</a></h3>
+<p>Whenever Numba optimizes Python code to native code that only works on
+native types and variables (rather than Python objects), it is not necessary
+anymore to hold Python&#8217;s <a class="reference external" href="https://docs.python.org/3/glossary.html#term-global-interpreter-lock" title="(in Python v3.6)"><span class="xref std std-term">global interpreter lock</span></a> (GIL).
+Numba will release the GIL when entering such a compiled function if you
+passed <code class="docutils literal"><span class="pre">nogil=True</span></code>.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="nd">@jit</span><span class="p">(</span><span class="n">nogil</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
+</pre></div>
+</div>
+<p>Code running with the GIL released runs concurrently with other
+threads executing Python or Numba code (either the same compiled function,
+or another one), allowing you to take advantage of multi-core systems.
+This will not be possible if the function is compiled in <a class="reference internal" href="../glossary.html#term-object-mode"><span class="xref std std-term">object mode</span></a>.</p>
+<p>When using <code class="docutils literal"><span class="pre">nogil=True</span></code>, you&#8217;ll have to be wary of the usual pitfalls
+of multi-threaded programming (consistency, synchronization, race conditions,
+etc.).</p>
+</div>
+<div class="section" id="cache">
+<span id="jit-cache"></span><h3>1.3.4.3. <code class="docutils literal"><span class="pre">cache</span></code><a class="headerlink" href="#cache" title="Permalink to this headline">¶</a></h3>
+<p>To avoid compilation times each time you invoke a Python program,
+you can instruct Numba to write the result of function compilation into
+a file-based cache.  This is done by passing <code class="docutils literal"><span class="pre">cache=True</span></code>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="nd">@jit</span><span class="p">(</span><span class="n">cache</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="parallel">
+<span id="parallel-jit-option"></span><h3>1.3.4.4. <code class="docutils literal"><span class="pre">parallel</span></code><a class="headerlink" href="#parallel" title="Permalink to this headline">¶</a></h3>
+<p>Enables an experimental feature that automatically parallelizes (and
+performs other optimizations for) those operations in the function known to
+have parallel semantics.  For a list of supported operations, see
+<a class="reference internal" href="parallel.html#numba-parallel"><span class="std std-ref">Automatic parallelization with &#64;jit</span></a>.  This feature is enabled by passing <code class="docutils literal"><span class="pre">parallel=True</span></code> and
+must be used in conjunction with <code class="docutils literal"><span class="pre">nopython=True</span></code>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="nd">@jit</span><span class="p">(</span><span class="n">nopython</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">parallel</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="parallel.html#numba-parallel"><span class="std std-ref">Automatic parallelization with &#64;jit</span></a></p>
+</div>
+</div>
+</div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2012, Anaconda, Inc..<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.1.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>
