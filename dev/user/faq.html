@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>1.12. Frequently Asked Questions &mdash; Numba 0.37.0.dev0+6.g540650d-py2.7-linux-x86_64.egg documentation</title>
+    <title>1.12. Frequently Asked Questions &mdash; Numba 0.36.2+2.gc014c9d-py2.7-linux-x86_64.egg documentation</title>
     
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.37.0.dev0+6.g540650d-py2.7-linux-x86_64.egg',
+        VERSION:     '0.36.2+2.gc014c9d-py2.7-linux-x86_64.egg',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,7 +26,7 @@
     <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="Numba 0.37.0.dev0+6.g540650d-py2.7-linux-x86_64.egg documentation" href="../index.html" />
+    <link rel="top" title="Numba 0.36.2+2.gc014c9d-py2.7-linux-x86_64.egg documentation" href="../index.html" />
     <link rel="up" title="1. User Manual" href="index.html" />
     <link rel="next" title="1.13. Examples" href="examples.html" />
     <link rel="prev" title="1.11. Troubleshooting and tips" href="troubleshoot.html" />
@@ -49,7 +49,7 @@
         </button>
         <a class="navbar-brand" href="../index.html"><span><img src="../_static/numba_blue_icon_rgb.png"></span>
           Numba</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.37</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.36</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -101,9 +101,10 @@
 <li><a class="reference internal" href="#performance">1.12.2. Performance</a><ul>
 <li><a class="reference internal" href="#does-numba-inline-functions">1.12.2.1. Does Numba inline functions?</a></li>
 <li><a class="reference internal" href="#does-numba-vectorize-array-computations-simd">1.12.2.2. Does Numba vectorize array computations (SIMD)?</a></li>
-<li><a class="reference internal" href="#does-numba-automatically-parallelize-code">1.12.2.3. Does Numba automatically parallelize code?</a></li>
-<li><a class="reference internal" href="#can-numba-speed-up-short-running-functions">1.12.2.4. Can Numba speed up short-running functions?</a></li>
-<li><a class="reference internal" href="#there-is-a-delay-when-jit-compiling-a-complicated-function-how-can-i-improve-it">1.12.2.5. There is a delay when JIT-compiling a complicated function, how can I improve it?</a></li>
+<li><a class="reference internal" href="#why-my-loop-is-not-vectorized">1.12.2.3. Why my loop is not vectorized?</a></li>
+<li><a class="reference internal" href="#does-numba-automatically-parallelize-code">1.12.2.4. Does Numba automatically parallelize code?</a></li>
+<li><a class="reference internal" href="#can-numba-speed-up-short-running-functions">1.12.2.5. Can Numba speed up short-running functions?</a></li>
+<li><a class="reference internal" href="#there-is-a-delay-when-jit-compiling-a-complicated-function-how-can-i-improve-it">1.12.2.6. There is a delay when JIT-compiling a complicated function, how can I improve it?</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#integration-with-other-utilities">1.12.3. Integration with other utilities</a><ul>
@@ -255,8 +256,46 @@ can be inlined.  This only works in <a class="reference internal" href="../gloss
 <p>Numba doesn&#8217;t implement such optimizations by itself, but it lets LLVM
 apply them.</p>
 </div>
+<div class="section" id="why-my-loop-is-not-vectorized">
+<h3>1.12.2.3. Why my loop is not vectorized?<a class="headerlink" href="#why-my-loop-is-not-vectorized" title="Permalink to this headline">¶</a></h3>
+<p>Numba enables the loop-vectorize optimization in LLVM by default.
+While it is a powerful optimization, not all loops are applicable.
+Sometimes, loop-vectorization may fail due to subtle details like memory access
+pattern. To see additional diagnostic information from LLVM,
+add the following lines:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">llvmlite.binding</span> <span class="kn">as</span> <span class="nn">llvm</span>
+<span class="n">llvm</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="p">,</span> <span class="s">&#39;--debug-only=loop-vectorize&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This tells LLVM to print debug information from the <strong>loop-vectorize</strong>
+pass to stderr.  Each function entry looks like:</p>
+<div class="highlight-text"><div class="highlight"><pre>LV: Checking a loop in &quot;&lt;low-level symbol name&gt;&quot; from &lt;function name&gt;
+LV: Loop hints: force=? width=0 unroll=0
+...
+LV: Vectorization is possible but not beneficial.
+LV: Interleaving is not beneficial.
+</pre></div>
+</div>
+<p>Each function entry is separated by an empty line.  The reason for rejecting
+the vectorization is usually at the end of the entry.  In the example above,
+LLVM rejected the vectorization because doing so will not speedup the loop.
+In this case, it can be due to memory access pattern.  For instance, the
+array being looped over may not be in contiguous layout.</p>
+<p>When memory access pattern is non-trivial such that it cannot determine the
+access memory region, LLVM may reject with the following message:</p>
+<div class="highlight-text"><div class="highlight"><pre>LV: Can&#39;t vectorize due to memory conflicts
+</pre></div>
+</div>
+<p>Another common reason is:</p>
+<div class="highlight-text"><div class="highlight"><pre>LV: Not vectorizing: loop did not meet vectorization requirements.
+</pre></div>
+</div>
+<p>In this case, vectorization is rejected because the vectorized code may behave
+differently.  This is a case to try turning on <code class="docutils literal"><span class="pre">fastmath=True</span></code> to allow
+fastmath instructions.</p>
+</div>
 <div class="section" id="does-numba-automatically-parallelize-code">
-<h3>1.12.2.3. Does Numba automatically parallelize code?<a class="headerlink" href="#does-numba-automatically-parallelize-code" title="Permalink to this headline">¶</a></h3>
+<h3>1.12.2.4. Does Numba automatically parallelize code?<a class="headerlink" href="#does-numba-automatically-parallelize-code" title="Permalink to this headline">¶</a></h3>
 <p>It can, in some cases:</p>
 <ul class="simple">
 <li>Ufuncs and gufuncs with the <code class="docutils literal"><span class="pre">target=&quot;parallel&quot;</span></code> option will run on multiple threads.</li>
@@ -270,7 +309,7 @@ can also target parallel execution on GPU architectures using its CUDA and HSA
 backends.</p>
 </div>
 <div class="section" id="can-numba-speed-up-short-running-functions">
-<h3>1.12.2.4. Can Numba speed up short-running functions?<a class="headerlink" href="#can-numba-speed-up-short-running-functions" title="Permalink to this headline">¶</a></h3>
+<h3>1.12.2.5. Can Numba speed up short-running functions?<a class="headerlink" href="#can-numba-speed-up-short-running-functions" title="Permalink to this headline">¶</a></h3>
 <p>Not significantly.  New users sometimes expect to JIT-compile such
 functions:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
@@ -285,7 +324,7 @@ thumb, if a function takes less than 10 µs to execute: leave it.</p>
 from another jitted function.</p>
 </div>
 <div class="section" id="there-is-a-delay-when-jit-compiling-a-complicated-function-how-can-i-improve-it">
-<h3>1.12.2.5. There is a delay when JIT-compiling a complicated function, how can I improve it?<a class="headerlink" href="#there-is-a-delay-when-jit-compiling-a-complicated-function-how-can-i-improve-it" title="Permalink to this headline">¶</a></h3>
+<h3>1.12.2.6. There is a delay when JIT-compiling a complicated function, how can I improve it?<a class="headerlink" href="#there-is-a-delay-when-jit-compiling-a-complicated-function-how-can-i-improve-it" title="Permalink to this headline">¶</a></h3>
 <p>Try to pass <code class="docutils literal"><span class="pre">cache=True</span></code> to the <code class="docutils literal"><span class="pre">&#64;jit</span></code> decorator.  It will keep the
 compiled version on disk for later use.</p>
 <p>A more radical alternative is <a class="reference internal" href="pycc.html#pycc"><span>ahead-of-time compilation</span></a>.</p>
