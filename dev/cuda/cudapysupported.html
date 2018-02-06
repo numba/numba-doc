@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>3.5. Supported Python features in CUDA Python &mdash; Numba 0.37.0.dev1+210.g8474b1a-py2.7-linux-x86_64.egg documentation</title>
+    <title>3.5. Supported Python features in CUDA Python &mdash; Numba 0.37.0.dev1+212.g0109b4c-py2.7-linux-x86_64.egg documentation</title>
     
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.37.0.dev1+210.g8474b1a-py2.7-linux-x86_64.egg',
+        VERSION:     '0.37.0.dev1+212.g0109b4c-py2.7-linux-x86_64.egg',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,7 +26,7 @@
     <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="Numba 0.37.0.dev1+210.g8474b1a-py2.7-linux-x86_64.egg documentation" href="../index.html" />
+    <link rel="top" title="Numba 0.37.0.dev1+212.g0109b4c-py2.7-linux-x86_64.egg documentation" href="../index.html" />
     <link rel="up" title="3. Numba for CUDA GPUs" href="index.html" />
     <link rel="next" title="3.6. Supported Atomic Operations" href="intrinsics.html" />
     <link rel="prev" title="3.4. Writing Device Functions" href="device-functions.html" />
@@ -102,6 +102,7 @@
 <li><a class="reference internal" href="#operator">3.5.4.3. <code class="docutils literal"><span class="pre">operator</span></code></a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#numpy-support">3.5.5. Numpy support</a></li>
 </ul>
 </li>
 </ul>
@@ -325,6 +326,25 @@ a range object is returned instead of an array of values.</li>
 <li><a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.xor" title="(in Python v3.6)"><code class="xref py py-func docutils literal"><span class="pre">operator.xor()</span></code></a></li>
 </ul>
 </div>
+</div>
+<div class="section" id="numpy-support">
+<h2>3.5.5. Numpy support<a class="headerlink" href="#numpy-support" title="Permalink to this headline">¶</a></h2>
+<p>Due to the CUDA programming model, dynamic memory allocation inside a kernel is
+inefficient and is often not needed.  Numba disallows any memory allocating features.
+This disables a large number of NumPy APIs.  For best performance, users should write
+code such that each thread is dealing with a single element at a time.</p>
+<p>Supported numpy features:</p>
+<ul class="simple">
+<li>accessing <cite>ndarray</cite> attributes <cite>.shape</cite>, <cite>.strides</cite>, <cite>.ndim</cite>, <cite>.size</cite>, etc..</li>
+<li>scalar ufuncs that have equivalents in the <cite>math</cite> module; i.e. <code class="docutils literal"><span class="pre">np.sin(x[0])</span></code>, where x is a 1D array.</li>
+<li>indexing and slicing works.</li>
+</ul>
+<p>Unsupported numpy features:</p>
+<ul class="simple">
+<li>array creation APIs.</li>
+<li>array methods.</li>
+<li>functions that returns a new array.</li>
+</ul>
 </div>
 </div>
 
