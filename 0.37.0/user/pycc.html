@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>1.8. Compiling code ahead of time &#8212; Numba 0.37.0dev1+32.gbe5fb1f.dirty documentation</title>
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.37.0dev1+32.gbe5fb1f.dirty',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="1.9. Automatic parallelization with @jit" href="parallel.html" />
+    <link rel="prev" title="1.7. Creating C callbacks with @cfunc" href="cfunc.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html"><span><img src="../_static/numba_blue_icon_rgb.png"></span>
+          Numba</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.37</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">1. User Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/index.html">2. Reference Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cuda/index.html">3. Numba for CUDA GPUs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cuda-reference/index.html">4. CUDA Python Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hsa/index.html">5. Numba for HSA APUs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../extending/index.html">6. Extending Numba</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer/index.html">7. Developer Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../proposals/index.html">8. Numba Enhancement Proposals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">9. Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release-notes.html">10. Release Notes</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">1.8. Compiling code ahead of time</a><ul>
+<li><a class="reference internal" href="#overview">1.8.1. Overview</a><ul>
+<li><a class="reference internal" href="#benefits">1.8.1.1. Benefits</a></li>
+<li><a class="reference internal" href="#limitations">1.8.1.2. Limitations</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#usage">1.8.2. Usage</a><ul>
+<li><a class="reference internal" href="#standalone-example">1.8.2.1. Standalone example</a></li>
+<li><a class="reference internal" href="#distutils-integration">1.8.2.2. Distutils integration</a></li>
+<li><a class="reference internal" href="#signature-syntax">1.8.2.3. Signature syntax</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+  <li>
+    <a href="cfunc.html" title="Previous Chapter: 1.7. Creating C callbacks with @cfunc"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; 1.7. Creating...</span>
+    </a>
+  </li>
+  <li>
+    <a href="parallel.html" title="Next Chapter: 1.9. Automatic parallelization with @jit"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">1.9. Automati... &raquo;</span>
+    </a>
+  </li>
+              
+            
+            
+            
+            
+              <li class="hidden-sm">
+<div id="sourcelink">
+  <a href="../_sources/user/pycc.rst.txt"
+     rel="nofollow">Source</a>
+</div></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <div class="section" id="compiling-code-ahead-of-time">
+<h1>1.8. Compiling code ahead of time<a class="headerlink" href="#compiling-code-ahead-of-time" title="Permalink to this headline">¶</a></h1>
+<p id="pycc">While Numba’s main use case is <a class="reference internal" href="../glossary.html#term-just-in-time-compilation"><span class="xref std std-term">Just-in-Time compilation</span></a>, it also
+provides a facility for <a class="reference internal" href="../glossary.html#term-ahead-of-time-compilation"><span class="xref std std-term">Ahead-of-Time compilation</span></a> (AOT).</p>
+<div class="section" id="overview">
+<h2>1.8.1. Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="benefits">
+<h3>1.8.1.1. Benefits<a class="headerlink" href="#benefits" title="Permalink to this headline">¶</a></h3>
+<ol class="arabic simple">
+<li>AOT compilation produces a compiled extension module which does not depend
+on Numba: you can distribute the module on machines which do not have
+Numba installed (but Numpy is required).</li>
+<li>There is no compilation overhead at runtime (but see the
+<code class="docutils literal"><span class="pre">&#64;jit</span></code> <a class="reference internal" href="jit.html#jit-cache"><span class="std std-ref">cache</span></a> option), nor any overhead of importing
+Numba.</li>
+</ol>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last">Compiled extension modules are discussed in the
+<a class="reference external" href="https://packaging.python.org/en/latest/extensions/">Python packaging user guide</a>.</p>
+</div>
+</div>
+<div class="section" id="limitations">
+<h3>1.8.1.2. Limitations<a class="headerlink" href="#limitations" title="Permalink to this headline">¶</a></h3>
+<ol class="arabic simple">
+<li>AOT compilation only allows for regular functions, not <a class="reference internal" href="../glossary.html#term-ufunc"><span class="xref std std-term">ufuncs</span></a>.</li>
+<li>You have to specify function signatures explicitly.</li>
+<li>Each exported function can have only one signature (but you can export
+several different signatures under different names).</li>
+<li>AOT compilation produces generic code for your CPU’s architectural family
+(for example “x86-64”), while JIT compilation produces code optimized
+for your particular CPU model.</li>
+</ol>
+</div>
+</div>
+<div class="section" id="usage">
+<h2>1.8.2. Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="standalone-example">
+<h3>1.8.2.1. Standalone example<a class="headerlink" href="#standalone-example" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">numba.pycc</span> <span class="k">import</span> <span class="n">CC</span>
+
+<span class="n">cc</span> <span class="o">=</span> <span class="n">CC</span><span class="p">(</span><span class="s1">&#39;my_module&#39;</span><span class="p">)</span>
+<span class="c1"># Uncomment the following line to print out the compilation steps</span>
+<span class="c1">#cc.verbose = True</span>
+
+<span class="nd">@cc</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="s1">&#39;multf&#39;</span><span class="p">,</span> <span class="s1">&#39;f8(f8, f8)&#39;</span><span class="p">)</span>
+<span class="nd">@cc</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="s1">&#39;multi&#39;</span><span class="p">,</span> <span class="s1">&#39;i4(i4, i4)&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">mult</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">a</span> <span class="o">*</span> <span class="n">b</span>
+
+<span class="nd">@cc</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="s1">&#39;square&#39;</span><span class="p">,</span> <span class="s1">&#39;f8(f8)&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">square</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">a</span> <span class="o">**</span> <span class="mi">2</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">cc</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>If you run this Python script, it will generate an extension module named
+<code class="docutils literal"><span class="pre">my_module</span></code>.  Depending on your platform, the actual filename may be
+<code class="docutils literal"><span class="pre">my_module.so</span></code>, <code class="docutils literal"><span class="pre">my_module.pyd</span></code>, <code class="docutils literal"><span class="pre">my_module.cpython-34m.so</span></code>, etc.</p>
+<p>The generated module has three functions: <code class="docutils literal"><span class="pre">multf</span></code>, <code class="docutils literal"><span class="pre">multi</span></code> and <code class="docutils literal"><span class="pre">square</span></code>.
+<code class="docutils literal"><span class="pre">multi</span></code> operates on 32-bit integers (<code class="docutils literal"><span class="pre">i4</span></code>), while <code class="docutils literal"><span class="pre">multf</span></code> and <code class="docutils literal"><span class="pre">square</span></code>
+operate on double-precision floats (<code class="docutils literal"><span class="pre">f8</span></code>):</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">my_module</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_module</span><span class="o">.</span><span class="n">multi</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="go">12</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_module</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="mf">1.414</span><span class="p">)</span>
+<span class="go">1.9993959999999997</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="distutils-integration">
+<h3>1.8.2.2. Distutils integration<a class="headerlink" href="#distutils-integration" title="Permalink to this headline">¶</a></h3>
+<p>You can also integrate the compilation step for your extension modules
+in your <code class="docutils literal"><span class="pre">setup.py</span></code> script, using distutils or setuptools:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">distutils.core</span> <span class="k">import</span> <span class="n">setup</span>
+
+<span class="kn">from</span> <span class="nn">source_module</span> <span class="k">import</span> <span class="n">cc</span>
+
+<span class="n">setup</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
+      <span class="n">ext_modules</span><span class="o">=</span><span class="p">[</span><span class="n">cc</span><span class="o">.</span><span class="n">distutils_extension</span><span class="p">()])</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal"><span class="pre">source_module</span></code> above is the module defining the <code class="docutils literal"><span class="pre">cc</span></code> object.
+Extensions compiled like this will be automatically included in the
+build files for your Python project, so you can distribute them inside
+binary packages such as wheels or Conda packages. Note that in the case of
+using conda, the compilers used for AOT need to be those that are available
+in the Anaconda distribution.</p>
+</div>
+<div class="section" id="signature-syntax">
+<h3>1.8.2.3. Signature syntax<a class="headerlink" href="#signature-syntax" title="Permalink to this headline">¶</a></h3>
+<p>The syntax for exported signatures is the same as in the <code class="docutils literal"><span class="pre">&#64;jit</span></code>
+decorator.  You can read more about it in the <a class="reference internal" href="../reference/types.html#numba-types"><span class="std std-ref">types</span></a>
+reference.</p>
+<p>Here is an example of exporting an implementation of the second-order
+centered difference on a 1d array:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="nd">@cc</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="s1">&#39;centdiff_1d&#39;</span><span class="p">,</span> <span class="s1">&#39;f8[:](f8[:], f8)&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">centdiff_1d</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">dx</span><span class="p">):</span>
+    <span class="n">D</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty_like</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
+    <span class="n">D</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">D</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">D</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">D</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">u</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">u</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">u</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="n">dx</span><span class="o">**</span><span class="mi">2</span>
+    <span class="k">return</span> <span class="n">D</span>
+</pre></div>
+</div>
+<p>You can also omit the return type, which will then be inferred by Numba:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="nd">@cc</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="s1">&#39;centdiff_1d&#39;</span><span class="p">,</span> <span class="s1">&#39;(f8[:], f8)&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">centdiff_1d</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">dx</span><span class="p">):</span>
+    <span class="c1"># Same code as above</span>
+    <span class="o">...</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2012, Anaconda, Inc..<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>5.2. Writing HSA Kernels &#8212; Numba 0.37.0dev1+32.gbe5fb1f.dirty documentation</title>
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.37.0dev1+32.gbe5fb1f.dirty',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="5.3. Memory management" href="memory.html" />
+    <link rel="prev" title="5.1. Overview" href="overview.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html"><span><img src="../_static/numba_blue_icon_rgb.png"></span>
+          Numba</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.37</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../user/index.html">1. User Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/index.html">2. Reference Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cuda/index.html">3. Numba for CUDA GPUs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cuda-reference/index.html">4. CUDA Python Reference</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">5. Numba for HSA APUs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../extending/index.html">6. Extending Numba</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer/index.html">7. Developer Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../proposals/index.html">8. Numba Enhancement Proposals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">9. Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release-notes.html">10. Release Notes</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">5.2. Writing HSA Kernels</a><ul>
+<li><a class="reference internal" href="#introduction">5.2.1. Introduction</a></li>
+<li><a class="reference internal" href="#introduction-for-cuda-programmers">5.2.2. Introduction for CUDA Programmers</a></li>
+<li><a class="reference internal" href="#kernel-declaration">5.2.3. Kernel declaration</a></li>
+<li><a class="reference internal" href="#kernel-invocation">5.2.4. Kernel invocation</a><ul>
+<li><a class="reference internal" href="#choosing-the-workgroup-size">5.2.4.1. Choosing the workgroup size</a></li>
+<li><a class="reference internal" href="#multi-dimensional-workgroup-and-grid">5.2.4.2. Multi-dimensional workgroup and grid</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#workitem-positioning">5.2.5. WorkItem positioning</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+  <li>
+    <a href="overview.html" title="Previous Chapter: 5.1. Overview"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; 5.1. Overview</span>
+    </a>
+  </li>
+  <li>
+    <a href="memory.html" title="Next Chapter: 5.3. Memory management"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">5.3. Memory m... &raquo;</span>
+    </a>
+  </li>
+              
+            
+            
+            
+            
+              <li class="hidden-sm">
+<div id="sourcelink">
+  <a href="../_sources/hsa/kernels.rst.txt"
+     rel="nofollow">Source</a>
+</div></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <div class="section" id="writing-hsa-kernels">
+<h1>5.2. Writing HSA Kernels<a class="headerlink" href="#writing-hsa-kernels" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="introduction">
+<h2>5.2.1. Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<p>HSA provides an execution model similar to OpenCL.  Instructions are executed
+in parallel by a group of hardware threads.  In some way, this is similar to
+<em>single-instruction-multiple-data</em> (SIMD) model but with the convenience that
+the fine-grain scheduling is hidden from the programmer instead of programming
+with SIMD vectors as a data structure.  In HSA, the code you write will be
+executed by multiple threads at once (often hundreds or thousands).  Your
+solution will
+be modeled by defining a thread hierarchy of <em>grid</em>, <em>workgroup</em> and
+<em>workitem</em>.</p>
+<p>Numba’s HSA support exposes facilities to declare and manage this
+hierarchy of threads.</p>
+</div>
+<div class="section" id="introduction-for-cuda-programmers">
+<h2>5.2.2. Introduction for CUDA Programmers<a class="headerlink" href="#introduction-for-cuda-programmers" title="Permalink to this headline">¶</a></h2>
+<p>HSA execution model is similar to CUDA.  The main difference will be the
+shared memory model employed by HSA so that there are no device memory.  The
+GPU hardware uses the machine’s main memory (or host memory in
+CUDA term) directly.  Therefore, you will not need <code class="docutils literal"><span class="pre">to_device()</span></code> and
+<code class="docutils literal"><span class="pre">copy_to_host()</span></code> in HSA programming.</p>
+<p>Here’s a quick mapping of the CUDA terms to HSA:
+* workitem is CUDA threads
+* workgroup is CUDA thread block
+* grid is CUDA grid</p>
+</div>
+<div class="section" id="kernel-declaration">
+<h2>5.2.3. Kernel declaration<a class="headerlink" href="#kernel-declaration" title="Permalink to this headline">¶</a></h2>
+<p>A <em>kernel function</em> is a GPU function that is meant to be called from CPU
+code.  It gives it two fundamental characteristics:</p>
+<ul class="simple">
+<li>kernels cannot explicitly return a value; all result data must be written
+to an array passed to the function (if computing a scalar, you will
+probably pass a one-element array);</li>
+<li>kernels explicitly declare their thread hierarchy when called: i.e.
+the number of workgroups and the number of workitems per workgroup
+(note that while a kernel is compiled once, it can be called multiple
+times with different workgroup sizes or grid sizes).</li>
+</ul>
+<p>At first sight, writing a HSA kernel with Numba looks very much like
+writing a <a class="reference internal" href="../glossary.html#term-jit-function"><span class="xref std std-term">JIT function</span></a> for the CPU:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="nd">@hsa</span><span class="o">.</span><span class="n">jit</span>
+<span class="k">def</span> <span class="nf">increment_by_one</span><span class="p">(</span><span class="n">an_array</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Increment all array elements by one.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># code elided here; read further for different implementations</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="kernel-invocation">
+<span id="hsa-kernel-invocation"></span><h2>5.2.4. Kernel invocation<a class="headerlink" href="#kernel-invocation" title="Permalink to this headline">¶</a></h2>
+<p>A kernel is typically launched in the following way:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">itempergroup</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="n">groupperrange</span> <span class="o">=</span> <span class="p">(</span><span class="n">an_array</span><span class="o">.</span><span class="n">size</span> <span class="o">+</span> <span class="p">(</span><span class="n">itempergroup</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span> <span class="o">//</span> <span class="n">itempergroup</span>
+<span class="n">increment_by_one</span><span class="p">[</span><span class="n">groupperrange</span><span class="p">,</span> <span class="n">itempergroup</span><span class="p">](</span><span class="n">an_array</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We notice two steps here:</p>
+<ul class="simple">
+<li>Instantiate the kernel proper, by specifying a number of workgroup
+(or “workgroup per grid”), and a number of workitems per workgroup.  The
+product of the two will give the total number of workitem launched.  Kernel
+instantiation is done by taking the compiled kernel function
+(here <code class="docutils literal"><span class="pre">increment_by_one</span></code>) and indexing it with a tuple of integers.</li>
+<li>Running the kernel, by passing it the input array (and any separate
+output arrays if necessary).  By default, running a kernel is synchronous:
+the function returns when the kernel has finished executing and the
+data is synchronized back.</li>
+</ul>
+<div class="section" id="choosing-the-workgroup-size">
+<h3>5.2.4.1. Choosing the workgroup size<a class="headerlink" href="#choosing-the-workgroup-size" title="Permalink to this headline">¶</a></h3>
+<p>It might seem curious to have a two-level hierarchy when declaring the
+number of workitem needed by a kernel.  The workgroup size (i.e. number of
+workitem per workgroup) is often crucial:</p>
+<ul>
+<li><p class="first">On the software side, the workgroup size determines how many threads
+share a given area of <a class="reference internal" href="memory.html#hsa-shared-memory"><span class="std std-ref">shared memory</span></a>.</p>
+</li>
+<li><dl class="first docutils">
+<dt>On the hardware side, the workgroup size must be large enough for full</dt>
+<dd><p class="first last">occupation of execution units.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</div>
+<div class="section" id="multi-dimensional-workgroup-and-grid">
+<h3>5.2.4.2. Multi-dimensional workgroup and grid<a class="headerlink" href="#multi-dimensional-workgroup-and-grid" title="Permalink to this headline">¶</a></h3>
+<p>To help deal with multi-dimensional arrays, HSA allows you to specify
+multi-dimensional workgroups and grids.  In the example above, you could
+make <code class="docutils literal"><span class="pre">itempergroup</span></code> and <code class="docutils literal"><span class="pre">groupperrange</span></code> tuples of one, two
+or three integers.  Compared to 1D declarations of equivalent sizes,
+this doesn’t change anything to the efficiency or behaviour of generated
+code, but can help you write your algorithms in a more natural way.</p>
+</div>
+</div>
+<div class="section" id="workitem-positioning">
+<h2>5.2.5. WorkItem positioning<a class="headerlink" href="#workitem-positioning" title="Permalink to this headline">¶</a></h2>
+<p>When running a kernel, the kernel function’s code is executed by every
+thread once.  It therefore has to know which thread it is in, in order
+to know which array element(s) it is responsible for (complex algorithms
+may define more complex responsibilities, but the underlying principle
+is the same).</p>
+<p>One way is for the thread to determines its position in the grid and
+workgroup and manually compute the corresponding array position:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="nd">@hsa</span><span class="o">.</span><span class="n">jit</span>
+<span class="k">def</span> <span class="nf">increment_by_one</span><span class="p">(</span><span class="n">an_array</span><span class="p">):</span>
+    <span class="c1"># workitem id in a 1D workgroup</span>
+    <span class="n">tx</span> <span class="o">=</span> <span class="n">hsa</span><span class="o">.</span><span class="n">get_local_id</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="c1"># workgroup id in a 1D grid</span>
+    <span class="n">ty</span> <span class="o">=</span> <span class="n">hsa</span><span class="o">.</span><span class="n">get_group_id</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="c1"># workgroup size, i.e. number of workitem per workgroup</span>
+    <span class="n">bw</span> <span class="o">=</span> <span class="n">hsa</span><span class="o">.</span><span class="n">get_local_size</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="c1"># Compute flattened index inside the array</span>
+    <span class="n">pos</span> <span class="o">=</span> <span class="n">tx</span> <span class="o">+</span> <span class="n">ty</span> <span class="o">*</span> <span class="n">bw</span>
+    <span class="c1"># The above is equivalent to pos = hsa.get_global_id(0)</span>
+    <span class="k">if</span> <span class="n">pos</span> <span class="o">&lt;</span> <span class="n">an_array</span><span class="o">.</span><span class="n">size</span><span class="p">:</span>  <span class="c1"># Check array boundaries</span>
+        <span class="n">an_array</span><span class="p">[</span><span class="n">pos</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Unless you are sure the workgroup size and grid size is a divisor
+of your array size, you <strong>must</strong> check boundaries as shown above.</p>
+</div>
+<p><a class="reference internal" href="#numba.hsa.get_local_id" title="numba.hsa.get_local_id"><code class="xref py py-func docutils literal"><span class="pre">get_local_id()</span></code></a>, <a class="reference internal" href="#numba.hsa.get_local_size" title="numba.hsa.get_local_size"><code class="xref py py-func docutils literal"><span class="pre">get_local_size()</span></code></a>, <a class="reference internal" href="#numba.hsa.get_group_id" title="numba.hsa.get_group_id"><code class="xref py py-func docutils literal"><span class="pre">get_group_id()</span></code></a> and
+<a class="reference internal" href="#numba.hsa.get_global_id" title="numba.hsa.get_global_id"><code class="xref py py-func docutils literal"><span class="pre">get_global_id()</span></code></a> are special functions provided by the HSA backend for
+the sole purpose of knowing the geometry of the thread hierarchy and the
+position of the current workitem within that geometry.</p>
+<dl class="function">
+<dt id="numba.hsa.get_local_id">
+<code class="descclassname">numba.hsa.</code><code class="descname">get_local_id</code><span class="sig-paren">(</span><em>dim</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.hsa.get_local_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes the index of the dimension being queried</p>
+<p>Returns local workitem ID in the the current workgroup for the given
+dimension. For 1D workgroup, the index is an integer spanning the range
+from 0 inclusive to <a class="reference internal" href="#numba.hsa.get_local_size" title="numba.hsa.get_local_size"><code class="xref py py-func docutils literal"><span class="pre">numba.hsa.get_local_size()</span></code></a> exclusive.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.hsa.get_local_size">
+<code class="descclassname">numba.hsa.</code><code class="descname">get_local_size</code><span class="sig-paren">(</span><em>dim</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.hsa.get_local_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes the index of the dimension being queried</p>
+<p>Returns the size of the workgroup at the given dimension.
+The value is declared when instantiating the kernel.
+This value is the same for all workitems in a given kernel,
+even if they belong to different workgroups (i.e. each workgroups is “full”).</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.hsa.get_group_id">
+<code class="descclassname">numba.hsa.</code><code class="descname">get_group_id</code><span class="sig-paren">(</span><em>dim</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.hsa.get_group_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes the index of the dimension being queried</p>
+<p>Returns the workgroup ID in the grid of workgroup launched a kernel.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.hsa.get_global_id">
+<code class="descclassname">numba.hsa.</code><code class="descname">get_global_id</code><span class="sig-paren">(</span><em>dim</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.hsa.get_global_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes the index of the dimension being queried</p>
+<p>Returns the global workitem ID for the given dimension.  Unlike <cite>numba.hsa
+.get_local_id()</cite>, this number is unique for all workitems in a grid.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2012, Anaconda, Inc..<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>1.7. Creating C callbacks with @cfunc &#8212; Numba 0.37.0dev1+32.gbe5fb1f.dirty documentation</title>
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.37.0dev1+32.gbe5fb1f.dirty',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="1.8. Compiling code ahead of time" href="pycc.html" />
+    <link rel="prev" title="1.6. Compiling python classes with @jitclass" href="jitclass.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html"><span><img src="../_static/numba_blue_icon_rgb.png"></span>
+          Numba</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.37</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">1. User Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/index.html">2. Reference Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cuda/index.html">3. Numba for CUDA GPUs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cuda-reference/index.html">4. CUDA Python Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hsa/index.html">5. Numba for HSA APUs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../extending/index.html">6. Extending Numba</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer/index.html">7. Developer Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../proposals/index.html">8. Numba Enhancement Proposals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">9. Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release-notes.html">10. Release Notes</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">1.7. Creating C callbacks with <code class="docutils literal"><span class="pre">&#64;cfunc</span></code></a><ul>
+<li><a class="reference internal" href="#basic-usage">1.7.1. Basic usage</a></li>
+<li><a class="reference internal" href="#example">1.7.2. Example</a></li>
+<li><a class="reference internal" href="#dealing-with-pointers-and-array-memory">1.7.3. Dealing with pointers and array memory</a></li>
+<li><a class="reference internal" href="#signature-specification">1.7.4. Signature specification</a></li>
+<li><a class="reference internal" href="#compilation-options">1.7.5. Compilation options</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+  <li>
+    <a href="jitclass.html" title="Previous Chapter: 1.6. Compiling python classes with @jitclass"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; 1.6. Compilin...</span>
+    </a>
+  </li>
+  <li>
+    <a href="pycc.html" title="Next Chapter: 1.8. Compiling code ahead of time"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">1.8. Compilin... &raquo;</span>
+    </a>
+  </li>
+              
+            
+            
+            
+            
+              <li class="hidden-sm">
+<div id="sourcelink">
+  <a href="../_sources/user/cfunc.rst.txt"
+     rel="nofollow">Source</a>
+</div></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <div class="section" id="creating-c-callbacks-with-cfunc">
+<span id="cfunc"></span><h1>1.7. Creating C callbacks with <code class="docutils literal"><span class="pre">&#64;cfunc</span></code><a class="headerlink" href="#creating-c-callbacks-with-cfunc" title="Permalink to this headline">¶</a></h1>
+<p>Interfacing with some native libraries (for example written in C or C++)
+can necessitate writing native callbacks to provide business logic to the
+library.  The <a class="reference internal" href="../reference/jit-compilation.html#numba.cfunc" title="numba.cfunc"><code class="xref py py-func docutils literal"><span class="pre">numba.cfunc()</span></code></a> decorator creates a compiled function
+callable from foreign C code, using the signature of your choice.</p>
+<div class="section" id="basic-usage">
+<h2>1.7.1. Basic usage<a class="headerlink" href="#basic-usage" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal"><span class="pre">&#64;cfunc</span></code> decorator has a similar usage to <code class="docutils literal"><span class="pre">&#64;jit</span></code>, but with an
+important difference: passing a single signature is mandatory.
+It determines the visible signature of the C callback:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">numba</span> <span class="k">import</span> <span class="n">cfunc</span>
+
+<span class="nd">@cfunc</span><span class="p">(</span><span class="s2">&quot;float64(float64, float64)&quot;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
+</pre></div>
+</div>
+<p>The C function object exposes the address of the compiled C callback as
+the <a class="reference internal" href="../reference/jit-compilation.html#CFunc.address" title="CFunc.address"><code class="xref py py-attr docutils literal"><span class="pre">address</span></code></a> attribute, so that you can pass it to any
+foreign C or C++ library.  It also exposes a <a class="reference external" href="https://docs.python.org/3/library/ctypes.html#module-ctypes" title="(in Python v3.6)"><code class="xref py py-mod docutils literal"><span class="pre">ctypes</span></code></a> callback
+object pointing to that callback; that object is also callable from
+Python, making it easy to check the compiled code:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="nd">@cfunc</span><span class="p">(</span><span class="s2">&quot;float64(float64, float64)&quot;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">add</span><span class="o">.</span><span class="n">ctypes</span><span class="p">(</span><span class="mf">4.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">))</span>  <span class="c1"># prints &quot;9.0&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="example">
+<h2>1.7.2. Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
+<p>In this example, we are going to be using the <code class="docutils literal"><span class="pre">scipy.integrate.quad</span></code>
+function.  That function accepts either a regular Python callback or
+a C callback wrapped in a <a class="reference external" href="https://docs.python.org/3/library/ctypes.html#module-ctypes" title="(in Python v3.6)"><code class="xref py py-mod docutils literal"><span class="pre">ctypes</span></code></a> callback object.</p>
+<p>Let’s define a pure Python integrand and compile it as a
+C callback:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">numba</span> <span class="k">import</span> <span class="n">cfunc</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">integrand</span><span class="p">(</span><span class="n">t</span><span class="p">):</span>
+<span class="go">        return np.exp(-t) / t**2</span>
+<span class="go">   ...:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">nb_integrand</span> <span class="o">=</span> <span class="n">cfunc</span><span class="p">(</span><span class="s2">&quot;float64(float64)&quot;</span><span class="p">)(</span><span class="n">integrand</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We can pass the <code class="docutils literal"><span class="pre">nb_integrand</span></code> object’s <a class="reference external" href="https://docs.python.org/3/library/ctypes.html#module-ctypes" title="(in Python v3.6)"><code class="xref py py-mod docutils literal"><span class="pre">ctypes</span></code></a> callback to
+<code class="docutils literal"><span class="pre">scipy.integrate.quad</span></code> and check that the results are the same as with
+the pure Python function:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">scipy.integrate</span> <span class="k">as</span> <span class="nn">si</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">do_integrate</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+<span class="go">        &quot;&quot;&quot;</span>
+<span class="go">        Integrate the given function from 1.0 to +inf.</span>
+<span class="go">        &quot;&quot;&quot;</span>
+<span class="go">        return si.quad(func, 1, np.inf)</span>
+<span class="go">   ...:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">do_integrate</span><span class="p">(</span><span class="n">integrand</span><span class="p">)</span>
+<span class="go">(0.14849550677592208, 3.8736750296130505e-10)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">do_integrate</span><span class="p">(</span><span class="n">nb_integrand</span><span class="o">.</span><span class="n">ctypes</span><span class="p">)</span>
+<span class="go">(0.14849550677592208, 3.8736750296130505e-10)</span>
+</pre></div>
+</div>
+<p>Using the compiled callback, the integration function does not invoke the
+Python interpreter each time it evaluates the integrand.  In our case, the
+integration is made 18 times faster:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="o">%</span><span class="n">timeit</span> <span class="n">do_integrate</span><span class="p">(</span><span class="n">integrand</span><span class="p">)</span>
+<span class="go">1000 loops, best of 3: 242 µs per loop</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="o">%</span><span class="n">timeit</span> <span class="n">do_integrate</span><span class="p">(</span><span class="n">nb_integrand</span><span class="o">.</span><span class="n">ctypes</span><span class="p">)</span>
+<span class="go">100000 loops, best of 3: 13.5 µs per loop</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="dealing-with-pointers-and-array-memory">
+<h2>1.7.3. Dealing with pointers and array memory<a class="headerlink" href="#dealing-with-pointers-and-array-memory" title="Permalink to this headline">¶</a></h2>
+<p>A less trivial use case of C callbacks involves doing operation on some
+array of data passed by the caller.  As C doesn’t have a high-level
+abstraction similar to Numpy arrays, the C callback’s signature will pass
+low-level pointer and size arguments.  Nevertheless, the Python code for
+the callback will expect to exploit the power and expressiveness of Numpy
+arrays.</p>
+<p>In the following example, the C callback is expected to operate on 2-d arrays,
+with the signature <code class="docutils literal"><span class="pre">void(double</span> <span class="pre">*input,</span> <span class="pre">double</span> <span class="pre">*output,</span> <span class="pre">int</span> <span class="pre">m,</span> <span class="pre">int</span> <span class="pre">n)</span></code>.
+You can implement such a callback thusly:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">numba</span> <span class="k">import</span> <span class="n">cfunc</span><span class="p">,</span> <span class="n">types</span><span class="p">,</span> <span class="n">carray</span>
+
+<span class="n">c_sig</span> <span class="o">=</span> <span class="n">types</span><span class="o">.</span><span class="n">void</span><span class="p">(</span><span class="n">types</span><span class="o">.</span><span class="n">CPointer</span><span class="p">(</span><span class="n">types</span><span class="o">.</span><span class="n">double</span><span class="p">),</span>
+                   <span class="n">types</span><span class="o">.</span><span class="n">CPointer</span><span class="p">(</span><span class="n">types</span><span class="o">.</span><span class="n">double</span><span class="p">),</span>
+                   <span class="n">types</span><span class="o">.</span><span class="n">intc</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">intc</span><span class="p">)</span>
+
+<span class="nd">@cfunc</span><span class="p">(</span><span class="n">c_sig</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">my_callback</span><span class="p">(</span><span class="n">in_</span><span class="p">,</span> <span class="n">out</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+    <span class="n">in_array</span> <span class="o">=</span> <span class="n">carray</span><span class="p">(</span><span class="n">in_</span><span class="p">,</span> <span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">n</span><span class="p">))</span>
+    <span class="n">out_array</span> <span class="o">=</span> <span class="n">carray</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">n</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">m</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+            <span class="n">out_array</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">in_array</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>The <a class="reference internal" href="../reference/utils.html#numba.carray" title="numba.carray"><code class="xref py py-func docutils literal"><span class="pre">numba.carray()</span></code></a> function takes as input a data pointer and a shape
+and returns an array view of the given shape over that data.  The data is
+assumed to be laid out in C order.  If the data is laid out in Fortran order,
+<a class="reference internal" href="../reference/utils.html#numba.farray" title="numba.farray"><code class="xref py py-func docutils literal"><span class="pre">numba.farray()</span></code></a> should be used instead.</p>
+</div>
+<div class="section" id="signature-specification">
+<h2>1.7.4. Signature specification<a class="headerlink" href="#signature-specification" title="Permalink to this headline">¶</a></h2>
+<p>The explicit <code class="docutils literal"><span class="pre">&#64;cfunc</span></code> signature can use any <a class="reference internal" href="../reference/types.html#numba-types"><span class="std std-ref">Numba types</span></a>,
+but only a subset of them make sense for a C callback.  You should
+generally limit yourself to scalar types (such as <code class="docutils literal"><span class="pre">int8</span></code> or <code class="docutils literal"><span class="pre">float64</span></code>)
+or pointers to them (for example <code class="docutils literal"><span class="pre">types.CPointer(types.int8)</span></code>).</p>
+</div>
+<div class="section" id="compilation-options">
+<h2>1.7.5. Compilation options<a class="headerlink" href="#compilation-options" title="Permalink to this headline">¶</a></h2>
+<p>A number of keyword-only arguments can be passed to the <code class="docutils literal"><span class="pre">&#64;cfunc</span></code>
+decorator: <code class="docutils literal"><span class="pre">nopython</span></code> and <code class="docutils literal"><span class="pre">cache</span></code>.  Their meaning is similar to those
+in the <code class="docutils literal"><span class="pre">&#64;jit</span></code> decorator.</p>
+</div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2012, Anaconda, Inc..<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>
