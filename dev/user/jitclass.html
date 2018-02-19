@@ -1,19 +1,22 @@
 <!DOCTYPE html>
 
+
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>1.6. Compiling python classes with @jitclass &#8212; Numba 0.37.0dev1+32.gbe5fb1f.dirty documentation</title>
+    
+    <title>1.6. Compiling python classes with @jitclass &mdash; Numba 0.37.0+6.g1d17549-py2.7-linux-x86_64.egg documentation</title>
+    
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.37.0dev1+32.gbe5fb1f.dirty',
+        VERSION:     '0.37.0+6.g1d17549-py2.7-linux-x86_64.egg',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
+        HAS_SOURCE:  true
       };
     </script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
@@ -23,8 +26,8 @@
     <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
-    <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="Numba 0.37.0+6.g1d17549-py2.7-linux-x86_64.egg documentation" href="../index.html" />
+    <link rel="up" title="1. User Manual" href="index.html" />
     <link rel="next" title="1.7. Creating C callbacks with @cfunc" href="cfunc.html" />
     <link rel="prev" title="1.5. Creating Numpy universal functions" href="vectorize.html" />
 <meta charset='utf-8'>
@@ -33,7 +36,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 
   </head>
-  <body>
+  <body role="document">
 
   <div id="navbar" class="navbar navbar-default navbar-fixed-top">
     <div class="container">
@@ -101,11 +104,11 @@
               
                 
   <li>
-    <a href="vectorize.html" title="Previous Chapter: 1.5. Creating Numpy universal functions"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; 1.5. Creating...</span>
+    <a href="vectorize.html" title="Previous Chapter: 1.5. Creating Numpy universal functions"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; 1.5. Creating Nu...</span>
     </a>
   </li>
   <li>
-    <a href="cfunc.html" title="Next Chapter: 1.7. Creating C callbacks with @cfunc"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">1.7. Creating... &raquo;</span>
+    <a href="cfunc.html" title="Next Chapter: 1.7. Creating C callbacks with @cfunc"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">1.7. Creating C ... &raquo;</span>
     </a>
   </li>
               
@@ -115,7 +118,7 @@
             
               <li class="hidden-sm">
 <div id="sourcelink">
-  <a href="../_sources/user/jitclass.rst.txt"
+  <a href="../_sources/user/jitclass.txt"
      rel="nofollow">Source</a>
 </div></li>
             
@@ -155,14 +158,14 @@ C-compatible structure so that any compiled functions can have direct access
 to the underlying data, bypassing the interpreter.</p>
 <div class="section" id="basic-usage">
 <h2>1.6.1. Basic usage<a class="headerlink" href="#basic-usage" title="Permalink to this headline">¶</a></h2>
-<p>Here’s an example of a jitclass:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">numba</span> <span class="k">import</span> <span class="n">jitclass</span>          <span class="c1"># import the decorator</span>
-<span class="kn">from</span> <span class="nn">numba</span> <span class="k">import</span> <span class="n">int32</span><span class="p">,</span> <span class="n">float32</span>    <span class="c1"># import the types</span>
+<p>Here&#8217;s an example of a jitclass:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">jitclass</span>          <span class="c"># import the decorator</span>
+<span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">int32</span><span class="p">,</span> <span class="n">float32</span>    <span class="c"># import the types</span>
 
 <span class="n">spec</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="n">int32</span><span class="p">),</span>               <span class="c1"># a simple scalar field</span>
-    <span class="p">(</span><span class="s1">&#39;array&#39;</span><span class="p">,</span> <span class="n">float32</span><span class="p">[:]),</span>          <span class="c1"># an array field</span>
+    <span class="p">(</span><span class="s">&#39;value&#39;</span><span class="p">,</span> <span class="n">int32</span><span class="p">),</span>               <span class="c"># a simple scalar field</span>
+    <span class="p">(</span><span class="s">&#39;array&#39;</span><span class="p">,</span> <span class="n">float32</span><span class="p">[:]),</span>          <span class="c"># an array field</span>
 <span class="p">]</span>
 
 <span class="nd">@jitclass</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span>
@@ -260,7 +263,7 @@ With a sequence, it must contain 2-tuples of (fieldname, fieldtype).</p>
     </p>
     <p>
         &copy; Copyright 2012, Anaconda, Inc..<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.<br/>
     </p>
   </div>
 </footer>

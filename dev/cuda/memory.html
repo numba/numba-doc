@@ -1,19 +1,22 @@
 <!DOCTYPE html>
 
+
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>3.3. Memory management &#8212; Numba 0.37.0dev1+32.gbe5fb1f.dirty documentation</title>
+    
+    <title>3.3. Memory management &mdash; Numba 0.37.0+6.g1d17549-py2.7-linux-x86_64.egg documentation</title>
+    
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.37.0dev1+32.gbe5fb1f.dirty',
+        VERSION:     '0.37.0+6.g1d17549-py2.7-linux-x86_64.egg',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
+        HAS_SOURCE:  true
       };
     </script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
@@ -23,8 +26,8 @@
     <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
-    <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="Numba 0.37.0+6.g1d17549-py2.7-linux-x86_64.egg documentation" href="../index.html" />
+    <link rel="up" title="3. Numba for CUDA GPUs" href="index.html" />
     <link rel="next" title="3.4. Writing Device Functions" href="device-functions.html" />
     <link rel="prev" title="3.2. Writing CUDA Kernels" href="kernels.html" />
 <meta charset='utf-8'>
@@ -33,7 +36,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 
   </head>
-  <body>
+  <body role="document">
 
   <div id="navbar" class="navbar navbar-default navbar-fixed-top">
     <div class="container">
@@ -108,11 +111,11 @@
               
                 
   <li>
-    <a href="kernels.html" title="Previous Chapter: 3.2. Writing CUDA Kernels"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; 3.2. Writing ...</span>
+    <a href="kernels.html" title="Previous Chapter: 3.2. Writing CUDA Kernels"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; 3.2. Writing CUD...</span>
     </a>
   </li>
   <li>
-    <a href="device-functions.html" title="Next Chapter: 3.4. Writing Device Functions"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">3.4. Writing ... &raquo;</span>
+    <a href="device-functions.html" title="Next Chapter: 3.4. Writing Device Functions"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">3.4. Writing Dev... &raquo;</span>
     </a>
   </li>
               
@@ -122,7 +125,7 @@
             
               <li class="hidden-sm">
 <div id="sourcelink">
-  <a href="../_sources/cuda/memory.rst.txt"
+  <a href="../_sources/cuda/memory.txt"
      rel="nofollow">Source</a>
 </div></li>
             
@@ -172,27 +175,27 @@ transfer:</p>
 <code class="descclassname">numba.cuda.</code><code class="descname">to_device</code><span class="sig-paren">(</span><em>obj</em>, <em>stream=0</em>, <em>copy=True</em>, <em>to=None</em><span class="sig-paren">)</span></dt>
 <dd><p>Allocate and transfer a numpy ndarray or structured scalar to the device.</p>
 <p>To copy host-&gt;device a numpy array:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">ary</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">ary</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
 <span class="n">d_ary</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">to_device</span><span class="p">(</span><span class="n">ary</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>To enqueue the transfer to a stream:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">stream</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">stream</span><span class="p">()</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">stream</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">stream</span><span class="p">()</span>
 <span class="n">d_ary</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">to_device</span><span class="p">(</span><span class="n">ary</span><span class="p">,</span> <span class="n">stream</span><span class="o">=</span><span class="n">stream</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>The resulting <code class="docutils literal"><span class="pre">d_ary</span></code> is a <code class="docutils literal"><span class="pre">DeviceNDArray</span></code>.</p>
 <p>To copy device-&gt;host:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">hary</span> <span class="o">=</span> <span class="n">d_ary</span><span class="o">.</span><span class="n">copy_to_host</span><span class="p">()</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">hary</span> <span class="o">=</span> <span class="n">d_ary</span><span class="o">.</span><span class="n">copy_to_host</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>To copy device-&gt;host to an existing array:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">ary</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="n">d_ary</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">d_ary</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">ary</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="n">d_ary</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">d_ary</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
 <span class="n">d_ary</span><span class="o">.</span><span class="n">copy_to_host</span><span class="p">(</span><span class="n">ary</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>To enqueue the transfer to a stream:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">hary</span> <span class="o">=</span> <span class="n">d_ary</span><span class="o">.</span><span class="n">copy_to_host</span><span class="p">(</span><span class="n">stream</span><span class="o">=</span><span class="n">stream</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">hary</span> <span class="o">=</span> <span class="n">d_ary</span><span class="o">.</span><span class="n">copy_to_host</span><span class="p">(</span><span class="n">stream</span><span class="o">=</span><span class="n">stream</span><span class="p">)</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -215,8 +218,8 @@ asynchronously as part as the given stream.  Otherwise, the transfer is
 synchronous: the function returns after the copy is finished.</p>
 <p>Always returns the host array.</p>
 <p>Example:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">numba</span> <span class="k">import</span> <span class="n">cuda</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">cuda</span>
 
 <span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
 <span class="n">d_arr</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">to_device</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span>
@@ -244,15 +247,15 @@ synchronous: the function returns after the copy is finished.</p>
 <dt>
 <code class="descname">ravel</code><span class="sig-paren">(</span><em>order='C'</em>, <em>stream=0</em><span class="sig-paren">)</span></dt>
 <dd><p>Flatten the array without changing its contents, similar to
-<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.ravel.html#numpy.ndarray.ravel" title="(in NumPy v1.14)"><code class="xref py py-meth docutils literal"><span class="pre">numpy.ndarray.ravel()</span></code></a>.</p>
+<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.ravel.html#numpy.ndarray.ravel" title="(in NumPy v1.14)"><code class="xref py py-meth docutils literal"><span class="pre">numpy.ndarray.ravel()</span></code></a>.</p>
 </dd></dl>
 
 <dl class="method">
 <dt>
 <code class="descname">reshape</code><span class="sig-paren">(</span><em>*newshape</em>, <em>**kws</em><span class="sig-paren">)</span></dt>
 <dd><p>Reshape the array without changing its contents, similarly to
-<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.reshape.html#numpy.ndarray.reshape" title="(in NumPy v1.14)"><code class="xref py py-meth docutils literal"><span class="pre">numpy.ndarray.reshape()</span></code></a>. Example:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">d_arr</span> <span class="o">=</span> <span class="n">d_arr</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">)</span>
+<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.reshape.html#numpy.ndarray.reshape" title="(in NumPy v1.14)"><code class="xref py py-meth docutils literal"><span class="pre">numpy.ndarray.reshape()</span></code></a>. Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">d_arr</span> <span class="o">=</span> <span class="n">d_arr</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="s">&#39;F&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -322,8 +325,8 @@ traditional dynamic memory management.</p>
 <dd><p>Allocate a shared array of the given <em>shape</em> and <em>type</em> on the device.
 This function must be called on the device (i.e. from a kernel or
 device function). <em>shape</em> is either an integer or a tuple of integers
-representing the array’s dimensions and must be a simple constant
-expression. <em>type</em> is a <a class="reference internal" href="../reference/types.html#numba-types"><span class="std std-ref">Numba type</span></a> of the elements
+representing the array&#8217;s dimensions and must be a simple constant
+expression. <em>type</em> is a <a class="reference internal" href="../reference/types.html#numba-types"><span>Numba type</span></a> of the elements
 needing to be stored in the array.</p>
 <p>The returned array-like object can be read and written to like any normal
 device array (e.g. through indexing).</p>
@@ -343,7 +346,7 @@ control to all its callers.</p>
 
 <div class="admonition seealso">
 <p class="first admonition-title">See also</p>
-<p class="last"><a class="reference internal" href="examples.html#cuda-matmul"><span class="std std-ref">Matrix multiplication example</span></a>.</p>
+<p class="last"><a class="reference internal" href="examples.html#cuda-matmul"><span>Matrix multiplication example</span></a>.</p>
 </div>
 </div>
 <div class="section" id="local-memory">
@@ -356,9 +359,9 @@ unlike traditional dynamic memory management.</p>
 <dt>
 <code class="descclassname">numba.cuda.local.</code><code class="descname">array</code><span class="sig-paren">(</span><em>shape</em>, <em>type</em><span class="sig-paren">)</span></dt>
 <dd><p>Allocate a local array of the given <em>shape</em> and <em>type</em> on the device.
-<em>shape</em> is either an integer or a tuple of integers representing the array’s
+<em>shape</em> is either an integer or a tuple of integers representing the array&#8217;s
 dimensions and must be a simple constant expression. <em>type</em> is a
-<a class="reference internal" href="../reference/types.html#numba-types"><span class="std std-ref">Numba type</span></a> of the elements needing to be stored in the
+<a class="reference internal" href="../reference/types.html#numba-types"><span>Numba type</span></a> of the elements needing to be stored in the
 array. The array is private to the current thread. An array-like object is
 returned which can be read and written to like any standard array
 (e.g. through indexing).</p>
@@ -382,8 +385,8 @@ creating an array in constant memory is through the use of:</p>
 <h2>3.3.7. SmartArrays (experimental)<a class="headerlink" href="#smartarrays-experimental" title="Permalink to this headline">¶</a></h2>
 <p>Numba provides an Array-like data type that manages data movement to
 and from the device automatically. It can be used as drop-in replacement for
-<cite>numpy.ndarray</cite> in most cases, and is supported by Numba’s JIT-compiler for both
-‘host’ and ‘cuda’ target.</p>
+<cite>numpy.ndarray</cite> in most cases, and is supported by Numba&#8217;s JIT-compiler for both
+&#8216;host&#8217; and &#8216;cuda&#8217; target.</p>
 <dl class="class">
 <dt id="numba.SmartArray">
 <em class="property">class </em><code class="descclassname">numba.</code><code class="descname">SmartArray</code><span class="sig-paren">(</span><em>obj=None</em>, <em>copy=True</em>, <em>shape=None</em>, <em>dtype=None</em>, <em>order=None</em>, <em>where='host'</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.SmartArray" title="Permalink to this definition">¶</a></dt>
@@ -391,26 +394,26 @@ and from the device automatically. It can be used as drop-in replacement for
 <dl class="method">
 <dt id="numba.SmartArray.__init__">
 <code class="descname">__init__</code><span class="sig-paren">(</span><em>obj=None</em>, <em>copy=True</em>, <em>shape=None</em>, <em>dtype=None</em>, <em>order=None</em>, <em>where='host'</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.SmartArray.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Construct a SmartArray in the memory space defined by ‘where’.
+<dd><p>Construct a SmartArray in the memory space defined by &#8216;where&#8217;.
 Valid invocations:</p>
 <ul>
 <li><p class="first">SmartArray(obj=&lt;array-like object&gt;, copy=&lt;optional-true-or-false&gt;):</p>
 <p>to create a SmartArray from an existing array-like object.
-The ‘copy’ argument specifies whether to adopt or to copy it.</p>
+The &#8216;copy&#8217; argument specifies whether to adopt or to copy it.</p>
 </li>
 <li><p class="first">SmartArray(shape=&lt;shape&gt;, dtype=&lt;dtype&gt;, order=&lt;order&gt;)</p>
 <p>to create a new SmartArray from scratch, given the typical NumPy array
 attributes.</p>
 </li>
 </ul>
-<p>(The optional ‘where’ argument specifies where to allocate the array
-initially. (Default: ‘host’)</p>
+<p>(The optional &#8216;where&#8217; argument specifies where to allocate the array
+initially. (Default: &#8216;host&#8217;)</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="numba.SmartArray.get">
 <code class="descname">get</code><span class="sig-paren">(</span><em>where='host'</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.SmartArray.get" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the representation of ‘self’ in the given memory space.</p>
+<dd><p>Return the representation of &#8216;self&#8217; in the given memory space.</p>
 </dd></dl>
 
 <dl class="method">
@@ -476,10 +479,10 @@ deallocation.  This can be done by using the following context manager:</p>
 <dd><p>Temporarily disable memory deallocation.
 Use this to prevent resource deallocation breaking asynchronous execution.</p>
 <p>For example:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">defer_cleanup</span><span class="p">():</span>
-    <span class="c1"># all cleanup is deferred in here</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">with</span> <span class="n">defer_cleanup</span><span class="p">():</span>
+    <span class="c"># all cleanup is deferred in here</span>
     <span class="n">do_speed_critical_code</span><span class="p">()</span>
-<span class="c1"># cleanup can occur here</span>
+<span class="c"># cleanup can occur here</span>
 </pre></div>
 </div>
 <p>Note: this context manager can be nested.</p>
@@ -501,7 +504,7 @@ Use this to prevent resource deallocation breaking asynchronous execution.</p>
     </p>
     <p>
         &copy; Copyright 2012, Anaconda, Inc..<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.<br/>
     </p>
   </div>
 </footer>

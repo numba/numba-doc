@@ -1,19 +1,22 @@
 <!DOCTYPE html>
 
+
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>7.7. Live Variable Analysis &#8212; Numba 0.37.0dev1+32.gbe5fb1f.dirty documentation</title>
+    
+    <title>7.7. Live Variable Analysis &mdash; Numba 0.37.0+6.g1d17549-py2.7-linux-x86_64.egg documentation</title>
+    
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.37.0dev1+32.gbe5fb1f.dirty',
+        VERSION:     '0.37.0+6.g1d17549-py2.7-linux-x86_64.egg',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
+        HAS_SOURCE:  true
       };
     </script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
@@ -23,8 +26,8 @@
     <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
-    <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="Numba 0.37.0+6.g1d17549-py2.7-linux-x86_64.egg documentation" href="../index.html" />
+    <link rel="up" title="7. Developer Manual" href="index.html" />
     <link rel="next" title="7.8. Listings" href="listings.html" />
     <link rel="prev" title="7.6. Using the Numba Rewrite Pass for Fun and Optimization" href="rewrites.html" />
 <meta charset='utf-8'>
@@ -33,7 +36,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 
   </head>
-  <body>
+  <body role="document">
 
   <div id="navbar" class="navbar navbar-default navbar-fixed-top">
     <div class="container">
@@ -101,7 +104,7 @@
               
                 
   <li>
-    <a href="rewrites.html" title="Previous Chapter: 7.6. Using the Numba Rewrite Pass for Fun and Optimization"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; 7.6. Using th...</span>
+    <a href="rewrites.html" title="Previous Chapter: 7.6. Using the Numba Rewrite Pass for Fun and Optimization"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; 7.6. Using the N...</span>
     </a>
   </li>
   <li>
@@ -115,7 +118,7 @@
             
               <li class="hidden-sm">
 <div id="sourcelink">
-  <a href="../_sources/developer/live_variable_analysis.rst.txt"
+  <a href="../_sources/developer/live_variable_analysis.txt"
      rel="nofollow">Source</a>
 </div></li>
             
@@ -169,17 +172,17 @@ which reduces the size of the state to suspend at each yield point.</p>
 <p>(Related issue: <a class="reference external" href="https://github.com/numba/numba/pull/1738">https://github.com/numba/numba/pull/1738</a>)</p>
 <p>When a variable lifetime is confined within the loop body (its definition and
 usage does not escape the loop body), like:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">arr</span><span class="p">):</span>
-  <span class="c1"># BB 0</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">arr</span><span class="p">):</span>
+  <span class="c"># BB 0</span>
   <span class="n">res</span> <span class="o">=</span> <span class="mi">0</span>
-  <span class="c1"># BB 1</span>
+  <span class="c"># BB 1</span>
   <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span>
-      <span class="c1"># BB 2</span>
+      <span class="c"># BB 2</span>
       <span class="n">t</span> <span class="o">=</span> <span class="n">arr</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
       <span class="k">if</span> <span class="n">t</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-          <span class="c1"># BB 3</span>
+          <span class="c"># BB 3</span>
           <span class="n">res</span> <span class="o">+=</span> <span class="n">t</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-  <span class="c1"># BB 4</span>
+  <span class="c"># BB 4</span>
   <span class="k">return</span> <span class="n">res</span>
 </pre></div>
 </div>
@@ -187,13 +190,13 @@ usage does not escape the loop body), like:</p>
 A <code class="docutils literal"><span class="pre">del</span></code> instruction is emitted for <code class="docutils literal"><span class="pre">t</span></code> at the head of the loop (BB 1)
 before a variable is defined.  The reason is obvious once we know the control
 flow graph:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span>         <span class="o">+------------------------------&gt;</span> <span class="n">BB4</span>
-         <span class="o">|</span>
-         <span class="o">|</span>
-<span class="n">BB</span> <span class="mi">0</span> <span class="o">--&gt;</span> <span class="n">BB</span> <span class="mi">1</span>  <span class="o">--&gt;</span>  <span class="n">BB</span> <span class="mi">2</span> <span class="o">---&gt;</span> <span class="n">BB</span> <span class="mi">3</span>
-         <span class="o">^</span>          <span class="o">|</span>          <span class="o">|</span>
-         <span class="o">|</span>          <span class="n">V</span>          <span class="n">V</span>
-         <span class="o">+---------------------+</span>
+<div class="highlight-python"><div class="highlight"><pre>         +------------------------------&gt; BB4
+         |
+         |
+BB 0 --&gt; BB 1  --&gt;  BB 2 ---&gt; BB 3
+         ^          |          |
+         |          V          V
+         +---------------------+
 </pre></div>
 </div>
 <p>Variable <code class="docutils literal"><span class="pre">t</span></code> is defined in BB 1.  In BB 2, the evaluation of
@@ -223,7 +226,7 @@ the loop body (BB 2 and BB 3), where the variable is defined.</p>
     </p>
     <p>
         &copy; Copyright 2012, Anaconda, Inc..<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.<br/>
     </p>
   </div>
 </footer>

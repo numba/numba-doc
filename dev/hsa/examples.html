@@ -1,19 +1,22 @@
 <!DOCTYPE html>
 
+
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>5.7. Examples &#8212; Numba 0.37.0dev1+32.gbe5fb1f.dirty documentation</title>
+    
+    <title>5.7. Examples &mdash; Numba 0.37.0+6.g1d17549-py2.7-linux-x86_64.egg documentation</title>
+    
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.37.0dev1+32.gbe5fb1f.dirty',
+        VERSION:     '0.37.0+6.g1d17549-py2.7-linux-x86_64.egg',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
+        HAS_SOURCE:  true
       };
     </script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
@@ -23,8 +26,8 @@
     <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
-    <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="Numba 0.37.0+6.g1d17549-py2.7-linux-x86_64.egg documentation" href="../index.html" />
+    <link rel="up" title="5. Numba for HSA APUs" href="index.html" />
     <link rel="next" title="6. Extending Numba" href="../extending/index.html" />
     <link rel="prev" title="5.6. Device management" href="device-management.html" />
 <meta charset='utf-8'>
@@ -33,7 +36,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 
   </head>
-  <body>
+  <body role="document">
 
   <div id="navbar" class="navbar navbar-default navbar-fixed-top">
     <div class="container">
@@ -98,11 +101,11 @@
               
                 
   <li>
-    <a href="device-management.html" title="Previous Chapter: 5.6. Device management"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; 5.6. Device m...</span>
+    <a href="device-management.html" title="Previous Chapter: 5.6. Device management"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; 5.6. Device mana...</span>
     </a>
   </li>
   <li>
-    <a href="../extending/index.html" title="Next Chapter: 6. Extending Numba"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">6. Extending ... &raquo;</span>
+    <a href="../extending/index.html" title="Next Chapter: 6. Extending Numba"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">6. Extending Num... &raquo;</span>
     </a>
   </li>
               
@@ -112,7 +115,7 @@
             
               <li class="hidden-sm">
 <div id="sourcelink">
-  <a href="../_sources/hsa/examples.rst.txt"
+  <a href="../_sources/hsa/examples.txt"
      rel="nofollow">Source</a>
 </div></li>
             
@@ -141,7 +144,7 @@
 <div class="section" id="matrix-multiplication">
 <span id="hsa-matmul"></span><h2>5.7.1. Matrix multiplication<a class="headerlink" href="#matrix-multiplication" title="Permalink to this headline">¶</a></h2>
 <p>Here is a naive implementation of matrix multiplication using a HSA kernel:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="nd">@hsa</span><span class="o">.</span><span class="n">jit</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@hsa.jit</span>
 <span class="k">def</span> <span class="nf">matmul</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">C</span><span class="p">):</span>
     <span class="n">i</span> <span class="o">=</span> <span class="n">hsa</span><span class="o">.</span><span class="n">get_global_id</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
     <span class="n">j</span> <span class="o">=</span> <span class="n">hsa</span><span class="o">.</span><span class="n">get_global_id</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
@@ -162,18 +165,18 @@ because the same matrix elements will be loaded multiple times from device
 memory, which is slow (some devices may have transparent data caches, but
 they may not be large enough to hold the entire inputs at once).</p>
 <p>It will be faster if we use a blocked algorithm to reduce accesses to the
-device memory.  HSA provides a fast <a class="reference internal" href="memory.html#hsa-shared-memory"><span class="std std-ref">shared memory</span></a>
+device memory.  HSA provides a fast <a class="reference internal" href="memory.html#hsa-shared-memory"><span>shared memory</span></a>
 for workitems in a group to cooperately compute on a task.  The following
 implements a faster version of the square matrix multiplication using shared
 memory:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">numba</span> <span class="k">import</span> <span class="n">hsa</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">hsa</span>
 
 
 <span class="n">blocksize</span> <span class="o">=</span> <span class="mi">20</span>
 <span class="n">gridsize</span> <span class="o">=</span> <span class="mi">20</span>
 
-<span class="nd">@hsa</span><span class="o">.</span><span class="n">jit</span>
+<span class="nd">@hsa.jit</span>
 <span class="k">def</span> <span class="nf">matmulfast</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">C</span><span class="p">):</span>
     <span class="n">x</span> <span class="o">=</span> <span class="n">hsa</span><span class="o">.</span><span class="n">get_global_id</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
     <span class="n">y</span> <span class="o">=</span> <span class="n">hsa</span><span class="o">.</span><span class="n">get_global_id</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
@@ -190,15 +193,15 @@ memory:</p>
     <span class="n">tmp</span> <span class="o">=</span> <span class="mi">0</span>
 
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">gridsize</span><span class="p">):</span>
-        <span class="c1"># preload</span>
+        <span class="c"># preload</span>
         <span class="n">sA</span><span class="p">[</span><span class="n">tx</span><span class="p">,</span> <span class="n">ty</span><span class="p">]</span> <span class="o">=</span> <span class="n">A</span><span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">ty</span> <span class="o">+</span> <span class="n">i</span> <span class="o">*</span> <span class="n">blocksize</span><span class="p">]</span>
         <span class="n">sB</span><span class="p">[</span><span class="n">tx</span><span class="p">,</span> <span class="n">ty</span><span class="p">]</span> <span class="o">=</span> <span class="n">B</span><span class="p">[</span><span class="n">tx</span> <span class="o">+</span> <span class="n">i</span> <span class="o">*</span> <span class="n">blocksize</span><span class="p">,</span> <span class="n">y</span><span class="p">]</span>
-        <span class="c1"># wait for preload to end</span>
+        <span class="c"># wait for preload to end</span>
         <span class="n">hsa</span><span class="o">.</span><span class="n">barrier</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-        <span class="c1"># compute loop</span>
+        <span class="c"># compute loop</span>
         <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">blocksize</span><span class="p">):</span>
             <span class="n">tmp</span> <span class="o">+=</span> <span class="n">sA</span><span class="p">[</span><span class="n">tx</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">sB</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">ty</span><span class="p">]</span>
-        <span class="c1"># wait for compute to end</span>
+        <span class="c"># wait for compute to end</span>
         <span class="n">hsa</span><span class="o">.</span><span class="n">barrier</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
     <span class="n">C</span><span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmp</span>
@@ -215,18 +218,18 @@ memory:</p>
     <span class="n">ts</span> <span class="o">=</span> <span class="n">timer</span><span class="p">()</span>
     <span class="n">matmulfast</span><span class="p">[</span><span class="n">griddim</span><span class="p">,</span> <span class="n">blockdim</span><span class="p">](</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">C</span><span class="p">)</span>
     <span class="n">te</span> <span class="o">=</span> <span class="n">timer</span><span class="p">()</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;1st GPU time:&quot;</span><span class="p">,</span> <span class="n">te</span> <span class="o">-</span> <span class="n">ts</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">&quot;1st GPU time:&quot;</span><span class="p">,</span> <span class="n">te</span> <span class="o">-</span> <span class="n">ts</span><span class="p">)</span>
 
 <span class="k">with</span> <span class="n">hsa</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">C</span><span class="p">):</span>
     <span class="n">ts</span> <span class="o">=</span> <span class="n">timer</span><span class="p">()</span>
     <span class="n">matmulfast</span><span class="p">[</span><span class="n">griddim</span><span class="p">,</span> <span class="n">blockdim</span><span class="p">](</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">C</span><span class="p">)</span>
     <span class="n">te</span> <span class="o">=</span> <span class="n">timer</span><span class="p">()</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;2nd GPU time:&quot;</span><span class="p">,</span> <span class="n">te</span> <span class="o">-</span> <span class="n">ts</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">&quot;2nd GPU time:&quot;</span><span class="p">,</span> <span class="n">te</span> <span class="o">-</span> <span class="n">ts</span><span class="p">)</span>
 
 <span class="n">ts</span> <span class="o">=</span> <span class="n">timer</span><span class="p">()</span>
 <span class="n">ans</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span>
 <span class="n">te</span> <span class="o">=</span> <span class="n">timer</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;CPU time:&quot;</span><span class="p">,</span> <span class="n">te</span> <span class="o">-</span> <span class="n">ts</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s">&quot;CPU time:&quot;</span><span class="p">,</span> <span class="n">te</span> <span class="o">-</span> <span class="n">ts</span><span class="p">)</span>
 <span class="n">np</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_allclose</span><span class="p">(</span><span class="n">ans</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">rtol</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -253,7 +256,7 @@ in the next loop iteration.</p>
     </p>
     <p>
         &copy; Copyright 2012, Anaconda, Inc..<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.<br/>
     </p>
   </div>
 </footer>

@@ -1,19 +1,22 @@
 <!DOCTYPE html>
 
+
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>1.10. Using the @stencil decorator &#8212; Numba 0.37.0dev1+32.gbe5fb1f.dirty documentation</title>
+    
+    <title>1.10. Using the @stencil decorator &mdash; Numba 0.37.0+6.g1d17549-py2.7-linux-x86_64.egg documentation</title>
+    
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.37.0dev1+32.gbe5fb1f.dirty',
+        VERSION:     '0.37.0+6.g1d17549-py2.7-linux-x86_64.egg',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
+        HAS_SOURCE:  true
       };
     </script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
@@ -23,8 +26,8 @@
     <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
-    <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="Numba 0.37.0+6.g1d17549-py2.7-linux-x86_64.egg documentation" href="../index.html" />
+    <link rel="up" title="1. User Manual" href="index.html" />
     <link rel="next" title="1.11. Troubleshooting and tips" href="troubleshoot.html" />
     <link rel="prev" title="1.9. Automatic parallelization with @jit" href="parallel.html" />
 <meta charset='utf-8'>
@@ -33,7 +36,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 
   </head>
-  <body>
+  <body role="document">
 
   <div id="navbar" class="navbar navbar-default navbar-fixed-top">
     <div class="container">
@@ -112,11 +115,11 @@
               
                 
   <li>
-    <a href="parallel.html" title="Previous Chapter: 1.9. Automatic parallelization with @jit"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; 1.9. Automati...</span>
+    <a href="parallel.html" title="Previous Chapter: 1.9. Automatic parallelization with @jit"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; 1.9. Automatic p...</span>
     </a>
   </li>
   <li>
-    <a href="troubleshoot.html" title="Next Chapter: 1.11. Troubleshooting and tips"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">1.11. Trouble... &raquo;</span>
+    <a href="troubleshoot.html" title="Next Chapter: 1.11. Troubleshooting and tips"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">1.11. Troublesho... &raquo;</span>
     </a>
   </li>
               
@@ -126,7 +129,7 @@
             
               <li class="hidden-sm">
 <div id="sourcelink">
-  <a href="../_sources/user/stencil.rst.txt"
+  <a href="../_sources/user/stencil.txt"
      rel="nofollow">Source</a>
 </div></li>
             
@@ -158,12 +161,12 @@ Numba provides the <code class="docutils literal"><span class="pre">&#64;stencil
 easily specify a stencil kernel and Numba then generates the looping
 code necessary to apply that kernel to some input array.  Thus, the
 stencil decorator allows clearer, more concise code and in conjunction
-with <a class="reference internal" href="jit.html#parallel-jit-option"><span class="std std-ref">the parallel jit option</span></a> enables higher
+with <a class="reference internal" href="jit.html#parallel-jit-option"><span>the parallel jit option</span></a> enables higher
 performance through parallelization of the stencil execution.</p>
 <div class="section" id="basic-usage">
 <h2>1.10.1. Basic usage<a class="headerlink" href="#basic-usage" title="Permalink to this headline">¶</a></h2>
 <p>An example use of the <code class="docutils literal"><span class="pre">&#64;stencil</span></code> decorator:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">numba</span> <span class="k">import</span> <span class="n">stencil</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">stencil</span>
 
 <span class="nd">@stencil</span>
 <span class="k">def</span> <span class="nf">kernel1</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
@@ -189,13 +192,13 @@ kernel corresponds to <code class="docutils literal"><span class="pre">a[x</span
 <p>Depending on the specified kernel, the kernel may not be applicable to the
 borders of the output array as this may cause the input array to be
 accessed out-of-bounds.  The way in which the stencil decorator handles
-this situation is dependent upon which <a class="reference internal" href="#stencil-mode"><span class="std std-ref">mode</span></a> is selected.
+this situation is dependent upon which <a class="reference internal" href="#stencil-mode"><span>mode</span></a> is selected.
 The default mode is for the stencil decorator to set the border elements
 of the output array to zero.</p>
 <p>To invoke a stencil on an input array, call the stencil as if it were
 a regular function and pass the input array as the argument. For example, using
 the kernel defined above:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">input_arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
 <span class="go">array([[ 0,  1,  2,  3,  4,  5,  6,  7,  8,  9],</span>
 <span class="go">       [10, 11, 12, 13, 14, 15, 16, 17, 18, 19],</span>
@@ -270,7 +273,7 @@ time series of data.  One could write
 <code class="docutils literal"><span class="pre">(a[-29]</span> <span class="pre">+</span> <span class="pre">a[-28]</span> <span class="pre">+</span> <span class="pre">...</span> <span class="pre">+</span> <span class="pre">a[-1]</span> <span class="pre">+</span> <span class="pre">a[0])</span> <span class="pre">/</span> <span class="pre">30</span></code> but the stencil
 decorator offers a more concise form using the <code class="docutils literal"><span class="pre">neighborhood</span></code>
 option:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="nd">@stencil</span><span class="p">(</span><span class="n">neighborhood</span> <span class="o">=</span> <span class="p">((</span><span class="o">-</span><span class="mi">29</span><span class="p">,</span> <span class="mi">0</span><span class="p">),))</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@stencil</span><span class="p">(</span><span class="n">neighborhood</span> <span class="o">=</span> <span class="p">((</span><span class="o">-</span><span class="mi">29</span><span class="p">,</span> <span class="mi">0</span><span class="p">),))</span>
 <span class="k">def</span> <span class="nf">kernel2</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
     <span class="n">cumul</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="o">-</span><span class="mi">29</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span>
@@ -278,9 +281,9 @@ option:</p>
     <span class="k">return</span> <span class="n">cumul</span> <span class="o">/</span> <span class="mi">30</span>
 </pre></div>
 </div>
-<p>The neighborhood option is a tuple of tuples.  The outer tuple’s
+<p>The neighborhood option is a tuple of tuples.  The outer tuple&#8217;s
 length is equal to the number of dimensions of the input array.
-The inner tuple’s lengths are always two because
+The inner tuple&#8217;s lengths are always two because
 each element of the outer tuple corresponds to minimum and
 maximum index offsets used in the corresponding dimension.</p>
 <p>If a user specifies a neighborhood but the kernel accesses elements outside the
@@ -316,7 +319,7 @@ stencil decorator option <code class="docutils literal"><span class="pre">standa
 collection of strings whose names match those parameters to the
 stencil function that are to be accessed with standard Python indexing
 rather than relative indexing:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="nd">@stencil</span><span class="p">(</span><span class="n">standard_indexing</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;b&quot;</span><span class="p">,))</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@stencil</span><span class="p">(</span><span class="n">standard_indexing</span><span class="o">=</span><span class="p">(</span><span class="s">&quot;b&quot;</span><span class="p">,))</span>
 <span class="k">def</span> <span class="nf">kernel3</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">a</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">b</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">b</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 </pre></div>
@@ -352,7 +355,7 @@ Users should assure that the return type of the stencil kernel can
 be safely cast to the element-type of the user-specified output array
 following the <a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/ufuncs.html#casting-rules">Numpy ufunc casting rules</a>.</p>
 <p>An example usage is shown below:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">input_arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">output_arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">input_arr</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">kernel1</span><span class="p">(</span><span class="n">input_arr</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="n">output_arr</span><span class="p">)</span>
@@ -375,7 +378,7 @@ following the <a class="reference external" href="http://docs.scipy.org/doc/nump
     </p>
     <p>
         &copy; Copyright 2012, Anaconda, Inc..<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.<br/>
     </p>
   </div>
 </footer>
