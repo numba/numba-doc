@@ -1,22 +1,19 @@
 <!DOCTYPE html>
 
-
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>7.6. Using the Numba Rewrite Pass for Fun and Optimization &mdash; Numba 0.37.0rc1+2.gb6b965a-py2.7-linux-x86_64.egg documentation</title>
-    
+    <title>7.6. Using the Numba Rewrite Pass for Fun and Optimization &#8212; Numba 0.37.0dev1+32.gbe5fb1f.dirty documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.37.0rc1+2.gb6b965a-py2.7-linux-x86_64.egg',
+        VERSION:     '0.37.0dev1+32.gbe5fb1f.dirty',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
       };
     </script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
@@ -26,8 +23,8 @@
     <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="Numba 0.37.0rc1+2.gb6b965a-py2.7-linux-x86_64.egg documentation" href="../index.html" />
-    <link rel="up" title="7. Developer Manual" href="index.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="7.7. Live Variable Analysis" href="live_variable_analysis.html" />
     <link rel="prev" title="7.5. Notes on Numba Runtime" href="numba-runtime.html" />
 <meta charset='utf-8'>
@@ -36,7 +33,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 
   </head>
-  <body role="document">
+  <body>
 
   <div id="navbar" class="navbar navbar-default navbar-fixed-top">
     <div class="container">
@@ -116,11 +113,11 @@
               
                 
   <li>
-    <a href="numba-runtime.html" title="Previous Chapter: 7.5. Notes on Numba Runtime"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; 7.5. Notes on Nu...</span>
+    <a href="numba-runtime.html" title="Previous Chapter: 7.5. Notes on Numba Runtime"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; 7.5. Notes on...</span>
     </a>
   </li>
   <li>
-    <a href="live_variable_analysis.html" title="Next Chapter: 7.7. Live Variable Analysis"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">7.7. Live Variab... &raquo;</span>
+    <a href="live_variable_analysis.html" title="Next Chapter: 7.7. Live Variable Analysis"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">7.7. Live Var... &raquo;</span>
     </a>
   </li>
               
@@ -130,7 +127,7 @@
             
               <li class="hidden-sm">
 <div id="sourcelink">
-  <a href="../_sources/developer/rewrites.txt"
+  <a href="../_sources/developer/rewrites.rst.txt"
      rel="nofollow">Source</a>
 </div></li>
             
@@ -160,12 +157,12 @@
 <h2>7.6.1. Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
 <p>This section introduces intermediate representation (IR) rewrites, and
 how they can be used to implement optimizations.</p>
-<p>As discussed earlier in &#8220;<a class="reference internal" href="architecture.html#rewrite-typed-ir"><span>Stage 6a: Rewrite typed IR</span></a>&#8221;, rewriting the Numba
+<p>As discussed earlier in “<a class="reference internal" href="architecture.html#rewrite-typed-ir"><span class="std std-ref">Stage 6a: Rewrite typed IR</span></a>”, rewriting the Numba
 IR allows us to perform optimizations that would be much more
 difficult to perform at the lower LLVM level.  Similar to the Numba
 type and lowering subsystems, the rewrite subsystem is user
 extensible.  This extensibility affords Numba the possibility of
-supporting a wide variety of domain-specific optimizations (DSO&#8217;s).</p>
+supporting a wide variety of domain-specific optimizations (DSO’s).</p>
 <p>The remaining subsections detail the mechanics of implementing a
 rewrite, registering a rewrite with the rewrite registry, and provide
 examples of adding new rewrites, as well as internals of the array
@@ -178,9 +175,9 @@ developers should take care.</p>
 <p>Rewriting passes have a simple <a class="reference internal" href="#Rewrite.match" title="Rewrite.match"><code class="xref py py-func docutils literal"><span class="pre">match()</span></code></a> and
 <a class="reference internal" href="#Rewrite.apply" title="Rewrite.apply"><code class="xref py py-func docutils literal"><span class="pre">apply()</span></code></a> interface.  The division between matching and
 rewriting follows how one would define a term rewrite in a declarative
-domain-specific languages (DSL&#8217;s).  In such DSL&#8217;s, one may write a
+domain-specific languages (DSL’s).  In such DSL’s, one may write a
 rewrite as follows:</p>
-<div class="highlight-python"><div class="highlight"><pre>&lt;match&gt; =&gt; &lt;replacement&gt;
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">match</span><span class="o">&gt;</span> <span class="o">=&gt;</span> <span class="o">&lt;</span><span class="n">replacement</span><span class="o">&gt;</span>
 </pre></div>
 </div>
 <p>The <code class="docutils literal"><span class="pre">&lt;match&gt;</span></code> and <code class="docutils literal"><span class="pre">&lt;replacement&gt;</span></code> symbols represent IR term
@@ -269,7 +266,7 @@ should return a replacement <code class="xref py py-class docutils literal"><spa
 <div class="section" id="subclassing-rewrite">
 <h3>7.6.2.2. Subclassing <a class="reference internal" href="#Rewrite" title="Rewrite"><code class="xref py py-class docutils literal"><span class="pre">Rewrite</span></code></a><a class="headerlink" href="#subclassing-rewrite" title="Permalink to this headline">¶</a></h3>
 <p>Before going into the expectations for the overloaded methods any
-<a class="reference internal" href="#Rewrite" title="Rewrite"><code class="xref py py-class docutils literal"><span class="pre">Rewrite</span></code></a> subclass must have, let&#8217;s step back a minute to
+<a class="reference internal" href="#Rewrite" title="Rewrite"><code class="xref py py-class docutils literal"><span class="pre">Rewrite</span></code></a> subclass must have, let’s step back a minute to
 review what is taking place here.  By providing an extensible
 compiler, Numba opens itself to user-defined code generators which may
 be incomplete, or worse, incorrect.  When a code generator goes awry,
@@ -290,7 +287,7 @@ use special functions in the target IR.  This technique again
 generates code that is no longer within the domain of the original
 match, and the rewrite will terminate.</li>
 </ul>
-<p>In the &#8220;<a class="reference internal" href="#case-study-array-expressions"><span>Case study: Array Expressions</span></a>&#8221; subsection, below, we&#8217;ll
+<p>In the “<a class="reference internal" href="#case-study-array-expressions"><span class="std std-ref">Case study: Array Expressions</span></a>” subsection, below, we’ll
 see how the array expression rewriter uses both of these techniques.</p>
 </div>
 <div class="section" id="overloading-rewrite-match">
@@ -298,7 +295,7 @@ see how the array expression rewriter uses both of these techniques.</p>
 <p>Every rewrite developer should seek to have their implementation of
 <a class="reference internal" href="#Rewrite.match" title="Rewrite.match"><code class="xref py py-func docutils literal"><span class="pre">match()</span></code></a> return a <a class="reference external" href="https://docs.python.org/3/library/constants.html#False" title="(in Python v3.6)"><code class="xref py py-obj docutils literal"><span class="pre">False</span></code></a> value as quickly as
 possible.  Numba is a just-in-time compiler, and adding compilation
-time ultimately adds to the user&#8217;s run time.  When a rewrite returns
+time ultimately adds to the user’s run time.  When a rewrite returns
 <a class="reference external" href="https://docs.python.org/3/library/constants.html#False" title="(in Python v3.6)"><code class="xref py py-obj docutils literal"><span class="pre">False</span></code></a> for a given block, the registry will no longer process that
 block with that rewrite, and the compiler is that much closer to
 proceeding to lowering.</p>
@@ -314,7 +311,7 @@ the replacement basic block.</p>
 <code class="xref py py-class docutils literal"><span class="pre">numba.ir.Block</span></code> instance to replace the basic block that
 contained a match for the rewrite.  As mentioned above, the IR built
 by <a class="reference internal" href="#Rewrite.apply" title="Rewrite.apply"><code class="xref py py-func docutils literal"><span class="pre">apply()</span></code></a> methods should preserve the semantics of the
-user&#8217;s code, but also seek to avoid generating another match for the
+user’s code, but also seek to avoid generating another match for the
 same rewrite or set of rewrites.</p>
 </div>
 </div>
@@ -325,20 +322,20 @@ register it with the rewrite registry.  The <code class="xref py py-mod docutils
 module provides both the abstract base class and a class decorator for
 hooking into the Numba rewrite subsystem.  The following illustrates a
 stub definition of a new rewrite:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">rewrites</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">numba</span> <span class="k">import</span> <span class="n">rewrites</span>
 
-<span class="nd">@rewrites.register_rewrite</span>
+<span class="nd">@rewrites</span><span class="o">.</span><span class="n">register_rewrite</span>
 <span class="k">class</span> <span class="nc">MyRewrite</span><span class="p">(</span><span class="n">rewrites</span><span class="o">.</span><span class="n">Rewrite</span><span class="p">):</span>
 
     <span class="k">def</span> <span class="nf">match</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block</span><span class="p">,</span> <span class="n">typemap</span><span class="p">,</span> <span class="n">calltypes</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s">&quot;FIXME&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;FIXME&quot;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">apply</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s">&quot;FIXME&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;FIXME&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Developers should note that using the class decorator as shown above
-will register a rewrite at import time.  It is the developer&#8217;s
+will register a rewrite at import time.  It is the developer’s
 responsibility to ensure their extensions are loaded before
 compilation starts.</p>
 </div>
@@ -368,8 +365,8 @@ finds an <code class="docutils literal"><span class="pre">arrayexpr</span></code
 <div class="section" id="the-rewritearrayexprs-match-method">
 <h3>7.6.4.1. The <code class="xref py py-func docutils literal"><span class="pre">RewriteArrayExprs.match()</span></code> method<a class="headerlink" href="#the-rewritearrayexprs-match-method" title="Permalink to this headline">¶</a></h3>
 <p>The array expression optimization pass starts by looking for array
-operations, including calls to supported <code class="xref py py-class docutils literal"><span class="pre">ufunc</span></code>&#8216;s and
-user-defined <a class="reference internal" href="../reference/jit-compilation.html#numba.DUFunc" title="numba.DUFunc"><code class="xref py py-class docutils literal"><span class="pre">DUFunc</span></code></a>&#8216;s.  Numba IR follows the
+operations, including calls to supported <code class="xref py py-class docutils literal"><span class="pre">ufunc</span></code>’s and
+user-defined <a class="reference internal" href="../reference/jit-compilation.html#numba.DUFunc" title="numba.DUFunc"><code class="xref py py-class docutils literal"><span class="pre">DUFunc</span></code></a>’s.  Numba IR follows the
 conventions of a static single assignment (SSA) language, meaning that
 the search for array operators begins with looking for assignment
 instructions.</p>
@@ -450,7 +447,7 @@ replacement instruction map.  When an assignment instruction is found
 in the instruction map, <code class="xref py py-func docutils literal"><span class="pre">apply()</span></code> must then
 check to see if the replacement instruction is also in the replacement
 map.  The optimizer continues this check until it either arrives at a
-<a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.6)"><code class="xref py py-obj docutils literal"><span class="pre">None</span></code></a> value or an instruction that isn&#8217;t in the replacement map.
+<a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.6)"><code class="xref py py-obj docutils literal"><span class="pre">None</span></code></a> value or an instruction that isn’t in the replacement map.
 Instructions that have a replacement that is <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.6)"><code class="xref py py-obj docutils literal"><span class="pre">None</span></code></a> are deleted.
 Instructions that have a non-<a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.6)"><code class="xref py py-obj docutils literal"><span class="pre">None</span></code></a> replacement are replaced.
 Assignment instructions not in the replacement map are appended to the
@@ -471,7 +468,7 @@ basic block for lowering.</p>
 <div class="section" id="the-lower-array-expr-function">
 <h3>7.6.4.3. The <code class="xref py py-func docutils literal"><span class="pre">_lower_array_expr()</span></code> function<a class="headerlink" href="#the-lower-array-expr-function" title="Permalink to this headline">¶</a></h3>
 <p>If we left things at just the rewrite, then the lowering stage of the
-compiler would fail, complaining it doesn&#8217;t know how to lower
+compiler would fail, complaining it doesn’t know how to lower
 <code class="docutils literal"><span class="pre">arrayexpr</span></code> operations.  We start by hooking a lowering function
 into the target context whenever the <code class="xref py py-class docutils literal"><span class="pre">RewriteArrayExprs</span></code> class
 is instantiated by the compiler.  This hook causes the lowering pass to
@@ -491,7 +488,7 @@ DUFunc kernels, calling
 <code class="xref py py-func docutils literal"><span class="pre">numba.targets.numpyimpl.numpy_ufunc_kernel()</span></code> after defining
 how to lower calls to the synthetic function.</li>
 </ul>
-<p>The end result is similar to loop lifting in Numba&#8217;s object mode.</p>
+<p>The end result is similar to loop lifting in Numba’s object mode.</p>
 </div>
 </div>
 <div class="section" id="conclusions-and-caveats">
@@ -503,7 +500,7 @@ this section are:</p>
 <li>When writing a good plug-in, the matcher should try to get a
 go/no-go result as soon as possible.</li>
 <li>The rewrite application portion can be more computationally
-expensive, but should still generate code that won&#8217;t cause infinite
+expensive, but should still generate code that won’t cause infinite
 loops in the compiler.</li>
 <li>We use object state to communicate any results of matching to the
 rewrite application pass.</li>
@@ -524,7 +521,7 @@ rewrite application pass.</li>
     </p>
     <p>
         &copy; Copyright 2012, Anaconda, Inc..<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.<br/>
     </p>
   </div>
 </footer>

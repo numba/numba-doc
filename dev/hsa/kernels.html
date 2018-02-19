@@ -1,22 +1,19 @@
 <!DOCTYPE html>
 
-
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>5.2. Writing HSA Kernels &mdash; Numba 0.37.0rc1+2.gb6b965a-py2.7-linux-x86_64.egg documentation</title>
-    
+    <title>5.2. Writing HSA Kernels &#8212; Numba 0.37.0dev1+32.gbe5fb1f.dirty documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.37.0rc1+2.gb6b965a-py2.7-linux-x86_64.egg',
+        VERSION:     '0.37.0dev1+32.gbe5fb1f.dirty',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
       };
     </script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
@@ -26,8 +23,8 @@
     <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="Numba 0.37.0rc1+2.gb6b965a-py2.7-linux-x86_64.egg documentation" href="../index.html" />
-    <link rel="up" title="5. Numba for HSA APUs" href="index.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="5.3. Memory management" href="memory.html" />
     <link rel="prev" title="5.1. Overview" href="overview.html" />
 <meta charset='utf-8'>
@@ -36,7 +33,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 
   </head>
-  <body role="document">
+  <body>
 
   <div id="navbar" class="navbar navbar-default navbar-fixed-top">
     <div class="container">
@@ -113,7 +110,7 @@
     </a>
   </li>
   <li>
-    <a href="memory.html" title="Next Chapter: 5.3. Memory management"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">5.3. Memory mana... &raquo;</span>
+    <a href="memory.html" title="Next Chapter: 5.3. Memory management"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">5.3. Memory m... &raquo;</span>
     </a>
   </li>
               
@@ -123,7 +120,7 @@
             
               <li class="hidden-sm">
 <div id="sourcelink">
-  <a href="../_sources/hsa/kernels.txt"
+  <a href="../_sources/hsa/kernels.rst.txt"
      rel="nofollow">Source</a>
 </div></li>
             
@@ -160,17 +157,17 @@ executed by multiple threads at once (often hundreds or thousands).  Your
 solution will
 be modeled by defining a thread hierarchy of <em>grid</em>, <em>workgroup</em> and
 <em>workitem</em>.</p>
-<p>Numba&#8217;s HSA support exposes facilities to declare and manage this
+<p>Numba’s HSA support exposes facilities to declare and manage this
 hierarchy of threads.</p>
 </div>
 <div class="section" id="introduction-for-cuda-programmers">
 <h2>5.2.2. Introduction for CUDA Programmers<a class="headerlink" href="#introduction-for-cuda-programmers" title="Permalink to this headline">¶</a></h2>
 <p>HSA execution model is similar to CUDA.  The main difference will be the
 shared memory model employed by HSA so that there are no device memory.  The
-GPU hardware uses the machine&#8217;s main memory (or host memory in
+GPU hardware uses the machine’s main memory (or host memory in
 CUDA term) directly.  Therefore, you will not need <code class="docutils literal"><span class="pre">to_device()</span></code> and
 <code class="docutils literal"><span class="pre">copy_to_host()</span></code> in HSA programming.</p>
-<p>Here&#8217;s a quick mapping of the CUDA terms to HSA:
+<p>Here’s a quick mapping of the CUDA terms to HSA:
 * workitem is CUDA threads
 * workgroup is CUDA thread block
 * grid is CUDA grid</p>
@@ -190,19 +187,19 @@ times with different workgroup sizes or grid sizes).</li>
 </ul>
 <p>At first sight, writing a HSA kernel with Numba looks very much like
 writing a <a class="reference internal" href="../glossary.html#term-jit-function"><span class="xref std std-term">JIT function</span></a> for the CPU:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="nd">@hsa.jit</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="nd">@hsa</span><span class="o">.</span><span class="n">jit</span>
 <span class="k">def</span> <span class="nf">increment_by_one</span><span class="p">(</span><span class="n">an_array</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Increment all array elements by one.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c"># code elided here; read further for different implementations</span>
+    <span class="c1"># code elided here; read further for different implementations</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="kernel-invocation">
 <span id="hsa-kernel-invocation"></span><h2>5.2.4. Kernel invocation<a class="headerlink" href="#kernel-invocation" title="Permalink to this headline">¶</a></h2>
 <p>A kernel is typically launched in the following way:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">itempergroup</span> <span class="o">=</span> <span class="mi">32</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">itempergroup</span> <span class="o">=</span> <span class="mi">32</span>
 <span class="n">groupperrange</span> <span class="o">=</span> <span class="p">(</span><span class="n">an_array</span><span class="o">.</span><span class="n">size</span> <span class="o">+</span> <span class="p">(</span><span class="n">itempergroup</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span> <span class="o">//</span> <span class="n">itempergroup</span>
 <span class="n">increment_by_one</span><span class="p">[</span><span class="n">groupperrange</span><span class="p">,</span> <span class="n">itempergroup</span><span class="p">](</span><span class="n">an_array</span><span class="p">)</span>
 </pre></div>
@@ -210,7 +207,7 @@ writing a <a class="reference internal" href="../glossary.html#term-jit-function
 <p>We notice two steps here:</p>
 <ul class="simple">
 <li>Instantiate the kernel proper, by specifying a number of workgroup
-(or &#8220;workgroup per grid&#8221;), and a number of workitems per workgroup.  The
+(or “workgroup per grid”), and a number of workitems per workgroup.  The
 product of the two will give the total number of workitem launched.  Kernel
 instantiation is done by taking the compiled kernel function
 (here <code class="docutils literal"><span class="pre">increment_by_one</span></code>) and indexing it with a tuple of integers.</li>
@@ -226,7 +223,7 @@ number of workitem needed by a kernel.  The workgroup size (i.e. number of
 workitem per workgroup) is often crucial:</p>
 <ul>
 <li><p class="first">On the software side, the workgroup size determines how many threads
-share a given area of <a class="reference internal" href="memory.html#hsa-shared-memory"><span>shared memory</span></a>.</p>
+share a given area of <a class="reference internal" href="memory.html#hsa-shared-memory"><span class="std std-ref">shared memory</span></a>.</p>
 </li>
 <li><dl class="first docutils">
 <dt>On the hardware side, the workgroup size must be large enough for full</dt>
@@ -242,31 +239,31 @@ share a given area of <a class="reference internal" href="memory.html#hsa-shared
 multi-dimensional workgroups and grids.  In the example above, you could
 make <code class="docutils literal"><span class="pre">itempergroup</span></code> and <code class="docutils literal"><span class="pre">groupperrange</span></code> tuples of one, two
 or three integers.  Compared to 1D declarations of equivalent sizes,
-this doesn&#8217;t change anything to the efficiency or behaviour of generated
+this doesn’t change anything to the efficiency or behaviour of generated
 code, but can help you write your algorithms in a more natural way.</p>
 </div>
 </div>
 <div class="section" id="workitem-positioning">
 <h2>5.2.5. WorkItem positioning<a class="headerlink" href="#workitem-positioning" title="Permalink to this headline">¶</a></h2>
-<p>When running a kernel, the kernel function&#8217;s code is executed by every
+<p>When running a kernel, the kernel function’s code is executed by every
 thread once.  It therefore has to know which thread it is in, in order
 to know which array element(s) it is responsible for (complex algorithms
 may define more complex responsibilities, but the underlying principle
 is the same).</p>
 <p>One way is for the thread to determines its position in the grid and
 workgroup and manually compute the corresponding array position:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="nd">@hsa.jit</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="nd">@hsa</span><span class="o">.</span><span class="n">jit</span>
 <span class="k">def</span> <span class="nf">increment_by_one</span><span class="p">(</span><span class="n">an_array</span><span class="p">):</span>
-    <span class="c"># workitem id in a 1D workgroup</span>
+    <span class="c1"># workitem id in a 1D workgroup</span>
     <span class="n">tx</span> <span class="o">=</span> <span class="n">hsa</span><span class="o">.</span><span class="n">get_local_id</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-    <span class="c"># workgroup id in a 1D grid</span>
+    <span class="c1"># workgroup id in a 1D grid</span>
     <span class="n">ty</span> <span class="o">=</span> <span class="n">hsa</span><span class="o">.</span><span class="n">get_group_id</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-    <span class="c"># workgroup size, i.e. number of workitem per workgroup</span>
+    <span class="c1"># workgroup size, i.e. number of workitem per workgroup</span>
     <span class="n">bw</span> <span class="o">=</span> <span class="n">hsa</span><span class="o">.</span><span class="n">get_local_size</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-    <span class="c"># Compute flattened index inside the array</span>
+    <span class="c1"># Compute flattened index inside the array</span>
     <span class="n">pos</span> <span class="o">=</span> <span class="n">tx</span> <span class="o">+</span> <span class="n">ty</span> <span class="o">*</span> <span class="n">bw</span>
-    <span class="c"># The above is equivalent to pos = hsa.get_global_id(0)</span>
-    <span class="k">if</span> <span class="n">pos</span> <span class="o">&lt;</span> <span class="n">an_array</span><span class="o">.</span><span class="n">size</span><span class="p">:</span>  <span class="c"># Check array boundaries</span>
+    <span class="c1"># The above is equivalent to pos = hsa.get_global_id(0)</span>
+    <span class="k">if</span> <span class="n">pos</span> <span class="o">&lt;</span> <span class="n">an_array</span><span class="o">.</span><span class="n">size</span><span class="p">:</span>  <span class="c1"># Check array boundaries</span>
         <span class="n">an_array</span><span class="p">[</span><span class="n">pos</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
 </pre></div>
 </div>
@@ -295,7 +292,7 @@ from 0 inclusive to <a class="reference internal" href="#numba.hsa.get_local_siz
 <p>Returns the size of the workgroup at the given dimension.
 The value is declared when instantiating the kernel.
 This value is the same for all workitems in a given kernel,
-even if they belong to different workgroups (i.e. each workgroups is &#8220;full&#8221;).</p>
+even if they belong to different workgroups (i.e. each workgroups is “full”).</p>
 </dd></dl>
 
 <dl class="function">
@@ -329,7 +326,7 @@ even if they belong to different workgroups (i.e. each workgroups is &#8220;full
     </p>
     <p>
         &copy; Copyright 2012, Anaconda, Inc..<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.<br/>
     </p>
   </div>
 </footer>

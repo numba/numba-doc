@@ -1,22 +1,19 @@
 <!DOCTYPE html>
 
-
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>7.9. Notes on stencils &mdash; Numba 0.37.0rc1+2.gb6b965a-py2.7-linux-x86_64.egg documentation</title>
-    
+    <title>7.9. Notes on stencils &#8212; Numba 0.37.0dev1+32.gbe5fb1f.dirty documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.37.0rc1+2.gb6b965a-py2.7-linux-x86_64.egg',
+        VERSION:     '0.37.0dev1+32.gbe5fb1f.dirty',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
       };
     </script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
@@ -26,8 +23,8 @@
     <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="Numba 0.37.0rc1+2.gb6b965a-py2.7-linux-x86_64.egg documentation" href="../index.html" />
-    <link rel="up" title="7. Developer Manual" href="index.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="8. Numba Enhancement Proposals" href="../proposals/index.html" />
     <link rel="prev" title="7.8.1. Lowering Listing" href="autogen_lower_listing.html" />
 <meta charset='utf-8'>
@@ -36,7 +33,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 
   </head>
-  <body role="document">
+  <body>
 
   <div id="navbar" class="navbar navbar-default navbar-fixed-top">
     <div class="container">
@@ -109,11 +106,11 @@
               
                 
   <li>
-    <a href="autogen_lower_listing.html" title="Previous Chapter: 7.8.1. Lowering Listing"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; 7.8.1. Lowering ...</span>
+    <a href="autogen_lower_listing.html" title="Previous Chapter: 7.8.1. Lowering Listing"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; 7.8.1. Loweri...</span>
     </a>
   </li>
   <li>
-    <a href="../proposals/index.html" title="Next Chapter: 8. Numba Enhancement Proposals"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">8. Numba Enhance... &raquo;</span>
+    <a href="../proposals/index.html" title="Next Chapter: 8. Numba Enhancement Proposals"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">8. Numba Enha... &raquo;</span>
     </a>
   </li>
               
@@ -123,7 +120,7 @@
             
               <li class="hidden-sm">
 <div id="sourcelink">
-  <a href="../_sources/developer/stencil.txt"
+  <a href="../_sources/developer/stencil.rst.txt"
      rel="nofollow">Source</a>
 </div></li>
             
@@ -149,12 +146,12 @@
       
   <div class="section" id="notes-on-stencils">
 <span id="arch-stencil"></span><h1>7.9. Notes on stencils<a class="headerlink" href="#notes-on-stencils" title="Permalink to this headline">¶</a></h1>
-<p>Numba provides the <a class="reference internal" href="../user/stencil.html#numba-stencil"><span>&#64;stencil decorator</span></a> to
+<p>Numba provides the <a class="reference internal" href="../user/stencil.html#numba-stencil"><span class="std std-ref">&#64;stencil decorator</span></a> to
 represent stencil computations.  This document explains how this
 feature is implemented in the several different modes available in
 Numba.  Currently, calls to the stencil from non-jitted code is
 supported as well as calls from jitted code, either with or without
-the <a class="reference internal" href="../user/jit.html#parallel-jit-option"><span>parallel=True</span></a> option.</p>
+the <a class="reference internal" href="../user/jit.html#parallel-jit-option"><span class="std std-ref">parallel=True</span></a> option.</p>
 <div class="section" id="the-stencil-decorator">
 <h2>7.9.1. The stencil decorator<a class="headerlink" href="#the-stencil-decorator" title="Permalink to this headline">¶</a></h2>
 <p>The stencil decorator itself just returns a <code class="docutils literal"><span class="pre">StencilFunc</span></code> object.
@@ -168,23 +165,23 @@ stored in the <code class="docutils literal"><span class="pre">StencilFunc</span
 <h2>7.9.2. Handling the three modes<a class="headerlink" href="#handling-the-three-modes" title="Permalink to this headline">¶</a></h2>
 <p>As mentioned above, Numba supports the calling of stencils
 from inside or outside a <code class="docutils literal"><span class="pre">&#64;jit</span></code> compiled function, with or
-without the <a class="reference internal" href="../user/jit.html#parallel-jit-option"><span>parallel=True</span></a> option.</p>
+without the <a class="reference internal" href="../user/jit.html#parallel-jit-option"><span class="std std-ref">parallel=True</span></a> option.</p>
 <div class="section" id="outside-jit-context">
 <h3>7.9.2.1. Outside jit context<a class="headerlink" href="#outside-jit-context" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal"><span class="pre">StencilFunc</span></code> overrides the <code class="docutils literal"><span class="pre">__call__</span></code> method so that calls
 to <code class="docutils literal"><span class="pre">StencilFunc</span></code> objects execute the stencil:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;out&#39;</span><span class="p">)</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;out&#39;</span><span class="p">)</span>
 
-    <span class="n">new_stencil_func</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stencil_wrapper</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
+    <span class="n">new_stencil_func</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stencil_wrapper</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">result</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">result</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">new_stencil_func</span><span class="o">.</span><span class="n">entry_point</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">new_stencil_func</span><span class="o">.</span><span class="n">entry_point</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>First, the presence of the optional <a class="reference internal" href="../user/stencil.html#stencil-function-out"><span>out</span></a>
+<p>First, the presence of the optional <a class="reference internal" href="../user/stencil.html#stencil-function-out"><span class="std std-ref">out</span></a>
 parameter is checked.  If it is present then the output array is
 stored in <code class="docutils literal"><span class="pre">result</span></code>.  Then, the call to <code class="docutils literal"><span class="pre">_stencil_wrapper</span></code>
 generates the stencil function given the result and argument types
@@ -194,7 +191,7 @@ returned.</p>
 <div class="section" id="jit-without-parallel-true">
 <h3>7.9.2.2. Jit without <code class="docutils literal"><span class="pre">parallel=True</span></code><a class="headerlink" href="#jit-without-parallel-true" title="Permalink to this headline">¶</a></h3>
 <p>When constructed, a <code class="docutils literal"><span class="pre">StencilFunc</span></code> inserts itself into the typing
-context&#8217;s set of user functions and provides the <code class="docutils literal"><span class="pre">_type_me</span></code>
+context’s set of user functions and provides the <code class="docutils literal"><span class="pre">_type_me</span></code>
 callback.  In this way, the standard Numba compiler is able to
 determine the output type and signature of a <code class="docutils literal"><span class="pre">StencilFunc</span></code>.
 Each <code class="docutils literal"><span class="pre">StencilFunc</span></code> maintains a cache of previously seen combinations
@@ -207,8 +204,8 @@ return type of the kernel.  From that, a Numpy array type is constructed
 whose element type matches that scalar return type.</p>
 <p>After computing the signature of the stencil for a previously
 unseen combination of input and keyword types, the <code class="docutils literal"><span class="pre">StencilFunc</span></code>
-then <a class="reference internal" href="#arch-stencil-create-function"><span>creates the stencil function</span></a> itself.
-<code class="docutils literal"><span class="pre">StencilFunc</span></code> then installs the new stencil function&#8217;s definition
+then <a class="reference internal" href="#arch-stencil-create-function"><span class="std std-ref">creates the stencil function</span></a> itself.
+<code class="docutils literal"><span class="pre">StencilFunc</span></code> then installs the new stencil function’s definition
 in the target context so that jitted code is able to call it.</p>
 <p>Thus, in this mode, the generated stencil function is a stand-alone
 function called like a normal function from within jitted code.</p>
@@ -216,8 +213,8 @@ function called like a normal function from within jitted code.</p>
 <div class="section" id="jit-with-parallel-true">
 <h3>7.9.2.3. Jit with <code class="docutils literal"><span class="pre">parallel=True</span></code><a class="headerlink" href="#jit-with-parallel-true" title="Permalink to this headline">¶</a></h3>
 <p>When calling a <code class="docutils literal"><span class="pre">StencilFunc</span></code> from a jitted context with <code class="docutils literal"><span class="pre">parallel=True</span></code>,
-a separate stencil function as generated by <a class="reference internal" href="#arch-stencil-create-function"><span>Creating the stencil function</span></a>
-is not used.  Instead, <cite>parfors</cite> (<a class="reference internal" href="architecture.html#parallel-accelerator"><span>Stage 6b: Perform Automatic Parallelization</span></a>) are
+a separate stencil function as generated by <a class="reference internal" href="#arch-stencil-create-function"><span class="std std-ref">Creating the stencil function</span></a>
+is not used.  Instead, <cite>parfors</cite> (<a class="reference internal" href="architecture.html#parallel-accelerator"><span class="std std-ref">Stage 6b: Perform Automatic Parallelization</span></a>) are
 created within the current function that implements the stencil.
 This code again starts with the stencil kernel and does a similar kernel
 size computation but then rather than standard Python looping syntax,
@@ -225,7 +222,7 @@ corresponding <cite>parfors</cite> are created so that the execution of the sten
 will take place in parallel.</p>
 <p>The stencil to <cite>parfor</cite> translations can also be selectively disabled
 by setting <code class="docutils literal"><span class="pre">parallel={'stencil':</span> <span class="pre">False}</span></code>, among other sub-options
-described in <a class="reference internal" href="architecture.html#parallel-accelerator"><span>Stage 6b: Perform Automatic Parallelization</span></a>.</p>
+described in <a class="reference internal" href="architecture.html#parallel-accelerator"><span class="std std-ref">Stage 6b: Perform Automatic Parallelization</span></a>.</p>
 </div>
 </div>
 <div class="section" id="creating-the-stencil-function">
@@ -233,12 +230,12 @@ described in <a class="reference internal" href="architecture.html#parallel-acce
 <p>Conceptually, a stencil function is created from the user-specified
 stencil kernel by adding looping code around the kernel, transforming
 the relative kernel indices into absolute array indices based on the
-loop indices, and replacing the kernel&#8217;s <code class="docutils literal"><span class="pre">return</span></code> statement with
+loop indices, and replacing the kernel’s <code class="docutils literal"><span class="pre">return</span></code> statement with
 a statement to assign the computed value into the output array.</p>
 <p>To accomplish this transformation, first, a copy of the stencil
 kernel IR is created so that subsequent modifications of the IR
 for different stencil signatures will not effect each other.</p>
-<p>Then, an approach similar to how GUFunc&#8217;s are created for <cite>parfors</cite>
+<p>Then, an approach similar to how GUFunc’s are created for <cite>parfors</cite>
 is employed.  In a text buffer, a Python function is created with
 a unique name.  The input array parameter is added to the function
 definition and if the <code class="docutils literal"><span class="pre">out</span></code> argument type is present then an
@@ -306,7 +303,7 @@ is raised.</p>
     </p>
     <p>
         &copy; Copyright 2012, Anaconda, Inc..<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.<br/>
     </p>
   </div>
 </footer>

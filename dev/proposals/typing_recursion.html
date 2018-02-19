@@ -1,22 +1,19 @@
 <!DOCTYPE html>
 
-
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>8.2.5. NBEP 6: Typing Recursion &mdash; Numba 0.37.0rc1+2.gb6b965a-py2.7-linux-x86_64.egg documentation</title>
-    
+    <title>8.2.5. NBEP 6: Typing Recursion &#8212; Numba 0.37.0dev1+32.gbe5fb1f.dirty documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.37.0rc1+2.gb6b965a-py2.7-linux-x86_64.egg',
+        VERSION:     '0.37.0dev1+32.gbe5fb1f.dirty',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
       };
     </script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
@@ -26,8 +23,8 @@
     <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="Numba 0.37.0rc1+2.gb6b965a-py2.7-linux-x86_64.egg documentation" href="../index.html" />
-    <link rel="up" title="8. Numba Enhancement Proposals" href="index.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="9. Glossary" href="../glossary.html" />
     <link rel="prev" title="8.2.4. NBEP 5: Type Inference" href="type-inference.html" />
 <meta charset='utf-8'>
@@ -36,7 +33,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 
   </head>
-  <body role="document">
+  <body>
 
   <div id="navbar" class="navbar navbar-default navbar-fixed-top">
     <div class="container">
@@ -104,7 +101,7 @@
               
                 
   <li>
-    <a href="type-inference.html" title="Previous Chapter: 8.2.4. NBEP 5: Type Inference"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; 8.2.4. NBEP 5: T...</span>
+    <a href="type-inference.html" title="Previous Chapter: 8.2.4. NBEP 5: Type Inference"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; 8.2.4. NBEP 5...</span>
     </a>
   </li>
   <li>
@@ -118,7 +115,7 @@
             
               <li class="hidden-sm">
 <div id="sourcelink">
-  <a href="../_sources/proposals/typing_recursion.txt"
+  <a href="../_sources/proposals/typing_recursion.rst.txt"
      rel="nofollow">Source</a>
 </div></li>
             
@@ -174,7 +171,7 @@ either the current function (for self-recursion) or a parent function
 the function-type of its callee.  This results in the formation of a cyclic
 dependency.  For example, given a function <code class="docutils literal"><span class="pre">foo()</span></code> that calls <code class="docutils literal"><span class="pre">bar()</span></code>,
 which in turns call <code class="docutils literal"><span class="pre">foo()</span></code>:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">bar</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
@@ -198,7 +195,7 @@ on non-recursive control-flow paths.</li>
 </ol>
 <p>The compile-time callstack stores typing information of the functions being
 compiled.  Like an ordinary callstack, it pushes a new record every time a
-function is &#8220;called&#8221;.  Since this occurs at compile-time, a &#8220;call&#8221; triggers
+function is “called”.  Since this occurs at compile-time, a “call” triggers
 a compilation of the callee.</p>
 <p>To detect recursion, the compile-time callstack is searched bottom-up
 (stack grows downward) for a record that matches the callee.
@@ -214,7 +211,7 @@ final return type, which is used to refine the type information by the
 subsequent iteration in the type inference process.</p>
 <p>The following figure illustrates the compile-time callstack when the compiler
 reaches the recursive call to <code class="docutils literal"><span class="pre">foo()</span></code> from <code class="docutils literal"><span class="pre">bar()</span></code>:</p>
-<a class="reference internal image-reference" href="../_images/recursion_callstack.svg"><img src="../_images/recursion_callstack.svg" width="400px" /></a>
+<a class="reference internal image-reference" href="../_images/recursion_callstack.svg"><img alt="../_images/recursion_callstack.svg" src="../_images/recursion_callstack.svg" width="400px" /></a>
 <p>At this time, the type inference process of <code class="docutils literal"><span class="pre">foo()</span></code> is suspended and that of <code class="docutils literal"><span class="pre">bar()</span></code>
 is active.  The compiler can see that the callee is already compiling by
 searching the callstack.  Knowing that it is a recursive call, the compiler
@@ -232,9 +229,9 @@ at least one of the control path leads to a return-statement without undertaking
 a recursive call.  Should this not be the case, the algorithm will raise an
 exception indicating a potential runaway recursion.</p>
 <p>For example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="nd">@jit</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="nd">@jit</span>
 <span class="k">def</span> <span class="nf">first</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-    <span class="c"># The recursing call must have a path that is non-recursing.</span>
+    <span class="c1"># The recursing call must have a path that is non-recursing.</span>
     <span class="k">if</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">second</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
@@ -274,7 +271,7 @@ precompiling in a specific order.</p>
     </p>
     <p>
         &copy; Copyright 2012, Anaconda, Inc..<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.<br/>
     </p>
   </div>
 </footer>

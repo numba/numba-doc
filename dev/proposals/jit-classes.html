@@ -1,22 +1,19 @@
 <!DOCTYPE html>
 
-
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>8.2.2. NBEP 3: JIT Classes &mdash; Numba 0.37.0rc1+2.gb6b965a-py2.7-linux-x86_64.egg documentation</title>
-    
+    <title>8.2.2. NBEP 3: JIT Classes &#8212; Numba 0.37.0dev1+32.gbe5fb1f.dirty documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.37.0rc1+2.gb6b965a-py2.7-linux-x86_64.egg',
+        VERSION:     '0.37.0dev1+32.gbe5fb1f.dirty',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
       };
     </script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
@@ -26,8 +23,8 @@
     <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="Numba 0.37.0rc1+2.gb6b965a-py2.7-linux-x86_64.egg documentation" href="../index.html" />
-    <link rel="up" title="8. Numba Enhancement Proposals" href="index.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="8.2.3. NBEP 4: Defining C callbacks" href="cfunc.html" />
     <link rel="prev" title="8.2.1. NBEP 2: Extension points" href="extension-points.html" />
 <meta charset='utf-8'>
@@ -36,7 +33,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 
   </head>
-  <body role="document">
+  <body>
 
   <div id="navbar" class="navbar navbar-default navbar-fixed-top">
     <div class="container">
@@ -119,11 +116,11 @@
               
                 
   <li>
-    <a href="extension-points.html" title="Previous Chapter: 8.2.1. NBEP 2: Extension points"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; 8.2.1. NBEP 2: E...</span>
+    <a href="extension-points.html" title="Previous Chapter: 8.2.1. NBEP 2: Extension points"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; 8.2.1. NBEP 2...</span>
     </a>
   </li>
   <li>
-    <a href="cfunc.html" title="Next Chapter: 8.2.3. NBEP 4: Defining C callbacks"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">8.2.3. NBEP 4: D... &raquo;</span>
+    <a href="cfunc.html" title="Next Chapter: 8.2.3. NBEP 4: Defining C callbacks"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">8.2.3. NBEP 4... &raquo;</span>
     </a>
   </li>
               
@@ -133,7 +130,7 @@
             
               <li class="hidden-sm">
 <div id="sourcelink">
-  <a href="../_sources/proposals/jit-classes.txt"
+  <a href="../_sources/proposals/jit-classes.rst.txt"
      rel="nofollow">Source</a>
 </div></li>
             
@@ -178,7 +175,7 @@ Classes provide useful abstraction and promote modularity when used
 right.  In the simplest sense, a class specifies the set of data and
 operations as attributes and methods, respectively.
 A class instance is an instantiation of that class.
-This proposal will focus on supporting this simple usecase of classes&#8211;with
+This proposal will focus on supporting this simple usecase of classes–with
 just attributes and methods.  Other features, such as class methods, static
 methods, and inheritance are deferred to another proposal, but we believe
 these features can be easily implemented given the foundation described here.</p>
@@ -201,9 +198,9 @@ materialize. Using the class object as a constructor is fully resolved (a
 runtime implementation is picked) during the typing phase in the compiler.
 This means <strong>a class object will not be first class</strong>.  On the other hand,
 implementating a first-class class object will require an
-&#8220;interface&#8221; type, or the type of class.</p>
+“interface” type, or the type of class.</p>
 <p>The instantiation of a class will allocate resources for storing the data
-attributes.  This is described in the &#8220;Storage model&#8221; section.  Methods are
+attributes.  This is described in the “Storage model” section.  Methods are
 never stored in the instance.  They are information attached to the class.
 Since a class object only exists in the type domain, the methods will also be
 fully resolved at the typing phase.  Again, numba do not have first-class
@@ -212,7 +209,7 @@ implementation (this needs to be changed to support function value as argument).
 <p>A class instance can contain other NRT reference-counted object as attributes.
 To properly clean up an instance, a destructor is called when the reference
 count of the instance is dropped to zero.  This is described in the
-&#8220;Reference count and descructor&#8221; section.</p>
+“Reference count and descructor” section.</p>
 <div class="section" id="storage-model">
 <h3>8.2.2.2.1. Storage model<a class="headerlink" href="#storage-model" title="Permalink to this headline">¶</a></h3>
 <p>For compatibility with C, attributes are stored in a simple plain-old-data
@@ -220,11 +217,11 @@ structure.  Each attribute are stored in a user-defined order in a padded
 (for proper alignment), contiguous memory region. An instance that contains
 three fields of int32, float32, complex64 will be compatible with the following
 C structure:</p>
-<div class="highlight-python"><div class="highlight"><pre>struct {
-    int32     field0;
-    float32   field1;
-    complex64 field2;
-};
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">struct</span> <span class="p">{</span>
+    <span class="n">int32</span>     <span class="n">field0</span><span class="p">;</span>
+    <span class="n">float32</span>   <span class="n">field1</span><span class="p">;</span>
+    <span class="n">complex64</span> <span class="n">field2</span><span class="p">;</span>
+<span class="p">};</span>
 </pre></div>
 </div>
 <p>This will also be comptabile with an aligned numpy structure dtype.</p>
@@ -254,9 +251,9 @@ Cycles will cause memory leak.</p>
 Type information is necessary to materailize the instance (e.g. allocate the
 storage).  The simplest way is to let user provide the type of each attributes
 as well as the ordering; for instance:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">dct</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
-<span class="n">dct</span><span class="p">[</span><span class="s">&#39;x&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">int32</span>
-<span class="n">dct</span><span class="p">[</span><span class="s">&#39;y&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">float32</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">dct</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+<span class="n">dct</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">int32</span>
+<span class="n">dct</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">float32</span>
 </pre></div>
 </div>
 <p>Allowing user to supply an ordered dictionary will provide the name, ordering
@@ -270,13 +267,13 @@ conditionally depending on the value. (Very few languages implement dependent
 typing and those that does are mostly theorem provers.)</p>
 <div class="section" id="example-typing-function-using-an-ordereddict">
 <h4>8.2.2.2.4.1. Example: typing function using an OrderedDict<a class="headerlink" href="#example-typing-function-using-an-ordereddict" title="Permalink to this headline">¶</a></h4>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">spec</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
-<span class="n">spec</span><span class="p">[</span><span class="s">&#39;x&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">numba</span><span class="o">.</span><span class="n">int32</span>
-<span class="n">spec</span><span class="p">[</span><span class="s">&#39;y&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">numba</span><span class="o">.</span><span class="n">float32</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">spec</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+<span class="n">spec</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">numba</span><span class="o">.</span><span class="n">int32</span>
+<span class="n">spec</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">numba</span><span class="o">.</span><span class="n">float32</span>
 
 <span class="nd">@jitclass</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">Vec</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">x</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">y</span>
 
@@ -288,8 +285,8 @@ typing and those that does are mostly theorem provers.)</p>
 </div>
 <div class="section" id="example-typing-function-using-a-list-of-2-tuples">
 <h4>8.2.2.2.4.2. Example: typing function using a list of 2-tuples<a class="headerlink" href="#example-typing-function-using-a-list-of-2-tuples" title="Permalink to this headline">¶</a></h4>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">spec</span> <span class="o">=</span> <span class="p">[(</span><span class="s">&#39;x&#39;</span><span class="p">,</span> <span class="n">numba</span><span class="o">.</span><span class="n">int32</span><span class="p">),</span>
-        <span class="p">(</span><span class="s">&#39;y&#39;</span><span class="p">,</span> <span class="n">numba</span><span class="o">.</span><span class="n">float32</span><span class="p">)]</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">spec</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">numba</span><span class="o">.</span><span class="n">int32</span><span class="p">),</span>
+        <span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">numba</span><span class="o">.</span><span class="n">float32</span><span class="p">)]</span>
 
 <span class="nd">@jitclass</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">Vec</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -301,19 +298,19 @@ typing and those that does are mostly theorem provers.)</p>
 <h4>8.2.2.2.4.3. Creating multiple jitclasses from a single class object<a class="headerlink" href="#creating-multiple-jitclasses-from-a-single-class-object" title="Permalink to this headline">¶</a></h4>
 <p>The <cite>jitclass(spec)</cite> decorator creates a new jitclass type even when applied to
 the same class object and the same type specification.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Vec</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Vec</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
   <span class="o">...</span>
 
 <span class="n">Vec1</span> <span class="o">=</span> <span class="n">jitclass</span><span class="p">(</span><span class="n">spec</span><span class="p">)(</span><span class="n">Vec</span><span class="p">)</span>
 <span class="n">Vec2</span> <span class="o">=</span> <span class="n">jitclass</span><span class="p">(</span><span class="n">spec</span><span class="p">)(</span><span class="n">Vec</span><span class="p">)</span>
-<span class="c"># Vec1 and Vec2 are two different jitclass types</span>
+<span class="c1"># Vec1 and Vec2 are two different jitclass types</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="section" id="usage-from-the-interpreter">
 <h3>8.2.2.2.5. Usage from the Interpreter<a class="headerlink" href="#usage-from-the-interpreter" title="Permalink to this headline">¶</a></h3>
-<p>When constructing a new instance of a jitclass, a &#8220;box&#8221; is created that wraps
+<p>When constructing a new instance of a jitclass, a “box” is created that wraps
 the underlying jitclass instance from numba.  Attributes and methods are
 accessible from the interpreter.  The actual implementation will be in numba
 compiled code.  Any Python object is converted to its native
@@ -344,8 +341,8 @@ jitclass instance, which will be described in a separate NBEP.</p>
 <div class="section" id="other-properties">
 <h3>8.2.2.2.9. Other properties<a class="headerlink" href="#other-properties" title="Permalink to this headline">¶</a></h3>
 <p>Given:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">spec</span> <span class="o">=</span> <span class="p">[(</span><span class="s">&#39;x&#39;</span><span class="p">,</span> <span class="n">numba</span><span class="o">.</span><span class="n">int32</span><span class="p">),</span>
-        <span class="p">(</span><span class="s">&#39;y&#39;</span><span class="p">,</span> <span class="n">numba</span><span class="o">.</span><span class="n">float32</span><span class="p">)]</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">spec</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">numba</span><span class="o">.</span><span class="n">int32</span><span class="p">),</span>
+        <span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">numba</span><span class="o">.</span><span class="n">float32</span><span class="p">)]</span>
 
 <span class="nd">@jitclass</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">Vec</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -379,7 +376,7 @@ proposals.</p>
     </p>
     <p>
         &copy; Copyright 2012, Anaconda, Inc..<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.<br/>
     </p>
   </div>
 </footer>

@@ -1,22 +1,19 @@
 <!DOCTYPE html>
 
-
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>2.9. Floating-point pitfalls &mdash; Numba 0.37.0rc1+2.gb6b965a-py2.7-linux-x86_64.egg documentation</title>
-    
+    <title>2.9. Floating-point pitfalls &#8212; Numba 0.37.0dev1+32.gbe5fb1f.dirty documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.37.0rc1+2.gb6b965a-py2.7-linux-x86_64.egg',
+        VERSION:     '0.37.0dev1+32.gbe5fb1f.dirty',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
       };
     </script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
@@ -26,8 +23,8 @@
     <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="Numba 0.37.0rc1+2.gb6b965a-py2.7-linux-x86_64.egg documentation" href="../index.html" />
-    <link rel="up" title="2. Reference Manual" href="index.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="3. Numba for CUDA GPUs" href="../cuda/index.html" />
     <link rel="prev" title="2.8. Deviations from Python semantics" href="pysemantics.html" />
 <meta charset='utf-8'>
@@ -36,7 +33,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 
   </head>
-  <body role="document">
+  <body>
 
   <div id="navbar" class="navbar navbar-default navbar-fixed-top">
     <div class="container">
@@ -107,11 +104,11 @@
               
                 
   <li>
-    <a href="pysemantics.html" title="Previous Chapter: 2.8. Deviations from Python semantics"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; 2.8. Deviations ...</span>
+    <a href="pysemantics.html" title="Previous Chapter: 2.8. Deviations from Python semantics"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; 2.8. Deviatio...</span>
     </a>
   </li>
   <li>
-    <a href="../cuda/index.html" title="Next Chapter: 3. Numba for CUDA GPUs"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">3. Numba for CUD... &raquo;</span>
+    <a href="../cuda/index.html" title="Next Chapter: 3. Numba for CUDA GPUs"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">3. Numba for ... &raquo;</span>
     </a>
   </li>
               
@@ -121,7 +118,7 @@
             
               <li class="hidden-sm">
 <div id="sourcelink">
-  <a href="../_sources/reference/fpsemantics.txt"
+  <a href="../_sources/reference/fpsemantics.rst.txt"
      rel="nofollow">Source</a>
 </div></li>
             
@@ -163,7 +160,7 @@ requirements as set out by the IEEE 754 standard (like <code class="docutils lit
 etc.), but each implementation may have bugs.  Thus, on some platforms
 Numba has to exercise special care in order to workaround known <code class="docutils literal"><span class="pre">libm</span></code>
 issues.</p>
-<p>Another typical problem is when an operating system&#8217;s <code class="docutils literal"><span class="pre">libm</span></code> function
+<p>Another typical problem is when an operating system’s <code class="docutils literal"><span class="pre">libm</span></code> function
 set is incomplete and needs to be supplemented by additional functions.
 These are provided with reference to the IEEE 754 and C99 standards
 and are often implemented in Numba in a manner similar to equivalent
@@ -176,7 +173,7 @@ the Microsoft Visual Studio compiler.</p>
 <h3>2.9.1.2. Linear algebra<a class="headerlink" href="#linear-algebra" title="Permalink to this headline">¶</a></h3>
 <p>Numpy forces some linear algebra operations to run in double-precision mode
 even when a <code class="docutils literal"><span class="pre">float32</span></code> input is given.  Numba will always observe
-the input&#8217;s precision, and invoke single-precision linear algebra routines
+the input’s precision, and invoke single-precision linear algebra routines
 when all inputs are <code class="docutils literal"><span class="pre">float32</span></code> or <code class="docutils literal"><span class="pre">complex64</span></code>.</p>
 <p>The implementations of the <code class="docutils literal"><span class="pre">numpy.linalg</span></code> routines in Numba only support the
 floating point types that are used in the LAPACK functions that provide
@@ -206,12 +203,12 @@ Numpy will determine whether an error occurred by examining the FPU
 error word.  It may then print out a warning or raise an exception
 (such as <code class="docutils literal"><span class="pre">RuntimeWarning:</span> <span class="pre">divide</span> <span class="pre">by</span> <span class="pre">zero</span> <span class="pre">encountered</span></code>),
 depending on the current error handling settings.</p>
-<p>Depending on how LLVM optimized the ufunc&#8217;s code, however, some spurious
+<p>Depending on how LLVM optimized the ufunc’s code, however, some spurious
 warnings or errors may appear.  If you get caught by this issue, we
-recommend you call <a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.seterr.html#numpy.seterr" title="(in NumPy v1.14)"><code class="xref py py-func docutils literal"><span class="pre">numpy.seterr()</span></code></a> to change Numpy&#8217;s error handling
-settings, or the <a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.errstate.html#numpy.errstate" title="(in NumPy v1.14)"><code class="xref py py-class docutils literal"><span class="pre">numpy.errstate</span></code></a> context manager to switch them
+recommend you call <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.seterr.html#numpy.seterr" title="(in NumPy v1.14)"><code class="xref py py-func docutils literal"><span class="pre">numpy.seterr()</span></code></a> to change Numpy’s error handling
+settings, or the <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.errstate.html#numpy.errstate" title="(in NumPy v1.14)"><code class="xref py py-class docutils literal"><span class="pre">numpy.errstate</span></code></a> context manager to switch them
 temporarily:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="k">with</span> <span class="n">np</span><span class="o">.</span><span class="n">errstate</span><span class="p">(</span><span class="nb">all</span><span class="o">=</span><span class="s">&#39;ignore&#39;</span><span class="p">):</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">np</span><span class="o">.</span><span class="n">errstate</span><span class="p">(</span><span class="nb">all</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">):</span>
     <span class="n">x</span> <span class="o">=</span> <span class="n">my_ufunc</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -231,7 +228,7 @@ temporarily:</p>
     </p>
     <p>
         &copy; Copyright 2012, Anaconda, Inc..<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.<br/>
     </p>
   </div>
 </footer>
