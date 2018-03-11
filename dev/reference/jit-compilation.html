@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>2.2. Just-in-Time compilation &mdash; Numba 0.37.0+35.gd6f3a74-py2.7-linux-x86_64.egg documentation</title>
+    <title>2.2. Just-in-Time compilation &mdash; Numba 0.37.0+39.gd591af1-py2.7-linux-x86_64.egg documentation</title>
     
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.37.0+35.gd6f3a74-py2.7-linux-x86_64.egg',
+        VERSION:     '0.37.0+39.gd591af1-py2.7-linux-x86_64.egg',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,7 +26,7 @@
     <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="Numba 0.37.0+35.gd6f3a74-py2.7-linux-x86_64.egg documentation" href="../index.html" />
+    <link rel="top" title="Numba 0.37.0+39.gd591af1-py2.7-linux-x86_64.egg documentation" href="../index.html" />
     <link rel="up" title="2. Reference Manual" href="index.html" />
     <link rel="next" title="2.3. Ahead-of-Time compilation" href="aot-compilation.html" />
     <link rel="prev" title="2.1. Types and signatures" href="types.html" />
@@ -361,7 +361,8 @@ Python function into a Numpy ufunc.  If no <em>signatures</em> are given,
 then the decorator will wrap the user Python function in a
 <a class="reference internal" href="#numba.DUFunc" title="numba.DUFunc"><code class="xref py py-class docutils literal"><span class="pre">DUFunc</span></code></a> instance, which will compile the user
 function at call time whenever Numpy can not find a matching loop
-for the input arguments.</p>
+for the input arguments.  <em>signatures</em> is required if <em>target</em> is
+<code class="docutils literal"><span class="pre">&quot;parallel&quot;</span></code>.</p>
 <p><em>identity</em> is the identity (or unit) value of the function being
 implemented.  Possible values are 0, 1, None, and the string
 <code class="docutils literal"><span class="pre">&quot;reorderable&quot;</span></code>.  The default is None.  Both None and
@@ -383,8 +384,9 @@ execution.  The correct invocation is:</p>
 <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">):</span> <span class="o">...</span>
 </pre></div>
 </div>
-<p><em>target</em> is a string for backend target; Available values are &#8220;cpu&#8221;, &#8220;parallel&#8221;, and &#8220;cuda&#8221;.
-To use a multithreaded version, change the target to &#8220;parallel&#8221;:</p>
+<p><em>target</em> is a string for backend target; Available values are &#8220;cpu&#8221;,
+&#8220;parallel&#8221;, and &#8220;cuda&#8221;.  To use a multithreaded version, change the
+target to &#8220;parallel&#8221; (which requires signatures to be specified):</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="nd">@vectorize</span><span class="p">([</span><span class="s">&quot;float64(float64)&quot;</span><span class="p">,</span> <span class="s">&quot;float32(float32)&quot;</span><span class="p">],</span> <span class="n">target</span><span class="o">=</span><span class="s">&#39;parallel&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">):</span> <span class="o">...</span>
 </pre></div>
