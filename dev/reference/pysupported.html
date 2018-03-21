@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>2.6. Supported Python features &mdash; Numba 0.37.0+91.g56f99d3-py2.7-linux-x86_64.egg documentation</title>
+    <title>2.6. Supported Python features &mdash; Numba 0.37.0+100.gbc12c91-py2.7-linux-x86_64.egg documentation</title>
     
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.37.0+91.g56f99d3-py2.7-linux-x86_64.egg',
+        VERSION:     '0.37.0+100.gbc12c91-py2.7-linux-x86_64.egg',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,7 +26,7 @@
     <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="Numba 0.37.0+91.g56f99d3-py2.7-linux-x86_64.egg documentation" href="../index.html" />
+    <link rel="top" title="Numba 0.37.0+100.gbc12c91-py2.7-linux-x86_64.egg documentation" href="../index.html" />
     <link rel="up" title="2. Reference Manual" href="index.html" />
     <link rel="next" title="2.7. Supported NumPy features" href="numpysupported.html" />
     <link rel="prev" title="2.5. Environment variables" href="envvars.html" />
@@ -91,12 +91,14 @@
 <li><a class="reference internal" href="#">2.6. Supported Python features</a><ul>
 <li><a class="reference internal" href="#language">2.6.1. Language</a><ul>
 <li><a class="reference internal" href="#constructs">2.6.1.1. Constructs</a></li>
-<li><a class="reference internal" href="#inner-function-and-closure">2.6.1.2. Inner function and closure</a></li>
-<li><a class="reference internal" href="#function-calls">2.6.1.3. Function calls</a><ul>
-<li><a class="reference internal" href="#recursive-calls">2.6.1.3.1. Recursive calls</a></li>
+<li><a class="reference internal" href="#functions">2.6.1.2. Functions</a><ul>
+<li><a class="reference internal" href="#function-calls">2.6.1.2.1. Function calls</a></li>
+<li><a class="reference internal" href="#functions-as-arguments">2.6.1.2.2. Functions as arguments</a></li>
+<li><a class="reference internal" href="#inner-function-and-closure">2.6.1.2.3. Inner function and closure</a></li>
+<li><a class="reference internal" href="#recursive-calls">2.6.1.2.4. Recursive calls</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#generators">2.6.1.4. Generators</a></li>
+<li><a class="reference internal" href="#generators">2.6.1.3. Generators</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#built-in-types">2.6.2. Built-in types</a><ul>
@@ -206,23 +208,57 @@ arguments must be <a class="reference internal" href="../glossary.html#term-comp
 <p>Similarly, the <code class="docutils literal"><span class="pre">assert</span></code> statement is supported with or without an error
 message.</p>
 </div>
-<div class="section" id="inner-function-and-closure">
-<h3>2.6.1.2. Inner function and closure<a class="headerlink" href="#inner-function-and-closure" title="Permalink to this headline">¶</a></h3>
-<p>Numba now supports inner functions as long as they are non-recursive
-and only called locally, but not passed as argument or returned as
-result. The use of closure variables (variables defined in outer scopes)
-within an inner function is also supported.</p>
-</div>
+<div class="section" id="functions">
+<h3>2.6.1.2. Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h3>
 <div class="section" id="function-calls">
-<h3>2.6.1.3. Function calls<a class="headerlink" href="#function-calls" title="Permalink to this headline">¶</a></h3>
+<h4>2.6.1.2.1. Function calls<a class="headerlink" href="#function-calls" title="Permalink to this headline">¶</a></h4>
 <p>Numba supports function calls using positional and named arguments, as well
 as arguments with default values and <code class="docutils literal"><span class="pre">*args</span></code> (note the argument for
 <code class="docutils literal"><span class="pre">*args</span></code> can only be a tuple, not a list).  Explicit <code class="docutils literal"><span class="pre">**kwargs</span></code> are
 not supported.</p>
 <p>Function calls to locally defined inner functions are supported as long as
 they can be fully inlined.</p>
+</div>
+<div class="section" id="functions-as-arguments">
+<h4>2.6.1.2.2. Functions as arguments<a class="headerlink" href="#functions-as-arguments" title="Permalink to this headline">¶</a></h4>
+<p>Functions can be passed as argument into another function.  But, they cannot
+be returned. For example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">jit</span>
+
+<span class="nd">@jit</span>
+<span class="k">def</span> <span class="nf">add1</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span>
+
+<span class="nd">@jit</span>
+<span class="k">def</span> <span class="nf">bar</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">fn</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+<span class="nd">@jit</span>
+<span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">bar</span><span class="p">(</span><span class="n">add1</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+
+<span class="c"># Passing add1 within numba compiled code.</span>
+<span class="k">print</span><span class="p">(</span><span class="n">foo</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+<span class="c"># Passing add1 into bar from interpreted code</span>
+<span class="k">print</span><span class="p">(</span><span class="n">bar</span><span class="p">(</span><span class="n">add1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Numba does not handle function objects as real objects.  Once a
+function is assigned to a variable, the variable cannot be
+re-assigned to a different function.</p>
+</div>
+</div>
+<div class="section" id="inner-function-and-closure">
+<h4>2.6.1.2.3. Inner function and closure<a class="headerlink" href="#inner-function-and-closure" title="Permalink to this headline">¶</a></h4>
+<p>Numba now supports inner functions as long as they are non-recursive
+and only called locally, but not passed as argument or returned as
+result. The use of closure variables (variables defined in outer scopes)
+within an inner function is also supported.</p>
+</div>
 <div class="section" id="recursive-calls">
-<h4>2.6.1.3.1. Recursive calls<a class="headerlink" href="#recursive-calls" title="Permalink to this headline">¶</a></h4>
+<h4>2.6.1.2.4. Recursive calls<a class="headerlink" href="#recursive-calls" title="Permalink to this headline">¶</a></h4>
 <p>Most recursive call patterns are supported.  The only restriction is that the
 recursive callee must have a control-flow path that returns without recursing.
 Numba is able to type-infer recursive functions without specifying the function
@@ -231,7 +267,7 @@ Recursive calls can even call into a different overload of the function.</p>
 </div>
 </div>
 <div class="section" id="generators">
-<h3>2.6.1.4. Generators<a class="headerlink" href="#generators" title="Permalink to this headline">¶</a></h3>
+<h3>2.6.1.3. Generators<a class="headerlink" href="#generators" title="Permalink to this headline">¶</a></h3>
 <p>Numba supports generator functions and is able to compile them in
 <a class="reference internal" href="../glossary.html#term-object-mode"><span class="xref std std-term">object mode</span></a> and <a class="reference internal" href="../glossary.html#term-nopython-mode"><span class="xref std std-term">nopython mode</span></a>.  The returned generator
 can be used both from Numba-compiled code and from regular Python code.</p>
