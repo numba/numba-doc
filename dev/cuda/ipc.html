@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>3.14. Sharing CUDA Memory &mdash; Numba 0.37.0+135.g95ab2fa-py2.7-linux-x86_64.egg documentation</title>
+    
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.37.0+135.g95ab2fa-py2.7-linux-x86_64.egg',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="Numba 0.37.0+135.g95ab2fa-py2.7-linux-x86_64.egg documentation" href="../index.html" />
+    <link rel="up" title="3. Numba for CUDA GPUs" href="index.html" />
+    <link rel="next" title="3.15. CUDA Frequently Asked Questions" href="faq.html" />
+    <link rel="prev" title="3.13. CUDA Ufuncs and Generalized Ufuncs" href="ufunc.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body role="document">
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html"><span><img src="../_static/numba_blue_icon_rgb.png"></span>
+          Numba</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.37</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../user/index.html">1. User Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/index.html">2. Reference Manual</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">3. Numba for CUDA GPUs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cuda-reference/index.html">4. CUDA Python Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hsa/index.html">5. Numba for HSA APUs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../extending/index.html">6. Extending Numba</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer/index.html">7. Developer Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../proposals/index.html">8. Numba Enhancement Proposals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">9. Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release-notes.html">10. Release Notes</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">3.14. Sharing CUDA Memory</a><ul>
+<li><a class="reference internal" href="#sharing-between-process">3.14.1. Sharing between process</a><ul>
+<li><a class="reference internal" href="#export-device-array-to-another-process">3.14.1.1. Export device array to another process</a></li>
+<li><a class="reference internal" href="#import-ipc-memory-from-another-process">3.14.1.2. Import IPC memory from another process</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+  <li>
+    <a href="ufunc.html" title="Previous Chapter: 3.13. CUDA Ufuncs and Generalized Ufuncs"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; 3.13. CUDA Ufunc...</span>
+    </a>
+  </li>
+  <li>
+    <a href="faq.html" title="Next Chapter: 3.15. CUDA Frequently Asked Questions"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">3.15. CUDA Frequ... &raquo;</span>
+    </a>
+  </li>
+              
+            
+            
+            
+            
+              <li class="hidden-sm">
+<div id="sourcelink">
+  <a href="../_sources/cuda/ipc.txt"
+     rel="nofollow">Source</a>
+</div></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <div class="section" id="sharing-cuda-memory">
+<h1>3.14. Sharing CUDA Memory<a class="headerlink" href="#sharing-cuda-memory" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="sharing-between-process">
+<span id="cuda-ipc-memory"></span><h2>3.14.1. Sharing between process<a class="headerlink" href="#sharing-between-process" title="Permalink to this headline">¶</a></h2>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">This feature is limited to Linux only.</p>
+</div>
+<div class="section" id="export-device-array-to-another-process">
+<h3>3.14.1.1. Export device array to another process<a class="headerlink" href="#export-device-array-to-another-process" title="Permalink to this headline">¶</a></h3>
+<p>A device array can be shared with another process in the same machine using
+the CUDA IPC API.  To do so, use the <code class="docutils literal"><span class="pre">.get_ipc_handle()</span></code> method on the device
+array to get a <code class="docutils literal"><span class="pre">IpcArrayHandle</span></code> object, which can be transferred to another
+process.</p>
+<dl class="method">
+<dt>
+<code class="descclassname">DeviceNDArray.</code><code class="descname">get_ipc_handle</code><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<dd><p>Returns a <em>IpcArrayHandle</em> object that is safe to serialize and transfer
+to another process to share the local allocation.</p>
+<p>Note: this feature is only available on Linux.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.cudadrv.devicearray.IpcArrayHandle">
+<em class="property">class </em><code class="descclassname">numba.cuda.cudadrv.devicearray.</code><code class="descname">IpcArrayHandle</code><span class="sig-paren">(</span><em>ipc_handle</em>, <em>array_desc</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.cuda.cudadrv.devicearray.IpcArrayHandle" title="Permalink to this definition">¶</a></dt>
+<dd><p>An IPC array handle that can be serialized and transfer to another process
+in the same machine for share a GPU allocation.</p>
+<p>On the destination process, use the <em>.open()</em> method to creates a new
+<em>DeviceNDArray</em> object that shares the allocation from the original process.
+To release the resources, call the <em>.close()</em> method.  After that, the
+destination can no longer use the shared array object.  (Note: the
+underlying weakref to the resource is now dead.)</p>
+<p>This object implements the context-manager interface that calls the
+<em>.open()</em> and <em>.close()</em> method automatically:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">with</span> <span class="n">the_ipc_array_handle</span> <span class="k">as</span> <span class="n">ipc_array</span><span class="p">:</span>
+    <span class="c"># use ipc_array here as a normal gpu array object</span>
+    <span class="n">some_code</span><span class="p">(</span><span class="n">ipc_array</span><span class="p">)</span>
+<span class="c"># ipc_array is dead at this point</span>
+</pre></div>
+</div>
+<dl class="method">
+<dt id="numba.cuda.cudadrv.devicearray.IpcArrayHandle.close">
+<code class="descname">close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#numba.cuda.cudadrv.devicearray.IpcArrayHandle.close" title="Permalink to this definition">¶</a></dt>
+<dd><p>Closes the IPC handle to the array.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadrv.devicearray.IpcArrayHandle.open">
+<code class="descname">open</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#numba.cuda.cudadrv.devicearray.IpcArrayHandle.open" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a new <em>DeviceNDArray</em> that shares the allocation from the
+original process.  Must not be used on the original process.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="import-ipc-memory-from-another-process">
+<h3>3.14.1.2. Import IPC memory from another process<a class="headerlink" href="#import-ipc-memory-from-another-process" title="Permalink to this headline">¶</a></h3>
+<p>The following function is used to open IPC handle from another process
+as a device array.</p>
+<dl class="method">
+<dt id="numba.cuda.open_ipc_array">
+<code class="descclassname">cuda.</code><code class="descname">open_ipc_array</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwds</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.cuda.open_ipc_array" title="Permalink to this definition">¶</a></dt>
+<dd><p>A context manager that opens a IPC <em>handle</em> (<em>CUipcMemHandle</em>) that is
+represented as a sequence of bytes (e.g. <em>bytes</em>, tuple of int)
+and represent it as an array of the given <em>shape</em>, <em>strides</em> and <em>dtype</em>.
+The <em>strides</em> can be omitted.  In that case, it is assumed to be a 1D
+C contiguous array.</p>
+<p>Yields a device array.</p>
+<p>The IPC handle is closed automatically when context manager exits.</p>
+</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2012, Anaconda, Inc..<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>
