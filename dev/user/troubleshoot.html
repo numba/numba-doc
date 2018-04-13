@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>1.12. Troubleshooting and tips &mdash; Numba 0.37.0+278.g9241e5e-py2.7-linux-x86_64.egg documentation</title>
+    <title>1.12. Troubleshooting and tips &mdash; Numba 0.38.0.dev1+13.ga0390f6-py2.7-linux-x86_64.egg documentation</title>
     
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.37.0+278.g9241e5e-py2.7-linux-x86_64.egg',
+        VERSION:     '0.38.0.dev1+13.ga0390f6-py2.7-linux-x86_64.egg',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,7 +26,7 @@
     <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="Numba 0.37.0+278.g9241e5e-py2.7-linux-x86_64.egg documentation" href="../index.html" />
+    <link rel="top" title="Numba 0.38.0.dev1+13.ga0390f6-py2.7-linux-x86_64.egg documentation" href="../index.html" />
     <link rel="up" title="1. User Manual" href="index.html" />
     <link rel="next" title="1.13. Frequently Asked Questions" href="faq.html" />
     <link rel="prev" title="1.11. Performance Tips" href="performance-tips.html" />
@@ -49,7 +49,7 @@
         </button>
         <a class="navbar-brand" href="../index.html"><span><img src="../_static/numba_blue_icon_rgb.png"></span>
           Numba</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.37</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.38</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -91,16 +91,17 @@
 <li><a class="reference internal" href="#">1.12. Troubleshooting and tips</a><ul>
 <li><a class="reference internal" href="#what-to-compile">1.12.1. What to compile</a></li>
 <li><a class="reference internal" href="#my-code-doesn-t-compile">1.12.2. My code doesn&#8217;t compile</a></li>
-<li><a class="reference internal" href="#the-compiled-code-is-too-slow">1.12.3. The compiled code is too slow</a></li>
-<li><a class="reference internal" href="#disabling-jit-compilation">1.12.4. Disabling JIT compilation</a></li>
-<li><a class="reference internal" href="#debugging-jit-compiled-code-with-gdb">1.12.5. Debugging JIT compiled code with GDB</a><ul>
-<li><a class="reference internal" href="#example-debug-usage">1.12.5.1. Example debug usage</a></li>
-<li><a class="reference internal" href="#globally-override-debug-setting">1.12.5.2. Globally override debug setting</a></li>
+<li><a class="reference internal" href="#my-code-has-a-type-unification-problem">1.12.3. My code has a type unification problem</a></li>
+<li><a class="reference internal" href="#the-compiled-code-is-too-slow">1.12.4. The compiled code is too slow</a></li>
+<li><a class="reference internal" href="#disabling-jit-compilation">1.12.5. Disabling JIT compilation</a></li>
+<li><a class="reference internal" href="#debugging-jit-compiled-code-with-gdb">1.12.6. Debugging JIT compiled code with GDB</a><ul>
+<li><a class="reference internal" href="#example-debug-usage">1.12.6.1. Example debug usage</a></li>
+<li><a class="reference internal" href="#globally-override-debug-setting">1.12.6.2. Globally override debug setting</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#debugging-cuda-python-code">1.12.6. Debugging CUDA Python code</a><ul>
-<li><a class="reference internal" href="#using-the-simulator">1.12.6.1. Using the simulator</a></li>
-<li><a class="reference internal" href="#debug-info">1.12.6.2. Debug Info</a></li>
+<li><a class="reference internal" href="#debugging-cuda-python-code">1.12.7. Debugging CUDA Python code</a><ul>
+<li><a class="reference internal" href="#using-the-simulator">1.12.7.1. Using the simulator</a></li>
+<li><a class="reference internal" href="#debug-info">1.12.7.2. Debug Info</a></li>
 </ul>
 </li>
 </ul>
@@ -177,9 +178,13 @@ unsupported Python feature, especially in <a class="reference internal" href="..
 Please see the list of <a class="reference internal" href="../reference/pysupported.html#pysupported"><span>Supported Python features</span></a>.  If you find something that
 is listed there and still fails compiling, please
 <a class="reference internal" href="../developer/contributing.html#report-numba-bugs"><span>report a bug</span></a>.</p>
-<p>The other reason is that you asked for <a class="reference internal" href="../glossary.html#term-nopython-mode"><span class="xref std std-term">nopython mode</span></a>, and type
-inference has failed on some piece of your code.  For example, let&#8217;s
-consider this trivial function:</p>
+<p>When Numba tries to compile your code it first tries to work out the types of
+all the variables in use, this is so it can generate a type specific
+implementation of your code that can be compiled down to machine code. A common
+reason for Numba failing to compile (especially in <a class="reference internal" href="../glossary.html#term-nopython-mode"><span class="xref std std-term">nopython mode</span></a>) is a
+type inference failure, essentially Numba cannot work out what the type of all
+the variables in your code should be.</p>
+<p>For example, let&#8217;s consider this trivial function:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="nd">@jit</span><span class="p">(</span><span class="n">nopython</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
@@ -187,29 +192,61 @@ consider this trivial function:</p>
 </div>
 <p>If you call it with two numbers, Numba is able to infer the types properly:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
-<span class="go">3</span>
+<span class="go">    3</span>
 </pre></div>
 </div>
 <p>If however you call it with a tuple and a number, Numba is unable to say
 what the result of adding a tuple and number is, and therefore compilation
 errors out:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,))</span>
-<span class="gt">Traceback (most recent call last):</span>
-  File <span class="nb">&quot;&lt;stdin&gt;&quot;</span>, line <span class="m">1</span>, in <span class="n">&lt;module&gt;</span>
-    <span class="p">[</span><span class="o">...</span><span class="p">]</span>
-  File <span class="nb">&quot;/home/antoine/numba/numba/typeinfer.py&quot;</span>, line <span class="m">242</span>, in <span class="n">resolve</span>
-    <span class="k">raise</span> <span class="n">TypingError</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">loc</span><span class="p">)</span>
-<span class="gr">numba.typeinfer.TypingError</span>: <span class="n">Failed at nopython frontend</span>
-<span class="go">Undeclared +(int64, (int32 x 1))</span>
-<span class="go">File &quot;&lt;stdin&gt;&quot;, line 2</span>
+<div class="highlight-python"><div class="highlight"><pre>&gt;&gt;&gt; f(1, (2,))
+Traceback (most recent call last):
+File &quot;&lt;stdin&gt;&quot;, line 1, in &lt;module&gt;
+File &quot;&lt;path&gt;/numba/numba/dispatcher.py&quot;, line 339, in _compile_for_args
+    reraise(type(e), e, None)
+File &quot;&lt;path&gt;/numba/numba/six.py&quot;, line 658, in reraise
+    raise value.with_traceback(tb)
+numba.errors.TypingError: Failed at nopython (nopython frontend)
+Invalid usage of + with parameters (int64, tuple(int64 x 1))
+Known signatures:
+* (int64, int64) -&gt; int64
+* (int64, uint64) -&gt; int64
+* (uint64, int64) -&gt; int64
+* (uint64, uint64) -&gt; uint64
+* (float32, float32) -&gt; float32
+* (float64, float64) -&gt; float64
+* (complex64, complex64) -&gt; complex64
+* (complex128, complex128) -&gt; complex128
+* (uint16,) -&gt; uint64
+* (uint8,) -&gt; uint64
+* (uint64,) -&gt; uint64
+* (uint32,) -&gt; uint64
+* (int16,) -&gt; int64
+* (int64,) -&gt; int64
+* (int8,) -&gt; int64
+* (int32,) -&gt; int64
+* (float32,) -&gt; float32
+* (float64,) -&gt; float64
+* (complex64,) -&gt; complex64
+* (complex128,) -&gt; complex128
+* parameterized
+[1] During: typing of intrinsic-call at &lt;stdin&gt; (3)
+
+File &quot;&lt;stdin&gt;&quot;, line 3:
 </pre></div>
 </div>
 <p>The error message helps you find out what went wrong:
-&#8220;Undeclared +(int64, (int32 x 1))&#8221; is to be interpreted as &#8220;Numba encountered
-an addition of variables typed as integer and 1-tuple of integer, respectively,
-and doesn&#8217;t know about any such operation&#8221;.</p>
-<p>Note that if you allow object mode, compilation will succeed and the
-compiled function will raise at runtime as Python would do:</p>
+&#8220;Invalid usage of + with parameters (int64, tuple(int64 x 1))&#8221; is to be
+interpreted as &#8220;Numba encountered an addition of variables typed as integer
+and 1-tuple of integer, respectively, and doesn&#8217;t know about any such
+operation&#8221;.</p>
+<p>Note that if you allow object mode:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@jit</span>
+<span class="k">def</span> <span class="nf">g</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
+</pre></div>
+</div>
+<p>compilation will succeed and the compiled function will raise at runtime as
+Python would do:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">g</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,))</span>
 <span class="gt">Traceback (most recent call last):</span>
   File <span class="nb">&quot;&lt;stdin&gt;&quot;</span>, line <span class="m">1</span>, in <span class="n">&lt;module&gt;</span>
@@ -217,8 +254,55 @@ compiled function will raise at runtime as Python would do:</p>
 </pre></div>
 </div>
 </div>
+<div class="section" id="my-code-has-a-type-unification-problem">
+<h2>1.12.3. My code has a type unification problem<a class="headerlink" href="#my-code-has-a-type-unification-problem" title="Permalink to this headline">¶</a></h2>
+<p>Another common reason for Numba not being able to compile your code is that it
+cannot statically determine the return type of a function. The most likely
+cause of this is the return type depending on a value that is available only at
+runtime. Again, this is most often problematic when using
+<a class="reference internal" href="../glossary.html#term-nopython-mode"><span class="xref std std-term">nopython mode</span></a>. The concept of type unification is simply trying to find
+a type in which two variables could safely be represented. For example a 64 bit
+float and a 64 bit complex number could both be represented in a 128 bit complex
+number.</p>
+<p>As an example of type unification failure, this function has a return type that
+is determined at runtime based on the value of <cite>x</cite>:</p>
+<div class="highlight-python"><div class="highlight"><pre>In [1]: from numba import jit
+
+In [2]: @jit(nopython=True)
+...: def f(x):
+...:     if x &gt; 10:
+...:         return (1,)
+...:     else:
+...:         return 1
+...:
+
+In [3]: f(10)
+</pre></div>
+</div>
+<p>Trying to execute this function, errors out as follows:</p>
+<div class="highlight-python"><div class="highlight"><pre>TypingError: Failed at nopython (nopython frontend)
+Can&#39;t unify return type from the following types: tuple(int64 x 1), int64
+Return of: IR name &#39;$8.2&#39;, type &#39;(int64 x 1)&#39;, location:
+File &quot;&lt;ipython-input-2-51ef1cc64bea&gt;&quot;, line 4:
+def f(x):
+    &lt;source elided&gt;
+    if x &gt; 10:
+        return (1,)
+        ^
+Return of: IR name &#39;$12.2&#39;, type &#39;int64&#39;, location:
+File &quot;&lt;ipython-input-2-51ef1cc64bea&gt;&quot;, line 6:
+def f(x):
+    &lt;source elided&gt;
+    else:
+        return 1
+</pre></div>
+</div>
+<p>The error message &#8220;Can&#8217;t unify return type from the following types:
+tuple(int64 x 1), int64&#8221; should be read as &#8220;Numba cannot find a type that
+can safely represent a 1-tuple of integer and an integer&#8221;.</p>
+</div>
 <div class="section" id="the-compiled-code-is-too-slow">
-<h2>1.12.3. The compiled code is too slow<a class="headerlink" href="#the-compiled-code-is-too-slow" title="Permalink to this headline">¶</a></h2>
+<h2>1.12.4. The compiled code is too slow<a class="headerlink" href="#the-compiled-code-is-too-slow" title="Permalink to this headline">¶</a></h2>
 <p>The most common reason for slowness of a compiled JIT function is that
 compiling in <a class="reference internal" href="../glossary.html#term-nopython-mode"><span class="xref std std-term">nopython mode</span></a> has failed and the Numba compiler has
 fallen back to <a class="reference internal" href="../glossary.html#term-object-mode"><span class="xref std std-term">object mode</span></a>.  <a class="reference internal" href="../glossary.html#term-object-mode"><span class="xref std std-term">object mode</span></a> currently provides
@@ -354,7 +438,7 @@ variable; for example with the <code class="docutils literal"><span class="pre">
 </ul>
 </div>
 <div class="section" id="disabling-jit-compilation">
-<h2>1.12.4. Disabling JIT compilation<a class="headerlink" href="#disabling-jit-compilation" title="Permalink to this headline">¶</a></h2>
+<h2>1.12.5. Disabling JIT compilation<a class="headerlink" href="#disabling-jit-compilation" title="Permalink to this headline">¶</a></h2>
 <p>In order to debug code, it is possible to disable JIT compilation, which makes
 the <code class="docutils literal"><span class="pre">jit</span></code> decorator (and the decorators <code class="docutils literal"><span class="pre">njit</span></code> and <code class="docutils literal"><span class="pre">autojit</span></code>) act as if
 they perform no operation, and the invocation of decorated functions calls the
@@ -365,7 +449,7 @@ still result in compilation of a ufunc, as there is no straightforward pure
 Python implementation of these functions.</p>
 </div>
 <div class="section" id="debugging-jit-compiled-code-with-gdb">
-<h2>1.12.5. Debugging JIT compiled code with GDB<a class="headerlink" href="#debugging-jit-compiled-code-with-gdb" title="Permalink to this headline">¶</a></h2>
+<h2>1.12.6. Debugging JIT compiled code with GDB<a class="headerlink" href="#debugging-jit-compiled-code-with-gdb" title="Permalink to this headline">¶</a></h2>
 <p>Setting the <code class="docutils literal"><span class="pre">debug</span></code> keyword argument in the <code class="docutils literal"><span class="pre">jit</span></code> decorator
 (e.g. <code class="docutils literal"><span class="pre">&#64;jit(debug=True)</span></code>) enables the emission of debug info in the jitted
 code.  To debug, GDB version 7.0 or above is required.  Currently, the following
@@ -418,7 +502,7 @@ the variables will be <code class="docutils literal"><span class="pre">x</span><
 </li>
 </ul>
 <div class="section" id="example-debug-usage">
-<h3>1.12.5.1. Example debug usage<a class="headerlink" href="#example-debug-usage" title="Permalink to this headline">¶</a></h3>
+<h3>1.12.6.1. Example debug usage<a class="headerlink" href="#example-debug-usage" title="Permalink to this headline">¶</a></h3>
 <p>The python source:</p>
 <div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
@@ -478,7 +562,7 @@ b = 124
 </div>
 </div>
 <div class="section" id="globally-override-debug-setting">
-<h3>1.12.5.2. Globally override debug setting<a class="headerlink" href="#globally-override-debug-setting" title="Permalink to this headline">¶</a></h3>
+<h3>1.12.6.2. Globally override debug setting<a class="headerlink" href="#globally-override-debug-setting" title="Permalink to this headline">¶</a></h3>
 <p>It is possible to enable debug for the full application by setting environment
 variable <code class="docutils literal"><span class="pre">NUMBA_DEBUGINFO=1</span></code>.  This sets the default value of the <code class="docutils literal"><span class="pre">debug</span></code>
 option in <code class="docutils literal"><span class="pre">jit</span></code>.  Debug can be turned off on individual functions by setting
@@ -489,9 +573,9 @@ error.</p>
 </div>
 </div>
 <div class="section" id="debugging-cuda-python-code">
-<h2>1.12.6. Debugging CUDA Python code<a class="headerlink" href="#debugging-cuda-python-code" title="Permalink to this headline">¶</a></h2>
+<h2>1.12.7. Debugging CUDA Python code<a class="headerlink" href="#debugging-cuda-python-code" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="using-the-simulator">
-<h3>1.12.6.1. Using the simulator<a class="headerlink" href="#using-the-simulator" title="Permalink to this headline">¶</a></h3>
+<h3>1.12.7.1. Using the simulator<a class="headerlink" href="#using-the-simulator" title="Permalink to this headline">¶</a></h3>
 <p>CUDA Python code can be run in the Python interpreter using the CUDA Simulator,
 allowing it to be debugged with the Python debugger or with print statements. To
 enable the CUDA simulator, set the environment variable
@@ -499,7 +583,7 @@ enable the CUDA simulator, set the environment variable
 see <a class="reference internal" href="../cuda/simulator.html#simulator"><span>the CUDA Simulator documentation</span></a>.</p>
 </div>
 <div class="section" id="debug-info">
-<h3>1.12.6.2. Debug Info<a class="headerlink" href="#debug-info" title="Permalink to this headline">¶</a></h3>
+<h3>1.12.7.2. Debug Info<a class="headerlink" href="#debug-info" title="Permalink to this headline">¶</a></h3>
 <p>By setting the <code class="docutils literal"><span class="pre">debug</span></code> argument to <code class="docutils literal"><span class="pre">cuda.jit</span></code> to <code class="docutils literal"><span class="pre">True</span></code>
 (<code class="docutils literal"><span class="pre">&#64;cuda.jit(debug=True)</span></code>), Numba will emit source location in the compiled
 CUDA code.  Unlike the CPU target, only filename and line information are
