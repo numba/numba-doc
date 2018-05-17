@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>7.4. Notes on generators &mdash; Numba 0.39.0.dev0+20.g90c738b-py2.7-linux-x86_64.egg documentation</title>
+    <title>7.4. Notes on generators &mdash; Numba 0.39.0.dev0+26.g210d839-py2.7-linux-x86_64.egg documentation</title>
     
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.39.0.dev0+20.g90c738b-py2.7-linux-x86_64.egg',
+        VERSION:     '0.39.0.dev0+26.g210d839-py2.7-linux-x86_64.egg',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,7 +26,7 @@
     <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="Numba 0.39.0.dev0+20.g90c738b-py2.7-linux-x86_64.egg documentation" href="../index.html" />
+    <link rel="top" title="Numba 0.39.0.dev0+26.g210d839-py2.7-linux-x86_64.egg documentation" href="../index.html" />
     <link rel="up" title="7. Developer Manual" href="index.html" />
     <link rel="next" title="7.5. Notes on Numba Runtime" href="numba-runtime.html" />
     <link rel="prev" title="7.3. Polymorphic dispatching" href="dispatching.html" />
@@ -159,10 +159,10 @@ document explains some of the implementation choices.</p>
 <em>generators</em>.  A generator function is a function containing one or
 several <code class="docutils literal"><span class="pre">yield</span></code> statements.  A generator (sometimes also called &#8220;generator
 iterator&#8221;) is the return value of a generator function; it resumes
-execution inside its frame each time <code class="xref py py-func docutils literal"><span class="pre">next()</span></code> is called.</p>
+execution inside its frame each time <a class="reference external" href="https://docs.python.org/3/library/functions.html#next" title="(in Python v3.6)"><code class="xref py py-func docutils literal"><span class="pre">next()</span></code></a> is called.</p>
 <p>A <em>yield point</em> is the place where a <code class="docutils literal"><span class="pre">yield</span></code> statement is called.
 A <em>resumption point</em> is the place just after a <em>yield point</em> where execution
-is resumed when <code class="xref py py-func docutils literal"><span class="pre">next()</span></code> is called again.</p>
+is resumed when <a class="reference external" href="https://docs.python.org/3/library/functions.html#next" title="(in Python v3.6)"><code class="xref py py-func docutils literal"><span class="pre">next()</span></code></a> is called again.</p>
 </div>
 <div class="section" id="function-analysis">
 <h2>7.4.2. Function analysis<a class="headerlink" href="#function-analysis" title="Permalink to this headline">¶</a></h2>
@@ -172,7 +172,7 @@ is resumed when <code class="xref py py-func docutils literal"><span class="pre"
     <span class="k">yield</span> <span class="n">x</span> <span class="o">-</span> <span class="n">y</span>
 </pre></div>
 </div>
-<p>Here is its CPython bytecode, as printed out using <code class="xref py py-func docutils literal"><span class="pre">dis.dis()</span></code>:</p>
+<p>Here is its CPython bytecode, as printed out using <a class="reference external" href="https://docs.python.org/3/library/dis.html#dis.dis" title="(in Python v3.6)"><code class="xref py py-func docutils literal"><span class="pre">dis.dis()</span></code></a>:</p>
 <div class="highlight-python"><div class="highlight"><pre>7           0 LOAD_FAST                0 (x)
             3 LOAD_FAST                1 (y)
             6 BINARY_ADD
@@ -285,7 +285,7 @@ in pseudo-code:</p>
 <li>The first member, the <em>resume index</em>, is an integer telling the generator
 at which resumption point execution must resume.  By convention, it can
 have two special values: 0 means execution must start at the beginning of
-the generator (i.e. the first time <code class="xref py py-func docutils literal"><span class="pre">next()</span></code> is called); -1 means
+the generator (i.e. the first time <a class="reference external" href="https://docs.python.org/3/library/functions.html#next" title="(in Python v3.6)"><code class="xref py py-func docutils literal"><span class="pre">next()</span></code></a> is called); -1 means
 the generator is exhauted and resumption must immediately raise StopIteration.
 Other values indicate the yield point&#8217;s index starting from 1
 (corresponding to the indices shown in the generator info above).</li>
@@ -327,7 +327,7 @@ case, generator instantiation is practically costless.</li>
 <li>When a Numba-compiled generator function is called from regular Python
 code, a CPython-compatible wrapper is instantiated that has the right
 amount of allocated space to store the structure, and whose
-<code class="xref c c-member docutils literal"><span class="pre">tp_iternext</span></code> slot is a wrapper around the
+<a class="reference external" href="https://docs.python.org/3/c-api/typeobj.html#c.PyTypeObject.tp_iternext" title="(in Python v3.6)"><code class="xref c c-member docutils literal"><span class="pre">tp_iternext</span></code></a> slot is a wrapper around the
 generator&#8217;s native code.</li>
 </ul>
 </div>
