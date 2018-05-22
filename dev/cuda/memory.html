@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>3.3. Memory management &mdash; Numba 0.39.0.dev0+26.g210d839-py2.7-linux-x86_64.egg documentation</title>
+    <title>3.3. Memory management &mdash; Numba 0.39.0.dev0+40.gf0418c7-py2.7-linux-x86_64.egg documentation</title>
     
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.39.0.dev0+26.g210d839-py2.7-linux-x86_64.egg',
+        VERSION:     '0.39.0.dev0+40.gf0418c7-py2.7-linux-x86_64.egg',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,7 +26,7 @@
     <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="Numba 0.39.0.dev0+26.g210d839-py2.7-linux-x86_64.egg documentation" href="../index.html" />
+    <link rel="top" title="Numba 0.39.0.dev0+40.gf0418c7-py2.7-linux-x86_64.egg documentation" href="../index.html" />
     <link rel="up" title="3. Numba for CUDA GPUs" href="index.html" />
     <link rel="next" title="3.4. Writing Device Functions" href="device-functions.html" />
     <link rel="prev" title="3.2. Writing CUDA Kernels" href="kernels.html" />
@@ -200,6 +200,26 @@ transfer:</p>
 </div>
 </dd></dl>
 
+<p>In addition to the device arrays, Numba can consume any object that implements
+<a class="reference internal" href="cuda_array_interface.html#cuda-array-interface"><span>cuda array interface</span></a>.  These objects also can be
+manually converted into a Numba device array by creating a view of the GPU
+buffer using the following APIs:</p>
+<dl class="function">
+<dt>
+<code class="descclassname">numba.cuda.</code><code class="descname">as_cuda_array</code><span class="sig-paren">(</span><em>obj</em><span class="sig-paren">)</span></dt>
+<dd><p>Create a DeviceNDArray from any object that implements
+the cuda-array-interface.</p>
+<p>A view of the underlying GPU buffer is created.  No copying of the data
+is done.  The resulting DeviceNDArray will acquire a reference from <cite>obj</cite>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="descclassname">numba.cuda.</code><code class="descname">is_cuda_array</code><span class="sig-paren">(</span><em>obj</em><span class="sig-paren">)</span></dt>
+<dd><p>Test if the object has defined the <cite>__cuda_array_interface__</cite>.</p>
+<p>Does not verify the validity of the interface.</p>
+</dd></dl>
+
 <div class="section" id="device-arrays">
 <h3>3.3.1.1. Device arrays<a class="headerlink" href="#device-arrays" title="Permalink to this headline">¶</a></h3>
 <p>Device array references have the following methods.  These methods are to be
@@ -262,6 +282,10 @@ synchronous: the function returns after the copy is finished.</p>
 
 </dd></dl>
 
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">DeviceNDArray defines the <a class="reference internal" href="cuda_array_interface.html#cuda-array-interface"><span>cuda array interface</span></a>.</p>
+</div>
 </div>
 </div>
 <div class="section" id="pinned-memory">

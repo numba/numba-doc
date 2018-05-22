@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>3.8. Device management &mdash; Numba 0.39.0.dev0+40.gf0418c7-py2.7-linux-x86_64.egg documentation</title>
+    <title>3.15. CUDA Array Interface &mdash; Numba 0.39.0.dev0+40.gf0418c7-py2.7-linux-x86_64.egg documentation</title>
     
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -28,8 +28,8 @@
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
     <link rel="top" title="Numba 0.39.0.dev0+40.gf0418c7-py2.7-linux-x86_64.egg documentation" href="../index.html" />
     <link rel="up" title="3. Numba for CUDA GPUs" href="index.html" />
-    <link rel="next" title="3.10. Examples" href="examples.html" />
-    <link rel="prev" title="3.7. Random Number Generation" href="random.html" />
+    <link rel="next" title="3.16. CUDA Frequently Asked Questions" href="faq.html" />
+    <link rel="prev" title="3.14. Sharing CUDA Memory" href="ipc.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -88,11 +88,10 @@
   <ul class="dropdown-menu localtoc"
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul>
-<li><a class="reference internal" href="#">3.8. Device management</a><ul>
-<li><a class="reference internal" href="#device-selection">3.8.1. Device Selection</a></li>
+<li><a class="reference internal" href="#">3.15. CUDA Array Interface</a><ul>
+<li><a class="reference internal" href="#python-interface-specification">3.15.1. Python Interface Specification</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#the-device-list">3.9. The Device List</a></li>
 </ul>
 </ul>
 </li>
@@ -102,11 +101,11 @@
               
                 
   <li>
-    <a href="random.html" title="Previous Chapter: 3.7. Random Number Generation"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; 3.7. Random Numb...</span>
+    <a href="ipc.html" title="Previous Chapter: 3.14. Sharing CUDA Memory"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; 3.14. Sharing CU...</span>
     </a>
   </li>
   <li>
-    <a href="examples.html" title="Next Chapter: 3.10. Examples"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">3.10. Examples &raquo;</span>
+    <a href="faq.html" title="Next Chapter: 3.16. CUDA Frequently Asked Questions"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">3.16. CUDA Frequ... &raquo;</span>
     </a>
   </li>
               
@@ -116,7 +115,7 @@
             
               <li class="hidden-sm">
 <div id="sourcelink">
-  <a href="../_sources/cuda/device-management.txt"
+  <a href="../_sources/cuda/cuda_array_interface.txt"
      rel="nofollow">Source</a>
 </div></li>
             
@@ -140,81 +139,81 @@
   <div class="row">
     <div class="col-md-12 content">
       
-  <div class="section" id="device-management">
-<h1>3.8. Device management<a class="headerlink" href="#device-management" title="Permalink to this headline">¶</a></h1>
-<p>For multi-GPU machines, users may want to select which GPU to use.
-By default the CUDA driver selects the fastest GPU as the device 0,
-which is the default device used by Numba.</p>
-<p>The features introduced on this page are generally not of interest
-unless working with systems hosting/offering more than one CUDA-capable GPU.</p>
-<div class="section" id="device-selection">
-<h2>3.8.1. Device Selection<a class="headerlink" href="#device-selection" title="Permalink to this headline">¶</a></h2>
-<p>If at all required, device selection must be done before any CUDA feature is
-used.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">cuda</span>
-<span class="n">cuda</span><span class="o">.</span><span class="n">select_device</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>The device can be closed by:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">cuda</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-</pre></div>
-</div>
-<p>Users can then create a new context with another device.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">cuda</span><span class="o">.</span><span class="n">select_device</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>  <span class="c"># assuming we have 2 GPUs</span>
-</pre></div>
-</div>
-<dl class="function">
-<dt>
-<code class="descclassname">numba.cuda.</code><code class="descname">select_device</code><span class="sig-paren">(</span><em>device_id</em><span class="sig-paren">)</span></dt>
-<dd><p>Create a new CUDA context for the selected <em>device_id</em>.  <em>device_id</em>
-should be the number of the device (starting from 0; the device order
-is determined by the CUDA libraries).  The context is associated with
-the current thread.  Numba currently allows only one context per thread.</p>
-<p>If successful, this function returns a device instance.</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<code class="descclassname">numba.cuda.</code><code class="descname">close</code><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
-<dd><p>Explicitly close all contexts in the current thread.</p>
+  <div class="section" id="cuda-array-interface">
+<span id="id1"></span><h1>3.15. CUDA Array Interface<a class="headerlink" href="#cuda-array-interface" title="Permalink to this headline">¶</a></h1>
+<p>The <em>cuda array inteface</em> is created for interoperability between different
+implementation of GPU array-like objects in various projects.  The idea is
+borrowed from the <a class="reference external" href="https://docs.scipy.org/doc/numpy-1.13.0/reference/arrays.interface.html#__array_interface__">numpy array interface</a>.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">Compiled functions are associated with the CUDA context.
-This makes it not very useful to close and create new devices, though it
-is certainly useful for choosing which device to use when the machine
-has multiple GPUs.</p>
+<p class="last">Currently, we only define the Python-side interface.  In the future, we may
+add a C-side interface for efficient exchange of the information in
+compiled code.</p>
 </div>
-</dd></dl>
-
+<div class="section" id="python-interface-specification">
+<h2>3.15.1. Python Interface Specification<a class="headerlink" href="#python-interface-specification" title="Permalink to this headline">¶</a></h2>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Experimental feature.  Specification may change.</p>
 </div>
+<p>The <code class="docutils literal"><span class="pre">__cuda_array_interface__</span></code> attribute is a dictionary-like object that
+must contain the following entries:</p>
+<ul>
+<li><p class="first"><strong>shape</strong>: <code class="docutils literal"><span class="pre">(integer,</span> <span class="pre">...)</span></code></p>
+<blockquote>
+<div><p>A tuple of <cite>int</cite> (or <cite>long</cite>) representing the size of each dimension.</p>
+</div></blockquote>
+</li>
+<li><p class="first"><strong>typestr</strong>: <cite>str</cite></p>
+<blockquote>
+<div><p>The type string.  This has the same definition as <em>typestr</em> in the
+<a class="reference external" href="https://docs.scipy.org/doc/numpy-1.13.0/reference/arrays.interface.html#__array_interface__">numpy array interface</a>.</p>
+</div></blockquote>
+</li>
+<li><p class="first"><strong>data</strong>: <cite>(integer, boolean)</cite></p>
+<blockquote>
+<div><p>The <strong>data</strong> is a 2-tuple.  The first element data pointer
+as a Python <cite>int</cite> (or <cite>long</cite>).  The data must be device-accessible.
+The second element is the read-only flag as a Python <cite>bool</cite>.</p>
+<p>Because the user of the interface may or may not be in the same context,
+the most common case is to use <code class="docutils literal"><span class="pre">cuPointerGetAttribute</span></code> with
+<code class="docutils literal"><span class="pre">CU_POINTER_ATTRIBUTE_DEVICE_POINTER</span></code> in the CUDA driver API (or the
+equivalent CUDA Runtime API) to retrieve a device pointer that
+is usable in the currently active context.</p>
+</div></blockquote>
+</li>
+<li><p class="first"><strong>version</strong>: <cite>integer</cite></p>
+<blockquote>
+<div><p>An integer for the version of the interface being exported.
+The current version is <em>0</em> since it is still experimental.</p>
+</div></blockquote>
+</li>
+</ul>
+<p>The following are optional entries:</p>
+<ul>
+<li><p class="first"><strong>strides</strong>: <code class="docutils literal"><span class="pre">None</span></code> or <code class="docutils literal"><span class="pre">(integer,</span> <span class="pre">...)</span></code></p>
+<blockquote>
+<div><p>A tuple of <cite>int</cite> (or <cite>long</cite>) representing the number of bytes to skip to
+access the next element at each dimension. If it is <code class="docutils literal"><span class="pre">None</span></code>, the array is
+assumed to be in C-contiguous layout.</p>
+</div></blockquote>
+</li>
+<li><p class="first"><strong>descr</strong></p>
+<blockquote>
+<div><p>This is for describing more complicated types.  This follows the same
+specification as in the <a class="reference external" href="https://docs.scipy.org/doc/numpy-1.13.0/reference/arrays.interface.html#__array_interface__">numpy array interface</a>.</p>
+</div></blockquote>
+</li>
+</ul>
+<p>Additional information about the data pointer can be retrieved using
+<code class="docutils literal"><span class="pre">cuPointerGetAttribute</span></code> or <code class="docutils literal"><span class="pre">cudaPointerGetAttributes</span></code>.  Such information
+include:</p>
+<ul class="simple">
+<li>the CUDA context that owns the pointer;</li>
+<li>is the pointer host-accessible?</li>
+<li>is the pointer a managed memory?</li>
+</ul>
 </div>
-<div class="section" id="the-device-list">
-<h1>3.9. The Device List<a class="headerlink" href="#the-device-list" title="Permalink to this headline">¶</a></h1>
-<p>The Device List is a list of all the GPUs in the system, and can be indexed to
-obtain a context manager that ensures execution on the selected GPU.</p>
-<dl class="attribute">
-<dt>
-<code class="descclassname">numba.cuda.</code><code class="descname">gpus</code></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="numba.cuda.cudadrv.devices.gpus">
-<code class="descclassname">numba.cuda.cudadrv.devices.</code><code class="descname">gpus</code><a class="headerlink" href="#numba.cuda.cudadrv.devices.gpus" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<p><code class="xref py py-data docutils literal"><span class="pre">gpus</span></code> is an instance of the <code class="xref py py-class docutils literal"><span class="pre">_DeviceList</span></code> class, from which
-the current GPU context can also be retrieved:</p>
-<dl class="class">
-<dt>
-<em class="property">class </em><code class="descclassname">numba.cuda.cudadrv.devices.</code><code class="descname">_DeviceList</code></dt>
-<dd><dl class="attribute">
-<dt>
-<code class="descname">current</code></dt>
-<dd><p>Returns the active device or None if there&#8217;s no active device</p>
-</dd></dl>
-
-</dd></dl>
-
 </div>
 
 
