@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>5.4. Writing Device Functions &mdash; Numba 0.39.0.dev0+163.g7690756-py2.7-linux-x86_64.egg documentation</title>
+    <title>7.11. Environment Object &mdash; Numba 0.39.0.dev0+163.g7690756-py2.7-linux-x86_64.egg documentation</title>
     
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -27,9 +27,9 @@
     <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
     <link rel="top" title="Numba 0.39.0.dev0+163.g7690756-py2.7-linux-x86_64.egg documentation" href="../index.html" />
-    <link rel="up" title="5. Numba for HSA APUs" href="index.html" />
-    <link rel="next" title="5.5. Supported Atomic Operations" href="intrinsics.html" />
-    <link rel="prev" title="5.3. Memory management" href="memory.html" />
+    <link rel="up" title="7. Developer Manual" href="index.html" />
+    <link rel="next" title="8. Numba Enhancement Proposals" href="../proposals/index.html" />
+    <link rel="prev" title="7.10. Notes on Custom Pipelines" href="custom_pipeline.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -69,9 +69,9 @@
 <li class="toctree-l1"><a class="reference internal" href="../reference/index.html">2. Reference Manual</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../cuda/index.html">3. Numba for CUDA GPUs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../cuda-reference/index.html">4. CUDA Python Reference</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="index.html">5. Numba for HSA APUs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hsa/index.html">5. Numba for HSA APUs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../extending/index.html">6. Extending Numba</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../developer/index.html">7. Developer Manual</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">7. Developer Manual</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../proposals/index.html">8. Numba Enhancement Proposals</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../glossary.html">9. Glossary</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../release-notes.html">10. Release Notes</a></li>
@@ -88,7 +88,14 @@
   <ul class="dropdown-menu localtoc"
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul>
-<li><a class="reference internal" href="#">5.4. Writing Device Functions</a></li>
+<li><a class="reference internal" href="#">7.11. Environment Object</a><ul>
+<li><a class="reference internal" href="#the-implementation">7.11.1. The Implementation</a><ul>
+<li><a class="reference internal" href="#serialization">7.11.1.1. Serialization</a></li>
+<li><a class="reference internal" href="#usage">7.11.1.2. Usage</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </ul>
 </li>
@@ -98,11 +105,11 @@
               
                 
   <li>
-    <a href="memory.html" title="Previous Chapter: 5.3. Memory management"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; 5.3. Memory mana...</span>
+    <a href="custom_pipeline.html" title="Previous Chapter: 7.10. Notes on Custom Pipelines"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; 7.10. Notes on C...</span>
     </a>
   </li>
   <li>
-    <a href="intrinsics.html" title="Next Chapter: 5.5. Supported Atomic Operations"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">5.5. Supported A... &raquo;</span>
+    <a href="../proposals/index.html" title="Next Chapter: 8. Numba Enhancement Proposals"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">8. Numba Enhance... &raquo;</span>
     </a>
   </li>
               
@@ -112,7 +119,7 @@
             
               <li class="hidden-sm">
 <div id="sourcelink">
-  <a href="../_sources/hsa/device-functions.txt"
+  <a href="../_sources/developer/environment.txt"
      rel="nofollow">Source</a>
 </div></li>
             
@@ -136,19 +143,55 @@
   <div class="row">
     <div class="col-md-12 content">
       
-  <div class="section" id="writing-device-functions">
-<h1>5.4. Writing Device Functions<a class="headerlink" href="#writing-device-functions" title="Permalink to this headline">¶</a></h1>
-<p>HSA device functions can only be invoked from a kernel
-or another device function.  To define a device function:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">hsa</span>
-
-<span class="nd">@hsa.jit</span><span class="p">(</span><span class="n">device</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">a_device_function</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
-</pre></div>
+  <div class="section" id="environment-object">
+<h1>7.11. Environment Object<a class="headerlink" href="#environment-object" title="Permalink to this headline">¶</a></h1>
+<p>The Environment object (Env) is used to maintain references to python objects
+that are needed to support compiled functions for both object-mode and
+nopython-mode.</p>
+<p>In nopython-mode, the Env is used for:</p>
+<ul class="simple">
+<li>Storing pyobjects for reconstruction from native values,
+such as:
+* for printing native values of NumPy arrays;
+* for returning or yielding native values back to the interpreter.</li>
+</ul>
+<p>In object-mode, the Env is used for:</p>
+<ul class="simple">
+<li>storing constant values referenced in the code.</li>
+<li>storing a reference to the function&#8217;s global dictionary to load global
+values.</li>
+</ul>
+<div class="section" id="the-implementation">
+<h2>7.11.1. The Implementation<a class="headerlink" href="#the-implementation" title="Permalink to this headline">¶</a></h2>
+<p>The Env is implemented in two parts.  In <code class="docutils literal"><span class="pre">_dynfunc.c</span></code>, the Env is defined
+as <code class="docutils literal"><span class="pre">EnvironmentObject</span></code> as a Python C-extension type.  In <code class="docutils literal"><span class="pre">lowering.py</span></code>,
+the <cite>EnvironmentObject`</cite> (exported as <code class="docutils literal"><span class="pre">_dynfunc.Environment</span></code>) is extended
+to support necessary operations needed at lowering.</p>
+<div class="section" id="serialization">
+<h3>7.11.1.1. Serialization<a class="headerlink" href="#serialization" title="Permalink to this headline">¶</a></h3>
+<p>The Env supports being pickled.  Compilation cache files and ahead-of-time
+compiled modules serialize all the used Envs for recreation at the runtime.</p>
 </div>
-<p>Unlike a kernel function, a device function can return a value like normal
-functions.</p>
+<div class="section" id="usage">
+<h3>7.11.1.2. Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h3>
+<p>At the start of the lowering for a function or a generator, an Env is created.
+Throughout the compilation, the Env is mutated to attach additional
+information.  The compiled code references an Env via a global variable in
+the emitted LLVM IR.  The global variable is zero-initialized with &#8220;common&#8221;
+linkage, which is the default linkage for C global values.  The use of this
+linkage allows multiple definitions of the global variable to be merged into
+a single definition when the modules are linked together.  The name of the
+global variable is computed from the name of the function
+(see <code class="docutils literal"><span class="pre">FunctionDescriptor.env_name</span></code> and <code class="docutils literal"><span class="pre">.get_env_name()</span></code> of the target
+context).</p>
+<p>The Env is initialized when the compiled-function is loaded. The JIT engine
+finds the address of the associated global variable for the Env and stores the
+address of the Env into it.  For cached functions, the same process applies.
+For ahead-of-time compiled functions, the module initializer in the generated
+library is responsible for initializing the global variables of all the Envs
+in the module.</p>
+</div>
+</div>
 </div>
 
 
