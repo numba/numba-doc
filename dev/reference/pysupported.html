@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>2.6. Supported Python features &mdash; Numba 0.39.0.dev0+202.gbe78cdb-py2.7-linux-x86_64.egg documentation</title>
+    <title>2.6. Supported Python features &mdash; Numba 0.39.0.dev0+256.gdfb2b69-py2.7-linux-x86_64.egg documentation</title>
     
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.39.0.dev0+202.gbe78cdb-py2.7-linux-x86_64.egg',
+        VERSION:     '0.39.0.dev0+256.gdfb2b69-py2.7-linux-x86_64.egg',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,7 +26,7 @@
     <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="Numba 0.39.0.dev0+202.gbe78cdb-py2.7-linux-x86_64.egg documentation" href="../index.html" />
+    <link rel="top" title="Numba 0.39.0.dev0+256.gdfb2b69-py2.7-linux-x86_64.egg documentation" href="../index.html" />
     <link rel="up" title="2. Reference Manual" href="index.html" />
     <link rel="next" title="2.7. Supported NumPy features" href="numpysupported.html" />
     <link rel="prev" title="2.5. Environment variables" href="envvars.html" />
@@ -106,7 +106,8 @@
 <li><a class="reference internal" href="#float-complex">2.6.2.2. float, complex</a></li>
 <li><a class="reference internal" href="#tuple">2.6.2.3. tuple</a></li>
 <li><a class="reference internal" href="#list">2.6.2.4. list</a><ul>
-<li><a class="reference internal" href="#list-comprehension">2.6.2.4.1. List comprehension</a></li>
+<li><a class="reference internal" href="#list-reflection">2.6.2.4.1. List Reflection</a></li>
+<li><a class="reference internal" href="#list-comprehension">2.6.2.4.2. List comprehension</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#set">2.6.2.5. set</a></li>
@@ -318,20 +319,64 @@ as well as all methods and operations.  Lists must be strictly homogenous:
 Numba will reject any list containing objects of different types, even if
 the types are compatible (for example, <code class="docutils literal"><span class="pre">[1,</span> <span class="pre">2.5]</span></code> is rejected as it
 contains a <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.6)"><code class="xref py py-class docutils literal"><span class="pre">int</span></code></a> and a <a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.6)"><code class="xref py py-class docutils literal"><span class="pre">float</span></code></a>).</p>
+<p>For example, to create a list of arrays:</p>
+<div class="highlight-python"><div class="highlight"><pre>In [1]: from numba import njit
+
+In [2]: import numpy as np
+
+In [3]: @njit
+  ...: def foo(x):
+  ...:     lst = []
+  ...:     for i in range(x):
+  ...:         lst.append(np.arange(i))
+  ...:     return lst
+  ...:
+
+In [4]: foo(4)
+Out[4]: [array([], dtype=int64), array([0]), array([0, 1]), array([0, 1, 2])]
+</pre></div>
+</div>
+<div class="section" id="list-reflection">
+<h4>2.6.2.4.1. List Reflection<a class="headerlink" href="#list-reflection" title="Permalink to this headline">¶</a></h4>
+<p>In nopython mode, Numba does not operate on Python objects.  <code class="docutils literal"><span class="pre">list</span></code> are
+compiled into an internal representation.  Any <code class="docutils literal"><span class="pre">list</span></code> arguments must be
+converted into this representation on the way in to nopython mode and their
+contained elements must be restored in the original Python objects via a
+process called <a class="reference internal" href="../glossary.html#term-reflection"><span class="xref std std-term">reflection</span></a>.  Reflection is required to maintain the same
+semantics as found in regular Python code.  However, the reflection process
+can be expensive for large lists and it is not supported for lists that contain
+reflected data types.  Users cannot use list-of-list as an argument because
+of this limitation.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">When passing a list into a JIT-compiled function, any modifications
 made to the list will not be visible to the Python interpreter until
-the function returns.</p>
+the function returns.  (A limitation of the reflection process.)</p>
 </div>
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
 <p class="last">List sorting currently uses a quicksort algorithm, which has different
 performance characterics than the algorithm used by Python.</p>
 </div>
+</div>
 <div class="section" id="list-comprehension">
-<span id="pysupported-comprehension"></span><h4>2.6.2.4.1. List comprehension<a class="headerlink" href="#list-comprehension" title="Permalink to this headline">¶</a></h4>
-<p>Numba supports list comprehension, but not the creation of nested list.</p>
+<span id="pysupported-comprehension"></span><h4>2.6.2.4.2. List comprehension<a class="headerlink" href="#list-comprehension" title="Permalink to this headline">¶</a></h4>
+<p>Numba supports list comprehension.  For example:</p>
+<div class="highlight-python"><div class="highlight"><pre>In [1]: from numba import njit
+
+In [2]: @njit
+  ...: def foo(x):
+  ...:     return [[i for i in range(n)] for n in range(x)]
+  ...:
+
+In [3]: foo(3)
+Out[3]: [[], [0], [0, 1]]
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Prior to version 0.39.0, Numba did not support the creation of nested lists.</p>
+</div>
 <p>Numba also supports &#8220;array comprehension&#8221; that is a list comprehension
 followed immediately by a call to <a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.array.html#numpy.array" title="(in NumPy v1.14)"><code class="xref py py-func docutils literal"><span class="pre">numpy.array()</span></code></a>. The following
 is an example that produces a 2D Numpy array:</p>
