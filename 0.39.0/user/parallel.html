@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>1.9. Automatic parallelization with @jit &#8212; Numba 0.39.0rc1+0.g26dde2b.dirty documentation</title>
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.39.0rc1+0.g26dde2b.dirty',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="1.10. Using the @stencil decorator" href="stencil.html" />
+    <link rel="prev" title="1.8. Compiling code ahead of time" href="pycc.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html"><span><img src="../_static/numba_blue_icon_rgb.png"></span>
+          Numba</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.39</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">1. User Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/index.html">2. Reference Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cuda/index.html">3. Numba for CUDA GPUs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cuda-reference/index.html">4. CUDA Python Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hsa/index.html">5. Numba for HSA APUs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../extending/index.html">6. Extending Numba</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer/index.html">7. Developer Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../proposals/index.html">8. Numba Enhancement Proposals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">9. Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release-notes.html">10. Release Notes</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">1.9. Automatic parallelization with <code class="docutils literal"><span class="pre">&#64;jit</span></code></a><ul>
+<li><a class="reference internal" href="#supported-operations">1.9.1. Supported Operations</a></li>
+<li><a class="reference internal" href="#explicit-parallel-loops">1.9.2. Explicit Parallel Loops</a></li>
+<li><a class="reference internal" href="#examples">1.9.3. Examples</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+  <li>
+    <a href="pycc.html" title="Previous Chapter: 1.8. Compiling code ahead of time"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; 1.8. Compilin...</span>
+    </a>
+  </li>
+  <li>
+    <a href="stencil.html" title="Next Chapter: 1.10. Using the @stencil decorator"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">1.10. Using t... &raquo;</span>
+    </a>
+  </li>
+              
+            
+            
+            
+            
+              <li class="hidden-sm">
+<div id="sourcelink">
+  <a href="../_sources/user/parallel.rst.txt"
+     rel="nofollow">Source</a>
+</div></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <div class="section" id="automatic-parallelization-with-jit">
+<span id="numba-parallel"></span><h1>1.9. Automatic parallelization with <code class="docutils literal"><span class="pre">&#64;jit</span></code><a class="headerlink" href="#automatic-parallelization-with-jit" title="Permalink to this headline">¶</a></h1>
+<p>Setting the <a class="reference internal" href="jit.html#parallel-jit-option"><span class="std std-ref">parallel</span></a> option for <a class="reference internal" href="../reference/jit-compilation.html#numba.jit" title="numba.jit"><code class="xref py py-func docutils literal"><span class="pre">jit()</span></code></a> enables
+an experimental Numba feature that attempts to automatically parallelize and
+perform other optimizations on (part of) a function. At the moment, this
+feature only works on CPUs.</p>
+<p>Some operations inside a user defined function, e.g., adding a scalar value to
+an array, are known to have parallel semantics.  A user program may contain
+many such operations and while each operation could be parallelized
+individually, such an approach often has lackluster performance due to poor
+cache behavior.  Instead, with auto-parallelization, Numba attempts to
+identify such operations in a user program, and fuse adjacent ones together,
+to form one or more kernels that are automatically run in parallel.
+The process is fully automated without modifications to the user program,
+which is in contrast to Numba’s <a class="reference internal" href="../reference/jit-compilation.html#numba.vectorize" title="numba.vectorize"><code class="xref py py-func docutils literal"><span class="pre">vectorize()</span></code></a> or
+<a class="reference internal" href="../reference/jit-compilation.html#numba.guvectorize" title="numba.guvectorize"><code class="xref py py-func docutils literal"><span class="pre">guvectorize()</span></code></a> mechanism, where manual effort is required
+to create parallel kernels.</p>
+<div class="section" id="supported-operations">
+<span id="numba-parallel-supported"></span><h2>1.9.1. Supported Operations<a class="headerlink" href="#supported-operations" title="Permalink to this headline">¶</a></h2>
+<p>In this section, we give a list of all the array operations that have
+parallel semantics and for which we attempt to parallelize.</p>
+<ol class="arabic">
+<li><p class="first">All numba array operations that are supported by <a class="reference internal" href="../developer/rewrites.html#case-study-array-expressions"><span class="std std-ref">Case study: Array Expressions</span></a>,
+which include common arithmetic functions between Numpy arrays, and between
+arrays and scalars, as well as Numpy ufuncs. They are often called
+<cite>element-wise</cite> or <cite>point-wise</cite> array operations:</p>
+<blockquote>
+<div><ul class="simple">
+<li>unary operators: <code class="docutils literal"><span class="pre">+</span></code> <code class="docutils literal"><span class="pre">-</span></code> <code class="docutils literal"><span class="pre">~</span></code></li>
+<li>binary operators: <code class="docutils literal"><span class="pre">+</span></code> <code class="docutils literal"><span class="pre">-</span></code> <code class="docutils literal"><span class="pre">*</span></code> <code class="docutils literal"><span class="pre">/</span></code> <code class="docutils literal"><span class="pre">/?</span></code> <code class="docutils literal"><span class="pre">%</span></code> <code class="docutils literal"><span class="pre">|</span></code> <code class="docutils literal"><span class="pre">&gt;&gt;</span></code> <code class="docutils literal"><span class="pre">^</span></code> <code class="docutils literal"><span class="pre">&lt;&lt;</span></code> <code class="docutils literal"><span class="pre">&amp;</span></code> <code class="docutils literal"><span class="pre">**</span></code> <code class="docutils literal"><span class="pre">//</span></code></li>
+<li>comparison operators: <code class="docutils literal"><span class="pre">==</span></code> <code class="docutils literal"><span class="pre">!=</span></code> <code class="docutils literal"><span class="pre">&lt;</span></code> <code class="docutils literal"><span class="pre">&lt;=</span></code> <code class="docutils literal"><span class="pre">&gt;</span></code> <code class="docutils literal"><span class="pre">&gt;=</span></code></li>
+<li><a class="reference internal" href="../reference/numpysupported.html#supported-ufuncs"><span class="std std-ref">Numpy ufuncs</span></a> that are supported in <a class="reference internal" href="../glossary.html#term-nopython-mode"><span class="xref std std-term">nopython mode</span></a>.</li>
+<li>User defined <a class="reference internal" href="../reference/jit-compilation.html#numba.DUFunc" title="numba.DUFunc"><code class="xref py py-class docutils literal"><span class="pre">DUFunc</span></code></a> through <a class="reference internal" href="../reference/jit-compilation.html#numba.vectorize" title="numba.vectorize"><code class="xref py py-func docutils literal"><span class="pre">vectorize()</span></code></a>.</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first">Numpy reduction functions <code class="docutils literal"><span class="pre">sum</span></code>, <code class="docutils literal"><span class="pre">prod</span></code>, <code class="docutils literal"><span class="pre">min</span></code>, <code class="docutils literal"><span class="pre">max</span></code>, <code class="docutils literal"><span class="pre">argmin</span></code>,
+and <code class="docutils literal"><span class="pre">argmax</span></code>. Also, array math functions <code class="docutils literal"><span class="pre">mean</span></code>, <code class="docutils literal"><span class="pre">var</span></code>, and <code class="docutils literal"><span class="pre">std</span></code>.</p>
+</li>
+<li><p class="first">Numpy array creation functions <code class="docutils literal"><span class="pre">zeros</span></code>, <code class="docutils literal"><span class="pre">ones</span></code>, <code class="docutils literal"><span class="pre">arange</span></code>, <code class="docutils literal"><span class="pre">linspace</span></code>,
+and several random functions (rand, randn, ranf, random_sample, sample,
+random, standard_normal, chisquare, weibull, power, geometric, exponential,
+poisson, rayleigh, normal, uniform, beta, binomial, f, gamma, lognormal,
+laplace, randint, triangular).</p>
+</li>
+<li><p class="first">Numpy <code class="docutils literal"><span class="pre">dot</span></code> function between a matrix and a vector, or two vectors.
+In all other cases, Numba’s default implementation is used.</p>
+</li>
+<li><p class="first">Multi-dimensional arrays are also supported for the above operations
+when operands have matching dimension and size. The full semantics of
+Numpy broadcast between arrays with mixed dimensionality or size is
+not supported, nor is the reduction across a selected dimension.</p>
+</li>
+<li><p class="first">Array assignment in which the target is an array selection using a slice
+or a boolean array, and the value being assigned is either a scalar or
+another selection where the slice range or bitarray are inferred to be
+compatible.</p>
+</li>
+<li><p class="first">The <code class="docutils literal"><span class="pre">reduce</span></code> operator of <code class="docutils literal"><span class="pre">functools</span></code> is supported for specifying parallel
+reductions on 1D Numpy arrays but the initial value argument is mandatory.</p>
+</li>
+</ol>
+</div>
+<div class="section" id="explicit-parallel-loops">
+<span id="numba-prange"></span><h2>1.9.2. Explicit Parallel Loops<a class="headerlink" href="#explicit-parallel-loops" title="Permalink to this headline">¶</a></h2>
+<p>Another experimental feature of this module is support for explicit parallel
+loops. One can use Numba’s <code class="docutils literal"><span class="pre">prange</span></code> instead of <code class="docutils literal"><span class="pre">range</span></code> to specify that a
+loop can be parallelized. The user is required to make sure that the loop does
+not have cross iteration dependencies except the supported reductions.</p>
+<p>A reductions is inferred automatically if a variable is updated by a binary
+function/operator using its previous value in the loop body. The initial value
+of the reduction is inferred automatically for <code class="docutils literal"><span class="pre">+=</span></code> and <code class="docutils literal"><span class="pre">*=</span></code> operators.
+For other functions/operators, the reduction variable should hold the initial
+value right before entering the <code class="docutils literal"><span class="pre">prange</span></code> loop.</p>
+<p>The example below demonstrates a parallel loop with a
+reduction (<code class="docutils literal"><span class="pre">A</span></code> is a one-dimensional Numpy array):</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">numba</span> <span class="k">import</span> <span class="n">njit</span><span class="p">,</span> <span class="n">prange</span>
+<span class="nd">@njit</span><span class="p">(</span><span class="n">parallel</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">prange_test</span><span class="p">(</span><span class="n">A</span><span class="p">):</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">prange</span><span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+        <span class="n">s</span> <span class="o">+=</span> <span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">s</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="examples">
+<h2>1.9.3. Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<p>In this section, we give an example of how this feature helps
+parallelize Logistic Regression:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="nd">@numba</span><span class="o">.</span><span class="n">jit</span><span class="p">(</span><span class="n">nopython</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">parallel</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">logistic_regression</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">iterations</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">iterations</span><span class="p">):</span>
+        <span class="n">w</span> <span class="o">-=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(((</span><span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">Y</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">w</span><span class="p">)))</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">*</span> <span class="n">Y</span><span class="p">),</span> <span class="n">X</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">w</span>
+</pre></div>
+</div>
+<p>We will not discuss details of the algorithm, but instead focus on how
+this program behaves with auto-parallelization:</p>
+<ol class="arabic simple">
+<li>Input <code class="docutils literal"><span class="pre">Y</span></code> is a vector of size <code class="docutils literal"><span class="pre">N</span></code>, <code class="docutils literal"><span class="pre">X</span></code> is an <code class="docutils literal"><span class="pre">N</span> <span class="pre">x</span> <span class="pre">D</span></code> matrix,
+and <code class="docutils literal"><span class="pre">w</span></code> is a vector of size <code class="docutils literal"><span class="pre">D</span></code>.</li>
+<li>The function body is an iterative loop that updates variable <code class="docutils literal"><span class="pre">w</span></code>.
+The loop body consists of a sequence of vector and matrix operations.</li>
+<li>The inner <code class="docutils literal"><span class="pre">dot</span></code> operation produces a vector of size <code class="docutils literal"><span class="pre">N</span></code>, followed by a
+sequence of arithmetic operations either between a scalar and vector of
+size <code class="docutils literal"><span class="pre">N</span></code>, or two vectors both of size <code class="docutils literal"><span class="pre">N</span></code>.</li>
+<li>The outer <code class="docutils literal"><span class="pre">dot</span></code> produces a vector of size <code class="docutils literal"><span class="pre">D</span></code>, followed by an inplace
+array subtraction on variable <code class="docutils literal"><span class="pre">w</span></code>.</li>
+<li>With auto-parallelization, all operations that produce array of size
+<code class="docutils literal"><span class="pre">N</span></code> are fused together to become a single parallel kernel. This includes
+the inner <code class="docutils literal"><span class="pre">dot</span></code> operation and all point-wise array operations following it.</li>
+<li>The outer <code class="docutils literal"><span class="pre">dot</span></code> operation produces a result array of different dimension,
+and is not fused with the above kernel.</li>
+</ol>
+<p>Here, the only thing required to take advantage of parallel hardware is to set
+the <a class="reference internal" href="jit.html#parallel-jit-option"><span class="std std-ref">parallel</span></a> option for <a class="reference internal" href="../reference/jit-compilation.html#numba.jit" title="numba.jit"><code class="xref py py-func docutils literal"><span class="pre">jit()</span></code></a>, with no
+modifications to the <code class="docutils literal"><span class="pre">logistic_regression</span></code> function itself.  If we were to
+give an equivalence parallel implementation using <a class="reference internal" href="../reference/jit-compilation.html#numba.guvectorize" title="numba.guvectorize"><code class="xref py py-func docutils literal"><span class="pre">guvectorize()</span></code></a>,
+it would require a pervasive change that rewrites the code to extract kernel
+computation that can be parallelized, which was both tedious and challenging.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="jit.html#parallel-jit-option"><span class="std std-ref">parallel</span></a>, <a class="reference internal" href="faq.html#parallel-faqs"><span class="std std-ref">Parallel FAQs</span></a></p>
+</div>
+</div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2012, Anaconda, Inc..<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>
