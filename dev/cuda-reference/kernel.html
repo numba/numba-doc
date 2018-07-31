@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>4.2. CUDA Kernel API &mdash; Numba 0.40.0.dev0+118.g3f91c70-py2.7-linux-x86_64.egg documentation</title>
+    <title>4.2. CUDA Kernel API &mdash; Numba 0.40.0.dev0+120.gf445ff7-py2.7-linux-x86_64.egg documentation</title>
     
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.40.0.dev0+118.g3f91c70-py2.7-linux-x86_64.egg',
+        VERSION:     '0.40.0.dev0+120.gf445ff7-py2.7-linux-x86_64.egg',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,7 +26,7 @@
     <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="Numba 0.40.0.dev0+118.g3f91c70-py2.7-linux-x86_64.egg documentation" href="../index.html" />
+    <link rel="top" title="Numba 0.40.0.dev0+120.gf445ff7-py2.7-linux-x86_64.egg documentation" href="../index.html" />
     <link rel="up" title="4. CUDA Python Reference" href="index.html" />
     <link rel="next" title="4.3. Memory Management" href="memory.html" />
     <link rel="prev" title="4.1. CUDA Host API" href="host.html" />
@@ -97,7 +97,8 @@
 <li><a class="reference internal" href="#memory-fences">4.2.2.4. Memory Fences</a></li>
 <li><a class="reference internal" href="#warp-intrinsics">4.2.2.5. Warp Intrinsics</a></li>
 <li><a class="reference internal" href="#integer-intrinsics">4.2.2.6. Integer Intrinsics</a></li>
-<li><a class="reference internal" href="#control-flow-instructions">4.2.2.7. Control Flow Instructions</a></li>
+<li><a class="reference internal" href="#floating-point-intrinsics">4.2.2.7. Floating Point Intrinsics</a></li>
+<li><a class="reference internal" href="#control-flow-instructions">4.2.2.8. Control Flow Instructions</a></li>
 </ul>
 </li>
 </ul>
@@ -604,7 +605,7 @@ or not all threads in the mask warp have the same warp.</p>
 </div>
 <div class="section" id="integer-intrinsics">
 <h3>4.2.2.6. Integer Intrinsics<a class="headerlink" href="#integer-intrinsics" title="Permalink to this headline">¶</a></h3>
-<p>A subset of the CUDA Math API&#8217;s integer intrisics are available. For further
+<p>A subset of the CUDA Math API&#8217;s integer intrinsics are available. For further
 documentation, including semantics, please refer to the <a class="reference external" href="docs.nvidia.com/cuda/cuda-math-api/group__CUDA__MATH__INTRINSIC__INT.html">CUDA Toolkit
 documentation</a>.</p>
 <dl class="function">
@@ -633,8 +634,23 @@ becomes 0b01101101.</p>
 </dd></dl>
 
 </div>
+<div class="section" id="floating-point-intrinsics">
+<h3>4.2.2.7. Floating Point Intrinsics<a class="headerlink" href="#floating-point-intrinsics" title="Permalink to this headline">¶</a></h3>
+<p>A subset of the CUDA Math API&#8217;s floating point intrinsics are available. For further
+documentation, including semantics, please refer to the <a class="reference external" href="https://docs.nvidia.com/cuda/cuda-math-api/group__CUDA__MATH__SINGLE.html">single</a> and
+<a class="reference external" href="https://docs.nvidia.com/cuda/cuda-math-api/group__CUDA__MATH__DOUBLE.html">double</a>
+precision parts of the CUDA Toolkit documentation.</p>
+<dl class="function">
+<dt id="numba.cuda.fma">
+<code class="descclassname">numba.cuda.</code><code class="descname">fma</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#numba.cuda.fma" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform the fused multiply-add operation. Named after the <code class="docutils literal"><span class="pre">fma</span></code> and <code class="docutils literal"><span class="pre">fmaf</span></code> in
+the C api, but maps to the <code class="docutils literal"><span class="pre">fma.rn.f32</span></code> and <code class="docutils literal"><span class="pre">fma.rn.f64</span></code> (round-to-nearest-even)
+PTX instructions.</p>
+</dd></dl>
+
+</div>
 <div class="section" id="control-flow-instructions">
-<h3>4.2.2.7. Control Flow Instructions<a class="headerlink" href="#control-flow-instructions" title="Permalink to this headline">¶</a></h3>
+<h3>4.2.2.8. Control Flow Instructions<a class="headerlink" href="#control-flow-instructions" title="Permalink to this headline">¶</a></h3>
 <p>A subset of the CUDA&#8217;s control flow instructions are directly available as
 intrinsics. Avoiding branches is a key way to improve CUDA performance, and
 using these intrinsics mean you don&#8217;t have to rely on the <code class="docutils literal"><span class="pre">nvcc</span></code> optimizer
