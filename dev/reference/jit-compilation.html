@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>2.2. Just-in-Time compilation &mdash; Numba 0.40.0.dev0+131.g19fc2e4-py2.7-linux-x86_64.egg documentation</title>
+    <title>2.2. Just-in-Time compilation &mdash; Numba 0.40.0.dev0+136.g46ab0a5-py2.7-linux-x86_64.egg documentation</title>
     
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.40.0.dev0+131.g19fc2e4-py2.7-linux-x86_64.egg',
+        VERSION:     '0.40.0.dev0+136.g46ab0a5-py2.7-linux-x86_64.egg',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,7 +26,7 @@
     <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="Numba 0.40.0.dev0+131.g19fc2e4-py2.7-linux-x86_64.egg documentation" href="../index.html" />
+    <link rel="top" title="Numba 0.40.0.dev0+136.g46ab0a5-py2.7-linux-x86_64.egg documentation" href="../index.html" />
     <link rel="up" title="2. Reference Manual" href="index.html" />
     <link rel="next" title="2.3. Ahead-of-Time compilation" href="aot-compilation.html" />
     <link rel="prev" title="2.1. Types and signatures" href="types.html" />
@@ -147,9 +147,9 @@
 <h1>2.2. Just-in-Time compilation<a class="headerlink" href="#just-in-time-compilation" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="jit-functions">
 <h2>2.2.1. JIT functions<a class="headerlink" href="#jit-functions" title="Permalink to this headline">¶</a></h2>
-<dl class="function">
+<span class="target" id="jit-decorator"></span><dl class="function">
 <dt id="numba.jit">
-<code class="descclassname">&#64;</code><code class="descclassname">numba.</code><code class="descname">jit</code><span class="sig-paren">(</span><em>signature=None</em>, <em>nopython=False</em>, <em>nogil=False</em>, <em>cache=False</em>, <em>forceobj=False</em>, <em>parallel=False</em>, <em>error_model='python'</em>, <em>locals={}</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.jit" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">&#64;</code><code class="descclassname">numba.</code><code class="descname">jit</code><span class="sig-paren">(</span><em>signature=None</em>, <em>nopython=False</em>, <em>nogil=False</em>, <em>cache=False</em>, <em>forceobj=False</em>, <em>parallel=False</em>, <em>error_model='python'</em>, <em>fastmath=False</em>, <em>locals={}</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.jit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compile the decorated function on-the-fly to produce efficient machine
 code.  All parameters all optional.</p>
 <p>If present, the <em>signature</em> is either a single signature or a list of
@@ -196,14 +196,18 @@ useful for testing purposes.</p>
 inside the compiled function.  The GIL will only be released if Numba can
 compile the function in <a class="reference internal" href="../glossary.html#term-nopython-mode"><span class="xref std std-term">nopython mode</span></a>, otherwise a compilation
 warning will be printed.</p>
-<p>If true, <em>cache</em> enables a file-based cache to shorten compilation times
+</dd></dl>
+
+<blockquote id="jit-decorator-cache">
+<div>If true, <em>cache</em> enables a file-based cache to shorten compilation times
 when the function was already compiled in a previous invocation.
 The cache is maintained in the <code class="docutils literal"><span class="pre">__pycache__</span></code> subdirectory of
 the directory containing the source file; if the current user is not
 allowed to write to it, though, it falls back to a platform-specific
 user-wide cache directory (such as <code class="docutils literal"><span class="pre">$HOME/.cache/numba</span></code> on Unix
-platforms).</p>
-<p>If true, <em>parallel</em> enables the automatic parallelization of a number of
+platforms).</div></blockquote>
+<blockquote id="jit-decorator-parallel">
+<div><p>If true, <em>parallel</em> enables the automatic parallelization of a number of
 common Numpy constructs as well as the fusion of adjacent parallel
 operations to maximize cache locality.</p>
 <p>The <em>error_model</em> option controls the divide-by-zero behavior.
@@ -213,6 +217,14 @@ Setting it to &#8216;numpy&#8217; causes divide-by-zero to set the result to <em
 <p>Not all functions can be cached, since some functionality cannot be
 always persisted to disk.  When a function cannot be cached, a
 warning is emitted; use <span class="target" id="index-0"></span><a class="reference internal" href="envvars.html#envvar-NUMBA_WARNINGS"><code class="xref std std-envvar docutils literal"><span class="pre">NUMBA_WARNINGS</span></code></a> to see it.</p>
+</div></blockquote>
+<blockquote id="jit-decorator-fastmath">
+<div><p>If true, <em>fastmath</em> enables the use of otherwise unsafe floating point
+transforms as described in the
+<a class="reference external" href="https://llvm.org/docs/LangRef.html#fast-math-flags">LLVM documentation</a>.
+Further, if <a class="reference internal" href="../user/performance-tips.html#intel-svml"><span>Intel SVML</span></a> is installed faster but less
+accurate versions of some math intrinsics are used (answers to within
+<code class="docutils literal"><span class="pre">4</span> <span class="pre">ULP</span></code>).</p>
 <p>The <em>locals</em> dictionary may be used to force the <a class="reference internal" href="types.html#numba-types"><span>Types and signatures</span></a>
 of particular local variables, for example if you want to force the
 use of single precision floats at some point.  In general, we recommend
@@ -244,8 +256,7 @@ with some given argument types.</p>
 <p class="first admonition-title">Note</p>
 <p class="last">Compilation can be influenced by some dedicated <a class="reference internal" href="envvars.html#numba-envvars"><span>Environment variables</span></a>.</p>
 </div>
-</dd></dl>
-
+</div></blockquote>
 </div>
 <div class="section" id="generated-jit-functions">
 <h2>2.2.2. Generated JIT functions<a class="headerlink" href="#generated-jit-functions" title="Permalink to this headline">¶</a></h2>

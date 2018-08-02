@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>1.11. Performance Tips &mdash; Numba 0.40.0.dev0+131.g19fc2e4-py2.7-linux-x86_64.egg documentation</title>
+    <title>1.12. Performance Tips &mdash; Numba 0.40.0.dev0+136.g46ab0a5-py2.7-linux-x86_64.egg documentation</title>
     
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.40.0.dev0+131.g19fc2e4-py2.7-linux-x86_64.egg',
+        VERSION:     '0.40.0.dev0+136.g46ab0a5-py2.7-linux-x86_64.egg',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,10 +26,10 @@
     <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="Numba 0.40.0.dev0+131.g19fc2e4-py2.7-linux-x86_64.egg documentation" href="../index.html" />
+    <link rel="top" title="Numba 0.40.0.dev0+136.g46ab0a5-py2.7-linux-x86_64.egg documentation" href="../index.html" />
     <link rel="up" title="1. User Manual" href="index.html" />
-    <link rel="next" title="1.12. Troubleshooting and tips" href="troubleshoot.html" />
-    <link rel="prev" title="1.10. Using the @stencil decorator" href="stencil.html" />
+    <link rel="next" title="1.13. Troubleshooting and tips" href="troubleshoot.html" />
+    <link rel="prev" title="1.11. Using the @stencil decorator" href="stencil.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -88,13 +88,13 @@
   <ul class="dropdown-menu localtoc"
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul>
-<li><a class="reference internal" href="#">1.11. Performance Tips</a><ul>
-<li><a class="reference internal" href="#no-python-mode-vs-object-mode">1.11.1. No Python mode vs Object mode</a></li>
-<li><a class="reference internal" href="#loops">1.11.2. Loops</a></li>
-<li><a class="reference internal" href="#fastmath">1.11.3. Fastmath</a></li>
-<li><a class="reference internal" href="#parallel-true">1.11.4. Parallel=True</a></li>
-<li><a class="reference internal" href="#intel-svml">1.11.5. Intel SVML</a></li>
-<li><a class="reference internal" href="#linear-algebra">1.11.6. Linear algebra</a></li>
+<li><a class="reference internal" href="#">1.12. Performance Tips</a><ul>
+<li><a class="reference internal" href="#no-python-mode-vs-object-mode">1.12.1. No Python mode vs Object mode</a></li>
+<li><a class="reference internal" href="#loops">1.12.2. Loops</a></li>
+<li><a class="reference internal" href="#fastmath">1.12.3. Fastmath</a></li>
+<li><a class="reference internal" href="#parallel-true">1.12.4. Parallel=True</a></li>
+<li><a class="reference internal" href="#intel-svml">1.12.5. Intel SVML</a></li>
+<li><a class="reference internal" href="#linear-algebra">1.12.6. Linear algebra</a></li>
 </ul>
 </li>
 </ul>
@@ -106,11 +106,11 @@
               
                 
   <li>
-    <a href="stencil.html" title="Previous Chapter: 1.10. Using the @stencil decorator"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; 1.10. Using the ...</span>
+    <a href="stencil.html" title="Previous Chapter: 1.11. Using the @stencil decorator"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; 1.11. Using the ...</span>
     </a>
   </li>
   <li>
-    <a href="troubleshoot.html" title="Next Chapter: 1.12. Troubleshooting and tips"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">1.12. Troublesho... &raquo;</span>
+    <a href="troubleshoot.html" title="Next Chapter: 1.13. Troubleshooting and tips"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">1.13. Troublesho... &raquo;</span>
     </a>
   </li>
               
@@ -145,7 +145,7 @@
     <div class="col-md-12 content">
       
   <div class="section" id="performance-tips">
-<h1>1.11. Performance Tips<a class="headerlink" href="#performance-tips" title="Permalink to this headline">¶</a></h1>
+<span id="id1"></span><h1>1.12. Performance Tips<a class="headerlink" href="#performance-tips" title="Permalink to this headline">¶</a></h1>
 <p>This is a short guide to features present in Numba that can help with obtaining
 the best performance from code. Two examples are used, both are entirely
 contrived and exist purely for pedagogical reasons to motivate discussion.
@@ -162,7 +162,7 @@ tuning. The information presented here is to demonstrate features, not to act
 as canonical guidance!</p>
 </div>
 <div class="section" id="no-python-mode-vs-object-mode">
-<h2>1.11.1. No Python mode vs Object mode<a class="headerlink" href="#no-python-mode-vs-object-mode" title="Permalink to this headline">¶</a></h2>
+<h2>1.12.1. No Python mode vs Object mode<a class="headerlink" href="#no-python-mode-vs-object-mode" title="Permalink to this headline">¶</a></h2>
 <p>A common pattern is to decorate functions with <code class="docutils literal"><span class="pre">&#64;jit</span></code> as this is the most
 flexible decorator offered by Numba. <code class="docutils literal"><span class="pre">&#64;jit</span></code> essentially encompasses two modes
 of compilation, first it will try and compile the decorated function in no
@@ -175,7 +175,7 @@ and <code class="docutils literal"><span class="pre">&#64;jit(nopython=True)</sp
 second for convenience).</p>
 </div>
 <div class="section" id="loops">
-<h2>1.11.2. Loops<a class="headerlink" href="#loops" title="Permalink to this headline">¶</a></h2>
+<h2>1.12.2. Loops<a class="headerlink" href="#loops" title="Permalink to this headline">¶</a></h2>
 <p>Whilst NumPy has developed a strong idiom around the use of vector operations,
 Numba is perfectly happy with loops too. For users familiar with C or Fortran,
 writing Python in this style will work fine in Numba (after all, LLVM gets a
@@ -228,7 +228,7 @@ the decorator the vectorized function is a couple of orders of magnitude faster.
 </table>
 </div>
 <div class="section" id="fastmath">
-<h2>1.11.3. Fastmath<a class="headerlink" href="#fastmath" title="Permalink to this headline">¶</a></h2>
+<h2>1.12.3. Fastmath<a class="headerlink" href="#fastmath" title="Permalink to this headline">¶</a></h2>
 <p>In certain classes of applications strict IEEE 754 compliance is less
 important. As a result it is possible to relax some numerical rigour with
 view of gaining additional performance. The way to achieve this behaviour in
@@ -272,7 +272,7 @@ Numba is through the use of the <code class="docutils literal"><span class="pre"
 </table>
 </div>
 <div class="section" id="parallel-true">
-<h2>1.11.4. Parallel=True<a class="headerlink" href="#parallel-true" title="Permalink to this headline">¶</a></h2>
+<h2>1.12.4. Parallel=True<a class="headerlink" href="#parallel-true" title="Permalink to this headline">¶</a></h2>
 <p>If code contains operations that are parallelisable (<a class="reference internal" href="parallel.html#numba-parallel-supported"><span>and supported</span></a>) Numba can compile a version of that will run in
 parallel on multiple native threads (no GIL!). This parallelisation is performed
 automatically and is enabled by simply adding the <code class="docutils literal"><span class="pre">parallel</span></code> keyword
@@ -355,7 +355,7 @@ computes a partial sum).</p>
 </table>
 </div>
 <div class="section" id="intel-svml">
-<h2>1.11.5. Intel SVML<a class="headerlink" href="#intel-svml" title="Permalink to this headline">¶</a></h2>
+<span id="id2"></span><h2>1.12.5. Intel SVML<a class="headerlink" href="#intel-svml" title="Permalink to this headline">¶</a></h2>
 <p>Intel provides a short vector math library (SVML) that contains a large number
 of optimised transcendental functions available for use as compiler
 intrinsics. If the <code class="docutils literal"><span class="pre">icc_rt</span></code> package is present in the environment (or the SVML
@@ -427,7 +427,7 @@ zero, this is expected as there is nothing in the original function that would
 benefit from relaxing numerical strictness.</p>
 </div>
 <div class="section" id="linear-algebra">
-<h2>1.11.6. Linear algebra<a class="headerlink" href="#linear-algebra" title="Permalink to this headline">¶</a></h2>
+<h2>1.12.6. Linear algebra<a class="headerlink" href="#linear-algebra" title="Permalink to this headline">¶</a></h2>
 <p>Numba supports most of <code class="docutils literal"><span class="pre">numpy.linalg</span></code> in no Python mode. The internal
 implementation relies on a LAPACK and BLAS library to do the numerical work
 and it obtains the bindings for the necessary functions from SciPy. Therefore,

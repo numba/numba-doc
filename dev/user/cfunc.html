@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>1.7. Creating C callbacks with @cfunc &mdash; Numba 0.40.0.dev0+131.g19fc2e4-py2.7-linux-x86_64.egg documentation</title>
+    <title>1.8. Creating C callbacks with @cfunc &mdash; Numba 0.40.0.dev0+136.g46ab0a5-py2.7-linux-x86_64.egg documentation</title>
     
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.40.0.dev0+131.g19fc2e4-py2.7-linux-x86_64.egg',
+        VERSION:     '0.40.0.dev0+136.g46ab0a5-py2.7-linux-x86_64.egg',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,10 +26,10 @@
     <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="Numba 0.40.0.dev0+131.g19fc2e4-py2.7-linux-x86_64.egg documentation" href="../index.html" />
+    <link rel="top" title="Numba 0.40.0.dev0+136.g46ab0a5-py2.7-linux-x86_64.egg documentation" href="../index.html" />
     <link rel="up" title="1. User Manual" href="index.html" />
-    <link rel="next" title="1.8. Compiling code ahead of time" href="pycc.html" />
-    <link rel="prev" title="1.6. Compiling python classes with @jitclass" href="jitclass.html" />
+    <link rel="next" title="1.9. Compiling code ahead of time" href="pycc.html" />
+    <link rel="prev" title="1.7. Compiling python classes with @jitclass" href="jitclass.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -88,12 +88,12 @@
   <ul class="dropdown-menu localtoc"
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul>
-<li><a class="reference internal" href="#">1.7. Creating C callbacks with <code class="docutils literal"><span class="pre">&#64;cfunc</span></code></a><ul>
-<li><a class="reference internal" href="#basic-usage">1.7.1. Basic usage</a></li>
-<li><a class="reference internal" href="#example">1.7.2. Example</a></li>
-<li><a class="reference internal" href="#dealing-with-pointers-and-array-memory">1.7.3. Dealing with pointers and array memory</a></li>
-<li><a class="reference internal" href="#signature-specification">1.7.4. Signature specification</a></li>
-<li><a class="reference internal" href="#compilation-options">1.7.5. Compilation options</a></li>
+<li><a class="reference internal" href="#">1.8. Creating C callbacks with <code class="docutils literal"><span class="pre">&#64;cfunc</span></code></a><ul>
+<li><a class="reference internal" href="#basic-usage">1.8.1. Basic usage</a></li>
+<li><a class="reference internal" href="#example">1.8.2. Example</a></li>
+<li><a class="reference internal" href="#dealing-with-pointers-and-array-memory">1.8.3. Dealing with pointers and array memory</a></li>
+<li><a class="reference internal" href="#signature-specification">1.8.4. Signature specification</a></li>
+<li><a class="reference internal" href="#compilation-options">1.8.5. Compilation options</a></li>
 </ul>
 </li>
 </ul>
@@ -105,11 +105,11 @@
               
                 
   <li>
-    <a href="jitclass.html" title="Previous Chapter: 1.6. Compiling python classes with @jitclass"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; 1.6. Compiling p...</span>
+    <a href="jitclass.html" title="Previous Chapter: 1.7. Compiling python classes with @jitclass"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; 1.7. Compiling p...</span>
     </a>
   </li>
   <li>
-    <a href="pycc.html" title="Next Chapter: 1.8. Compiling code ahead of time"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">1.8. Compiling c... &raquo;</span>
+    <a href="pycc.html" title="Next Chapter: 1.9. Compiling code ahead of time"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">1.9. Compiling c... &raquo;</span>
     </a>
   </li>
               
@@ -144,13 +144,13 @@
     <div class="col-md-12 content">
       
   <div class="section" id="creating-c-callbacks-with-cfunc">
-<span id="cfunc"></span><h1>1.7. Creating C callbacks with <code class="docutils literal"><span class="pre">&#64;cfunc</span></code><a class="headerlink" href="#creating-c-callbacks-with-cfunc" title="Permalink to this headline">¶</a></h1>
+<span id="cfunc"></span><h1>1.8. Creating C callbacks with <code class="docutils literal"><span class="pre">&#64;cfunc</span></code><a class="headerlink" href="#creating-c-callbacks-with-cfunc" title="Permalink to this headline">¶</a></h1>
 <p>Interfacing with some native libraries (for example written in C or C++)
 can necessitate writing native callbacks to provide business logic to the
 library.  The <a class="reference internal" href="../reference/jit-compilation.html#numba.cfunc" title="numba.cfunc"><code class="xref py py-func docutils literal"><span class="pre">numba.cfunc()</span></code></a> decorator creates a compiled function
 callable from foreign C code, using the signature of your choice.</p>
 <div class="section" id="basic-usage">
-<h2>1.7.1. Basic usage<a class="headerlink" href="#basic-usage" title="Permalink to this headline">¶</a></h2>
+<h2>1.8.1. Basic usage<a class="headerlink" href="#basic-usage" title="Permalink to this headline">¶</a></h2>
 <p>The <code class="docutils literal"><span class="pre">&#64;cfunc</span></code> decorator has a similar usage to <code class="docutils literal"><span class="pre">&#64;jit</span></code>, but with an
 important difference: passing a single signature is mandatory.
 It determines the visible signature of the C callback:</p>
@@ -175,7 +175,7 @@ Python, making it easy to check the compiled code:</p>
 </div>
 </div>
 <div class="section" id="example">
-<h2>1.7.2. Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
+<h2>1.8.2. Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
 <p>In this example, we are going to be using the <code class="docutils literal"><span class="pre">scipy.integrate.quad</span></code>
 function.  That function accepts either a regular Python callback or
 a C callback wrapped in a <a class="reference external" href="https://docs.python.org/3/library/ctypes.html#module-ctypes" title="(in Python v3.7)"><code class="xref py py-mod docutils literal"><span class="pre">ctypes</span></code></a> callback object.</p>
@@ -216,7 +216,7 @@ integration is made 18 times faster:</p>
 </div>
 </div>
 <div class="section" id="dealing-with-pointers-and-array-memory">
-<h2>1.7.3. Dealing with pointers and array memory<a class="headerlink" href="#dealing-with-pointers-and-array-memory" title="Permalink to this headline">¶</a></h2>
+<h2>1.8.3. Dealing with pointers and array memory<a class="headerlink" href="#dealing-with-pointers-and-array-memory" title="Permalink to this headline">¶</a></h2>
 <p>A less trivial use case of C callbacks involves doing operation on some
 array of data passed by the caller.  As C doesn&#8217;t have a high-level
 abstraction similar to Numpy arrays, the C callback&#8217;s signature will pass
@@ -247,14 +247,14 @@ assumed to be laid out in C order.  If the data is laid out in Fortran order,
 <a class="reference internal" href="../reference/utils.html#numba.farray" title="numba.farray"><code class="xref py py-func docutils literal"><span class="pre">numba.farray()</span></code></a> should be used instead.</p>
 </div>
 <div class="section" id="signature-specification">
-<h2>1.7.4. Signature specification<a class="headerlink" href="#signature-specification" title="Permalink to this headline">¶</a></h2>
+<h2>1.8.4. Signature specification<a class="headerlink" href="#signature-specification" title="Permalink to this headline">¶</a></h2>
 <p>The explicit <code class="docutils literal"><span class="pre">&#64;cfunc</span></code> signature can use any <a class="reference internal" href="../reference/types.html#numba-types"><span>Numba types</span></a>,
 but only a subset of them make sense for a C callback.  You should
 generally limit yourself to scalar types (such as <code class="docutils literal"><span class="pre">int8</span></code> or <code class="docutils literal"><span class="pre">float64</span></code>)
 or pointers to them (for example <code class="docutils literal"><span class="pre">types.CPointer(types.int8)</span></code>).</p>
 </div>
 <div class="section" id="compilation-options">
-<h2>1.7.5. Compilation options<a class="headerlink" href="#compilation-options" title="Permalink to this headline">¶</a></h2>
+<h2>1.8.5. Compilation options<a class="headerlink" href="#compilation-options" title="Permalink to this headline">¶</a></h2>
 <p>A number of keyword-only arguments can be passed to the <code class="docutils literal"><span class="pre">&#64;cfunc</span></code>
 decorator: <code class="docutils literal"><span class="pre">nopython</span></code> and <code class="docutils literal"><span class="pre">cache</span></code>.  Their meaning is similar to those
 in the <code class="docutils literal"><span class="pre">&#64;jit</span></code> decorator.</p>
