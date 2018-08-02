@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>5.2. Writing HSA Kernels &mdash; Numba 0.40.0.dev0+126.g1ee32ab-py2.7-linux-x86_64.egg documentation</title>
+    <title>5.2. Writing HSA Kernels &mdash; Numba 0.40.0.dev0+131.g19fc2e4-py2.7-linux-x86_64.egg documentation</title>
     
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.40.0.dev0+126.g1ee32ab-py2.7-linux-x86_64.egg',
+        VERSION:     '0.40.0.dev0+131.g19fc2e4-py2.7-linux-x86_64.egg',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,8 +26,8 @@
     <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="Numba 0.40.0.dev0+126.g1ee32ab-py2.7-linux-x86_64.egg documentation" href="../index.html" />
-    <link rel="up" title="5. Numba for HSA APUs" href="index.html" />
+    <link rel="top" title="Numba 0.40.0.dev0+131.g19fc2e4-py2.7-linux-x86_64.egg documentation" href="../index.html" />
+    <link rel="up" title="5. Numba for AMD ROC GPUs" href="index.html" />
     <link rel="next" title="5.3. Memory management" href="memory.html" />
     <link rel="prev" title="5.1. Overview" href="overview.html" />
 <meta charset='utf-8'>
@@ -69,7 +69,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../reference/index.html">2. Reference Manual</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../cuda/index.html">3. Numba for CUDA GPUs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../cuda-reference/index.html">4. CUDA Python Reference</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="index.html">5. Numba for HSA APUs</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">5. Numba for AMD ROC GPUs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../extending/index.html">6. Extending Numba</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../developer/index.html">7. Developer Manual</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../proposals/index.html">8. Numba Enhancement Proposals</a></li>
@@ -123,7 +123,7 @@
             
               <li class="hidden-sm">
 <div id="sourcelink">
-  <a href="../_sources/hsa/kernels.txt"
+  <a href="../_sources/roc/kernels.txt"
      rel="nofollow">Source</a>
 </div></li>
             
@@ -157,23 +157,24 @@ in parallel by a group of hardware threads.  In some way, this is similar to
 the fine-grain scheduling is hidden from the programmer instead of programming
 with SIMD vectors as a data structure.  In HSA, the code you write will be
 executed by multiple threads at once (often hundreds or thousands).  Your
-solution will
-be modeled by defining a thread hierarchy of <em>grid</em>, <em>workgroup</em> and
-<em>workitem</em>.</p>
+solution will be modelled by defining a thread hierarchy of <em>grid</em>, <em>workgroup</em>
+and <em>workitem</em>.</p>
 <p>Numba&#8217;s HSA support exposes facilities to declare and manage this
 hierarchy of threads.</p>
 </div>
 <div class="section" id="introduction-for-cuda-programmers">
 <h2>5.2.2. Introduction for CUDA Programmers<a class="headerlink" href="#introduction-for-cuda-programmers" title="Permalink to this headline">¶</a></h2>
-<p>HSA execution model is similar to CUDA.  The main difference will be the
-shared memory model employed by HSA so that there are no device memory.  The
-GPU hardware uses the machine&#8217;s main memory (or host memory in
-CUDA term) directly.  Therefore, you will not need <code class="docutils literal"><span class="pre">to_device()</span></code> and
-<code class="docutils literal"><span class="pre">copy_to_host()</span></code> in HSA programming.</p>
-<p>Here&#8217;s a quick mapping of the CUDA terms to HSA:
-* workitem is CUDA threads
-* workgroup is CUDA thread block
-* grid is CUDA grid</p>
+<p>HSA execution model is similar to CUDA. The memory model employed by HSA on ROC
+GPUs is also similar to that of CUDA. ROC GPUs have dedicated on GPU memory,
+therefore the <code class="docutils literal"><span class="pre">to_device()</span></code> and <code class="docutils literal"><span class="pre">copy_to_host()</span></code> etc. are required as per
+CUDA.</p>
+<p>Here&#8217;s a quick mapping of the CUDA terms to HSA:</p>
+<ul class="simple">
+<li>A <code class="docutils literal"><span class="pre">workitem</span></code> is equivalent to a CUDA thread.</li>
+<li>A <code class="docutils literal"><span class="pre">workgroup</span></code> is equivalent to a CUDA thread block.</li>
+<li>A <code class="docutils literal"><span class="pre">grid</span></code> is equivalent to a CUDA grid.</li>
+<li>A <code class="docutils literal"><span class="pre">wavefront</span></code> is equivalent to a CUDA <code class="docutils literal"><span class="pre">warp</span></code>.</li>
+</ul>
 </div>
 <div class="section" id="kernel-declaration">
 <h2>5.2.3. Kernel declaration<a class="headerlink" href="#kernel-declaration" title="Permalink to this headline">¶</a></h2>
@@ -190,7 +191,7 @@ times with different workgroup sizes or grid sizes).</li>
 </ul>
 <p>At first sight, writing a HSA kernel with Numba looks very much like
 writing a <a class="reference internal" href="../glossary.html#term-jit-function"><span class="xref std std-term">JIT function</span></a> for the CPU:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="nd">@hsa.jit</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@roc.jit</span>
 <span class="k">def</span> <span class="nf">increment_by_one</span><span class="p">(</span><span class="n">an_array</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Increment all array elements by one.</span>
@@ -226,7 +227,7 @@ number of workitem needed by a kernel.  The workgroup size (i.e. number of
 workitem per workgroup) is often crucial:</p>
 <ul>
 <li><p class="first">On the software side, the workgroup size determines how many threads
-share a given area of <a class="reference internal" href="memory.html#hsa-shared-memory"><span>shared memory</span></a>.</p>
+share a given area of <a class="reference internal" href="memory.html#roc-shared-memory"><span>shared memory</span></a>.</p>
 </li>
 <li><dl class="first docutils">
 <dt>On the hardware side, the workgroup size must be large enough for full</dt>
@@ -255,17 +256,17 @@ may define more complex responsibilities, but the underlying principle
 is the same).</p>
 <p>One way is for the thread to determines its position in the grid and
 workgroup and manually compute the corresponding array position:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="nd">@hsa.jit</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@roc.jit</span>
 <span class="k">def</span> <span class="nf">increment_by_one</span><span class="p">(</span><span class="n">an_array</span><span class="p">):</span>
     <span class="c"># workitem id in a 1D workgroup</span>
-    <span class="n">tx</span> <span class="o">=</span> <span class="n">hsa</span><span class="o">.</span><span class="n">get_local_id</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">tx</span> <span class="o">=</span> <span class="n">roc</span><span class="o">.</span><span class="n">get_local_id</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
     <span class="c"># workgroup id in a 1D grid</span>
-    <span class="n">ty</span> <span class="o">=</span> <span class="n">hsa</span><span class="o">.</span><span class="n">get_group_id</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">ty</span> <span class="o">=</span> <span class="n">roc</span><span class="o">.</span><span class="n">get_group_id</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
     <span class="c"># workgroup size, i.e. number of workitem per workgroup</span>
-    <span class="n">bw</span> <span class="o">=</span> <span class="n">hsa</span><span class="o">.</span><span class="n">get_local_size</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">bw</span> <span class="o">=</span> <span class="n">roc</span><span class="o">.</span><span class="n">get_local_size</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
     <span class="c"># Compute flattened index inside the array</span>
     <span class="n">pos</span> <span class="o">=</span> <span class="n">tx</span> <span class="o">+</span> <span class="n">ty</span> <span class="o">*</span> <span class="n">bw</span>
-    <span class="c"># The above is equivalent to pos = hsa.get_global_id(0)</span>
+    <span class="c"># The above is equivalent to pos = roc.get_global_id(0)</span>
     <span class="k">if</span> <span class="n">pos</span> <span class="o">&lt;</span> <span class="n">an_array</span><span class="o">.</span><span class="n">size</span><span class="p">:</span>  <span class="c"># Check array boundaries</span>
         <span class="n">an_array</span><span class="p">[</span><span class="n">pos</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
 </pre></div>
@@ -275,22 +276,22 @@ workgroup and manually compute the corresponding array position:</p>
 <p class="last">Unless you are sure the workgroup size and grid size is a divisor
 of your array size, you <strong>must</strong> check boundaries as shown above.</p>
 </div>
-<p><a class="reference internal" href="#numba.hsa.get_local_id" title="numba.hsa.get_local_id"><code class="xref py py-func docutils literal"><span class="pre">get_local_id()</span></code></a>, <a class="reference internal" href="#numba.hsa.get_local_size" title="numba.hsa.get_local_size"><code class="xref py py-func docutils literal"><span class="pre">get_local_size()</span></code></a>, <a class="reference internal" href="#numba.hsa.get_group_id" title="numba.hsa.get_group_id"><code class="xref py py-func docutils literal"><span class="pre">get_group_id()</span></code></a> and
-<a class="reference internal" href="#numba.hsa.get_global_id" title="numba.hsa.get_global_id"><code class="xref py py-func docutils literal"><span class="pre">get_global_id()</span></code></a> are special functions provided by the HSA backend for
+<p><a class="reference internal" href="#numba.roc.get_local_id" title="numba.roc.get_local_id"><code class="xref py py-func docutils literal"><span class="pre">get_local_id()</span></code></a>, <a class="reference internal" href="#numba.roc.get_local_size" title="numba.roc.get_local_size"><code class="xref py py-func docutils literal"><span class="pre">get_local_size()</span></code></a>, <a class="reference internal" href="#numba.roc.get_group_id" title="numba.roc.get_group_id"><code class="xref py py-func docutils literal"><span class="pre">get_group_id()</span></code></a> and
+<a class="reference internal" href="#numba.roc.get_global_id" title="numba.roc.get_global_id"><code class="xref py py-func docutils literal"><span class="pre">get_global_id()</span></code></a> are special functions provided by the HSA backend for
 the sole purpose of knowing the geometry of the thread hierarchy and the
 position of the current workitem within that geometry.</p>
 <dl class="function">
-<dt id="numba.hsa.get_local_id">
-<code class="descclassname">numba.hsa.</code><code class="descname">get_local_id</code><span class="sig-paren">(</span><em>dim</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.hsa.get_local_id" title="Permalink to this definition">¶</a></dt>
+<dt id="numba.roc.get_local_id">
+<code class="descclassname">numba.roc.</code><code class="descname">get_local_id</code><span class="sig-paren">(</span><em>dim</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.roc.get_local_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>Takes the index of the dimension being queried</p>
 <p>Returns local workitem ID in the the current workgroup for the given
 dimension. For 1D workgroup, the index is an integer spanning the range
-from 0 inclusive to <a class="reference internal" href="#numba.hsa.get_local_size" title="numba.hsa.get_local_size"><code class="xref py py-func docutils literal"><span class="pre">numba.hsa.get_local_size()</span></code></a> exclusive.</p>
+from 0 inclusive to <a class="reference internal" href="#numba.roc.get_local_size" title="numba.roc.get_local_size"><code class="xref py py-func docutils literal"><span class="pre">numba.roc.get_local_size()</span></code></a> exclusive.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="numba.hsa.get_local_size">
-<code class="descclassname">numba.hsa.</code><code class="descname">get_local_size</code><span class="sig-paren">(</span><em>dim</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.hsa.get_local_size" title="Permalink to this definition">¶</a></dt>
+<dt id="numba.roc.get_local_size">
+<code class="descclassname">numba.roc.</code><code class="descname">get_local_size</code><span class="sig-paren">(</span><em>dim</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.roc.get_local_size" title="Permalink to this definition">¶</a></dt>
 <dd><p>Takes the index of the dimension being queried</p>
 <p>Returns the size of the workgroup at the given dimension.
 The value is declared when instantiating the kernel.
@@ -299,17 +300,17 @@ even if they belong to different workgroups (i.e. each workgroups is &#8220;full
 </dd></dl>
 
 <dl class="function">
-<dt id="numba.hsa.get_group_id">
-<code class="descclassname">numba.hsa.</code><code class="descname">get_group_id</code><span class="sig-paren">(</span><em>dim</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.hsa.get_group_id" title="Permalink to this definition">¶</a></dt>
+<dt id="numba.roc.get_group_id">
+<code class="descclassname">numba.roc.</code><code class="descname">get_group_id</code><span class="sig-paren">(</span><em>dim</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.roc.get_group_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>Takes the index of the dimension being queried</p>
 <p>Returns the workgroup ID in the grid of workgroup launched a kernel.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="numba.hsa.get_global_id">
-<code class="descclassname">numba.hsa.</code><code class="descname">get_global_id</code><span class="sig-paren">(</span><em>dim</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.hsa.get_global_id" title="Permalink to this definition">¶</a></dt>
+<dt id="numba.roc.get_global_id">
+<code class="descclassname">numba.roc.</code><code class="descname">get_global_id</code><span class="sig-paren">(</span><em>dim</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.roc.get_global_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>Takes the index of the dimension being queried</p>
-<p>Returns the global workitem ID for the given dimension.  Unlike <cite>numba.hsa
+<p>Returns the global workitem ID for the given dimension.  Unlike <cite>numba.roc
 .get_local_id()</cite>, this number is unique for all workitems in a grid.</p>
 </dd></dl>
 
