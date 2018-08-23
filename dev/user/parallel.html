@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>1.10. Automatic parallelization with @jit &mdash; Numba 0.40.0.dev0+270.g252957c-py2.7-linux-x86_64.egg documentation</title>
+    <title>1.10. Automatic parallelization with @jit &mdash; Numba 0.40.0.dev0+288.g7014641-py2.7-linux-x86_64.egg documentation</title>
     
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.40.0.dev0+270.g252957c-py2.7-linux-x86_64.egg',
+        VERSION:     '0.40.0.dev0+288.g7014641-py2.7-linux-x86_64.egg',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,7 +26,7 @@
     <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="Numba 0.40.0.dev0+270.g252957c-py2.7-linux-x86_64.egg documentation" href="../index.html" />
+    <link rel="top" title="Numba 0.40.0.dev0+288.g7014641-py2.7-linux-x86_64.egg documentation" href="../index.html" />
     <link rel="up" title="1. User Manual" href="index.html" />
     <link rel="next" title="1.11. Using the @stencil decorator" href="stencil.html" />
     <link rel="prev" title="1.9. Compiling code ahead of time" href="pycc.html" />
@@ -209,12 +209,13 @@ reductions on 1D Numpy arrays but the initial value argument is mandatory.</p>
 <p>Another experimental feature of this module is support for explicit parallel
 loops. One can use Numba&#8217;s <code class="docutils literal"><span class="pre">prange</span></code> instead of <code class="docutils literal"><span class="pre">range</span></code> to specify that a
 loop can be parallelized. The user is required to make sure that the loop does
-not have cross iteration dependencies except the supported reductions.</p>
-<p>A reductions is inferred automatically if a variable is updated by a binary
+not have cross iteration dependencies except for supported reductions.</p>
+<p>A reduction is inferred automatically if a variable is updated by a binary
 function/operator using its previous value in the loop body. The initial value
 of the reduction is inferred automatically for <code class="docutils literal"><span class="pre">+=</span></code> and <code class="docutils literal"><span class="pre">*=</span></code> operators.
-For other functions/operators, the reduction variable should hold the initial
-value right before entering the <code class="docutils literal"><span class="pre">prange</span></code> loop.</p>
+For other functions/operators, the reduction variable should hold the identity
+value right before entering the <code class="docutils literal"><span class="pre">prange</span></code> loop.  Reductions in this manner
+are supported for scalars and for arrays of arbitrary dimensions.</p>
 <p>The example below demonstrates a parallel loop with a
 reduction (<code class="docutils literal"><span class="pre">A</span></code> is a one-dimensional Numpy array):</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">njit</span><span class="p">,</span> <span class="n">prange</span>
@@ -224,6 +225,20 @@ reduction (<code class="docutils literal"><span class="pre">A</span></code> is a
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">prange</span><span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
         <span class="n">s</span> <span class="o">+=</span> <span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">s</span>
+</pre></div>
+</div>
+<p>The following example demonstrates a product reduction on a two-dimensional array:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">njit</span><span class="p">,</span> <span class="n">prange</span>
+<span class="nd">@njit</span><span class="p">(</span><span class="n">parallel</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">two_d_array_reduction_prod</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="n">shp</span> <span class="o">=</span> <span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="mi">17</span><span class="p">)</span>
+    <span class="n">result1</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">shp</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">int_</span><span class="p">)</span>
+    <span class="n">tmp</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">result1</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">numba</span><span class="o">.</span><span class="n">prange</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        <span class="n">result1</span> <span class="o">*=</span> <span class="n">tmp</span>
+
+    <span class="k">return</span> <span class="n">result1</span>
 </pre></div>
 </div>
 </div>
