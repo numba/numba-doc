@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>1.10. Automatic parallelization with @jit &mdash; Numba 0.40.0.dev0+346.g830f56b-py2.7-linux-x86_64.egg documentation</title>
+    <title>1.10. Automatic parallelization with @jit &mdash; Numba 0.40.0.dev0+367.g62ec322-py2.7-linux-x86_64.egg documentation</title>
     
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.40.0.dev0+346.g830f56b-py2.7-linux-x86_64.egg',
+        VERSION:     '0.40.0.dev0+367.g62ec322-py2.7-linux-x86_64.egg',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -27,7 +27,7 @@
     <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="Numba 0.40.0.dev0+346.g830f56b-py2.7-linux-x86_64.egg documentation" href="../index.html" />
+    <link rel="top" title="Numba 0.40.0.dev0+367.g62ec322-py2.7-linux-x86_64.egg documentation" href="../index.html" />
     <link rel="up" title="1. User Manual" href="index.html" />
     <link rel="next" title="1.11. Using the @stencil decorator" href="stencil.html" />
     <link rel="prev" title="1.9. Compiling code ahead of time" href="pycc.html" />
@@ -145,7 +145,7 @@
   <div class="section" id="automatic-parallelization-with-jit">
 <span id="numba-parallel"></span><h1>1.10. Automatic parallelization with <code class="docutils literal"><span class="pre">&#64;jit</span></code><a class="headerlink" href="#automatic-parallelization-with-jit" title="Permalink to this headline">¶</a></h1>
 <p>Setting the <a class="reference internal" href="jit.html#parallel-jit-option"><span>parallel</span></a> option for <a class="reference internal" href="../reference/jit-compilation.html#numba.jit" title="numba.jit"><code class="xref py py-func docutils literal"><span class="pre">jit()</span></code></a> enables
-an experimental Numba feature that attempts to automatically parallelize and
+a Numba transformation pass that attempts to automatically parallelize and
 perform other optimizations on (part of) a function. At the moment, this
 feature only works on CPUs.</p>
 <p>Some operations inside a user defined function, e.g., adding a scalar value to
@@ -207,10 +207,11 @@ reductions on 1D Numpy arrays but the initial value argument is mandatory.</p>
 </div>
 <div class="section" id="explicit-parallel-loops">
 <span id="numba-prange"></span><h2>1.10.2. Explicit Parallel Loops<a class="headerlink" href="#explicit-parallel-loops" title="Permalink to this headline">¶</a></h2>
-<p>Another experimental feature of this module is support for explicit parallel
-loops. One can use Numba&#8217;s <code class="docutils literal"><span class="pre">prange</span></code> instead of <code class="docutils literal"><span class="pre">range</span></code> to specify that a
-loop can be parallelized. The user is required to make sure that the loop does
-not have cross iteration dependencies except for supported reductions.</p>
+<p>Another feature of this code transformation pass is support for explicit
+parallel loops. One can use Numba&#8217;s <code class="docutils literal"><span class="pre">prange</span></code> instead of <code class="docutils literal"><span class="pre">range</span></code> to specify
+that a loop can be parallelized. The user is required to make sure that the
+loop does not have cross iteration dependencies except for supported
+reductions.</p>
 <p>A reduction is inferred automatically if a variable is updated by a binary
 function/operator using its previous value in the loop body. The initial value
 of the reduction is inferred automatically for <code class="docutils literal"><span class="pre">+=</span></code> and <code class="docutils literal"><span class="pre">*=</span></code> operators.
