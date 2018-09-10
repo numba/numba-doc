@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>2.5. Environment variables &mdash; Numba 0.40.0.dev0+438.g10c4965-py2.7-linux-x86_64.egg documentation</title>
+    <title>2.5. Environment variables &mdash; Numba 0.40.0.dev0+583.gf849cc7-py2.7-linux-x86_64.egg documentation</title>
     
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.40.0.dev0+438.g10c4965-py2.7-linux-x86_64.egg',
+        VERSION:     '0.40.0.dev0+583.gf849cc7-py2.7-linux-x86_64.egg',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -27,7 +27,7 @@
     <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="Numba 0.40.0.dev0+438.g10c4965-py2.7-linux-x86_64.egg documentation" href="../index.html" />
+    <link rel="top" title="Numba 0.40.0.dev0+583.gf849cc7-py2.7-linux-x86_64.egg documentation" href="../index.html" />
     <link rel="up" title="2. Reference Manual" href="index.html" />
     <link rel="next" title="2.6. Supported Python features" href="pysupported.html" />
     <link rel="prev" title="2.4. Utilities" href="utils.html" />
@@ -477,6 +477,29 @@ will take this value. Must be greater than zero. This value is independent
 of <code class="docutils literal"><span class="pre">OMP_NUM_THREADS</span></code> and <code class="docutils literal"><span class="pre">MKL_NUM_THREADS</span></code>.</p>
 <p><em>Default value:</em> The number of CPU cores on the system as determined at run
 time, this can be accessed via <code class="docutils literal"><span class="pre">numba.config.NUMBA_DEFAULT_NUM_THREADS</span></code>.</p>
+</dd></dl>
+
+<dl class="envvar">
+<dt id="envvar-NUMBA_THREADING_LAYER">
+<code class="descname">NUMBA_THREADING_LAYER</code><a class="headerlink" href="#envvar-NUMBA_THREADING_LAYER" title="Permalink to this definition">¶</a></dt>
+<dd><p>This environment variable controls the library used for concurrent execution
+for the CPU parallel targets (<code class="docutils literal"><span class="pre">&#64;vectorize(target='parallel')</span></code>,
+<code class="docutils literal"><span class="pre">&#64;guvectorize(target='parallel')</span></code>  and <code class="docutils literal"><span class="pre">&#64;njit(parallel=True)</span></code>). The
+variable type is string and by default is <code class="docutils literal"><span class="pre">default</span></code> which will select a
+threading layer based on what is available in the runtime. The valid values
+are (for more information about these see
+<a class="reference internal" href="../user/threading-layer.html#numba-threading-layer"><span>the threading layer documentation</span></a>):</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">default</span></code> - select a threading layer based on what is available in the
+current runtime.</li>
+<li><code class="docutils literal"><span class="pre">safe</span></code> - select a threading layer that is both fork and thread safe
+(requires the TBB package).</li>
+<li><code class="docutils literal"><span class="pre">forksafe</span></code> - select a threading layer that is fork safe.</li>
+<li><code class="docutils literal"><span class="pre">threadsafe</span></code> - select a threading layer that is thread safe.</li>
+<li><code class="docutils literal"><span class="pre">tbb</span></code> - A threading layer backed by Intel TBB.</li>
+<li><code class="docutils literal"><span class="pre">omp</span></code> - A threading layer backed by OpenMP.</li>
+<li><code class="docutils literal"><span class="pre">workqueue</span></code> - A simple built-in work-sharing task scheduler.</li>
+</ul>
 </dd></dl>
 
 </div>
