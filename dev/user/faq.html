@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>1.16. Frequently Asked Questions &mdash; Numba 0.40.0.dev0+646.g307bedc-py2.7-linux-x86_64.egg documentation</title>
+    <title>1.16. Frequently Asked Questions &mdash; Numba 0.40.0.dev0+651.g70b6a14-py2.7-linux-x86_64.egg documentation</title>
     
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.40.0.dev0+646.g307bedc-py2.7-linux-x86_64.egg',
+        VERSION:     '0.40.0.dev0+651.g70b6a14-py2.7-linux-x86_64.egg',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -27,7 +27,7 @@
     <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="Numba 0.40.0.dev0+646.g307bedc-py2.7-linux-x86_64.egg documentation" href="../index.html" />
+    <link rel="top" title="Numba 0.40.0.dev0+651.g70b6a14-py2.7-linux-x86_64.egg documentation" href="../index.html" />
     <link rel="up" title="1. User Manual" href="index.html" />
     <link rel="next" title="1.17. Examples" href="examples.html" />
     <link rel="prev" title="1.15. Troubleshooting and tips" href="troubleshoot.html" />
@@ -108,14 +108,18 @@
 <li><a class="reference internal" href="#there-is-a-delay-when-jit-compiling-a-complicated-function-how-can-i-improve-it">1.16.2.6. There is a delay when JIT-compiling a complicated function, how can I improve it?</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#integration-with-other-utilities">1.16.3. Integration with other utilities</a><ul>
-<li><a class="reference internal" href="#can-i-freeze-an-application-which-uses-numba">1.16.3.1. Can I &#8220;freeze&#8221; an application which uses Numba?</a></li>
-<li><a class="reference internal" href="#i-get-errors-when-running-a-script-twice-under-spyder">1.16.3.2. I get errors when running a script twice under Spyder</a></li>
-<li><a class="reference internal" href="#why-does-numba-complain-about-the-current-locale">1.16.3.3. Why does Numba complain about the current locale?</a></li>
+<li><a class="reference internal" href="#gpu-programming">1.16.3. GPU Programming</a><ul>
+<li><a class="reference internal" href="#how-do-i-work-around-the-cuda-intialized-before-forking-error">1.16.3.1. How do I work around the <code class="docutils literal"><span class="pre">CUDA</span> <span class="pre">intialized</span> <span class="pre">before</span> <span class="pre">forking</span></code> error?</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#miscellaneous">1.16.4. Miscellaneous</a><ul>
-<li><a class="reference internal" href="#how-do-i-reference-cite-acknowledge-numba-in-other-work">1.16.4.1. How do I reference/cite/acknowledge Numba in other work?</a></li>
+<li><a class="reference internal" href="#integration-with-other-utilities">1.16.4. Integration with other utilities</a><ul>
+<li><a class="reference internal" href="#can-i-freeze-an-application-which-uses-numba">1.16.4.1. Can I &#8220;freeze&#8221; an application which uses Numba?</a></li>
+<li><a class="reference internal" href="#i-get-errors-when-running-a-script-twice-under-spyder">1.16.4.2. I get errors when running a script twice under Spyder</a></li>
+<li><a class="reference internal" href="#why-does-numba-complain-about-the-current-locale">1.16.4.3. Why does Numba complain about the current locale?</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#miscellaneous">1.16.5. Miscellaneous</a><ul>
+<li><a class="reference internal" href="#how-do-i-reference-cite-acknowledge-numba-in-other-work">1.16.5.1. How do I reference/cite/acknowledge Numba in other work?</a></li>
 </ul>
 </li>
 </ul>
@@ -334,10 +338,30 @@ compiled version on disk for later use.</p>
 <p>A more radical alternative is <a class="reference internal" href="pycc.html#pycc"><span>ahead-of-time compilation</span></a>.</p>
 </div>
 </div>
+<div class="section" id="gpu-programming">
+<h2>1.16.3. GPU Programming<a class="headerlink" href="#gpu-programming" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="how-do-i-work-around-the-cuda-intialized-before-forking-error">
+<h3>1.16.3.1. How do I work around the <code class="docutils literal"><span class="pre">CUDA</span> <span class="pre">intialized</span> <span class="pre">before</span> <span class="pre">forking</span></code> error?<a class="headerlink" href="#how-do-i-work-around-the-cuda-intialized-before-forking-error" title="Permalink to this headline">¶</a></h3>
+<p>On Linux, the <code class="docutils literal"><span class="pre">multiprocessing</span></code> module in the Python standard library
+defaults to using the <code class="docutils literal"><span class="pre">fork</span></code> method for creating new processes.  Because of
+the way process forking duplicates state between the parent and child
+processes, CUDA will not work correctly in the child process if the CUDA
+runtime was initialized <em>prior</em> to the fork.  Numba detects this and raises a
+<code class="docutils literal"><span class="pre">CudaDriverError</span></code> with the message <code class="docutils literal"><span class="pre">CUDA</span> <span class="pre">initialized</span> <span class="pre">before</span> <span class="pre">forking</span></code>.</p>
+<p>One approach to avoid this error is to make all calls to <code class="docutils literal"><span class="pre">numba.cuda</span></code>
+functions inside the child processes or after the process pool is created.
+However, this is not always possible, as you might want to query the number of
+available GPUs before starting the process pool.  In Python 3, you can change
+the process start method, as described in the <a class="reference external" href="https://docs.python.org/3.6/library/multiprocessing.html#contexts-and-start-methods">multiprocessing documentation</a>.
+Switching from <code class="docutils literal"><span class="pre">fork</span></code> to <code class="docutils literal"><span class="pre">spawn</span></code> or <code class="docutils literal"><span class="pre">forkserver</span></code> will avoid the CUDA
+initalization issue, although the child processes will not inherit any global
+variables from their parent.</p>
+</div>
+</div>
 <div class="section" id="integration-with-other-utilities">
-<h2>1.16.3. Integration with other utilities<a class="headerlink" href="#integration-with-other-utilities" title="Permalink to this headline">¶</a></h2>
+<h2>1.16.4. Integration with other utilities<a class="headerlink" href="#integration-with-other-utilities" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="can-i-freeze-an-application-which-uses-numba">
-<h3>1.16.3.1. Can I &#8220;freeze&#8221; an application which uses Numba?<a class="headerlink" href="#can-i-freeze-an-application-which-uses-numba" title="Permalink to this headline">¶</a></h3>
+<h3>1.16.4.1. Can I &#8220;freeze&#8221; an application which uses Numba?<a class="headerlink" href="#can-i-freeze-an-application-which-uses-numba" title="Permalink to this headline">¶</a></h3>
 <p>If you&#8217;re using PyInstaller or a similar utility to freeze an application,
 you may encounter issues with llvmlite.  llvmlite needs a non-Python DLL
 for its working, but it won&#8217;t be automatically detected by freezing utilities.
@@ -346,7 +370,7 @@ usually be named <code class="docutils literal"><span class="pre">llvmlite/bindi
 <code class="docutils literal"><span class="pre">llvmlite/binding/llvmlite.dll</span></code>, depending on your system.</p>
 </div>
 <div class="section" id="i-get-errors-when-running-a-script-twice-under-spyder">
-<h3>1.16.3.2. I get errors when running a script twice under Spyder<a class="headerlink" href="#i-get-errors-when-running-a-script-twice-under-spyder" title="Permalink to this headline">¶</a></h3>
+<h3>1.16.4.2. I get errors when running a script twice under Spyder<a class="headerlink" href="#i-get-errors-when-running-a-script-twice-under-spyder" title="Permalink to this headline">¶</a></h3>
 <p>When you run a script in a console under Spyder, Spyder first tries to
 reload existing modules.  This doesn&#8217;t work well with Numba, and can
 produce errors like <code class="docutils literal"><span class="pre">TypeError:</span> <span class="pre">No</span> <span class="pre">matching</span> <span class="pre">definition</span> <span class="pre">for</span> <span class="pre">argument</span> <span class="pre">type(s)</span></code>.</p>
@@ -357,7 +381,7 @@ modules&#8221; button, and add <code class="docutils literal"><span class="pre">
 kernel.</p>
 </div>
 <div class="section" id="why-does-numba-complain-about-the-current-locale">
-<span id="llvm-locale-bug"></span><h3>1.16.3.3. Why does Numba complain about the current locale?<a class="headerlink" href="#why-does-numba-complain-about-the-current-locale" title="Permalink to this headline">¶</a></h3>
+<span id="llvm-locale-bug"></span><h3>1.16.4.3. Why does Numba complain about the current locale?<a class="headerlink" href="#why-does-numba-complain-about-the-current-locale" title="Permalink to this headline">¶</a></h3>
 <p>If you get an error message such as the following:</p>
 <div class="highlight-python"><div class="highlight"><pre>RuntimeError: Failed at nopython (nopython mode backend)
 LLVM will produce incorrect floating-point code in the current locale
@@ -375,9 +399,9 @@ value, for example:</p>
 </div>
 </div>
 <div class="section" id="miscellaneous">
-<h2>1.16.4. Miscellaneous<a class="headerlink" href="#miscellaneous" title="Permalink to this headline">¶</a></h2>
+<h2>1.16.5. Miscellaneous<a class="headerlink" href="#miscellaneous" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="how-do-i-reference-cite-acknowledge-numba-in-other-work">
-<h3>1.16.4.1. How do I reference/cite/acknowledge Numba in other work?<a class="headerlink" href="#how-do-i-reference-cite-acknowledge-numba-in-other-work" title="Permalink to this headline">¶</a></h3>
+<h3>1.16.5.1. How do I reference/cite/acknowledge Numba in other work?<a class="headerlink" href="#how-do-i-reference-cite-acknowledge-numba-in-other-work" title="Permalink to this headline">¶</a></h3>
 <p>For academic use, the best option is to cite our ACM Proceedings:
 <a class="reference external" href="http://dl.acm.org/citation.cfm?id=2833162&amp;dl=ACM&amp;coll=DL">Numba: a LLVM-based Python JIT compiler.</a></p>
 </div>
