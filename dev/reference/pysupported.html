@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>2.6. Supported Python features &mdash; Numba 0.41.0.dev0+448.ga569da4-py2.7-linux-x86_64.egg documentation</title>
+    <title>2.6. Supported Python features &mdash; Numba 0.41.0.dev0+471.g8acc937-py2.7-linux-x86_64.egg documentation</title>
     
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.41.0.dev0+448.ga569da4-py2.7-linux-x86_64.egg',
+        VERSION:     '0.41.0.dev0+471.g8acc937-py2.7-linux-x86_64.egg',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -27,7 +27,7 @@
     <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="Numba 0.41.0.dev0+448.ga569da4-py2.7-linux-x86_64.egg documentation" href="../index.html" />
+    <link rel="top" title="Numba 0.41.0.dev0+471.g8acc937-py2.7-linux-x86_64.egg documentation" href="../index.html" />
     <link rel="up" title="2. Reference Manual" href="index.html" />
     <link rel="next" title="2.7. Supported NumPy features" href="numpysupported.html" />
     <link rel="prev" title="2.5. Environment variables" href="envvars.html" />
@@ -105,15 +105,16 @@
 <li><a class="reference internal" href="#built-in-types">2.6.2. Built-in types</a><ul>
 <li><a class="reference internal" href="#int-bool">2.6.2.1. int, bool</a></li>
 <li><a class="reference internal" href="#float-complex">2.6.2.2. float, complex</a></li>
-<li><a class="reference internal" href="#tuple">2.6.2.3. tuple</a></li>
-<li><a class="reference internal" href="#list">2.6.2.4. list</a><ul>
-<li><a class="reference internal" href="#list-reflection">2.6.2.4.1. List Reflection</a></li>
-<li><a class="reference internal" href="#list-comprehension">2.6.2.4.2. List comprehension</a></li>
+<li><a class="reference internal" href="#str">2.6.2.3. str</a></li>
+<li><a class="reference internal" href="#tuple">2.6.2.4. tuple</a></li>
+<li><a class="reference internal" href="#list">2.6.2.5. list</a><ul>
+<li><a class="reference internal" href="#list-reflection">2.6.2.5.1. List Reflection</a></li>
+<li><a class="reference internal" href="#list-comprehension">2.6.2.5.2. List comprehension</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#set">2.6.2.5. set</a></li>
-<li><a class="reference internal" href="#none">2.6.2.6. None</a></li>
-<li><a class="reference internal" href="#bytes-bytearray-memoryview">2.6.2.7. bytes, bytearray, memoryview</a></li>
+<li><a class="reference internal" href="#set">2.6.2.6. set</a></li>
+<li><a class="reference internal" href="#none">2.6.2.7. None</a></li>
+<li><a class="reference internal" href="#bytes-bytearray-memoryview">2.6.2.8. bytes, bytearray, memoryview</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#built-in-functions">2.6.3. Built-in functions</a></li>
@@ -306,8 +307,43 @@ methods).</p>
 <li><code class="docutils literal"><span class="pre">.imag</span></code></li>
 </ul>
 </div>
+<div class="section" id="str">
+<h3>2.6.2.3. str<a class="headerlink" href="#str" title="Permalink to this headline">¶</a></h3>
+<p>Numba supports (Unicode) strings in Python 3.  Strings can be passed into
+<a class="reference internal" href="../glossary.html#term-nopython-mode"><span class="xref std std-term">nopython mode</span></a> as arguments, as well as constructed and returned from
+<a class="reference internal" href="../glossary.html#term-nopython-mode"><span class="xref std std-term">nopython mode</span></a>. As in Python, slices (even of length 1) return a new,
+reference counted string.  Optimized code paths for efficiently accessing
+single characters may be introduced in the future.</p>
+<p>The in-memory representation is the same as was introduced in Python 3.4, with
+each string having a tag to indicate whether the string is using a 1, 2, or 4
+byte character width in memory.  When strings of different encodings are
+combined (as in concatenation), the resulting string automatically uses the
+larger character width of the two input strings.  String slices also use the
+same character width as the original string, even if the slice could be
+represented with a narrower character width.  (These details are invisible to
+the user, of course.)</p>
+<p>The following functions, attributes and methods are currently supported:</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">len()</span></code></li>
+<li><code class="docutils literal"><span class="pre">+</span></code> (concatenation of strings)</li>
+<li><code class="docutils literal"><span class="pre">in</span></code>, <code class="docutils literal"><span class="pre">.contains()</span></code></li>
+<li><code class="docutils literal"><span class="pre">==</span></code>, <code class="docutils literal"><span class="pre">&lt;</span></code>, <code class="docutils literal"><span class="pre">&lt;=</span></code>, <code class="docutils literal"><span class="pre">&gt;</span></code>, <code class="docutils literal"><span class="pre">&gt;=</span></code> (comparison)</li>
+<li><code class="docutils literal"><span class="pre">.startswith()</span></code></li>
+<li><code class="docutils literal"><span class="pre">.endswith()</span></code></li>
+<li><code class="docutils literal"><span class="pre">.find()</span></code></li>
+</ul>
+<p>Additional operations as well as support for Python 2 strings / Python 3 bytes
+will be added in a future version of Numba.  Python 2 Unicode objects will
+likely never be supported.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">The performance of the substring search operations (<code class="docutils literal"><span class="pre">in</span></code>,
+<code class="docutils literal"><span class="pre">.contains()</span></code> and <code class="docutils literal"><span class="pre">find()</span></code>) is poor in version 0.41 and will be improved in
+version 0.42.</p>
+</div>
+</div>
 <div class="section" id="tuple">
-<h3>2.6.2.3. tuple<a class="headerlink" href="#tuple" title="Permalink to this headline">¶</a></h3>
+<h3>2.6.2.4. tuple<a class="headerlink" href="#tuple" title="Permalink to this headline">¶</a></h3>
 <p>The following operations are supported:</p>
 <ul class="simple">
 <li>tuple construction</li>
@@ -320,7 +356,7 @@ methods).</p>
 </ul>
 </div>
 <div class="section" id="list">
-<h3>2.6.2.4. list<a class="headerlink" href="#list" title="Permalink to this headline">¶</a></h3>
+<h3>2.6.2.5. list<a class="headerlink" href="#list" title="Permalink to this headline">¶</a></h3>
 <p>Creating and returning lists from JIT-compiled functions is supported,
 as well as all methods and operations.  Lists must be strictly homogeneous:
 Numba will reject any list containing objects of different types, even if
@@ -344,7 +380,7 @@ Out[4]: [array([], dtype=int64), array([0]), array([0, 1]), array([0, 1, 2])]
 </pre></div>
 </div>
 <div class="section" id="list-reflection">
-<h4>2.6.2.4.1. List Reflection<a class="headerlink" href="#list-reflection" title="Permalink to this headline">¶</a></h4>
+<h4>2.6.2.5.1. List Reflection<a class="headerlink" href="#list-reflection" title="Permalink to this headline">¶</a></h4>
 <p>In nopython mode, Numba does not operate on Python objects.  <code class="docutils literal"><span class="pre">list</span></code> are
 compiled into an internal representation.  Any <code class="docutils literal"><span class="pre">list</span></code> arguments must be
 converted into this representation on the way in to nopython mode and their
@@ -367,7 +403,7 @@ performance characterics than the algorithm used by Python.</p>
 </div>
 </div>
 <div class="section" id="list-comprehension">
-<span id="pysupported-comprehension"></span><h4>2.6.2.4.2. List comprehension<a class="headerlink" href="#list-comprehension" title="Permalink to this headline">¶</a></h4>
+<span id="pysupported-comprehension"></span><h4>2.6.2.5.2. List comprehension<a class="headerlink" href="#list-comprehension" title="Permalink to this headline">¶</a></h4>
 <p>Numba supports list comprehension.  For example:</p>
 <div class="highlight-python"><div class="highlight"><pre>In [1]: from numba import njit
 
@@ -405,7 +441,7 @@ with the <a class="reference internal" href="../user/jit.html#parallel-jit-optio
 </div>
 </div>
 <div class="section" id="set">
-<h3>2.6.2.5. set<a class="headerlink" href="#set" title="Permalink to this headline">¶</a></h3>
+<h3>2.6.2.6. set<a class="headerlink" href="#set" title="Permalink to this headline">¶</a></h3>
 <p>All methods and operations on sets are supported in JIT-compiled functions.</p>
 <p>Sets must be strictly homogeneous: Numba will reject any set containing
 objects of different types, even if the types are compatible (for example,
@@ -418,12 +454,12 @@ the function returns.</p>
 </div>
 </div>
 <div class="section" id="none">
-<h3>2.6.2.6. None<a class="headerlink" href="#none" title="Permalink to this headline">¶</a></h3>
+<h3>2.6.2.7. None<a class="headerlink" href="#none" title="Permalink to this headline">¶</a></h3>
 <p>The None value is supported for identity testing (when using an
 <a class="reference internal" href="types.html#numba.optional" title="numba.optional"><code class="xref py py-class docutils literal"><span class="pre">optional</span></code></a> type).</p>
 </div>
 <div class="section" id="bytes-bytearray-memoryview">
-<h3>2.6.2.7. bytes, bytearray, memoryview<a class="headerlink" href="#bytes-bytearray-memoryview" title="Permalink to this headline">¶</a></h3>
+<h3>2.6.2.8. bytes, bytearray, memoryview<a class="headerlink" href="#bytes-bytearray-memoryview" title="Permalink to this headline">¶</a></h3>
 <p>The <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytearray" title="(in Python v3.7)"><code class="xref py py-class docutils literal"><span class="pre">bytearray</span></code></a> type and, on Python 3, the <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.7)"><code class="xref py py-class docutils literal"><span class="pre">bytes</span></code></a> type
 support indexing, iteration and retrieving the len().</p>
 <p>The <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#memoryview" title="(in Python v3.7)"><code class="xref py py-class docutils literal"><span class="pre">memoryview</span></code></a> type supports indexing, slicing, iteration,

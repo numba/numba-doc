@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>1.10. Automatic parallelization with @jit &mdash; Numba 0.41.0.dev0+448.ga569da4-py2.7-linux-x86_64.egg documentation</title>
+    <title>1.10. Automatic parallelization with @jit &mdash; Numba 0.41.0.dev0+471.g8acc937-py2.7-linux-x86_64.egg documentation</title>
     
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.41.0.dev0+448.ga569da4-py2.7-linux-x86_64.egg',
+        VERSION:     '0.41.0.dev0+471.g8acc937-py2.7-linux-x86_64.egg',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -27,7 +27,7 @@
     <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="Numba 0.41.0.dev0+448.ga569da4-py2.7-linux-x86_64.egg documentation" href="../index.html" />
+    <link rel="top" title="Numba 0.41.0.dev0+471.g8acc937-py2.7-linux-x86_64.egg documentation" href="../index.html" />
     <link rel="up" title="1. User Manual" href="index.html" />
     <link rel="next" title="1.11. Using the @stencil decorator" href="stencil.html" />
     <link rel="prev" title="1.9. Compiling code ahead of time" href="pycc.html" />
@@ -93,6 +93,10 @@
 <li><a class="reference internal" href="#supported-operations">1.10.1. Supported Operations</a></li>
 <li><a class="reference internal" href="#explicit-parallel-loops">1.10.2. Explicit Parallel Loops</a></li>
 <li><a class="reference internal" href="#examples">1.10.3. Examples</a></li>
+<li><a class="reference internal" href="#diagnostics">1.10.4. Diagnostics</a><ul>
+<li><a class="reference internal" href="#the-parallel-diagnostics-report-sections">1.10.4.1. The parallel diagnostics report sections</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -281,9 +285,344 @@ modifications to the <code class="docutils literal"><span class="pre">logistic_r
 give an equivalence parallel implementation using <a class="reference internal" href="../reference/jit-compilation.html#numba.guvectorize" title="numba.guvectorize"><code class="xref py py-func docutils literal"><span class="pre">guvectorize()</span></code></a>,
 it would require a pervasive change that rewrites the code to extract kernel
 computation that can be parallelized, which was both tedious and challenging.</p>
+</div>
+<div class="section" id="diagnostics">
+<h2>1.10.4. Diagnostics<a class="headerlink" href="#diagnostics" title="Permalink to this headline">¶</a></h2>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">At present not all parallel transforms and functions can be tracked
+through the code generation process. Occasionally diagnostics about
+some loops or transforms may be missing.</p>
+</div>
+<p>The <a class="reference internal" href="jit.html#parallel-jit-option"><span>parallel</span></a> option for <a class="reference internal" href="../reference/jit-compilation.html#numba.jit" title="numba.jit"><code class="xref py py-func docutils literal"><span class="pre">jit()</span></code></a> can produce
+diagnostic information about the transforms undertaken in automatically
+parallelizing the decorated code. This information can be accessed in two ways,
+the first is by setting the environment variable
+<span class="target" id="index-0"></span><a class="reference internal" href="../reference/envvars.html#envvar-NUMBA_PARALLEL_DIAGNOSTICS"><code class="xref std std-envvar docutils literal"><span class="pre">NUMBA_PARALLEL_DIAGNOSTICS</span></code></a>, the second is by calling
+<a class="reference internal" href="../reference/jit-compilation.html#Dispatcher.parallel_diagnostics" title="Dispatcher.parallel_diagnostics"><code class="xref py py-meth docutils literal"><span class="pre">parallel_diagnostics()</span></code></a>, both methods give the same information
+and print to <code class="docutils literal"><span class="pre">STDOUT</span></code>. The level of verbosity in the diagnostic information is
+controlled by an integer argument of value between 1 and 4 inclusive, 1 being
+the least verbose and 4 the most. For example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@njit</span><span class="p">(</span><span class="n">parallel</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">a</span> <span class="o">*</span> <span class="n">a</span><span class="p">)</span>
+    <span class="n">acc</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">prange</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">2</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">prange</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">acc</span> <span class="o">+=</span> <span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">b</span><span class="p">[</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">acc</span>
+
+<span class="n">test</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+
+<span class="n">test</span><span class="o">.</span><span class="n">parallel_diagnostics</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>produces:</p>
+<div class="highlight-python"><div class="highlight"><pre>================================================================================
+======= Parallel Accelerator Optimizing:  Function test, example.py (4)  =======
+================================================================================
+
+
+Parallel loop listing for  Function test, example.py (4)
+--------------------------------------|loop #ID
+@njit(parallel=True)                  |
+def test(x):                          |
+    n = x.shape[0]                    |
+    a = np.sin(x)---------------------| #0
+    b = np.cos(a * a)-----------------| #1
+    acc = 0                           |
+    for i in prange(n - 2):-----------| #3
+        for j in prange(n - 1):-------| #2
+            acc += b[i] + b[j + 1]    |
+    return acc                        |
+--------------------------------- Fusing loops ---------------------------------
+Attempting fusion of parallel loops (combines loops with similar properties)...
+Trying to fuse loops #0 and #1:
+    - fusion succeeded: parallel for-loop #1 is fused into for-loop #0.
+Trying to fuse loops #0 and #3:
+    - fusion failed: loop dimension mismatched in axis 0. slice(0, x_size0.1, 1)
+!= slice(0, $40.4, 1)
+----------------------------- Before Optimization ------------------------------
+Parallel region 0:
++--0 (parallel)
++--1 (parallel)
+
+
+Parallel region 1:
++--3 (parallel)
++--2 (parallel)
+
+
+--------------------------------------------------------------------------------
+------------------------------ After Optimization ------------------------------
+Parallel region 0:
++--0 (parallel, fused with loop(s): 1)
+
+
+Parallel region 1:
++--3 (parallel)
++--2 (serial)
+
+
+
+Parallel region 0 (loop #0) had 1 loop(s) fused.
+
+Parallel region 1 (loop #3) had 0 loop(s) fused and 1 loop(s) serialized as part
+of the larger parallel loop (#3).
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+
+---------------------------Loop invariant code motion---------------------------
+
+Instruction hoisting:
+loop #0:
+Failed to hoist the following:
+    dependency: $arg_out_var.10 = getitem(value=x, index=$parfor__index_5.99)
+    dependency: $0.6.11 = getattr(value=$0.5, attr=sin)
+    dependency: $expr_out_var.9 = call $0.6.11($arg_out_var.10, func=$0.6.11, args=[Var($arg_out_var.10, example.py (7))], kws=(), vararg=None)
+    dependency: $arg_out_var.17 = $expr_out_var.9 * $expr_out_var.9
+    dependency: $0.10.20 = getattr(value=$0.9, attr=cos)
+    dependency: $expr_out_var.16 = call $0.10.20($arg_out_var.17, func=$0.10.20, args=[Var($arg_out_var.17, example.py (8))], kws=(), vararg=None)
+loop #3:
+Has the following hoisted:
+    $const58.3 = const(int, 1)
+    $58.4 = _n_23 - $const58.3
+--------------------------------------------------------------------------------
+</pre></div>
+</div>
+<p>To aid users unfamiliar with the transforms undertaken when the
+<a class="reference internal" href="jit.html#parallel-jit-option"><span>parallel</span></a> option is used, and to assist in the understanding of
+the subsequent sections, the following definitions are provided:</p>
+<ul>
+<li><dl class="first docutils">
+<dt>Loop fusion</dt>
+<dd><p class="first last"><a class="reference external" href="https://en.wikipedia.org/wiki/Loop_fission_and_fusion">Loop fusion</a> is a
+technique whereby loops with equivalent bounds may be combined under certain
+conditions to produce a loop with a larger body (aiming to improve data
+locality).</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Loop serialization</dt>
+<dd><p class="first last">Loop serialization occurs when any number of <code class="docutils literal"><span class="pre">prange</span></code> driven loops are
+present inside another <code class="docutils literal"><span class="pre">prange</span></code> driven loop. In this case the outermost
+of all the <code class="docutils literal"><span class="pre">prange</span></code> loops executes in parallel and any inner <code class="docutils literal"><span class="pre">prange</span></code>
+loops (nested or otherwise) are treated as standard <code class="docutils literal"><span class="pre">range</span></code> based loops.
+Essentially, nested parallelism does not occur.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Loop invariant code motion</dt>
+<dd><p class="first last"><a class="reference external" href="https://en.wikipedia.org/wiki/Loop-invariant_code_motion">Loop invariant code motion</a> is an
+optimization technique that analyses a loop to look for statements that can
+be moved outside the loop body without changing the result of executing the
+loop, these statements are then &#8220;hoisted&#8221; out of the loop to save repeated
+computation.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Allocation hoisting</dt>
+<dd><p class="first">Allocation hoisting is a specialized case of loop invariant code motion that
+is possible due to the design of some common NumPy allocation methods.
+Explanation of this technique is best driven by an example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@njit</span><span class="p">(</span><span class="n">parallel</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">prange</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        <span class="n">temp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">))</span> <span class="c"># &lt;--- Allocate a temporary array with np.zeros()</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">50</span><span class="p">):</span>
+            <span class="n">temp</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span>
+
+    <span class="c"># ...do something with temp</span>
+</pre></div>
+</div>
+<p>internally, this is transformed to approximately the following:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@njit</span><span class="p">(</span><span class="n">parallel</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">prange</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        <span class="n">temp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">))</span> <span class="c"># &lt;--- np.zeros() is rewritten as np.empty()</span>
+        <span class="n">temp</span><span class="p">[:]</span> <span class="o">=</span> <span class="mi">0</span>               <span class="c"># &lt;--- and then a zero initialisation</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">50</span><span class="p">):</span>
+            <span class="n">temp</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span>
+
+    <span class="c"># ...do something with temp</span>
+</pre></div>
+</div>
+<p>then after hoisting:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@njit</span><span class="p">(</span><span class="n">parallel</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="n">temp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">))</span> <span class="c"># &lt;--- allocation is hoisted as a loop invariant as `np.empty` is considered pure</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">prange</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        <span class="n">temp</span><span class="p">[:]</span> <span class="o">=</span> <span class="mi">0</span>           <span class="c"># &lt;--- this remains as assignment is a side effect</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">50</span><span class="p">):</span>
+            <span class="n">temp</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span>
+
+    <span class="c"># ...do something with temp</span>
+</pre></div>
+</div>
+<p class="last">it can be seen that the <code class="docutils literal"><span class="pre">np.zeros</span></code> allocation is split into an allocation
+and an assignment, and then the allocation is hoisted out of the loop in
+<code class="docutils literal"><span class="pre">i</span></code>, this producing more efficient code as the allocation only occurs
+once.</p>
+</dd>
+</dl>
+</li>
+</ul>
+<div class="section" id="the-parallel-diagnostics-report-sections">
+<h3>1.10.4.1. The parallel diagnostics report sections<a class="headerlink" href="#the-parallel-diagnostics-report-sections" title="Permalink to this headline">¶</a></h3>
+<p>The report is split into the following sections:</p>
+<ol class="arabic">
+<li><dl class="first docutils">
+<dt>Code annotation</dt>
+<dd><p class="first">This is the first section and contains the source code of the decorated
+function with loops that have parallel semantics identified and enumerated.
+The <code class="docutils literal"><span class="pre">loop</span> <span class="pre">#ID</span></code> column on the right of the source code lines up with
+identified parallel loops. From the example, <code class="docutils literal"><span class="pre">#0</span></code> is <code class="docutils literal"><span class="pre">np.sin</span></code>, <code class="docutils literal"><span class="pre">#1</span></code>
+is <code class="docutils literal"><span class="pre">np.cos</span></code> and <code class="docutils literal"><span class="pre">#2</span></code> and <code class="docutils literal"><span class="pre">#3</span></code> are <code class="docutils literal"><span class="pre">prange()</span></code>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">Parallel</span> <span class="n">loop</span> <span class="n">listing</span> <span class="k">for</span>  <span class="n">Function</span> <span class="n">test</span><span class="p">,</span> <span class="n">example</span><span class="o">.</span><span class="n">py</span> <span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<span class="o">--------------------------------------|</span><span class="n">loop</span> <span class="c">#ID</span>
+<span class="nd">@njit</span><span class="p">(</span><span class="n">parallel</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>                  <span class="o">|</span>
+<span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>                          <span class="o">|</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>                    <span class="o">|</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">---------------------|</span> <span class="c">#0</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">a</span> <span class="o">*</span> <span class="n">a</span><span class="p">)</span><span class="o">-----------------|</span> <span class="c">#1</span>
+    <span class="n">acc</span> <span class="o">=</span> <span class="mi">0</span>                           <span class="o">|</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">prange</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">2</span><span class="p">):</span><span class="o">-----------|</span> <span class="c">#3</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">prange</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span><span class="o">-------|</span> <span class="c">#2</span>
+            <span class="n">acc</span> <span class="o">+=</span> <span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">b</span><span class="p">[</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>    <span class="o">|</span>
+    <span class="k">return</span> <span class="n">acc</span>                        <span class="o">|</span>
+</pre></div>
+</div>
+<p class="last">It is worth noting that the loop IDs are enumerated in the order they are
+discovered which is not necessarily the same order as present in the source.
+Further, it should also be noted that the parallel transforms use a static
+counter for loop ID indexing. As a consequence it is possible for the loop
+ID index to not start at 0 due to use of the same counter for internal
+optimizations/transforms taking place that are invisible to the user.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Fusing loops</dt>
+<dd><p class="first">This section describes the attempts made at fusing discovered
+loops noting which succeeded and which failed. In the case of failure to
+fuse a reason is given (e.g. dependency on other data). From the example:</p>
+<div class="highlight-text"><div class="highlight"><pre>--------------------------------- Fusing loops ---------------------------------
+Attempting fusion of parallel loops (combines loops with similar properties)...
+Trying to fuse loops #0 and #1:
+    - fusion succeeded: parallel for-loop #1 is fused into for-loop #0.
+Trying to fuse loops #0 and #3:
+    - fusion failed: loop dimension mismatched in axis 0. slice(0, x_size0.1, 1)
+!= slice(0, $40.4, 1)
+</pre></div>
+</div>
+<p class="last">It can be seen that fusion of loops <code class="docutils literal"><span class="pre">#0</span></code> and <code class="docutils literal"><span class="pre">#1</span></code> was attempted and this
+succeeded (both are based on the same dimensions of <code class="docutils literal"><span class="pre">x</span></code>). Following the
+successful fusion of <code class="docutils literal"><span class="pre">#0</span></code> and <code class="docutils literal"><span class="pre">#1</span></code>, fusion was attempted between <code class="docutils literal"><span class="pre">#0</span></code>
+(now including the fused <code class="docutils literal"><span class="pre">#1</span></code> loop) and <code class="docutils literal"><span class="pre">#3</span></code>. This fusion failed because
+there is a loop dimension mismatch, <code class="docutils literal"><span class="pre">#0</span></code> is size <code class="docutils literal"><span class="pre">x.shape</span></code> whereas
+<code class="docutils literal"><span class="pre">#3</span></code> is size <code class="docutils literal"><span class="pre">x.shape[0]</span> <span class="pre">-</span> <span class="pre">2</span></code>.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Before Optimization</dt>
+<dd><p class="first">This section shows the structure of the parallel regions in the code before
+any optimization has taken place, but with loops associated with their final
+parallel region (this is to make before/after optimization output directly
+comparable). Multiple parallel regions may exist if there are loops which
+cannot be fused, in this case code within each region will execute in
+parallel, but each parallel region will run sequentially. From the example:</p>
+<div class="highlight-text"><div class="highlight"><pre>Parallel region 0:
++--0 (parallel)
++--1 (parallel)
+
+
+Parallel region 1:
++--3 (parallel)
++--2 (parallel)
+</pre></div>
+</div>
+<p class="last">As alluded to by the <cite>Fusing loops</cite> section, there are necessarily two
+parallel regions in the code. The first contains loops <code class="docutils literal"><span class="pre">#0</span></code> and <code class="docutils literal"><span class="pre">#1</span></code>,
+the second contains <code class="docutils literal"><span class="pre">#3</span></code> and <code class="docutils literal"><span class="pre">#2</span></code>, all loops are marked <code class="docutils literal"><span class="pre">parallel</span></code> as
+no optimization has taken place yet.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>After Optimization</dt>
+<dd><p class="first">This section shows the structure of the parallel regions in the code after
+optimization has taken place. Again, parallel regions are enumerated with
+their corresponding loops but this time loops which are fused or serialized
+are noted and a summary is presented. From the example:</p>
+<div class="highlight-text"><div class="highlight"><pre>Parallel region 0:
++--0 (parallel, fused with loop(s): 1)
+
+
+Parallel region 1:
++--3 (parallel)
+   +--2 (serial)
+
+Parallel region 0 (loop #0) had 1 loop(s) fused.
+
+Parallel region 1 (loop #3) had 0 loop(s) fused and 1 loop(s) serialized as part
+of the larger parallel loop (#3).
+</pre></div>
+</div>
+<p class="last">It can be noted that parallel region 0 contains loop <code class="docutils literal"><span class="pre">#0</span></code> and, as seen in
+the <cite>fusing loops</cite> section, loop <code class="docutils literal"><span class="pre">#1</span></code> is fused into loop <code class="docutils literal"><span class="pre">#0</span></code>. It can
+also be noted that parallel region 1 contains loop <code class="docutils literal"><span class="pre">#3</span></code> and that loop
+<code class="docutils literal"><span class="pre">#2</span></code> (the inner <code class="docutils literal"><span class="pre">prange()</span></code>) has been serialized for execution in the
+body of loop <code class="docutils literal"><span class="pre">#3</span></code>.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Loop invariant code motion</dt>
+<dd><p class="first">This section shows for each loop, after optimization has occurred:</p>
+<ul class="simple">
+<li>the instructions that failed to be hoisted and the reason for failure
+(dependency/impure).</li>
+<li>the instructions that were hoisted.</li>
+<li>any allocation hoisting that may have occurred.</li>
+</ul>
+<p>From the example:</p>
+<div class="highlight-text"><div class="highlight"><pre>Instruction hoisting:
+loop #0:
+Failed to hoist the following:
+    dependency: $arg_out_var.10 = getitem(value=x, index=$parfor__index_5.99)
+    dependency: $0.6.11 = getattr(value=$0.5, attr=sin)
+    dependency: $expr_out_var.9 = call $0.6.11($arg_out_var.10, func=$0.6.11, args=[Var($arg_out_var.10, example.py (7))], kws=(), vararg=None)
+    dependency: $arg_out_var.17 = $expr_out_var.9 * $expr_out_var.9
+    dependency: $0.10.20 = getattr(value=$0.9, attr=cos)
+    dependency: $expr_out_var.16 = call $0.10.20($arg_out_var.17, func=$0.10.20, args=[Var($arg_out_var.17, example.py (8))], kws=(), vararg=None)
+loop #3:
+Has the following hoisted:
+    $const58.3 = const(int, 1)
+    $58.4 = _n_23 - $const58.3
+</pre></div>
+</div>
+<p class="last">The first thing to note is that this information is for advanced users as it
+refers to the <a class="reference internal" href="../glossary.html#term-numba-ir"><span class="xref std std-term">Numba IR</span></a> of the function being transformed. As an
+example, the expression <code class="docutils literal"><span class="pre">a</span> <span class="pre">*</span> <span class="pre">a</span></code> in the example source partly translates to
+the expression <code class="docutils literal"><span class="pre">$arg_out_var.17</span> <span class="pre">=</span> <span class="pre">$expr_out_var.9</span> <span class="pre">*</span> <span class="pre">$expr_out_var.9</span></code> in
+the IR, this clearly cannot be hoisted out of <code class="docutils literal"><span class="pre">loop</span> <span class="pre">#0</span></code> because it is not
+loop invariant! Whereas in <code class="docutils literal"><span class="pre">loop</span> <span class="pre">#3</span></code>, the expression
+<code class="docutils literal"><span class="pre">$const58.3</span> <span class="pre">=</span> <span class="pre">const(int,</span> <span class="pre">1)</span></code> comes from the source <code class="docutils literal"><span class="pre">b[j</span> <span class="pre">+</span> <span class="pre">1]</span></code>, the
+number <code class="docutils literal"><span class="pre">1</span></code> is clearly a constant and so can be hoisted out of the loop.</p>
+</dd>
+</dl>
+</li>
+</ol>
 <div class="admonition seealso">
 <p class="first admonition-title">See also</p>
 <p class="last"><a class="reference internal" href="jit.html#parallel-jit-option"><span>parallel</span></a>, <a class="reference internal" href="faq.html#parallel-faqs"><span>Parallel FAQs</span></a></p>
+</div>
 </div>
 </div>
 </div>
