@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>1.7. Compiling python classes with @jitclass &mdash; Numba 0.41.0.dev0+488.g57d4ba0-py2.7-linux-x86_64.egg documentation</title>
+    
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/numba-docs.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.41.0.dev0+488.g57d4ba0-py2.7-linux-x86_64.egg',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="Numba 0.41.0.dev0+488.g57d4ba0-py2.7-linux-x86_64.egg documentation" href="../index.html" />
+    <link rel="up" title="1. User Manual" href="index.html" />
+    <link rel="next" title="1.8. Creating C callbacks with @cfunc" href="cfunc.html" />
+    <link rel="prev" title="1.6. Creating Numpy universal functions" href="vectorize.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body role="document">
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html"><span><img src="../_static/numba_blue_icon_rgb.png"></span>
+          Numba</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.41</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">1. User Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/index.html">2. Reference Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cuda/index.html">3. Numba for CUDA GPUs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cuda-reference/index.html">4. CUDA Python Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../roc/index.html">5. Numba for AMD ROC GPUs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../extending/index.html">6. Extending Numba</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer/index.html">7. Developer Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../proposals/index.html">8. Numba Enhancement Proposals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">9. Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release-notes.html">10. Release Notes</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">1.7. Compiling python classes with &#64;jitclass</a><ul>
+<li><a class="reference internal" href="#basic-usage">1.7.1. Basic usage</a></li>
+<li><a class="reference internal" href="#support-operations">1.7.2. Support operations</a></li>
+<li><a class="reference internal" href="#limitations">1.7.3. Limitations</a></li>
+<li><a class="reference internal" href="#the-decorator-jitclass">1.7.4. The decorator: <code class="docutils literal"><span class="pre">&#64;jitclass</span></code></a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+  <li>
+    <a href="vectorize.html" title="Previous Chapter: 1.6. Creating Numpy universal functions"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; 1.6. Creating Nu...</span>
+    </a>
+  </li>
+  <li>
+    <a href="cfunc.html" title="Next Chapter: 1.8. Creating C callbacks with @cfunc"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">1.8. Creating C ... &raquo;</span>
+    </a>
+  </li>
+              
+            
+            
+            
+            
+              <li class="hidden-sm">
+<div id="sourcelink">
+  <a href="../_sources/user/jitclass.txt"
+     rel="nofollow">Source</a>
+</div></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <div class="section" id="compiling-python-classes-with-jitclass">
+<span id="jitclass"></span><h1>1.7. Compiling python classes with &#64;jitclass<a class="headerlink" href="#compiling-python-classes-with-jitclass" title="Permalink to this headline">¶</a></h1>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This is a early version of jitclass support. Not all compiling features are
+exposed or implemented, yet.</p>
+</div>
+<p>Numba supports code generation for classes via the <a class="reference internal" href="#numba.jitclass" title="numba.jitclass"><code class="xref py py-func docutils literal"><span class="pre">numba.jitclass()</span></code></a>
+decorator.  A class can be marked for optimization using this decorator along
+with a specification of the types of each field.  We call the resulting class
+object a jitclass.  All methods of a jitclass are compiled into nopython
+functions.  The data of a jitclass instance is allocated on the heap as a
+C-compatible structure so that any compiled functions can have direct access
+to the underlying data, bypassing the interpreter.</p>
+<div class="section" id="basic-usage">
+<h2>1.7.1. Basic usage<a class="headerlink" href="#basic-usage" title="Permalink to this headline">¶</a></h2>
+<p>Here&#8217;s an example of a jitclass:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">jitclass</span>          <span class="c"># import the decorator</span>
+<span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">int32</span><span class="p">,</span> <span class="n">float32</span>    <span class="c"># import the types</span>
+
+<span class="n">spec</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">(</span><span class="s">&#39;value&#39;</span><span class="p">,</span> <span class="n">int32</span><span class="p">),</span>               <span class="c"># a simple scalar field</span>
+    <span class="p">(</span><span class="s">&#39;array&#39;</span><span class="p">,</span> <span class="n">float32</span><span class="p">[:]),</span>          <span class="c"># an array field</span>
+<span class="p">]</span>
+
+<span class="nd">@jitclass</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Bag</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">size</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">size</span>
+
+    <span class="k">def</span> <span class="nf">increment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">array</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">array</span>
+</pre></div>
+</div>
+<p>(see full example at <cite>examples/jitclass.py</cite> from the source tree)</p>
+<p>In the above example, a <code class="docutils literal"><span class="pre">spec</span></code> is provided as a list of 2-tuples.  The tuples
+contain the name of the field and the numba type of the field.  Alternatively,
+user can use a dictionary (an <code class="docutils literal"><span class="pre">OrderedDict</span></code> preferrably for stable field
+ordering), which maps field names to types.</p>
+<p>The definition of the class requires at least a <code class="docutils literal"><span class="pre">__init__</span></code> method for
+initializing each defined fields.  Uninitialized fields contains garbage data.
+Methods and properties (getters and setters only) can be defined.  They will be
+automatically compiled.</p>
+</div>
+<div class="section" id="support-operations">
+<h2>1.7.2. Support operations<a class="headerlink" href="#support-operations" title="Permalink to this headline">¶</a></h2>
+<p>The following operations of jitclasses work in both the interpreter and numba
+compiled functions:</p>
+<ul class="simple">
+<li>calling the jitclass class object to construct a new instance
+(e.g. <code class="docutils literal"><span class="pre">mybag</span> <span class="pre">=</span> <span class="pre">Bag(123)</span></code>);</li>
+<li>read/write access to attributes and properties (e.g. <code class="docutils literal"><span class="pre">mybag.value</span></code>);</li>
+<li>calling methods (e.g. <code class="docutils literal"><span class="pre">mybag.increment(3)</span></code>);</li>
+</ul>
+<p>Using jitclasses in numba compiled function is more efficient.
+Short methods can be inlined (at the discretion of LLVM inliner).
+Attributes access are simply reading from a C structure.
+Using jitclasses from the intpreter has the same overhead of calling any
+numba compiled function from the interpreter.  Arguments and return values
+must be unboxed or boxed between python objects and native representation.
+Values encapsulated by a jitclass does not get boxed into python object when
+the jitclass instance is handed to the interpreter.  It is during attribute
+access to the field values that they are boxed.</p>
+</div>
+<div class="section" id="limitations">
+<h2>1.7.3. Limitations<a class="headerlink" href="#limitations" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>A jitclass class object is treated as a function (the constructor) inside
+a numba compiled function.</li>
+<li><code class="docutils literal"><span class="pre">isinstance()</span></code> only works in the interpreter.</li>
+<li>Manipulating jitclass instances in the interpreter is not optimized, yet.</li>
+<li>Support for jitclasses are available on CPU only.
+(Note: Support for GPU devices is planned for a future release.)</li>
+</ul>
+</div>
+<div class="section" id="the-decorator-jitclass">
+<h2>1.7.4. The decorator: <code class="docutils literal"><span class="pre">&#64;jitclass</span></code><a class="headerlink" href="#the-decorator-jitclass" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="numba.jitclass">
+<code class="descclassname">numba.</code><code class="descname">jitclass</code><span class="sig-paren">(</span><em>spec</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.jitclass" title="Permalink to this definition">¶</a></dt>
+<dd><p>A decorator for creating a jitclass.</p>
+<p><strong>arguments</strong>:</p>
+<ul>
+<li><dl class="first docutils">
+<dt>spec:</dt>
+<dd><p class="first last">Specifies the types of each field on this class.
+Must be a dictionary or a sequence.
+With a dictionary, use collections.OrderedDict for stable ordering.
+With a sequence, it must contain 2-tuples of (fieldname, fieldtype).</p>
+</dd>
+</dl>
+</li>
+</ul>
+<p><strong>returns</strong>:</p>
+<p>A callable that takes a class object, which will be compiled.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2012, Anaconda, Inc..<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

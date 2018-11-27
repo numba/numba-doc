@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>3.15. CUDA Array Interface &mdash; Numba 0.41.0.dev0+488.g57d4ba0-py2.7-linux-x86_64.egg documentation</title>
+    
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/numba-docs.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.41.0.dev0+488.g57d4ba0-py2.7-linux-x86_64.egg',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="Numba 0.41.0.dev0+488.g57d4ba0-py2.7-linux-x86_64.egg documentation" href="../index.html" />
+    <link rel="up" title="3. Numba for CUDA GPUs" href="index.html" />
+    <link rel="next" title="3.16. CUDA Frequently Asked Questions" href="faq.html" />
+    <link rel="prev" title="3.14. Sharing CUDA Memory" href="ipc.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body role="document">
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html"><span><img src="../_static/numba_blue_icon_rgb.png"></span>
+          Numba</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.41</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../user/index.html">1. User Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/index.html">2. Reference Manual</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">3. Numba for CUDA GPUs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cuda-reference/index.html">4. CUDA Python Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../roc/index.html">5. Numba for AMD ROC GPUs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../extending/index.html">6. Extending Numba</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer/index.html">7. Developer Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../proposals/index.html">8. Numba Enhancement Proposals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">9. Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release-notes.html">10. Release Notes</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">3.15. CUDA Array Interface</a><ul>
+<li><a class="reference internal" href="#python-interface-specification">3.15.1. Python Interface Specification</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+  <li>
+    <a href="ipc.html" title="Previous Chapter: 3.14. Sharing CUDA Memory"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; 3.14. Sharing CU...</span>
+    </a>
+  </li>
+  <li>
+    <a href="faq.html" title="Next Chapter: 3.16. CUDA Frequently Asked Questions"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">3.16. CUDA Frequ... &raquo;</span>
+    </a>
+  </li>
+              
+            
+            
+            
+            
+              <li class="hidden-sm">
+<div id="sourcelink">
+  <a href="../_sources/cuda/cuda_array_interface.txt"
+     rel="nofollow">Source</a>
+</div></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <div class="section" id="cuda-array-interface">
+<span id="id1"></span><h1>3.15. CUDA Array Interface<a class="headerlink" href="#cuda-array-interface" title="Permalink to this headline">¶</a></h1>
+<p>The <em>cuda array inteface</em> is created for interoperability between different
+implementation of GPU array-like objects in various projects.  The idea is
+borrowed from the <a class="reference external" href="https://docs.scipy.org/doc/numpy-1.13.0/reference/arrays.interface.html#__array_interface__">numpy array interface</a>.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Currently, we only define the Python-side interface.  In the future, we may
+add a C-side interface for efficient exchange of the information in
+compiled code.</p>
+</div>
+<div class="section" id="python-interface-specification">
+<h2>3.15.1. Python Interface Specification<a class="headerlink" href="#python-interface-specification" title="Permalink to this headline">¶</a></h2>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Experimental feature.  Specification may change.</p>
+</div>
+<p>The <code class="docutils literal"><span class="pre">__cuda_array_interface__</span></code> attribute is a dictionary-like object that
+must contain the following entries:</p>
+<ul>
+<li><p class="first"><strong>shape</strong>: <code class="docutils literal"><span class="pre">(integer,</span> <span class="pre">...)</span></code></p>
+<blockquote>
+<div><p>A tuple of <cite>int</cite> (or <cite>long</cite>) representing the size of each dimension.</p>
+</div></blockquote>
+</li>
+<li><p class="first"><strong>typestr</strong>: <cite>str</cite></p>
+<blockquote>
+<div><p>The type string.  This has the same definition as <em>typestr</em> in the
+<a class="reference external" href="https://docs.scipy.org/doc/numpy-1.13.0/reference/arrays.interface.html#__array_interface__">numpy array interface</a>.</p>
+</div></blockquote>
+</li>
+<li><p class="first"><strong>data</strong>: <cite>(integer, boolean)</cite></p>
+<blockquote>
+<div><p>The <strong>data</strong> is a 2-tuple.  The first element data pointer
+as a Python <cite>int</cite> (or <cite>long</cite>).  The data must be device-accessible.
+The second element is the read-only flag as a Python <cite>bool</cite>.</p>
+<p>Because the user of the interface may or may not be in the same context,
+the most common case is to use <code class="docutils literal"><span class="pre">cuPointerGetAttribute</span></code> with
+<code class="docutils literal"><span class="pre">CU_POINTER_ATTRIBUTE_DEVICE_POINTER</span></code> in the CUDA driver API (or the
+equivalent CUDA Runtime API) to retrieve a device pointer that
+is usable in the currently active context.</p>
+</div></blockquote>
+</li>
+<li><p class="first"><strong>version</strong>: <cite>integer</cite></p>
+<blockquote>
+<div><p>An integer for the version of the interface being exported.
+The current version is <em>0</em> since it is still experimental.</p>
+</div></blockquote>
+</li>
+</ul>
+<p>The following are optional entries:</p>
+<ul>
+<li><p class="first"><strong>strides</strong>: <code class="docutils literal"><span class="pre">None</span></code> or <code class="docutils literal"><span class="pre">(integer,</span> <span class="pre">...)</span></code></p>
+<blockquote>
+<div><p>A tuple of <cite>int</cite> (or <cite>long</cite>) representing the number of bytes to skip to
+access the next element at each dimension. If it is <code class="docutils literal"><span class="pre">None</span></code>, the array is
+assumed to be in C-contiguous layout.</p>
+</div></blockquote>
+</li>
+<li><p class="first"><strong>descr</strong></p>
+<blockquote>
+<div><p>This is for describing more complicated types.  This follows the same
+specification as in the <a class="reference external" href="https://docs.scipy.org/doc/numpy-1.13.0/reference/arrays.interface.html#__array_interface__">numpy array interface</a>.</p>
+</div></blockquote>
+</li>
+</ul>
+<p>Additional information about the data pointer can be retrieved using
+<code class="docutils literal"><span class="pre">cuPointerGetAttribute</span></code> or <code class="docutils literal"><span class="pre">cudaPointerGetAttributes</span></code>.  Such information
+include:</p>
+<ul class="simple">
+<li>the CUDA context that owns the pointer;</li>
+<li>is the pointer host-accessible?</li>
+<li>is the pointer a managed memory?</li>
+</ul>
+</div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2012, Anaconda, Inc..<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

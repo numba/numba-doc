@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>4.3. Memory Management &mdash; Numba 0.41.0.dev0+488.g57d4ba0-py2.7-linux-x86_64.egg documentation</title>
+    
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/numba-docs.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.41.0.dev0+488.g57d4ba0-py2.7-linux-x86_64.egg',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="Numba 0.41.0.dev0+488.g57d4ba0-py2.7-linux-x86_64.egg documentation" href="../index.html" />
+    <link rel="up" title="4. CUDA Python Reference" href="index.html" />
+    <link rel="next" title="5. Numba for AMD ROC GPUs" href="../roc/index.html" />
+    <link rel="prev" title="4.2. CUDA Kernel API" href="kernel.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body role="document">
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html"><span><img src="../_static/numba_blue_icon_rgb.png"></span>
+          Numba</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.41</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../user/index.html">1. User Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/index.html">2. Reference Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cuda/index.html">3. Numba for CUDA GPUs</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">4. CUDA Python Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../roc/index.html">5. Numba for AMD ROC GPUs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../extending/index.html">6. Extending Numba</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer/index.html">7. Developer Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../proposals/index.html">8. Numba Enhancement Proposals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">9. Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release-notes.html">10. Release Notes</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">4.3. Memory Management</a><ul>
+<li><a class="reference internal" href="#device-objects">4.3.1. Device Objects</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+  <li>
+    <a href="kernel.html" title="Previous Chapter: 4.2. CUDA Kernel API"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; 4.2. CUDA Kernel...</span>
+    </a>
+  </li>
+  <li>
+    <a href="../roc/index.html" title="Next Chapter: 5. Numba for AMD ROC GPUs"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">5. Numba for AMD... &raquo;</span>
+    </a>
+  </li>
+              
+            
+            
+            
+            
+              <li class="hidden-sm">
+<div id="sourcelink">
+  <a href="../_sources/cuda-reference/memory.txt"
+     rel="nofollow">Source</a>
+</div></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <div class="section" id="memory-management">
+<h1>4.3. Memory Management<a class="headerlink" href="#memory-management" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="numba.cuda.to_device">
+<code class="descclassname">numba.cuda.</code><code class="descname">to_device</code><span class="sig-paren">(</span><em>obj</em>, <em>stream=0</em>, <em>copy=True</em>, <em>to=None</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.cuda.to_device" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allocate and transfer a numpy ndarray or structured scalar to the device.</p>
+<p>To copy host-&gt;device a numpy array:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">ary</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">d_ary</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">to_device</span><span class="p">(</span><span class="n">ary</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>To enqueue the transfer to a stream:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">stream</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">stream</span><span class="p">()</span>
+<span class="n">d_ary</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">to_device</span><span class="p">(</span><span class="n">ary</span><span class="p">,</span> <span class="n">stream</span><span class="o">=</span><span class="n">stream</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The resulting <code class="docutils literal"><span class="pre">d_ary</span></code> is a <code class="docutils literal"><span class="pre">DeviceNDArray</span></code>.</p>
+<p>To copy device-&gt;host:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">hary</span> <span class="o">=</span> <span class="n">d_ary</span><span class="o">.</span><span class="n">copy_to_host</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>To copy device-&gt;host to an existing array:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">ary</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="n">d_ary</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">d_ary</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+<span class="n">d_ary</span><span class="o">.</span><span class="n">copy_to_host</span><span class="p">(</span><span class="n">ary</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>To enqueue the transfer to a stream:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">hary</span> <span class="o">=</span> <span class="n">d_ary</span><span class="o">.</span><span class="n">copy_to_host</span><span class="p">(</span><span class="n">stream</span><span class="o">=</span><span class="n">stream</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.device_array">
+<code class="descclassname">numba.cuda.</code><code class="descname">device_array</code><span class="sig-paren">(</span><em>shape</em>, <em>dtype=np.float</em>, <em>strides=None</em>, <em>order='C'</em>, <em>stream=0</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.cuda.device_array" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allocate an empty device ndarray. Similar to <code class="xref py py-meth docutils literal"><span class="pre">numpy.empty()</span></code>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.device_array_like">
+<code class="descclassname">numba.cuda.</code><code class="descname">device_array_like</code><span class="sig-paren">(</span><em>ary</em>, <em>stream=0</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.cuda.device_array_like" title="Permalink to this definition">¶</a></dt>
+<dd><p>Call cuda.devicearray() with information from the array.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.pinned_array">
+<code class="descclassname">numba.cuda.</code><code class="descname">pinned_array</code><span class="sig-paren">(</span><em>shape</em>, <em>dtype=np.float</em>, <em>strides=None</em>, <em>order='C'</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.cuda.pinned_array" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allocate a np.ndarray with a buffer that is pinned (pagelocked).
+Similar to np.empty().</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.mapped_array">
+<code class="descclassname">numba.cuda.</code><code class="descname">mapped_array</code><span class="sig-paren">(</span><em>shape</em>, <em>dtype=np.float</em>, <em>strides=None</em>, <em>order='C'</em>, <em>stream=0</em>, <em>portable=False</em>, <em>wc=False</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.cuda.mapped_array" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allocate a mapped ndarray with a buffer that is pinned and mapped on
+to the device. Similar to np.empty()</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>portable</strong> &#8211; a boolean flag to allow the allocated device memory to be
+usable in multiple devices.</li>
+<li><strong>wc</strong> &#8211; a boolean flag to enable writecombined allocation which is faster
+to write by the host and to read by the device, but slower to
+write by the host and slower to write by the device.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.pinned">
+<code class="descclassname">numba.cuda.</code><code class="descname">pinned</code><span class="sig-paren">(</span><em>*args</em>, <em>**kws</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.cuda.pinned" title="Permalink to this definition">¶</a></dt>
+<dd><p>A context manager for temporary pinning a sequence of host ndarrays.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.mapped">
+<code class="descclassname">numba.cuda.</code><code class="descname">mapped</code><span class="sig-paren">(</span><em>*args</em>, <em>**kws</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.cuda.mapped" title="Permalink to this definition">¶</a></dt>
+<dd><p>A context manager for temporarily mapping a sequence of host ndarrays.</p>
+</dd></dl>
+
+<div class="section" id="device-objects">
+<h2>4.3.1. Device Objects<a class="headerlink" href="#device-objects" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="numba.cuda.cudadrv.devicearray.DeviceNDArray">
+<em class="property">class </em><code class="descclassname">numba.cuda.cudadrv.devicearray.</code><code class="descname">DeviceNDArray</code><span class="sig-paren">(</span><em>shape</em>, <em>strides</em>, <em>dtype</em>, <em>stream=0</em>, <em>writeback=None</em>, <em>gpu_data=None</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.cuda.cudadrv.devicearray.DeviceNDArray" title="Permalink to this definition">¶</a></dt>
+<dd><p>An on-GPU array type</p>
+<dl class="method">
+<dt id="numba.cuda.cudadrv.devicearray.DeviceNDArray.copy_to_device">
+<code class="descname">copy_to_device</code><span class="sig-paren">(</span><em>*args</em>, <em>**kws</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.cuda.cudadrv.devicearray.DeviceNDArray.copy_to_device" title="Permalink to this definition">¶</a></dt>
+<dd><p>Copy <cite>ary</cite> to <cite>self</cite>.</p>
+<p>If <cite>ary</cite> is a CUDA memory, perform a device-to-device transfer.
+Otherwise, perform a a host-to-device transfer.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadrv.devicearray.DeviceNDArray.copy_to_host">
+<code class="descname">copy_to_host</code><span class="sig-paren">(</span><em>*args</em>, <em>**kws</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.cuda.cudadrv.devicearray.DeviceNDArray.copy_to_host" title="Permalink to this definition">¶</a></dt>
+<dd><p>Copy <code class="docutils literal"><span class="pre">self</span></code> to <code class="docutils literal"><span class="pre">ary</span></code> or create a new Numpy ndarray
+if <code class="docutils literal"><span class="pre">ary</span></code> is <code class="docutils literal"><span class="pre">None</span></code>.</p>
+<p>If a CUDA <code class="docutils literal"><span class="pre">stream</span></code> is given, then the transfer will be made
+asynchronously as part as the given stream.  Otherwise, the transfer is
+synchronous: the function returns after the copy is finished.</p>
+<p>Always returns the host array.</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">cuda</span>
+
+<span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
+<span class="n">d_arr</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">to_device</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span>
+
+<span class="n">my_kernel</span><span class="p">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">](</span><span class="n">d_arr</span><span class="p">)</span>
+
+<span class="n">result_array</span> <span class="o">=</span> <span class="n">d_arr</span><span class="o">.</span><span class="n">copy_to_host</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadrv.devicearray.DeviceNDArray.is_c_contiguous">
+<code class="descname">is_c_contiguous</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#numba.cuda.cudadrv.devicearray.DeviceNDArray.is_c_contiguous" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return true if the array is C-contiguous.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadrv.devicearray.DeviceNDArray.is_f_contiguous">
+<code class="descname">is_f_contiguous</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#numba.cuda.cudadrv.devicearray.DeviceNDArray.is_f_contiguous" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return true if the array is Fortran-contiguous.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadrv.devicearray.DeviceNDArray.ravel">
+<code class="descname">ravel</code><span class="sig-paren">(</span><em>order='C'</em>, <em>stream=0</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.cuda.cudadrv.devicearray.DeviceNDArray.ravel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Flatten the array without changing its contents, similar to
+<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.ravel.html#numpy.ndarray.ravel" title="(in NumPy v1.15)"><code class="xref py py-meth docutils literal"><span class="pre">numpy.ndarray.ravel()</span></code></a>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadrv.devicearray.DeviceNDArray.reshape">
+<code class="descname">reshape</code><span class="sig-paren">(</span><em>*newshape</em>, <em>**kws</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.cuda.cudadrv.devicearray.DeviceNDArray.reshape" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reshape the array without changing its contents, similarly to
+<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.reshape.html#numpy.ndarray.reshape" title="(in NumPy v1.15)"><code class="xref py py-meth docutils literal"><span class="pre">numpy.ndarray.reshape()</span></code></a>. Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">d_arr</span> <span class="o">=</span> <span class="n">d_arr</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="s">&#39;F&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadrv.devicearray.DeviceNDArray.split">
+<code class="descname">split</code><span class="sig-paren">(</span><em>section</em>, <em>stream=0</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.cuda.cudadrv.devicearray.DeviceNDArray.split" title="Permalink to this definition">¶</a></dt>
+<dd><p>Split the array into equal partition of the <cite>section</cite> size.
+If the array cannot be equally divided, the last section will be
+smaller.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.cudadrv.devicearray.DeviceRecord">
+<em class="property">class </em><code class="descclassname">numba.cuda.cudadrv.devicearray.</code><code class="descname">DeviceRecord</code><span class="sig-paren">(</span><em>dtype</em>, <em>stream=0</em>, <em>gpu_data=None</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.cuda.cudadrv.devicearray.DeviceRecord" title="Permalink to this definition">¶</a></dt>
+<dd><p>An on-GPU record type</p>
+<dl class="method">
+<dt id="numba.cuda.cudadrv.devicearray.DeviceRecord.copy_to_device">
+<code class="descname">copy_to_device</code><span class="sig-paren">(</span><em>*args</em>, <em>**kws</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.cuda.cudadrv.devicearray.DeviceRecord.copy_to_device" title="Permalink to this definition">¶</a></dt>
+<dd><p>Copy <cite>ary</cite> to <cite>self</cite>.</p>
+<p>If <cite>ary</cite> is a CUDA memory, perform a device-to-device transfer.
+Otherwise, perform a a host-to-device transfer.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadrv.devicearray.DeviceRecord.copy_to_host">
+<code class="descname">copy_to_host</code><span class="sig-paren">(</span><em>*args</em>, <em>**kws</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.cuda.cudadrv.devicearray.DeviceRecord.copy_to_host" title="Permalink to this definition">¶</a></dt>
+<dd><p>Copy <code class="docutils literal"><span class="pre">self</span></code> to <code class="docutils literal"><span class="pre">ary</span></code> or create a new Numpy ndarray
+if <code class="docutils literal"><span class="pre">ary</span></code> is <code class="docutils literal"><span class="pre">None</span></code>.</p>
+<p>If a CUDA <code class="docutils literal"><span class="pre">stream</span></code> is given, then the transfer will be made
+asynchronously as part as the given stream.  Otherwise, the transfer is
+synchronous: the function returns after the copy is finished.</p>
+<p>Always returns the host array.</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">cuda</span>
+
+<span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
+<span class="n">d_arr</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">to_device</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span>
+
+<span class="n">my_kernel</span><span class="p">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">](</span><span class="n">d_arr</span><span class="p">)</span>
+
+<span class="n">result_array</span> <span class="o">=</span> <span class="n">d_arr</span><span class="o">.</span><span class="n">copy_to_host</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.cudadrv.devicearray.MappedNDArray">
+<em class="property">class </em><code class="descclassname">numba.cuda.cudadrv.devicearray.</code><code class="descname">MappedNDArray</code><span class="sig-paren">(</span><em>shape</em>, <em>strides</em>, <em>dtype</em>, <em>stream=0</em>, <em>writeback=None</em>, <em>gpu_data=None</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.cuda.cudadrv.devicearray.MappedNDArray" title="Permalink to this definition">¶</a></dt>
+<dd><p>A host array that uses CUDA mapped memory.</p>
+<dl class="method">
+<dt id="numba.cuda.cudadrv.devicearray.MappedNDArray.copy_to_device">
+<code class="descname">copy_to_device</code><span class="sig-paren">(</span><em>*args</em>, <em>**kws</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.cuda.cudadrv.devicearray.MappedNDArray.copy_to_device" title="Permalink to this definition">¶</a></dt>
+<dd><p>Copy <cite>ary</cite> to <cite>self</cite>.</p>
+<p>If <cite>ary</cite> is a CUDA memory, perform a device-to-device transfer.
+Otherwise, perform a a host-to-device transfer.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadrv.devicearray.MappedNDArray.copy_to_host">
+<code class="descname">copy_to_host</code><span class="sig-paren">(</span><em>*args</em>, <em>**kws</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.cuda.cudadrv.devicearray.MappedNDArray.copy_to_host" title="Permalink to this definition">¶</a></dt>
+<dd><p>Copy <code class="docutils literal"><span class="pre">self</span></code> to <code class="docutils literal"><span class="pre">ary</span></code> or create a new Numpy ndarray
+if <code class="docutils literal"><span class="pre">ary</span></code> is <code class="docutils literal"><span class="pre">None</span></code>.</p>
+<p>If a CUDA <code class="docutils literal"><span class="pre">stream</span></code> is given, then the transfer will be made
+asynchronously as part as the given stream.  Otherwise, the transfer is
+synchronous: the function returns after the copy is finished.</p>
+<p>Always returns the host array.</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">cuda</span>
+
+<span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
+<span class="n">d_arr</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">to_device</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span>
+
+<span class="n">my_kernel</span><span class="p">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">](</span><span class="n">d_arr</span><span class="p">)</span>
+
+<span class="n">result_array</span> <span class="o">=</span> <span class="n">d_arr</span><span class="o">.</span><span class="n">copy_to_host</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.cudadrv.devicearray.MappedNDArray.split">
+<code class="descname">split</code><span class="sig-paren">(</span><em>section</em>, <em>stream=0</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.cuda.cudadrv.devicearray.MappedNDArray.split" title="Permalink to this definition">¶</a></dt>
+<dd><p>Split the array into equal partition of the <cite>section</cite> size.
+If the array cannot be equally divided, the last section will be
+smaller.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2012, Anaconda, Inc..<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

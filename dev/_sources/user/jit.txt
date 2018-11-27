@@ -61,8 +61,8 @@ to use single-precision floats).
 
 If you omit the return type, e.g. by writing ``(int32, int32)`` instead of
 ``int32(int32, int32)``, Numba will try to infer it for you.  Function
-signatures can also be strings; see the :func:`numba.jit` documentation for
-more details.
+signatures can also be strings, and you can pass several of them as a list;
+see the :func:`numba.jit` documentation for more details.
 
 Of course, the compiled function gives the expected results::
 
@@ -115,8 +115,8 @@ common ones:
 * ``complex64`` and ``complex128`` are single- and double-precision complex
   numbers, respectively
 * array types can be specified by indexing any numeric type, e.g. ``float32[:]``
-  for a one-dimension single-precision array or ``int8[:,:]`` for a
-  two-dimension array of 8-bit integers.
+  for a one-dimensional single-precision array or ``int8[:,:]`` for a
+  two-dimensional array of 8-bit integers.
 
 
 Compilation options
@@ -140,7 +140,7 @@ Numba from falling back, and instead raise an error, pass ``nopython=True``.
    def f(x, y):
        return x + y
 
-.. seealso:: :ref:`troubleshooting`
+.. seealso:: :ref:`numba-troubleshooting`
 
 .. _jit-nogil:
 
@@ -167,3 +167,33 @@ This will not be possible if the function is compiled in :term:`object mode`.
 When using ``nogil=True``, you'll have to be wary of the usual pitfalls
 of multi-threaded programming (consistency, synchronization, race conditions,
 etc.).
+
+.. _jit-cache:
+
+``cache``
+---------
+
+To avoid compilation times each time you invoke a Python program,
+you can instruct Numba to write the result of function compilation into
+a file-based cache.  This is done by passing ``cache=True``::
+
+   @jit(cache=True)
+   def f(x, y):
+       return x + y
+
+.. _parallel_jit_option:
+
+``parallel``
+------------
+
+Enables automatic parallelization (and related optimizations) for those
+operations in the function known to have parallel semantics.  For a list of
+supported operations, see :ref:`numba-parallel`.  This feature is enabled by
+passing ``parallel=True`` and must be used in conjunction with
+``nopython=True``::
+
+   @jit(nopython=True, parallel=True)
+   def f(x, y):
+       return x + y
+
+.. seealso:: :ref:`numba-parallel`
