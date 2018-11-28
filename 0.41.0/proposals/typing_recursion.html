@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>8.2.5. NBEP 6: Typing Recursion &#8212; Numba 0.41.0 documentation</title>
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/numba-docs.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="9. Glossary" href="../glossary.html" />
+    <link rel="prev" title="8.2.4. NBEP 5: Type Inference" href="type-inference.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html"><span><img src="../_static/numba_blue_icon_rgb.png"></span>
+          Numba</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.41</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../user/index.html">1. User Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/index.html">2. Reference Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cuda/index.html">3. Numba for CUDA GPUs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cuda-reference/index.html">4. CUDA Python Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../roc/index.html">5. Numba for AMD ROC GPUs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../extending/index.html">6. Extending Numba</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer/index.html">7. Developer Manual</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">8. Numba Enhancement Proposals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">9. Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release-notes.html">10. Release Notes</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">8.2.5. NBEP 6: Typing Recursion</a><ul>
+<li><a class="reference internal" href="#introduction">8.2.5.1. Introduction</a></li>
+<li><a class="reference internal" href="#the-current-state">8.2.5.2. The Current State</a></li>
+<li><a class="reference internal" href="#the-solution">8.2.5.3. The Solution</a></li>
+<li><a class="reference internal" href="#limitations">8.2.5.4. Limitations</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+  <li>
+    <a href="type-inference.html" title="Previous Chapter: 8.2.4. NBEP 5: Type Inference"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; 8.2.4. NBEP 5...</span>
+    </a>
+  </li>
+  <li>
+    <a href="../glossary.html" title="Next Chapter: 9. Glossary"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">9. Glossary &raquo;</span>
+    </a>
+  </li>
+              
+            
+            
+            
+            
+              <li class="hidden-sm">
+<div id="sourcelink">
+  <a href="../_sources/proposals/typing_recursion.rst.txt"
+     rel="nofollow">Source</a>
+</div></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <div class="section" id="nbep-6-typing-recursion">
+<h1>8.2.5. NBEP 6: Typing Recursion<a class="headerlink" href="#nbep-6-typing-recursion" title="Permalink to this headline">¶</a></h1>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Author:</th><td class="field-body">Siu Kwan Lam</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Date:</th><td class="field-body">Sept 2016</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Status:</th><td class="field-body">Draft</td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="introduction">
+<h2>8.2.5.1. Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<p>This document proposes an enhancement to the type inference algorithm to
+support recursion without explicitly annotating the function signature.
+As a result, the proposal enables numba to type-infer both self-recursive and
+mutual-recursive functions under some limitations.  In practice, these
+limitions can be easily overcome by specifying a compilation order.</p>
+</div>
+<div class="section" id="the-current-state">
+<h2>8.2.5.2. The Current State<a class="headerlink" href="#the-current-state" title="Permalink to this headline">¶</a></h2>
+<p>Recursion support in numba is currently limited to self-recursion with explicit
+type annotation for the function.  This limitation comes from the inability to
+determine the return type of a recursive call.  This is because the callee is
+either the current function (for self-recursion) or a parent function
+(mutual-recursion) and its type inference process has been suspended while waiting for
+the function-type of its callee.  This results in the formation of a cyclic
+dependency.  For example, given a function <code class="docutils literal notranslate"><span class="pre">foo()</span></code> that calls <code class="docutils literal notranslate"><span class="pre">bar()</span></code>,
+which in turns call <code class="docutils literal notranslate"><span class="pre">foo()</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">bar</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">1</span>
+
+<span class="k">def</span> <span class="nf">bar</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">foo</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The type inferrence process of <code class="docutils literal notranslate"><span class="pre">foo()</span></code> depends on that of <code class="docutils literal notranslate"><span class="pre">bar()</span></code>,
+which depends on <code class="docutils literal notranslate"><span class="pre">foo()</span></code>.  Therefore <code class="docutils literal notranslate"><span class="pre">foo()</span></code> depends on itself and the type
+inference algorithm cannot terminate.</p>
+</div>
+<div class="section" id="the-solution">
+<h2>8.2.5.3. The Solution<a class="headerlink" href="#the-solution" title="Permalink to this headline">¶</a></h2>
+<p>The proposed solution has two components:</p>
+<ol class="arabic simple">
+<li>The introduction of a compile-time <em>callstack</em> that tracks the compiling functions.</li>
+<li>The allowance of a partial type inference on functions by leveraging the return type
+on non-recursive control-flow paths.</li>
+</ol>
+<p>The compile-time callstack stores typing information of the functions being
+compiled.  Like an ordinary callstack, it pushes a new record every time a
+function is “called”.  Since this occurs at compile-time, a “call” triggers
+a compilation of the callee.</p>
+<p>To detect recursion, the compile-time callstack is searched bottom-up
+(stack grows downward) for a record that matches the callee.
+As the record contains a reference to the type inference state,
+the type inference process can be resumed to determine the return type.</p>
+<p>Recall that the type inference process cannot be resumed normally because of the cyclic
+dependency of the return type.  In practice, we can assume that a useful
+program must have a terminating condition, a path that does not recurse.  So,
+the type inference process can make an initial guess for the return-type at the recursive
+call by using the return-type determined by the non-recursive paths.  This
+allows type information to propagate on the recursive paths to generate the
+final return type, which is used to refine the type information by the
+subsequent iteration in the type inference process.</p>
+<p>The following figure illustrates the compile-time callstack when the compiler
+reaches the recursive call to <code class="docutils literal notranslate"><span class="pre">foo()</span></code> from <code class="docutils literal notranslate"><span class="pre">bar()</span></code>:</p>
+<a class="reference internal image-reference" href="../_images/recursion_callstack.svg"><img alt="../_images/recursion_callstack.svg" src="../_images/recursion_callstack.svg" width="400px" /></a>
+<p>At this time, the type inference process of <code class="docutils literal notranslate"><span class="pre">foo()</span></code> is suspended and that of <code class="docutils literal notranslate"><span class="pre">bar()</span></code>
+is active.  The compiler can see that the callee is already compiling by
+searching the callstack.  Knowing that it is a recursive call, the compiler
+can resume the type-inference on <code class="docutils literal notranslate"><span class="pre">foo()</span></code> by ignoring the paths that contain
+recursive calls.  This means only the <code class="docutils literal notranslate"><span class="pre">else</span></code> branch is considered and we can
+easily tell that <code class="docutils literal notranslate"><span class="pre">foo()</span></code> returns an <code class="docutils literal notranslate"><span class="pre">int</span></code> in this case.  The compiler will
+then set the initial return type of <code class="docutils literal notranslate"><span class="pre">foo()</span></code> and <code class="docutils literal notranslate"><span class="pre">bar()</span></code> to <code class="docutils literal notranslate"><span class="pre">int</span></code>.  The
+subsequent type propagation can use this information to complete the type
+inference of both functions, unifying the return-type of all returning paths.</p>
+</div>
+<div class="section" id="limitations">
+<h2>8.2.5.4. Limitations<a class="headerlink" href="#limitations" title="Permalink to this headline">¶</a></h2>
+<p>For the proposed type inference algorithm to terminate, it assumes that
+at least one of the control path leads to a return-statement without undertaking
+a recursive call.  Should this not be the case, the algorithm will raise an
+exception indicating a potential runaway recursion.</p>
+<p>For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@jit</span>
+<span class="k">def</span> <span class="nf">first</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="c1"># The recursing call must have a path that is non-recursing.</span>
+    <span class="k">if</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">second</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">1</span>
+
+<span class="nd">@jit</span>
+<span class="k">def</span> <span class="nf">second</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">third</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+<span class="nd">@jit</span>
+<span class="k">def</span> <span class="nf">third</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">first</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">first()</span></code> function must be the compiled first for the type inference algorithm to
+complete successfully.  Compiling any other function first will lead to a failure
+in type inference.  The type inference algorithm will treat it as a runaway
+recursion due to the lack of a non-recursive exit in the recursive callee.</p>
+<p>For example, compiling <code class="docutils literal notranslate"><span class="pre">second()</span></code> first will move the recursive call to
+<code class="docutils literal notranslate"><span class="pre">first()</span></code>.  When the compiler tries to resume the type inference process of
+<code class="docutils literal notranslate"><span class="pre">second()</span></code>, it will fail to find a non-recursive path.</p>
+<p>This is a small limitation and can be overcome easily by code restructuring or
+precompiling in a specific order.</p>
+</div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2012, Anaconda, Inc..<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>
