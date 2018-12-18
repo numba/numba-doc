@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>1.11. Using the @stencil decorator &mdash; Numba 0.42.0.dev0+145.g7f0ab87-py2.7-linux-x86_64.egg documentation</title>
+    <title>1.11. Using the @stencil decorator &mdash; Numba 0.42.0.dev0+150.gcd0c974-py2.7-linux-x86_64.egg documentation</title>
     
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.42.0.dev0+145.g7f0ab87-py2.7-linux-x86_64.egg',
+        VERSION:     '0.42.0.dev0+150.gcd0c974-py2.7-linux-x86_64.egg',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -27,7 +27,7 @@
     <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="Numba 0.42.0.dev0+145.g7f0ab87-py2.7-linux-x86_64.egg documentation" href="../index.html" />
+    <link rel="top" title="Numba 0.42.0.dev0+150.gcd0c974-py2.7-linux-x86_64.egg documentation" href="../index.html" />
     <link rel="up" title="1. User Manual" href="index.html" />
     <link rel="next" title="1.12. Callback into the Python Interpreter from within JIT’ed code" href="withobjmode.html" />
     <link rel="prev" title="1.10. Automatic parallelization with @jit" href="parallel.html" />
@@ -95,7 +95,7 @@
 <li><a class="reference internal" href="#kernel-shape-inference-and-border-handling">1.11.3. Kernel shape inference and border handling</a></li>
 <li><a class="reference internal" href="#stencil-decorator-options">1.11.4. Stencil decorator options</a><ul>
 <li><a class="reference internal" href="#neighborhood">1.11.4.1. <code class="docutils literal"><span class="pre">neighborhood</span></code></a></li>
-<li><a class="reference internal" href="#mode">1.11.4.2. <code class="docutils literal"><span class="pre">mode</span></code></a></li>
+<li><a class="reference internal" href="#func-or-mode">1.11.4.2. <code class="docutils literal"><span class="pre">func_or_mode</span></code></a></li>
 <li><a class="reference internal" href="#cval">1.11.4.3. <code class="docutils literal"><span class="pre">cval</span></code></a></li>
 <li><a class="reference internal" href="#standard-indexing">1.11.4.4. <code class="docutils literal"><span class="pre">standard_indexing</span></code></a></li>
 </ul>
@@ -193,7 +193,7 @@ kernel corresponds to <code class="docutils literal"><span class="pre">a[x</span
 <p>Depending on the specified kernel, the kernel may not be applicable to the
 borders of the output array as this may cause the input array to be
 accessed out-of-bounds.  The way in which the stencil decorator handles
-this situation is dependent upon which <a class="reference internal" href="#stencil-mode"><span>mode</span></a> is selected.
+this situation is dependent upon which <a class="reference internal" href="#stencil-mode"><span>func_or_mode</span></a> is selected.
 The default mode is for the stencil decorator to set the border elements
 of the output array to zero.</p>
 <p>To invoke a stencil on an input array, call the stencil as if it were
@@ -272,9 +272,12 @@ simple expressions if possible. For example:</p>
 </div>
 <div class="section" id="stencil-decorator-options">
 <h2>1.11.4. Stencil decorator options<a class="headerlink" href="#stencil-decorator-options" title="Permalink to this headline">¶</a></h2>
-<p>While the stencil decorator may be augmented in the future to
-provide additional mechanisms for border handling, at the moment
-the stencil decorator currently supports only one option.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The stencil decorator may be augmented in the future to provide additional
+mechanisms for border handling. At present, only one behaviour is
+implemented, <code class="docutils literal"><span class="pre">&quot;constant&quot;</span></code> (see <code class="docutils literal"><span class="pre">func_or_mode</span></code> below for details).</p>
+</div>
 <div class="section" id="neighborhood">
 <span id="stencil-neighborhood"></span><h3>1.11.4.1. <code class="docutils literal"><span class="pre">neighborhood</span></code><a class="headerlink" href="#neighborhood" title="Permalink to this headline">¶</a></h3>
 <p>Sometimes it may be inconvenient to write the stencil kernel
@@ -300,9 +303,9 @@ maximum index offsets used in the corresponding dimension.</p>
 <p>If a user specifies a neighborhood but the kernel accesses elements outside the
 specified neighborhood, <strong>the behavior is undefined.</strong></p>
 </div>
-<div class="section" id="mode">
-<span id="stencil-mode"></span><h3>1.11.4.2. <code class="docutils literal"><span class="pre">mode</span></code><a class="headerlink" href="#mode" title="Permalink to this headline">¶</a></h3>
-<p>The optional mode parameter controls how the border of the output array
+<div class="section" id="func-or-mode">
+<span id="stencil-mode"></span><h3>1.11.4.2. <code class="docutils literal"><span class="pre">func_or_mode</span></code><a class="headerlink" href="#func-or-mode" title="Permalink to this headline">¶</a></h3>
+<p>The optional <code class="docutils literal"><span class="pre">func_or_mode</span></code> parameter controls how the border of the output array
 is handled.  Currently, there is only one supported value, <code class="docutils literal"><span class="pre">&quot;constant&quot;</span></code>.
 In <code class="docutils literal"><span class="pre">constant</span></code> mode, the stencil kernel is not applied in cases where
 the kernel would access elements outside the valid range of the input
@@ -313,7 +316,7 @@ to a constant value, as specified by the <code class="docutils literal"><span cl
 <h3>1.11.4.3. <code class="docutils literal"><span class="pre">cval</span></code><a class="headerlink" href="#cval" title="Permalink to this headline">¶</a></h3>
 <p>The optional cval parameter defaults to zero but can be set to any
 desired value, which is then used for the border of the output array
-if the mode parameter is set to <code class="docutils literal"><span class="pre">constant</span></code>.  The cval parameter is
+if the <code class="docutils literal"><span class="pre">func_or_mode</span></code> parameter is set to <code class="docutils literal"><span class="pre">constant</span></code>.  The cval parameter is
 ignored in all other modes.  The type of the cval parameter must match
 the return type of the stencil kernel.  If the user wishes the output
 array to be constructed from a particular type then they should ensure
