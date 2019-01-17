@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>1.8. Creating C callbacks with @cfunc &mdash; Numba 0.43.0.dev0+78.g4fcd63a-py2.7-linux-x86_64.egg documentation</title>
+    <title>1.8. Creating C callbacks with @cfunc &mdash; Numba 0.43.0.dev0+98.g3be9d0d-py2.7-linux-x86_64.egg documentation</title>
     
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.43.0.dev0+78.g4fcd63a-py2.7-linux-x86_64.egg',
+        VERSION:     '0.43.0.dev0+98.g3be9d0d-py2.7-linux-x86_64.egg',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -27,7 +27,7 @@
     <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="Numba 0.43.0.dev0+78.g4fcd63a-py2.7-linux-x86_64.egg documentation" href="../index.html" />
+    <link rel="top" title="Numba 0.43.0.dev0+98.g3be9d0d-py2.7-linux-x86_64.egg documentation" href="../index.html" />
     <link rel="up" title="1. User Manual" href="index.html" />
     <link rel="next" title="1.9. Compiling code ahead of time" href="pycc.html" />
     <link rel="prev" title="1.7. Compiling python classes with @jitclass" href="jitclass.html" />
@@ -93,8 +93,14 @@
 <li><a class="reference internal" href="#basic-usage">1.8.1. Basic usage</a></li>
 <li><a class="reference internal" href="#example">1.8.2. Example</a></li>
 <li><a class="reference internal" href="#dealing-with-pointers-and-array-memory">1.8.3. Dealing with pointers and array memory</a></li>
-<li><a class="reference internal" href="#signature-specification">1.8.4. Signature specification</a></li>
-<li><a class="reference internal" href="#compilation-options">1.8.5. Compilation options</a></li>
+<li><a class="reference internal" href="#handling-c-structures">1.8.4. Handling C structures</a><ul>
+<li><a class="reference internal" href="#with-cffi">1.8.4.1. With CFFI</a></li>
+<li><a class="reference internal" href="#with-numba-types-record-make-c-struct">1.8.4.2. With <code class="docutils literal"><span class="pre">numba.types.Record.make_c_struct</span></code></a></li>
+<li><a class="reference internal" href="#full-example">1.8.4.3. Full example</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#signature-specification">1.8.5. Signature specification</a></li>
+<li><a class="reference internal" href="#compilation-options">1.8.6. Compilation options</a></li>
 </ul>
 </li>
 </ul>
@@ -247,15 +253,90 @@ and returns an array view of the given shape over that data.  The data is
 assumed to be laid out in C order.  If the data is laid out in Fortran order,
 <a class="reference internal" href="../reference/utils.html#numba.farray" title="numba.farray"><code class="xref py py-func docutils literal"><span class="pre">numba.farray()</span></code></a> should be used instead.</p>
 </div>
+<div class="section" id="handling-c-structures">
+<h2>1.8.4. Handling C structures<a class="headerlink" href="#handling-c-structures" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="with-cffi">
+<h3>1.8.4.1. With CFFI<a class="headerlink" href="#with-cffi" title="Permalink to this headline">¶</a></h3>
+<p>For applications that have a lot of state, it is useful to pass data in C
+structures.  To simplify the interoperability with C code, numba can convert
+a <code class="docutils literal"><span class="pre">cffi</span></code> type into a numba <code class="docutils literal"><span class="pre">Record</span></code> type using
+<code class="docutils literal"><span class="pre">numba.cffi_support.map_type</span></code>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">cffi_support</span>
+
+<span class="n">nbtype</span> <span class="o">=</span> <span class="n">cffi_support</span><span class="o">.</span><span class="n">map_type</span><span class="p">(</span><span class="n">cffi_type</span><span class="p">,</span> <span class="n">use_record_dtype</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last"><strong>use_record_dtype=True</strong> is needed otherwise pointers to C
+structures are returned as void pointers.</p>
+</div>
+<p>For example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">cffi</span> <span class="kn">import</span> <span class="n">FFI</span>
+
+<span class="n">src</span> <span class="o">=</span> <span class="s">&quot;&quot;&quot;</span>
+
+<span class="s">/* Define the C struct */</span>
+<span class="s">typedef struct my_struct {</span>
+<span class="s">   int    i1;</span>
+<span class="s">   float  f2;</span>
+<span class="s">   double d3;</span>
+<span class="s">} my_struct;</span>
+
+<span class="s">/* Define a callback function */</span>
+<span class="s">typedef double (*my_func)(my_struct*, size_t);</span>
+<span class="s">&quot;&quot;&quot;</span>
+
+<span class="n">ffi</span> <span class="o">=</span> <span class="n">FFI</span><span class="p">()</span>
+<span class="n">ffi</span><span class="o">.</span><span class="n">cdef</span><span class="p">(</span><span class="n">src</span><span class="p">)</span>
+
+<span class="c"># Get the function signature from *my_func*</span>
+<span class="n">sig</span> <span class="o">=</span> <span class="n">cffi_support</span><span class="o">.</span><span class="n">map_type</span><span class="p">(</span><span class="n">ffi</span><span class="o">.</span><span class="n">typeof</span><span class="p">(</span><span class="s">&#39;my_func&#39;</span><span class="p">),</span> <span class="n">use_record_dtype</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+<span class="c"># Make the cfunc</span>
+<span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">cfunc</span><span class="p">,</span> <span class="n">carray</span>
+
+<span class="nd">@cfunc</span><span class="p">(</span><span class="n">sig</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">ptr</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+   <span class="n">base</span> <span class="o">=</span> <span class="n">carray</span><span class="p">(</span><span class="n">ptr</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>  <span class="c"># view pointer as an array of my_struct</span>
+   <span class="n">tmp</span> <span class="o">=</span> <span class="mi">0</span>
+   <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+      <span class="n">tmp</span> <span class="o">+=</span> <span class="n">base</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">i1</span> <span class="o">*</span> <span class="n">base</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">f2</span> <span class="o">/</span> <span class="n">base</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">d3</span>
+   <span class="k">return</span> <span class="n">tmp</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="with-numba-types-record-make-c-struct">
+<h3>1.8.4.2. With <code class="docutils literal"><span class="pre">numba.types.Record.make_c_struct</span></code><a class="headerlink" href="#with-numba-types-record-make-c-struct" title="Permalink to this headline">¶</a></h3>
+<p>The <code class="docutils literal"><span class="pre">numba.types.Record</span></code> type can be created manually to follow a
+C-structure&#8217;s layout.  To do that, use <code class="docutils literal"><span class="pre">Record.make_c_struct</span></code>, for example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">my_struct</span> <span class="o">=</span> <span class="n">types</span><span class="o">.</span><span class="n">Record</span><span class="o">.</span><span class="n">make_c_struct</span><span class="p">([</span>
+   <span class="c"># Provides a sequence of 2-tuples i.e. (name:str, type:Type)</span>
+   <span class="p">(</span><span class="s">&#39;i1&#39;</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">int32</span><span class="p">),</span>
+   <span class="p">(</span><span class="s">&#39;f2&#39;</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span>
+   <span class="p">(</span><span class="s">&#39;d3&#39;</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">float64</span><span class="p">),</span>
+<span class="p">])</span>
+</pre></div>
+</div>
+<p>Due to ABI limitations, structures should be passed as pointers
+using <code class="docutils literal"><span class="pre">types.CPointer(my_struct)</span></code> as the argument type.  Inside the <code class="docutils literal"><span class="pre">cfunc</span></code>
+body, the <code class="docutils literal"><span class="pre">my_struct*</span></code> can be accessed with <code class="docutils literal"><span class="pre">carray</span></code>.</p>
+</div>
+<div class="section" id="full-example">
+<h3>1.8.4.3. Full example<a class="headerlink" href="#full-example" title="Permalink to this headline">¶</a></h3>
+<p>See full example in <code class="docutils literal"><span class="pre">examples/notebooks/Accessing</span> <span class="pre">C</span> <span class="pre">Struct</span> <span class="pre">Data.ipynb</span></code>.</p>
+</div>
+</div>
 <div class="section" id="signature-specification">
-<h2>1.8.4. Signature specification<a class="headerlink" href="#signature-specification" title="Permalink to this headline">¶</a></h2>
+<h2>1.8.5. Signature specification<a class="headerlink" href="#signature-specification" title="Permalink to this headline">¶</a></h2>
 <p>The explicit <code class="docutils literal"><span class="pre">&#64;cfunc</span></code> signature can use any <a class="reference internal" href="../reference/types.html#numba-types"><span>Numba types</span></a>,
 but only a subset of them make sense for a C callback.  You should
 generally limit yourself to scalar types (such as <code class="docutils literal"><span class="pre">int8</span></code> or <code class="docutils literal"><span class="pre">float64</span></code>)
-or pointers to them (for example <code class="docutils literal"><span class="pre">types.CPointer(types.int8)</span></code>).</p>
+,pointers to them (for example <code class="docutils literal"><span class="pre">types.CPointer(types.int8)</span></code>), or pointers
+to <code class="docutils literal"><span class="pre">Record</span></code> type.</p>
 </div>
 <div class="section" id="compilation-options">
-<h2>1.8.5. Compilation options<a class="headerlink" href="#compilation-options" title="Permalink to this headline">¶</a></h2>
+<h2>1.8.6. Compilation options<a class="headerlink" href="#compilation-options" title="Permalink to this headline">¶</a></h2>
 <p>A number of keyword-only arguments can be passed to the <code class="docutils literal"><span class="pre">&#64;cfunc</span></code>
 decorator: <code class="docutils literal"><span class="pre">nopython</span></code> and <code class="docutils literal"><span class="pre">cache</span></code>.  Their meaning is similar to those
 in the <code class="docutils literal"><span class="pre">&#64;jit</span></code> decorator.</p>
