@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>1.8. Creating C callbacks with @cfunc &mdash; Numba 0.43.0.dev0+185.g1eb88f3-py2.7-linux-x86_64.egg documentation</title>
+    <title>1.8. Creating C callbacks with @cfunc &mdash; Numba 0.43.0.dev0+192.gbda76a0-py2.7-linux-x86_64.egg documentation</title>
     
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.43.0.dev0+185.g1eb88f3-py2.7-linux-x86_64.egg',
+        VERSION:     '0.43.0.dev0+192.gbda76a0-py2.7-linux-x86_64.egg',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -27,7 +27,7 @@
     <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="Numba 0.43.0.dev0+185.g1eb88f3-py2.7-linux-x86_64.egg documentation" href="../index.html" />
+    <link rel="top" title="Numba 0.43.0.dev0+192.gbda76a0-py2.7-linux-x86_64.egg documentation" href="../index.html" />
     <link rel="up" title="1. User Manual" href="index.html" />
     <link rel="next" title="1.9. Compiling code ahead of time" href="pycc.html" />
     <link rel="prev" title="1.7. Compiling python classes with @jitclass" href="jitclass.html" />
@@ -281,6 +281,7 @@ structures are returned as void pointers.</p>
 <span class="s">   int    i1;</span>
 <span class="s">   float  f2;</span>
 <span class="s">   double d3;</span>
+<span class="s">   float  af4[7]; // arrays are supported</span>
 <span class="s">} my_struct;</span>
 
 <span class="s">/* Define a callback function */</span>
@@ -302,6 +303,7 @@ structures are returned as void pointers.</p>
    <span class="n">tmp</span> <span class="o">=</span> <span class="mi">0</span>
    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
       <span class="n">tmp</span> <span class="o">+=</span> <span class="n">base</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">i1</span> <span class="o">*</span> <span class="n">base</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">f2</span> <span class="o">/</span> <span class="n">base</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">d3</span>
+      <span class="n">tmp</span> <span class="o">+=</span> <span class="n">base</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">af4</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>  <span class="c"># nested arrays are like normal numpy array</span>
    <span class="k">return</span> <span class="n">tmp</span>
 </pre></div>
 </div>
@@ -315,6 +317,7 @@ C-structure&#8217;s layout.  To do that, use <code class="docutils literal"><spa
    <span class="p">(</span><span class="s">&#39;i1&#39;</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">int32</span><span class="p">),</span>
    <span class="p">(</span><span class="s">&#39;f2&#39;</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span>
    <span class="p">(</span><span class="s">&#39;d3&#39;</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">float64</span><span class="p">),</span>
+   <span class="p">(</span><span class="s">&#39;af4&#39;</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">NestedArray</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="n">types</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">7</span><span class="p">,))),</span>
 <span class="p">])</span>
 </pre></div>
 </div>
