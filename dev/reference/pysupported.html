@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>2.6. Supported Python features &mdash; Numba 0.43.0.dev0+588.g8154cca-py2.7-linux-x86_64.egg documentation</title>
+    <title>2.6. Supported Python features &mdash; Numba 0.43.0.dev0+601.ga8eb92c-py2.7-linux-x86_64.egg documentation</title>
     
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.43.0.dev0+588.g8154cca-py2.7-linux-x86_64.egg',
+        VERSION:     '0.43.0.dev0+601.ga8eb92c-py2.7-linux-x86_64.egg',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -27,7 +27,7 @@
     <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="Numba 0.43.0.dev0+588.g8154cca-py2.7-linux-x86_64.egg documentation" href="../index.html" />
+    <link rel="top" title="Numba 0.43.0.dev0+601.ga8eb92c-py2.7-linux-x86_64.egg documentation" href="../index.html" />
     <link rel="up" title="2. Reference Manual" href="index.html" />
     <link rel="next" title="2.7. Supported NumPy features" href="numpysupported.html" />
     <link rel="prev" title="2.5. Environment variables" href="envvars.html" />
@@ -113,8 +113,9 @@
 </ul>
 </li>
 <li><a class="reference internal" href="#set">2.6.2.6. set</a></li>
-<li><a class="reference internal" href="#none">2.6.2.7. None</a></li>
-<li><a class="reference internal" href="#bytes-bytearray-memoryview">2.6.2.8. bytes, bytearray, memoryview</a></li>
+<li><a class="reference internal" href="#dict">2.6.2.7. dict</a></li>
+<li><a class="reference internal" href="#none">2.6.2.8. None</a></li>
+<li><a class="reference internal" href="#bytes-bytearray-memoryview">2.6.2.9. bytes, bytearray, memoryview</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#built-in-functions">2.6.3. Built-in functions</a><ul>
@@ -463,13 +464,177 @@ made to the set will not be visible to the Python interpreter until
 the function returns.</p>
 </div>
 </div>
+<div class="section" id="dict">
+<h3>2.6.2.7. dict<a class="headerlink" href="#dict" title="Permalink to this headline">¶</a></h3>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last"><code class="docutils literal"><span class="pre">numba.typed.Dict</span></code> is an experimental feature.  The API may change
+in the future releases.</p>
+</div>
+<p>Numba does not directly support the Python <code class="docutils literal"><span class="pre">dict</span></code> because it is an untyped
+container that can have any Python types as members. To generate efficient
+machine code, Numba needs the keys and the values of the dictionary to have
+fixed types, declared in advance. To achieve this, Numba has a typed dictionary,
+<code class="docutils literal"><span class="pre">numba.typed.Dict</span></code>, for which the user must explicitly declare the key-type
+and the value-type using the <code class="docutils literal"><span class="pre">Dict.empty()</span></code> constructor method.
+This typed dictionary has the same API as the Python <code class="docutils literal"><span class="pre">dict</span></code>,  it implements
+the <code class="docutils literal"><span class="pre">collections.MutableMapping</span></code> interface and is usable in both interpreted
+Python code and JIT-compiled Numba functions.
+Because the typed dictionary stores keys and values in Numba&#8217;s native,
+unboxed data layout, passing a Numba dictionary into nopython mode has very low
+overhead. However, this means that using a typed dictionary from the Python
+interpreter is slower than a regular dictionary because Numba has to box and
+unbox key and value objects when getting or setting items.</p>
+<p>An important difference of the typed dictionary in comparison to Python&#8217;s
+<code class="docutils literal"><span class="pre">dict</span></code> is that <strong>implicit casting</strong> occurs when a key or value is stored.
+As a result the <em>setitem</em> operation may fail should the type-casting fail.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">A <code class="docutils literal"><span class="pre">numba.typed.Dict</span></code> cannot yet be constructed with <code class="docutils literal"><span class="pre">Dict()</span></code>, the
+<code class="docutils literal"><span class="pre">Dict.empty(key_type,</span> <span class="pre">value_type)</span></code> class method must be used to construct a
+typed dictionary instead.</p>
+</div>
+<p>It should be noted that the Numba typed dictionary is implemented using the same
+algorithm as the CPython 3.7 dictionary. As a consequence, the typed dictionary
+is ordered and has the same collision resolution as the CPython implementation.</p>
+<p>Further to the above in relation to type specification, there are limitations
+placed on the types that can be used as keys and/or values in the typed
+dictionary, most notably the Numba <code class="docutils literal"><span class="pre">Set</span></code> and <code class="docutils literal"><span class="pre">List</span></code> types are currently
+unsupported. Acceptable key/value types include but are not limited to: unicode
+strings, arrays, scalars, tuples. It is expected that these limitations will
+be relaxed as Numba continues to improve.</p>
+<p>Here&#8217;s an example of creating a <code class="docutils literal"><span class="pre">numba.typed.Dict</span></code> instance from interpreted
+code and using the dictionary in jit code:</p>
+<div class="literal-block-wrapper container" id="from-ex-typed-dict-from-cpython-of-examples-dict-usage-py">
+<div class="code-block-caption"><span class="caption-text">from <code class="docutils literal"><span class="pre">ex_typed_dict_from_cpython</span></code> of <code class="docutils literal"><span class="pre">examples/dict_usage.py</span></code></span><a class="headerlink" href="#from-ex-typed-dict-from-cpython-of-examples-dict-usage-py" title="Permalink to this code">¶</a></div>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33</pre></div></td><td class="code"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">njit</span>
+<span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">types</span>
+<span class="kn">from</span> <span class="nn">numba.typed</span> <span class="kn">import</span> <span class="n">Dict</span>
+
+<span class="c"># The Dict.empty() constructs a typed dictionary.</span>
+<span class="c"># The key and value typed must be explicitly declared.</span>
+<span class="n">d</span> <span class="o">=</span> <span class="n">Dict</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span>
+    <span class="n">key_type</span><span class="o">=</span><span class="n">types</span><span class="o">.</span><span class="n">unicode_type</span><span class="p">,</span>
+    <span class="n">value_type</span><span class="o">=</span><span class="n">types</span><span class="o">.</span><span class="n">float64</span><span class="p">[:],</span>
+<span class="p">)</span>
+
+<span class="c"># The typed-dict can be used from the interpreter.</span>
+<span class="n">d</span><span class="p">[</span><span class="s">&#39;posx&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="s">&#39;f8&#39;</span><span class="p">)</span>
+<span class="n">d</span><span class="p">[</span><span class="s">&#39;posy&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="mf">1.5</span><span class="p">,</span> <span class="mf">3.5</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="s">&#39;f8&#39;</span><span class="p">)</span>
+<span class="n">d</span><span class="p">[</span><span class="s">&#39;velx&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="s">&#39;f8&#39;</span><span class="p">)</span>
+<span class="n">d</span><span class="p">[</span><span class="s">&#39;vely&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="mf">0.2</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="s">&#39;f8&#39;</span><span class="p">)</span>
+
+<span class="c"># Here&#39;s a function that expects a typed-dict as the argument</span>
+<span class="nd">@njit</span>
+<span class="k">def</span> <span class="nf">move</span><span class="p">(</span><span class="n">d</span><span class="p">):</span>
+    <span class="c"># inplace operations on the arrays</span>
+    <span class="n">d</span><span class="p">[</span><span class="s">&#39;posx&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">d</span><span class="p">[</span><span class="s">&#39;velx&#39;</span><span class="p">]</span>
+    <span class="n">d</span><span class="p">[</span><span class="s">&#39;posy&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">d</span><span class="p">[</span><span class="s">&#39;vely&#39;</span><span class="p">]</span>
+
+<span class="k">print</span><span class="p">(</span><span class="s">&#39;posx: &#39;</span><span class="p">,</span> <span class="n">d</span><span class="p">[</span><span class="s">&#39;posx&#39;</span><span class="p">])</span>  <span class="c"># Out: posx:  [1.  0.5 2. ]</span>
+<span class="k">print</span><span class="p">(</span><span class="s">&#39;posy: &#39;</span><span class="p">,</span> <span class="n">d</span><span class="p">[</span><span class="s">&#39;posy&#39;</span><span class="p">])</span>  <span class="c"># Out: posy:  [1.5 3.5 2. ]</span>
+
+<span class="c"># Call move(d) to inplace update the arrays in the typed-dict.</span>
+<span class="n">move</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+
+<span class="k">print</span><span class="p">(</span><span class="s">&#39;posx: &#39;</span><span class="p">,</span> <span class="n">d</span><span class="p">[</span><span class="s">&#39;posx&#39;</span><span class="p">])</span>  <span class="c"># Out: posx:  [1.5 0.5 2.7]</span>
+<span class="k">print</span><span class="p">(</span><span class="s">&#39;posy: &#39;</span><span class="p">,</span> <span class="n">d</span><span class="p">[</span><span class="s">&#39;posy&#39;</span><span class="p">])</span>  <span class="c"># Out: posy:  [1.7 3.3 2.1]</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<p>Here&#8217;s an example of creating a <code class="docutils literal"><span class="pre">numba.typed.Dict</span></code> instance from jit code and
+using the dictionary in interpreted code:</p>
+<div class="literal-block-wrapper container" id="from-ex-typed-dict-njit-of-examples-dict-usage-py">
+<div class="code-block-caption"><span class="caption-text">from <code class="docutils literal"><span class="pre">ex_typed_dict_njit</span></code> of <code class="docutils literal"><span class="pre">examples/dict_usage.py</span></code></span><a class="headerlink" href="#from-ex-typed-dict-njit-of-examples-dict-usage-py" title="Permalink to this code">¶</a></div>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23</pre></div></td><td class="code"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">njit</span>
+<span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">types</span>
+<span class="kn">from</span> <span class="nn">numba.typed</span> <span class="kn">import</span> <span class="n">Dict</span>
+
+<span class="c"># Make array type.  Type-expression is not supported in jit functions.</span>
+<span class="n">float_array</span> <span class="o">=</span> <span class="n">types</span><span class="o">.</span><span class="n">float64</span><span class="p">[:]</span>
+
+<span class="nd">@njit</span>
+<span class="k">def</span> <span class="nf">foo</span><span class="p">():</span>
+    <span class="c"># Make dictionary</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="n">Dict</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span>
+        <span class="n">key_type</span><span class="o">=</span><span class="n">types</span><span class="o">.</span><span class="n">unicode_type</span><span class="p">,</span>
+        <span class="n">value_type</span><span class="o">=</span><span class="n">float_array</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="c"># Fill the dictionary</span>
+    <span class="n">d</span><span class="p">[</span><span class="s">&quot;posx&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+    <span class="n">d</span><span class="p">[</span><span class="s">&quot;posy&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">d</span>
+
+<span class="n">d</span> <span class="o">=</span> <span class="n">foo</span><span class="p">()</span>
+<span class="c"># Print the dictionary</span>
+<span class="k">print</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>  <span class="c"># Out: {posx: [0. 1. 2.], posy: [3. 4. 5.]}</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+</div>
 <div class="section" id="none">
-<h3>2.6.2.7. None<a class="headerlink" href="#none" title="Permalink to this headline">¶</a></h3>
+<h3>2.6.2.8. None<a class="headerlink" href="#none" title="Permalink to this headline">¶</a></h3>
 <p>The None value is supported for identity testing (when using an
 <a class="reference internal" href="types.html#numba.optional" title="numba.optional"><code class="xref py py-class docutils literal"><span class="pre">optional</span></code></a> type).</p>
 </div>
 <div class="section" id="bytes-bytearray-memoryview">
-<h3>2.6.2.8. bytes, bytearray, memoryview<a class="headerlink" href="#bytes-bytearray-memoryview" title="Permalink to this headline">¶</a></h3>
+<h3>2.6.2.9. bytes, bytearray, memoryview<a class="headerlink" href="#bytes-bytearray-memoryview" title="Permalink to this headline">¶</a></h3>
 <p>The <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytearray" title="(in Python v3.7)"><code class="xref py py-class docutils literal"><span class="pre">bytearray</span></code></a> type and, on Python 3, the <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.7)"><code class="xref py py-class docutils literal"><span class="pre">bytes</span></code></a> type
 support indexing, iteration and retrieving the len().</p>
 <p>The <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#memoryview" title="(in Python v3.7)"><code class="xref py py-class docutils literal"><span class="pre">memoryview</span></code></a> type supports indexing, slicing, iteration,
