@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>1.7. Compiling python classes with @jitclass &mdash; Numba 0.44.0.dev0+129.gb5a7131-py2.7-linux-x86_64.egg documentation</title>
+    <title>1.7. Compiling Python classes with @jitclass &mdash; Numba 0.44.0.dev0+158.gca731bf-py2.7-linux-x86_64.egg documentation</title>
     
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.44.0.dev0+129.gb5a7131-py2.7-linux-x86_64.egg',
+        VERSION:     '0.44.0.dev0+158.gca731bf-py2.7-linux-x86_64.egg',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -27,7 +27,7 @@
     <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="Numba 0.44.0.dev0+129.gb5a7131-py2.7-linux-x86_64.egg documentation" href="../index.html" />
+    <link rel="top" title="Numba 0.44.0.dev0+158.gca731bf-py2.7-linux-x86_64.egg documentation" href="../index.html" />
     <link rel="up" title="1. User Manual" href="index.html" />
     <link rel="next" title="1.8. Creating C callbacks with @cfunc" href="cfunc.html" />
     <link rel="prev" title="1.6. Creating Numpy universal functions" href="vectorize.html" />
@@ -89,7 +89,7 @@
   <ul class="dropdown-menu localtoc"
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul>
-<li><a class="reference internal" href="#">1.7. Compiling python classes with &#64;jitclass</a><ul>
+<li><a class="reference internal" href="#">1.7. Compiling Python classes with <code class="docutils literal"><span class="pre">&#64;jitclass</span></code></a><ul>
 <li><a class="reference internal" href="#basic-usage">1.7.1. Basic usage</a></li>
 <li><a class="reference internal" href="#support-operations">1.7.2. Support operations</a></li>
 <li><a class="reference internal" href="#limitations">1.7.3. Limitations</a></li>
@@ -144,7 +144,7 @@
     <div class="col-md-12 content">
       
   <div class="section" id="compiling-python-classes-with-jitclass">
-<span id="jitclass"></span><h1>1.7. Compiling python classes with &#64;jitclass<a class="headerlink" href="#compiling-python-classes-with-jitclass" title="Permalink to this headline">¶</a></h1>
+<span id="jitclass"></span><h1>1.7. Compiling Python classes with <code class="docutils literal"><span class="pre">&#64;jitclass</span></code><a class="headerlink" href="#compiling-python-classes-with-jitclass" title="Permalink to this headline">¶</a></h1>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">This is a early version of jitclass support. Not all compiling features are
@@ -153,7 +153,7 @@ exposed or implemented, yet.</p>
 <p>Numba supports code generation for classes via the <a class="reference internal" href="#numba.jitclass" title="numba.jitclass"><code class="xref py py-func docutils literal"><span class="pre">numba.jitclass()</span></code></a>
 decorator.  A class can be marked for optimization using this decorator along
 with a specification of the types of each field.  We call the resulting class
-object a jitclass.  All methods of a jitclass are compiled into nopython
+object a <em>jitclass</em>.  All methods of a jitclass are compiled into nopython
 functions.  The data of a jitclass instance is allocated on the heap as a
 C-compatible structure so that any compiled functions can have direct access
 to the underlying data, bypassing the interpreter.</p>
@@ -187,8 +187,8 @@ to the underlying data, bypassing the interpreter.</p>
 </div>
 <p>(see full example at <cite>examples/jitclass.py</cite> from the source tree)</p>
 <p>In the above example, a <code class="docutils literal"><span class="pre">spec</span></code> is provided as a list of 2-tuples.  The tuples
-contain the name of the field and the numba type of the field.  Alternatively,
-user can use a dictionary (an <code class="docutils literal"><span class="pre">OrderedDict</span></code> preferrably for stable field
+contain the name of the field and the Numba type of the field.  Alternatively,
+user can use a dictionary (an <code class="docutils literal"><span class="pre">OrderedDict</span></code> preferably for stable field
 ordering), which maps field names to types.</p>
 <p>The definition of the class requires at least a <code class="docutils literal"><span class="pre">__init__</span></code> method for
 initializing each defined fields.  Uninitialized fields contains garbage data.
@@ -197,7 +197,7 @@ automatically compiled.</p>
 </div>
 <div class="section" id="support-operations">
 <h2>1.7.2. Support operations<a class="headerlink" href="#support-operations" title="Permalink to this headline">¶</a></h2>
-<p>The following operations of jitclasses work in both the interpreter and numba
+<p>The following operations of jitclasses work in both the interpreter and Numba
 compiled functions:</p>
 <ul class="simple">
 <li>calling the jitclass class object to construct a new instance
@@ -205,13 +205,13 @@ compiled functions:</p>
 <li>read/write access to attributes and properties (e.g. <code class="docutils literal"><span class="pre">mybag.value</span></code>);</li>
 <li>calling methods (e.g. <code class="docutils literal"><span class="pre">mybag.increment(3)</span></code>);</li>
 </ul>
-<p>Using jitclasses in numba compiled function is more efficient.
+<p>Using jitclasses in Numba compiled function is more efficient.
 Short methods can be inlined (at the discretion of LLVM inliner).
 Attributes access are simply reading from a C structure.
 Using jitclasses from the intpreter has the same overhead of calling any
-numba compiled function from the interpreter.  Arguments and return values
-must be unboxed or boxed between python objects and native representation.
-Values encapsulated by a jitclass does not get boxed into python object when
+Numba compiled function from the interpreter.  Arguments and return values
+must be unboxed or boxed between Python objects and native representation.
+Values encapsulated by a jitclass does not get boxed into Python object when
 the jitclass instance is handed to the interpreter.  It is during attribute
 access to the field values that they are boxed.</p>
 </div>
@@ -219,7 +219,7 @@ access to the field values that they are boxed.</p>
 <h2>1.7.3. Limitations<a class="headerlink" href="#limitations" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>A jitclass class object is treated as a function (the constructor) inside
-a numba compiled function.</li>
+a Numba compiled function.</li>
 <li><code class="docutils literal"><span class="pre">isinstance()</span></code> only works in the interpreter.</li>
 <li>Manipulating jitclass instances in the interpreter is not optimized, yet.</li>
 <li>Support for jitclasses are available on CPU only.

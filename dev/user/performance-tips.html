@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>1.13. Performance Tips &mdash; Numba 0.44.0.dev0+129.gb5a7131-py2.7-linux-x86_64.egg documentation</title>
+    <title>1.13. Performance Tips &mdash; Numba 0.44.0.dev0+158.gca731bf-py2.7-linux-x86_64.egg documentation</title>
     
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.44.0.dev0+129.gb5a7131-py2.7-linux-x86_64.egg',
+        VERSION:     '0.44.0.dev0+158.gca731bf-py2.7-linux-x86_64.egg',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -27,7 +27,7 @@
     <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="Numba 0.44.0.dev0+129.gb5a7131-py2.7-linux-x86_64.egg documentation" href="../index.html" />
+    <link rel="top" title="Numba 0.44.0.dev0+158.gca731bf-py2.7-linux-x86_64.egg documentation" href="../index.html" />
     <link rel="up" title="1. User Manual" href="index.html" />
     <link rel="next" title="1.14. The Threading Layers" href="threading-layer.html" />
     <link rel="prev" title="1.12. Callback into the Python Interpreter from within JIT’ed code" href="withobjmode.html" />
@@ -271,6 +271,18 @@ Numba is through the use of the <code class="docutils literal"><span class="pre"
 </tr>
 </tbody>
 </table>
+<p>In some cases you may wish to opt-in to only a subset of possible fast-math
+optimizations. This can be done by supplying a set of <a class="reference external" href="https://llvm.org/docs/LangRef.html#fast-math-flags">LLVM fast-math flags</a> to <code class="docutils literal"><span class="pre">fastmath</span></code>.:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">add_assoc</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">y</span><span class="p">)</span> <span class="o">+</span> <span class="n">y</span>
+
+<span class="k">print</span><span class="p">(</span><span class="n">njit</span><span class="p">(</span><span class="n">fastmath</span><span class="o">=</span><span class="bp">False</span><span class="p">)(</span><span class="n">add_assoc</span><span class="p">)(</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">))</span> <span class="c"># nan</span>
+<span class="k">print</span><span class="p">(</span><span class="n">njit</span><span class="p">(</span><span class="n">fastmath</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span> <span class="p">(</span><span class="n">add_assoc</span><span class="p">)(</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">))</span> <span class="c"># 0.0</span>
+<span class="k">print</span><span class="p">(</span><span class="n">njit</span><span class="p">(</span><span class="n">fastmath</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;reassoc&#39;</span><span class="p">,</span> <span class="s">&#39;nsz&#39;</span><span class="p">})(</span><span class="n">add_assoc</span><span class="p">)(</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">))</span> <span class="c"># 0.0</span>
+<span class="k">print</span><span class="p">(</span><span class="n">njit</span><span class="p">(</span><span class="n">fastmath</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;reassoc&#39;</span><span class="p">})</span>       <span class="p">(</span><span class="n">add_assoc</span><span class="p">)(</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">))</span> <span class="c"># nan</span>
+<span class="k">print</span><span class="p">(</span><span class="n">njit</span><span class="p">(</span><span class="n">fastmath</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;nsz&#39;</span><span class="p">})</span>           <span class="p">(</span><span class="n">add_assoc</span><span class="p">)(</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">))</span> <span class="c"># nan</span>
+</pre></div>
+</div>
 </div>
 <div class="section" id="parallel-true">
 <h2>1.13.4. Parallel=True<a class="headerlink" href="#parallel-true" title="Permalink to this headline">¶</a></h2>
