@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>2.7. Supported NumPy features &mdash; Numba 0.44.0.dev0+160.g7ce865b-py2.7-linux-x86_64.egg documentation</title>
+    <title>2.7. Supported NumPy features &mdash; Numba 0.44.0.dev0+198.g02f4be5-py2.7-linux-x86_64.egg documentation</title>
     
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.44.0.dev0+160.g7ce865b-py2.7-linux-x86_64.egg',
+        VERSION:     '0.44.0.dev0+198.g02f4be5-py2.7-linux-x86_64.egg',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -27,7 +27,7 @@
     <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="Numba 0.44.0.dev0+160.g7ce865b-py2.7-linux-x86_64.egg documentation" href="../index.html" />
+    <link rel="top" title="Numba 0.44.0.dev0+198.g02f4be5-py2.7-linux-x86_64.egg documentation" href="../index.html" />
     <link rel="up" title="2. Reference Manual" href="index.html" />
     <link rel="next" title="2.8. Deviations from Python Semantics" href="pysemantics.html" />
     <link rel="prev" title="2.6. Supported Python features" href="pysupported.html" />
@@ -219,9 +219,42 @@ modules using the NumPy C API.</li>
 <li><strong>Half-precision and extended-precision</strong> real and complex numbers</li>
 <li><strong>Nested structured scalars</strong> the fields of structured scalars may not contain other structured scalars</li>
 </ul>
-<p>The operations supported on scalar Numpy numbers are the same as on the
-equivalent built-in types such as <code class="docutils literal"><span class="pre">int</span></code> or <code class="docutils literal"><span class="pre">float</span></code>.  You can use
-a type&#8217;s constructor to convert from a different type or width.</p>
+<p>The operations supported on NumPy scalars are almost the same as on the
+equivalent built-in types such as <code class="docutils literal"><span class="pre">int</span></code> or <code class="docutils literal"><span class="pre">float</span></code>.  You can use a type&#8217;s
+constructor to convert from a different type or width. In addition you can use
+the <code class="docutils literal"><span class="pre">view(np.&lt;dtype&gt;)</span></code> method to bitcast all <code class="docutils literal"><span class="pre">int</span></code> and <code class="docutils literal"><span class="pre">float</span></code> types
+within the same width. However, you must define the scalar using a NumPy
+constructor within a jitted function. For example, the following will work:</p>
+<div class="code pycon highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">njit</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nd">@njit</span>
+<span class="gp">... </span><span class="k">def</span> <span class="nf">bitcast</span><span class="p">():</span>
+<span class="gp">... </span>    <span class="n">i</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="k">print</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">uint64</span><span class="p">))</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bitcast</span><span class="p">()</span>
+<span class="go">18446744073709551615</span>
+</pre></div>
+</div>
+<p>Whereas the following will not work:</p>
+<div class="code pycon highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">njit</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nd">@njit</span>
+<span class="gp">... </span><span class="k">def</span> <span class="nf">bitcast</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">print</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">uint64</span><span class="p">))</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bitcast</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+<span class="go">---------------------------------------------------------------------------</span>
+<span class="go">TypingError                               Traceback (most recent call last)</span>
+<span class="go">    ...</span>
+<span class="go">TypingError: Failed in nopython mode pipeline (step: ensure IR is legal prior to lowering)</span>
+<span class="go">&#39;view&#39; can only be called on NumPy dtypes, try wrapping the variable with &#39;np.&lt;dtype&gt;()&#39;</span>
+
+<span class="go">File &quot;&lt;ipython-input-3-fc40aaab84c4&gt;&quot;, line 3:</span>
+<span class="go">def bitcast(i):</span>
+<span class="go">    print(i.view(np.uint64))</span>
+</pre></div>
+</div>
 <p>Structured scalars support attribute getting and setting, as well as
 member lookup using constant strings.</p>
 <div class="admonition seealso">
