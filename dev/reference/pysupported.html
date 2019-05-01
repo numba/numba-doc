@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>2.6. Supported Python features &mdash; Numba 0.44.0.dev0+330.ge8ac495-py2.7-linux-x86_64.egg documentation</title>
+    <title>2.6. Supported Python features &mdash; Numba 0.44.0.dev0+378.g1de3cd5-py2.7-linux-x86_64.egg documentation</title>
     
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.44.0.dev0+330.ge8ac495-py2.7-linux-x86_64.egg',
+        VERSION:     '0.44.0.dev0+378.g1de3cd5-py2.7-linux-x86_64.egg',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -27,7 +27,7 @@
     <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="Numba 0.44.0.dev0+330.ge8ac495-py2.7-linux-x86_64.egg documentation" href="../index.html" />
+    <link rel="top" title="Numba 0.44.0.dev0+378.g1de3cd5-py2.7-linux-x86_64.egg documentation" href="../index.html" />
     <link rel="up" title="2. Reference Manual" href="index.html" />
     <link rel="next" title="2.7. Supported NumPy features" href="numpysupported.html" />
     <link rel="prev" title="2.5. Environment variables" href="envvars.html" />
@@ -337,6 +337,7 @@ the user, of course.)</p>
 <li><code class="docutils literal"><span class="pre">.startswith()</span></code></li>
 <li><code class="docutils literal"><span class="pre">.endswith()</span></code></li>
 <li><code class="docutils literal"><span class="pre">.find()</span></code></li>
+<li><code class="docutils literal"><span class="pre">.ljust()</span></code></li>
 <li><code class="docutils literal"><span class="pre">.split()</span></code></li>
 <li><code class="docutils literal"><span class="pre">.join()</span></code></li>
 <li><code class="docutils literal"><span class="pre">.zfill()</span></code></li>
@@ -473,12 +474,22 @@ the function returns.</p>
 <p class="last"><code class="docutils literal"><span class="pre">numba.typed.Dict</span></code> is an experimental feature.  The API may change
 in the future releases.</p>
 </div>
-<p>Numba does not directly support the Python <code class="docutils literal"><span class="pre">dict</span></code> because it is an untyped
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last"><code class="docutils literal"><span class="pre">dict()</span></code> was not supported in versions prior to 0.44.  Currently, calling
+<code class="docutils literal"><span class="pre">dict()</span></code> translates to calling <code class="docutils literal"><span class="pre">numba.typed.Dict()</span></code>.</p>
+</div>
+<p>Numba only supports the use of <code class="docutils literal"><span class="pre">dict()</span></code> without any arguments.  Such use is
+semantically equivalent to <code class="docutils literal"><span class="pre">{}</span></code> and <code class="docutils literal"><span class="pre">numba.typed.Dict()</span></code>.  It will create
+an instance of <code class="docutils literal"><span class="pre">numba.typed.Dict</span></code> where the key-value types will be later
+inferred by usage.</p>
+<p>Numba does not fully support the Python <code class="docutils literal"><span class="pre">dict</span></code> because it is an untyped
 container that can have any Python types as members. To generate efficient
 machine code, Numba needs the keys and the values of the dictionary to have
 fixed types, declared in advance. To achieve this, Numba has a typed dictionary,
-<code class="docutils literal"><span class="pre">numba.typed.Dict</span></code>, for which the user must explicitly declare the key-type
-and the value-type using the <code class="docutils literal"><span class="pre">Dict.empty()</span></code> constructor method.
+<code class="docutils literal"><span class="pre">numba.typed.Dict</span></code>, for which the type-inference mechanism must be able to
+infer the key-value types by use, or the user must explicitly declare the
+key-value type using the <code class="docutils literal"><span class="pre">Dict.empty()</span></code> constructor method.
 This typed dictionary has the same API as the Python <code class="docutils literal"><span class="pre">dict</span></code>,  it implements
 the <code class="docutils literal"><span class="pre">collections.MutableMapping</span></code> interface and is usable in both interpreted
 Python code and JIT-compiled Numba functions.
@@ -490,12 +501,6 @@ unbox key and value objects when getting or setting items.</p>
 <p>An important difference of the typed dictionary in comparison to Python&#8217;s
 <code class="docutils literal"><span class="pre">dict</span></code> is that <strong>implicit casting</strong> occurs when a key or value is stored.
 As a result the <em>setitem</em> operation may fail should the type-casting fail.</p>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">A <code class="docutils literal"><span class="pre">numba.typed.Dict</span></code> cannot yet be constructed with <code class="docutils literal"><span class="pre">Dict()</span></code>, the
-<code class="docutils literal"><span class="pre">Dict.empty(key_type,</span> <span class="pre">value_type)</span></code> class method must be used to construct a
-typed dictionary instead.</p>
-</div>
 <p>It should be noted that the Numba typed dictionary is implemented using the same
 algorithm as the CPython 3.7 dictionary. As a consequence, the typed dictionary
 is ordered and has the same collision resolution as the CPython implementation.</p>
@@ -505,6 +510,44 @@ dictionary, most notably the Numba <code class="docutils literal"><span class="p
 unsupported. Acceptable key/value types include but are not limited to: unicode
 strings, arrays, scalars, tuples. It is expected that these limitations will
 be relaxed as Numba continues to improve.</p>
+<p>Here&#8217;s an example of using <code class="docutils literal"><span class="pre">dict()</span></code> and <code class="docutils literal"><span class="pre">{}</span></code> to create <code class="docutils literal"><span class="pre">numba.typed.Dict</span></code>
+instances and letting the compiler infer the key-value types:</p>
+<div class="literal-block-wrapper container" id="from-ex-inferred-dict-njit-of-examples-dict-usage-py">
+<div class="code-block-caption"><span class="caption-text">from <code class="docutils literal"><span class="pre">ex_inferred_dict_njit</span></code> of <code class="docutils literal"><span class="pre">examples/dict_usage.py</span></code></span><a class="headerlink" href="#from-ex-inferred-dict-njit-of-examples-dict-usage-py" title="Permalink to this code">¶</a></div>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16</pre></div></td><td class="code"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">njit</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+<span class="nd">@njit</span>
+<span class="k">def</span> <span class="nf">foo</span><span class="p">():</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="n">k</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="mi">2</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">2</span><span class="p">)}</span>
+    <span class="c"># The following tells the compiler what the key type and the value</span>
+    <span class="c"># type are for `d`.</span>
+    <span class="n">d</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">d</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">d</span><span class="p">,</span> <span class="n">k</span>
+
+<span class="n">d</span><span class="p">,</span> <span class="n">k</span> <span class="o">=</span> <span class="n">foo</span><span class="p">()</span>
+<span class="k">print</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>    <span class="c"># {3: [0 1 2], 5: [0 1 2 3 4]}</span>
+<span class="k">print</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>    <span class="c"># {1: [0], 2: [0 1]}</span>
+</pre></div>
+</td></tr></table></div>
+</div>
 <p>Here&#8217;s an example of creating a <code class="docutils literal"><span class="pre">numba.typed.Dict</span></code> instance from interpreted
 code and using the dictionary in jit code:</p>
 <div class="literal-block-wrapper container" id="from-ex-typed-dict-from-cpython-of-examples-dict-usage-py">
