@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>1.15. Troubleshooting and tips &mdash; Numba 0.44.0.dev0+400.g000fbcf-py2.7-linux-x86_64.egg documentation</title>
+    <title>1.15. Troubleshooting and tips &mdash; Numba 0.44.0.dev0+425.g92dbdb9-py2.7-linux-x86_64.egg documentation</title>
     
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.44.0.dev0+400.g000fbcf-py2.7-linux-x86_64.egg',
+        VERSION:     '0.44.0.dev0+425.g92dbdb9-py2.7-linux-x86_64.egg',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -27,7 +27,7 @@
     <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="Numba 0.44.0.dev0+400.g000fbcf-py2.7-linux-x86_64.egg documentation" href="../index.html" />
+    <link rel="top" title="Numba 0.44.0.dev0+425.g92dbdb9-py2.7-linux-x86_64.egg documentation" href="../index.html" />
     <link rel="up" title="1. User Manual" href="index.html" />
     <link rel="next" title="1.16. Frequently Asked Questions" href="faq.html" />
     <link rel="prev" title="1.14. The Threading Layers" href="threading-layer.html" />
@@ -472,28 +472,41 @@ that the function was compiled in object mode and values are passed
 around as generic Python objects, without Numba trying to look into them
 to reason about their raw values.  This is a situation you want to avoid
 when caring about the speed of your code.</p>
-<p>There are several ways of understanding why a function fails to
-compile in nopython mode:</p>
-<ul>
-<li><p class="first">pass <em>nopython=True</em>, which will raise an error indicating what went wrong
-(see above <a class="reference internal" href="#code-doesnt-compile"><span>My code doesn&#8217;t compile</span></a>);</p>
-</li>
-<li><p class="first">enable warnings by setting the <span class="target" id="index-0"></span><a class="reference internal" href="../reference/envvars.html#envvar-NUMBA_WARNINGS"><code class="xref std std-envvar docutils literal"><span class="pre">NUMBA_WARNINGS</span></code></a> environment
-variable; for example with the <code class="docutils literal"><span class="pre">f()</span></code> function above:</p>
+<p>If a function fails to compile in <code class="docutils literal"><span class="pre">nopython</span></code> mode warnings will be emitted
+with explanation as to why compilation failed. For example with the <code class="docutils literal"><span class="pre">f()</span></code>
+function above (slightly edited for documentation purposes):</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 <span class="go">3.0</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s">&quot;2&quot;</span><span class="p">)</span>
-<span class="go">example.py:7: NumbaWarning: Function &quot;f&quot; failed type inference: Internal error at &lt;numba.typeinfer.CallConstrain object at 0x7f6b8dd24550&gt;:</span>
-<span class="go">float() only support for numbers</span>
-<span class="go">File &quot;example.py&quot;, line 9</span>
-<span class="go">  @jit</span>
-<span class="go">example.py:7: NumbaWarning: Function &quot;f&quot; was compiled in object mode without forceobj=True.</span>
-<span class="go">  @jit</span>
+<span class="go">example.py:7: NumbaWarning:</span>
+<span class="go">Compilation is falling back to object mode WITH looplifting enabled because Function &quot;f&quot; failed type inference due to: Invalid use of Function(&lt;class &#39;float&#39;&gt;) with argument(s) of type(s): (unicode_type)</span>
+<span class="go">* parameterized</span>
+<span class="go">In definition 0:</span>
+<span class="go">    TypeError: float() only support for numbers</span>
+<span class="go">    raised from &lt;path&gt;/numba/typing/builtins.py:880</span>
+<span class="go">In definition 1:</span>
+<span class="go">    TypeError: float() only support for numbers</span>
+<span class="go">    raised from &lt;path&gt;/numba/typing/builtins.py:880</span>
+<span class="go">This error is usually caused by passing an argument of a type that is unsupported by the named function.</span>
+<span class="go">[1] During: resolving callee type: Function(&lt;class &#39;float&#39;&gt;)</span>
+<span class="go">[2] During: typing of call at example.py (9)</span>
+
+
+<span class="go">File &quot;example.py&quot;, line 9:</span>
+<span class="go">def f(a, b):</span>
+<span class="go">    s = a + float(b)</span>
+<span class="go">    ^</span>
+
+<span class="go">&lt;path&gt;/numba/compiler.py:722: NumbaWarning: Function &quot;f&quot; was compiled in object mode without forceobj=True.</span>
+
+<span class="go">File &quot;example.py&quot;, line 8:</span>
+<span class="go">@jit</span>
+<span class="go">def f(a, b):</span>
+<span class="go">^</span>
+
 <span class="go">3.0</span>
 </pre></div>
 </div>
-</li>
-</ul>
 </div>
 <div class="section" id="disabling-jit-compilation">
 <h2>1.15.6. Disabling JIT compilation<a class="headerlink" href="#disabling-jit-compilation" title="Permalink to this headline">¶</a></h2>
@@ -501,7 +514,7 @@ variable; for example with the <code class="docutils literal"><span class="pre">
 the <code class="docutils literal"><span class="pre">jit</span></code> decorator (and the decorators <code class="docutils literal"><span class="pre">njit</span></code> and <code class="docutils literal"><span class="pre">autojit</span></code>) act as if
 they perform no operation, and the invocation of decorated functions calls the
 original Python function instead of a compiled version. This can be toggled by
-setting the <span class="target" id="index-1"></span><a class="reference internal" href="../reference/envvars.html#envvar-NUMBA_DISABLE_JIT"><code class="xref std std-envvar docutils literal"><span class="pre">NUMBA_DISABLE_JIT</span></code></a> enviroment variable to <code class="docutils literal"><span class="pre">1</span></code>.</p>
+setting the <span class="target" id="index-0"></span><a class="reference internal" href="../reference/envvars.html#envvar-NUMBA_DISABLE_JIT"><code class="xref std std-envvar docutils literal"><span class="pre">NUMBA_DISABLE_JIT</span></code></a> enviroment variable to <code class="docutils literal"><span class="pre">1</span></code>.</p>
 <p>When this mode is enabled, the <code class="docutils literal"><span class="pre">vectorize</span></code> and <code class="docutils literal"><span class="pre">guvectorize</span></code> decorators will
 still result in compilation of a ufunc, as there is no straightforward pure
 Python implementation of these functions.</p>
@@ -650,7 +663,7 @@ to predict!</p>
 <div class="section" id="set-up">
 <h3>1.15.8.1. Set up<a class="headerlink" href="#set-up" title="Permalink to this headline">¶</a></h3>
 <p>Numba&#8217;s <code class="docutils literal"><span class="pre">gdb</span></code> related functions make use of a <code class="docutils literal"><span class="pre">gdb</span></code> binary, the location and
-name of this binary can be configured via the <span class="target" id="index-2"></span><a class="reference internal" href="../reference/envvars.html#envvar-NUMBA_GDB_BINARY"><code class="xref std std-envvar docutils literal"><span class="pre">NUMBA_GDB_BINARY</span></code></a>
+name of this binary can be configured via the <span class="target" id="index-1"></span><a class="reference internal" href="../reference/envvars.html#envvar-NUMBA_GDB_BINARY"><code class="xref std std-envvar docutils literal"><span class="pre">NUMBA_GDB_BINARY</span></code></a>
 environment variable if desired.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
@@ -1254,7 +1267,7 @@ these locations.</p>
 <p>CUDA Python code can be run in the Python interpreter using the CUDA Simulator,
 allowing it to be debugged with the Python debugger or with print statements. To
 enable the CUDA simulator, set the environment variable
-<span class="target" id="index-3"></span><a class="reference internal" href="../reference/envvars.html#envvar-NUMBA_ENABLE_CUDASIM"><code class="xref std std-envvar docutils literal"><span class="pre">NUMBA_ENABLE_CUDASIM</span></code></a> to 1. For more information on the CUDA Simulator,
+<span class="target" id="index-2"></span><a class="reference internal" href="../reference/envvars.html#envvar-NUMBA_ENABLE_CUDASIM"><code class="xref std std-envvar docutils literal"><span class="pre">NUMBA_ENABLE_CUDASIM</span></code></a> to 1. For more information on the CUDA Simulator,
 see <a class="reference internal" href="../cuda/simulator.html#simulator"><span>the CUDA Simulator documentation</span></a>.</p>
 </div>
 <div class="section" id="debug-info">
