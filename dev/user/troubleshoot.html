@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>1.15. Troubleshooting and tips &mdash; Numba 0.44.0.dev0+425.g92dbdb9-py2.7-linux-x86_64.egg documentation</title>
+    <title>1.16. Troubleshooting and tips &mdash; Numba 0.44.0.dev0+451.gd1a0332-py2.7-linux-x86_64.egg documentation</title>
     
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.44.0.dev0+425.g92dbdb9-py2.7-linux-x86_64.egg',
+        VERSION:     '0.44.0.dev0+451.gd1a0332-py2.7-linux-x86_64.egg',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -27,10 +27,10 @@
     <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="Numba 0.44.0.dev0+425.g92dbdb9-py2.7-linux-x86_64.egg documentation" href="../index.html" />
+    <link rel="top" title="Numba 0.44.0.dev0+451.gd1a0332-py2.7-linux-x86_64.egg documentation" href="../index.html" />
     <link rel="up" title="1. User Manual" href="index.html" />
-    <link rel="next" title="1.16. Frequently Asked Questions" href="faq.html" />
-    <link rel="prev" title="1.14. The Threading Layers" href="threading-layer.html" />
+    <link rel="next" title="1.17. Frequently Asked Questions" href="faq.html" />
+    <link rel="prev" title="1.15. Command line interface" href="cli.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -89,31 +89,31 @@
   <ul class="dropdown-menu localtoc"
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul>
-<li><a class="reference internal" href="#">1.15. Troubleshooting and tips</a><ul>
-<li><a class="reference internal" href="#what-to-compile">1.15.1. What to compile</a></li>
-<li><a class="reference internal" href="#my-code-doesn-t-compile">1.15.2. My code doesn&#8217;t compile</a></li>
-<li><a class="reference internal" href="#my-code-has-a-type-unification-problem">1.15.3. My code has a type unification problem</a></li>
-<li><a class="reference internal" href="#my-code-has-an-untyped-list-problem">1.15.4. My code has an untyped list problem</a></li>
-<li><a class="reference internal" href="#the-compiled-code-is-too-slow">1.15.5. The compiled code is too slow</a></li>
-<li><a class="reference internal" href="#disabling-jit-compilation">1.15.6. Disabling JIT compilation</a></li>
-<li><a class="reference internal" href="#debugging-jit-compiled-code-with-gdb">1.15.7. Debugging JIT compiled code with GDB</a><ul>
-<li><a class="reference internal" href="#example-debug-usage">1.15.7.1. Example debug usage</a></li>
-<li><a class="reference internal" href="#globally-override-debug-setting">1.15.7.2. Globally override debug setting</a></li>
+<li><a class="reference internal" href="#">1.16. Troubleshooting and tips</a><ul>
+<li><a class="reference internal" href="#what-to-compile">1.16.1. What to compile</a></li>
+<li><a class="reference internal" href="#my-code-doesn-t-compile">1.16.2. My code doesn&#8217;t compile</a></li>
+<li><a class="reference internal" href="#my-code-has-a-type-unification-problem">1.16.3. My code has a type unification problem</a></li>
+<li><a class="reference internal" href="#my-code-has-an-untyped-list-problem">1.16.4. My code has an untyped list problem</a></li>
+<li><a class="reference internal" href="#the-compiled-code-is-too-slow">1.16.5. The compiled code is too slow</a></li>
+<li><a class="reference internal" href="#disabling-jit-compilation">1.16.6. Disabling JIT compilation</a></li>
+<li><a class="reference internal" href="#debugging-jit-compiled-code-with-gdb">1.16.7. Debugging JIT compiled code with GDB</a><ul>
+<li><a class="reference internal" href="#example-debug-usage">1.16.7.1. Example debug usage</a></li>
+<li><a class="reference internal" href="#globally-override-debug-setting">1.16.7.2. Globally override debug setting</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#using-numba-s-direct-gdb-bindings-in-nopython-mode">1.15.8. Using Numba&#8217;s direct <code class="docutils literal"><span class="pre">gdb</span></code> bindings in <code class="docutils literal"><span class="pre">nopython</span></code>  mode</a><ul>
-<li><a class="reference internal" href="#set-up">1.15.8.1. Set up</a></li>
-<li><a class="reference internal" href="#basic-gdb-support">1.15.8.2. Basic <code class="docutils literal"><span class="pre">gdb</span></code> support</a></li>
-<li><a class="reference internal" href="#running-with-gdb-enabled">1.15.8.3. Running with <code class="docutils literal"><span class="pre">gdb</span></code> enabled</a></li>
-<li><a class="reference internal" href="#adding-breakpoints-to-code">1.15.8.4. Adding breakpoints to code</a></li>
-<li><a class="reference internal" href="#debugging-in-parallel-regions">1.15.8.5. Debugging in parallel regions</a></li>
-<li><a class="reference internal" href="#using-the-gdb-command-language">1.15.8.6. Using the <code class="docutils literal"><span class="pre">gdb</span></code> command language</a></li>
-<li><a class="reference internal" href="#how-does-the-gdb-binding-work">1.15.8.7. How does the <code class="docutils literal"><span class="pre">gdb</span></code> binding work?</a></li>
+<li><a class="reference internal" href="#using-numba-s-direct-gdb-bindings-in-nopython-mode">1.16.8. Using Numba&#8217;s direct <code class="docutils literal"><span class="pre">gdb</span></code> bindings in <code class="docutils literal"><span class="pre">nopython</span></code>  mode</a><ul>
+<li><a class="reference internal" href="#set-up">1.16.8.1. Set up</a></li>
+<li><a class="reference internal" href="#basic-gdb-support">1.16.8.2. Basic <code class="docutils literal"><span class="pre">gdb</span></code> support</a></li>
+<li><a class="reference internal" href="#running-with-gdb-enabled">1.16.8.3. Running with <code class="docutils literal"><span class="pre">gdb</span></code> enabled</a></li>
+<li><a class="reference internal" href="#adding-breakpoints-to-code">1.16.8.4. Adding breakpoints to code</a></li>
+<li><a class="reference internal" href="#debugging-in-parallel-regions">1.16.8.5. Debugging in parallel regions</a></li>
+<li><a class="reference internal" href="#using-the-gdb-command-language">1.16.8.6. Using the <code class="docutils literal"><span class="pre">gdb</span></code> command language</a></li>
+<li><a class="reference internal" href="#how-does-the-gdb-binding-work">1.16.8.7. How does the <code class="docutils literal"><span class="pre">gdb</span></code> binding work?</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#debugging-cuda-python-code">1.15.9. Debugging CUDA Python code</a><ul>
-<li><a class="reference internal" href="#using-the-simulator">1.15.9.1. Using the simulator</a></li>
-<li><a class="reference internal" href="#debug-info">1.15.9.2. Debug Info</a></li>
+<li><a class="reference internal" href="#debugging-cuda-python-code">1.16.9. Debugging CUDA Python code</a><ul>
+<li><a class="reference internal" href="#using-the-simulator">1.16.9.1. Using the simulator</a></li>
+<li><a class="reference internal" href="#debug-info">1.16.9.2. Debug Info</a></li>
 </ul>
 </li>
 </ul>
@@ -127,11 +127,11 @@
               
                 
   <li>
-    <a href="threading-layer.html" title="Previous Chapter: 1.14. The Threading Layers"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; 1.14. The Thread...</span>
+    <a href="cli.html" title="Previous Chapter: 1.15. Command line interface"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; 1.15. Command li...</span>
     </a>
   </li>
   <li>
-    <a href="faq.html" title="Next Chapter: 1.16. Frequently Asked Questions"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">1.16. Frequently... &raquo;</span>
+    <a href="faq.html" title="Next Chapter: 1.17. Frequently Asked Questions"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">1.17. Frequently... &raquo;</span>
     </a>
   </li>
               
@@ -166,9 +166,9 @@
     <div class="col-md-12 content">
       
   <div class="section" id="troubleshooting-and-tips">
-<span id="numba-troubleshooting"></span><h1>1.15. Troubleshooting and tips<a class="headerlink" href="#troubleshooting-and-tips" title="Permalink to this headline">¶</a></h1>
+<span id="numba-troubleshooting"></span><h1>1.16. Troubleshooting and tips<a class="headerlink" href="#troubleshooting-and-tips" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="what-to-compile">
-<span id="id1"></span><h2>1.15.1. What to compile<a class="headerlink" href="#what-to-compile" title="Permalink to this headline">¶</a></h2>
+<span id="id1"></span><h2>1.16.1. What to compile<a class="headerlink" href="#what-to-compile" title="Permalink to this headline">¶</a></h2>
 <p>The general recommendation is that you should only try to compile the
 critical paths in your code.  If you have a piece of performance-critical
 computational code amongst some higher-level code, you may factor out
@@ -183,7 +183,7 @@ compiled function much easier.</li>
 </ul>
 </div>
 <div class="section" id="my-code-doesn-t-compile">
-<span id="code-doesnt-compile"></span><h2>1.15.2. My code doesn&#8217;t compile<a class="headerlink" href="#my-code-doesn-t-compile" title="Permalink to this headline">¶</a></h2>
+<span id="code-doesnt-compile"></span><h2>1.16.2. My code doesn&#8217;t compile<a class="headerlink" href="#my-code-doesn-t-compile" title="Permalink to this headline">¶</a></h2>
 <p>There can be various reasons why Numba cannot compile your code, and raises
 an error instead.  One common reason is that your code relies on an
 unsupported Python feature, especially in <a class="reference internal" href="../glossary.html#term-nopython-mode"><span class="xref std std-term">nopython mode</span></a>.
@@ -267,7 +267,7 @@ Python would do:</p>
 </div>
 </div>
 <div class="section" id="my-code-has-a-type-unification-problem">
-<h2>1.15.3. My code has a type unification problem<a class="headerlink" href="#my-code-has-a-type-unification-problem" title="Permalink to this headline">¶</a></h2>
+<h2>1.16.3. My code has a type unification problem<a class="headerlink" href="#my-code-has-a-type-unification-problem" title="Permalink to this headline">¶</a></h2>
 <p>Another common reason for Numba not being able to compile your code is that it
 cannot statically determine the return type of a function. The most likely
 cause of this is the return type depending on a value that is available only at
@@ -314,7 +314,7 @@ tuple(int64 x 1), int64&#8221; should be read as &#8220;Numba cannot find a type
 can safely represent a 1-tuple of integer and an integer&#8221;.</p>
 </div>
 <div class="section" id="my-code-has-an-untyped-list-problem">
-<span id="code-has-untyped-list"></span><h2>1.15.4. My code has an untyped list problem<a class="headerlink" href="#my-code-has-an-untyped-list-problem" title="Permalink to this headline">¶</a></h2>
+<span id="code-has-untyped-list"></span><h2>1.16.4. My code has an untyped list problem<a class="headerlink" href="#my-code-has-an-untyped-list-problem" title="Permalink to this headline">¶</a></h2>
 <p>As <a class="reference internal" href="#code-doesnt-compile"><span>noted previously</span></a> the first part of Numba
 compiling your code involves working out what the types of all the variables
 are. In the case of lists, a list must contain items that are of the same type
@@ -360,7 +360,7 @@ used to instruct the typing mechanism:</p>
 </div>
 </div>
 <div class="section" id="the-compiled-code-is-too-slow">
-<h2>1.15.5. The compiled code is too slow<a class="headerlink" href="#the-compiled-code-is-too-slow" title="Permalink to this headline">¶</a></h2>
+<h2>1.16.5. The compiled code is too slow<a class="headerlink" href="#the-compiled-code-is-too-slow" title="Permalink to this headline">¶</a></h2>
 <p>The most common reason for slowness of a compiled JIT function is that
 compiling in <a class="reference internal" href="../glossary.html#term-nopython-mode"><span class="xref std std-term">nopython mode</span></a> has failed and the Numba compiler has
 fallen back to <a class="reference internal" href="../glossary.html#term-object-mode"><span class="xref std std-term">object mode</span></a>.  <a class="reference internal" href="../glossary.html#term-object-mode"><span class="xref std std-term">object mode</span></a> currently provides
@@ -509,9 +509,9 @@ function above (slightly edited for documentation purposes):</p>
 </div>
 </div>
 <div class="section" id="disabling-jit-compilation">
-<h2>1.15.6. Disabling JIT compilation<a class="headerlink" href="#disabling-jit-compilation" title="Permalink to this headline">¶</a></h2>
+<h2>1.16.6. Disabling JIT compilation<a class="headerlink" href="#disabling-jit-compilation" title="Permalink to this headline">¶</a></h2>
 <p>In order to debug code, it is possible to disable JIT compilation, which makes
-the <code class="docutils literal"><span class="pre">jit</span></code> decorator (and the decorators <code class="docutils literal"><span class="pre">njit</span></code> and <code class="docutils literal"><span class="pre">autojit</span></code>) act as if
+the <code class="docutils literal"><span class="pre">jit</span></code> decorator (and the <code class="docutils literal"><span class="pre">njit</span></code> decorator) act as if
 they perform no operation, and the invocation of decorated functions calls the
 original Python function instead of a compiled version. This can be toggled by
 setting the <span class="target" id="index-0"></span><a class="reference internal" href="../reference/envvars.html#envvar-NUMBA_DISABLE_JIT"><code class="xref std std-envvar docutils literal"><span class="pre">NUMBA_DISABLE_JIT</span></code></a> enviroment variable to <code class="docutils literal"><span class="pre">1</span></code>.</p>
@@ -520,7 +520,7 @@ still result in compilation of a ufunc, as there is no straightforward pure
 Python implementation of these functions.</p>
 </div>
 <div class="section" id="debugging-jit-compiled-code-with-gdb">
-<h2>1.15.7. Debugging JIT compiled code with GDB<a class="headerlink" href="#debugging-jit-compiled-code-with-gdb" title="Permalink to this headline">¶</a></h2>
+<h2>1.16.7. Debugging JIT compiled code with GDB<a class="headerlink" href="#debugging-jit-compiled-code-with-gdb" title="Permalink to this headline">¶</a></h2>
 <p>Setting the <code class="docutils literal"><span class="pre">debug</span></code> keyword argument in the <code class="docutils literal"><span class="pre">jit</span></code> decorator
 (e.g. <code class="docutils literal"><span class="pre">&#64;jit(debug=True)</span></code>) enables the emission of debug info in the jitted
 code.  To debug, GDB version 7.0 or above is required.  Currently, the following
@@ -573,7 +573,7 @@ the variables will be <code class="docutils literal"><span class="pre">x</span><
 </li>
 </ul>
 <div class="section" id="example-debug-usage">
-<h3>1.15.7.1. Example debug usage<a class="headerlink" href="#example-debug-usage" title="Permalink to this headline">¶</a></h3>
+<h3>1.16.7.1. Example debug usage<a class="headerlink" href="#example-debug-usage" title="Permalink to this headline">¶</a></h3>
 <p>The python source:</p>
 <div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
@@ -633,7 +633,7 @@ b = 124
 </div>
 </div>
 <div class="section" id="globally-override-debug-setting">
-<h3>1.15.7.2. Globally override debug setting<a class="headerlink" href="#globally-override-debug-setting" title="Permalink to this headline">¶</a></h3>
+<h3>1.16.7.2. Globally override debug setting<a class="headerlink" href="#globally-override-debug-setting" title="Permalink to this headline">¶</a></h3>
 <p>It is possible to enable debug for the full application by setting environment
 variable <code class="docutils literal"><span class="pre">NUMBA_DEBUGINFO=1</span></code>.  This sets the default value of the <code class="docutils literal"><span class="pre">debug</span></code>
 option in <code class="docutils literal"><span class="pre">jit</span></code>.  Debug can be turned off on individual functions by setting
@@ -644,7 +644,7 @@ error.</p>
 </div>
 </div>
 <div class="section" id="using-numba-s-direct-gdb-bindings-in-nopython-mode">
-<h2>1.15.8. Using Numba&#8217;s direct <code class="docutils literal"><span class="pre">gdb</span></code> bindings in <code class="docutils literal"><span class="pre">nopython</span></code>  mode<a class="headerlink" href="#using-numba-s-direct-gdb-bindings-in-nopython-mode" title="Permalink to this headline">¶</a></h2>
+<h2>1.16.8. Using Numba&#8217;s direct <code class="docutils literal"><span class="pre">gdb</span></code> bindings in <code class="docutils literal"><span class="pre">nopython</span></code>  mode<a class="headerlink" href="#using-numba-s-direct-gdb-bindings-in-nopython-mode" title="Permalink to this headline">¶</a></h2>
 <p>Numba (version 0.42.0 and later) has some additional functions relating to
 <code class="docutils literal"><span class="pre">gdb</span></code> support for CPUs that make it easier to debug programs. All the <code class="docutils literal"><span class="pre">gdb</span></code>
 related functions described in the following work in the same manner
@@ -661,7 +661,7 @@ alongside the <code class="docutils literal"><span class="pre">pdb</span></code>
 to predict!</p>
 </div>
 <div class="section" id="set-up">
-<h3>1.15.8.1. Set up<a class="headerlink" href="#set-up" title="Permalink to this headline">¶</a></h3>
+<h3>1.16.8.1. Set up<a class="headerlink" href="#set-up" title="Permalink to this headline">¶</a></h3>
 <p>Numba&#8217;s <code class="docutils literal"><span class="pre">gdb</span></code> related functions make use of a <code class="docutils literal"><span class="pre">gdb</span></code> binary, the location and
 name of this binary can be configured via the <span class="target" id="index-1"></span><a class="reference internal" href="../reference/envvars.html#envvar-NUMBA_GDB_BINARY"><code class="xref std std-envvar docutils literal"><span class="pre">NUMBA_GDB_BINARY</span></code></a>
 environment variable if desired.</p>
@@ -680,7 +680,7 @@ discusses how to adjust the behaviour of <cite>Yama</cite> on with regards to
 </div>
 </div>
 <div class="section" id="basic-gdb-support">
-<h3>1.15.8.2. Basic <code class="docutils literal"><span class="pre">gdb</span></code> support<a class="headerlink" href="#basic-gdb-support" title="Permalink to this headline">¶</a></h3>
+<h3>1.16.8.2. Basic <code class="docutils literal"><span class="pre">gdb</span></code> support<a class="headerlink" href="#basic-gdb-support" title="Permalink to this headline">¶</a></h3>
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
 <p class="last">Calling <code class="xref py py-func docutils literal"><span class="pre">numba.gdb()</span></code> and/or <code class="xref py py-func docutils literal"><span class="pre">numba.gdb_init()</span></code> more than
@@ -779,7 +779,7 @@ Issuing a <code class="docutils literal"><span class="pre">next</span></code> th
 demonstrated by the final print.</p>
 </div>
 <div class="section" id="running-with-gdb-enabled">
-<h3>1.15.8.3. Running with <code class="docutils literal"><span class="pre">gdb</span></code> enabled<a class="headerlink" href="#running-with-gdb-enabled" title="Permalink to this headline">¶</a></h3>
+<h3>1.16.8.3. Running with <code class="docutils literal"><span class="pre">gdb</span></code> enabled<a class="headerlink" href="#running-with-gdb-enabled" title="Permalink to this headline">¶</a></h3>
 <p>The functionality provided by <code class="xref py py-func docutils literal"><span class="pre">numba.gdb()</span></code> (launch and attach <code class="docutils literal"><span class="pre">gdb</span></code> to
 the executing process and pause on a breakpoint) is also available as two
 separate functions:</p>
@@ -893,7 +893,7 @@ that the segfault comes from an invalid access of index <code class="docutils li
 array containing <code class="docutils literal"><span class="pre">10</span></code> items.</p>
 </div>
 <div class="section" id="adding-breakpoints-to-code">
-<h3>1.15.8.4. Adding breakpoints to code<a class="headerlink" href="#adding-breakpoints-to-code" title="Permalink to this headline">¶</a></h3>
+<h3>1.16.8.4. Adding breakpoints to code<a class="headerlink" href="#adding-breakpoints-to-code" title="Permalink to this headline">¶</a></h3>
 <p>The next example demonstrates using multiple breakpoints that are defined
 through the invocation of the <code class="xref py py-func docutils literal"><span class="pre">numba.gdb_breakpoint()</span></code> function:</p>
 <div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
@@ -977,7 +977,7 @@ breakpoint was hit, and after a <code class="docutils literal"><span class="pre"
 11 where the next breakpoint was hit.</p>
 </div>
 <div class="section" id="debugging-in-parallel-regions">
-<h3>1.15.8.5. Debugging in parallel regions<a class="headerlink" href="#debugging-in-parallel-regions" title="Permalink to this headline">¶</a></h3>
+<h3>1.16.8.5. Debugging in parallel regions<a class="headerlink" href="#debugging-in-parallel-regions" title="Permalink to this headline">¶</a></h3>
 <p>The follow example is quite involved, it executes with <code class="docutils literal"><span class="pre">gdb</span></code> instrumentation
 from the outset as per the example above, but it also uses threads and makes use
 of the breakpoint functionality. Further, the last iteration of the parallel
@@ -1130,7 +1130,7 @@ and that back tracing shows that it came from <code class="docutils literal"><sp
 invalid address in <code class="docutils literal"><span class="pre">mem</span></code>, as expected.</p>
 </div>
 <div class="section" id="using-the-gdb-command-language">
-<h3>1.15.8.6. Using the <code class="docutils literal"><span class="pre">gdb</span></code> command language<a class="headerlink" href="#using-the-gdb-command-language" title="Permalink to this headline">¶</a></h3>
+<h3>1.16.8.6. Using the <code class="docutils literal"><span class="pre">gdb</span></code> command language<a class="headerlink" href="#using-the-gdb-command-language" title="Permalink to this headline">¶</a></h3>
 <p>Both the <code class="xref py py-func docutils literal"><span class="pre">numba.gdb()</span></code> and <code class="xref py py-func docutils literal"><span class="pre">numba.gdb_init()</span></code> functions accept unlimited
 string arguments which will be passed directly to <code class="docutils literal"><span class="pre">gdb</span></code> as command line
 arguments when it initializes, this makes it easy to set breakpoints on other
@@ -1217,7 +1217,7 @@ from &lt;path&gt;/numba/numba/_dispatcher.cpython-37m-x86_64-linux-gnu.so
 </div>
 </div>
 <div class="section" id="how-does-the-gdb-binding-work">
-<h3>1.15.8.7. How does the <code class="docutils literal"><span class="pre">gdb</span></code> binding work?<a class="headerlink" href="#how-does-the-gdb-binding-work" title="Permalink to this headline">¶</a></h3>
+<h3>1.16.8.7. How does the <code class="docutils literal"><span class="pre">gdb</span></code> binding work?<a class="headerlink" href="#how-does-the-gdb-binding-work" title="Permalink to this headline">¶</a></h3>
 <p>For advanced users and debuggers of Numba applications it&#8217;s important to know
 some of the internal implementation details of the outlined <code class="docutils literal"><span class="pre">gdb</span></code> bindings.
 The <code class="xref py py-func docutils literal"><span class="pre">numba.gdb()</span></code> and <code class="xref py py-func docutils literal"><span class="pre">numba.gdb_init()</span></code> functions work by injecting the
@@ -1261,9 +1261,9 @@ these locations.</p>
 </div>
 </div>
 <div class="section" id="debugging-cuda-python-code">
-<h2>1.15.9. Debugging CUDA Python code<a class="headerlink" href="#debugging-cuda-python-code" title="Permalink to this headline">¶</a></h2>
+<h2>1.16.9. Debugging CUDA Python code<a class="headerlink" href="#debugging-cuda-python-code" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="using-the-simulator">
-<h3>1.15.9.1. Using the simulator<a class="headerlink" href="#using-the-simulator" title="Permalink to this headline">¶</a></h3>
+<h3>1.16.9.1. Using the simulator<a class="headerlink" href="#using-the-simulator" title="Permalink to this headline">¶</a></h3>
 <p>CUDA Python code can be run in the Python interpreter using the CUDA Simulator,
 allowing it to be debugged with the Python debugger or with print statements. To
 enable the CUDA simulator, set the environment variable
@@ -1271,7 +1271,7 @@ enable the CUDA simulator, set the environment variable
 see <a class="reference internal" href="../cuda/simulator.html#simulator"><span>the CUDA Simulator documentation</span></a>.</p>
 </div>
 <div class="section" id="debug-info">
-<h3>1.15.9.2. Debug Info<a class="headerlink" href="#debug-info" title="Permalink to this headline">¶</a></h3>
+<h3>1.16.9.2. Debug Info<a class="headerlink" href="#debug-info" title="Permalink to this headline">¶</a></h3>
 <p>By setting the <code class="docutils literal"><span class="pre">debug</span></code> argument to <code class="docutils literal"><span class="pre">cuda.jit</span></code> to <code class="docutils literal"><span class="pre">True</span></code>
 (<code class="docutils literal"><span class="pre">&#64;cuda.jit(debug=True)</span></code>), Numba will emit source location in the compiled
 CUDA code.  Unlike the CPU target, only filename and line information are
