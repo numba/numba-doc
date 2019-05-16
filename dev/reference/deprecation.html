@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>2.11. Deprecation Notices &mdash; Numba 0.44.0.dev0+451.gd1a0332-py2.7-linux-x86_64.egg documentation</title>
+    <title>2.11. Deprecation Notices &mdash; Numba 0.44.0.dev0+466.gd5c35cd-py2.7-linux-x86_64.egg documentation</title>
     
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.44.0.dev0+451.gd1a0332-py2.7-linux-x86_64.egg',
+        VERSION:     '0.44.0.dev0+466.gd5c35cd-py2.7-linux-x86_64.egg',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -27,7 +27,7 @@
     <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="Numba 0.44.0.dev0+451.gd1a0332-py2.7-linux-x86_64.egg documentation" href="../index.html" />
+    <link rel="top" title="Numba 0.44.0.dev0+466.gd5c35cd-py2.7-linux-x86_64.egg documentation" href="../index.html" />
     <link rel="up" title="2. Reference Manual" href="index.html" />
     <link rel="next" title="3. Numba for CUDA GPUs" href="../cuda/index.html" />
     <link rel="prev" title="2.10. Python 2.7 End of Life Plan" href="python27-eol.html" />
@@ -124,6 +124,13 @@
 <li><a class="reference internal" href="#id13">2.11.6.1. Reason for deprecation</a></li>
 <li><a class="reference internal" href="#id14">2.11.6.2. Schedule</a></li>
 <li><a class="reference internal" href="#id15">2.11.6.3. Recommendations</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#deprecation-of-iternext-impl-without-a-supplied-reftype">2.11.7. Deprecation of <code class="docutils literal"><span class="pre">iternext_impl</span></code> without a supplied <code class="docutils literal"><span class="pre">RefType</span></code></a><ul>
+<li><a class="reference internal" href="#id16">2.11.7.1. Reason for deprecation</a></li>
+<li><a class="reference internal" href="#id17">2.11.7.2. Example(s) of the impact</a></li>
+<li><a class="reference internal" href="#id18">2.11.7.3. Schedule</a></li>
+<li><a class="reference internal" href="#id19">2.11.7.4. Recommendations</a></li>
 </ul>
 </li>
 </ul>
@@ -497,6 +504,56 @@ significant period of time.</p>
 on Numba to a version prior to removal of this behaviour. The recommended method
 for accommodating the deprecation of <code class="docutils literal"><span class="pre">numba.autojit</span></code> is to simply replace it
 with the semantically and functionally equivalent <code class="docutils literal"><span class="pre">numba.jit</span></code> decorator.</p>
+</div>
+</div>
+<div class="section" id="deprecation-of-iternext-impl-without-a-supplied-reftype">
+<h2>2.11.7. Deprecation of <code class="docutils literal"><span class="pre">iternext_impl</span></code> without a supplied <code class="docutils literal"><span class="pre">RefType</span></code><a class="headerlink" href="#deprecation-of-iternext-impl-without-a-supplied-reftype" title="Permalink to this headline">¶</a></h2>
+<p>Whilst <code class="docutils literal"><span class="pre">numba.targets.imputils.iternext_impl</span></code> is technically an internal API
+it has been used in external code bases as a convenient piece of functionality
+when implementing the low level details of iteration.</p>
+<div class="section" id="id16">
+<h3>2.11.7.1. Reason for deprecation<a class="headerlink" href="#id16" title="Permalink to this headline">¶</a></h3>
+<p>The original definition of <code class="docutils literal"><span class="pre">iternext_impl</span></code> assumed that the reference type of
+the yielded item was always <code class="docutils literal"><span class="pre">borrowed</span></code>. The addition of <code class="docutils literal"><span class="pre">unicode</span></code> type
+support to Numba meant that an iterator may yield an item which is a new
+reference. As a result, support for <code class="docutils literal"><span class="pre">unicode</span></code> type iteration required a
+behavioural change in <code class="docutils literal"><span class="pre">iternext_impl</span></code> and this was encapsulated in an API
+change.</p>
+</div>
+<div class="section" id="id17">
+<h3>2.11.7.2. Example(s) of the impact<a class="headerlink" href="#id17" title="Permalink to this headline">¶</a></h3>
+<p>In future code such as:</p>
+<div class="highlight-python"><div class="highlight"><pre>from numba.targets.imputils import iternext_impl
+
+@iternext_impl
+def mytype_iter(context, builder, sig, args, result):
+  #details
+</pre></div>
+</div>
+<p>will require adjustment to use the new API.</p>
+</div>
+<div class="section" id="id18">
+<h3>2.11.7.3. Schedule<a class="headerlink" href="#id18" title="Permalink to this headline">¶</a></h3>
+<p>The deprecated API will be removed with respect to this schedule:</p>
+<ul class="simple">
+<li>Deprecation warnings will be issued in version 0.44.0</li>
+<li>Support will be removed in version 0.46.0</li>
+</ul>
+</div>
+<div class="section" id="id19">
+<h3>2.11.7.4. Recommendations<a class="headerlink" href="#id19" title="Permalink to this headline">¶</a></h3>
+<p>Projects that need/rely on the deprecated behaviour should pin their dependency
+on Numba to a version prior to removal of this behaviour. Alternatively, to
+accommodate these changes, a direct replacement for the deprecated API is as
+follows:</p>
+<div class="highlight-python"><div class="highlight"><pre>from numba.targets.imputils import iternext_impl, RefType
+
+@iternext_impl(RefType.BORROWED)
+#              ^--- only change required is the specification of a RefType
+def mytype_iter(context, builder, sig, args, result):
+  #details
+</pre></div>
+</div>
 </div>
 </div>
 </div>
