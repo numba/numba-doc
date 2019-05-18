@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>3.1. Overview &mdash; Numba 0.44.0.dev0+466.gd5c35cd-py2.7-linux-x86_64.egg documentation</title>
+    <title>3.1. Overview &mdash; Numba 0.44.0.dev0+500.g5217ce9-py2.7-linux-x86_64.egg documentation</title>
     
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.44.0.dev0+466.gd5c35cd-py2.7-linux-x86_64.egg',
+        VERSION:     '0.44.0.dev0+500.g5217ce9-py2.7-linux-x86_64.egg',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -27,7 +27,7 @@
     <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="Numba 0.44.0.dev0+466.gd5c35cd-py2.7-linux-x86_64.egg documentation" href="../index.html" />
+    <link rel="top" title="Numba 0.44.0.dev0+500.g5217ce9-py2.7-linux-x86_64.egg documentation" href="../index.html" />
     <link rel="up" title="3. Numba for CUDA GPUs" href="index.html" />
     <link rel="next" title="3.2. Writing CUDA Kernels" href="kernels.html" />
     <link rel="prev" title="3. Numba for CUDA GPUs" href="index.html" />
@@ -94,7 +94,10 @@
 <li><a class="reference internal" href="#programming-model">3.1.2. Programming model</a></li>
 <li><a class="reference internal" href="#requirements">3.1.3. Requirements</a><ul>
 <li><a class="reference internal" href="#supported-gpus">3.1.3.1. Supported GPUs</a></li>
-<li><a class="reference internal" href="#software">3.1.3.2. Software</a></li>
+<li><a class="reference internal" href="#software">3.1.3.2. Software</a><ul>
+<li><a class="reference internal" href="#setting-cuda-installation-path">3.1.3.2.1. Setting CUDA Installation Path</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a class="reference internal" href="#missing-cuda-features">3.1.4. Missing CUDA Features</a></li>
@@ -186,6 +189,32 @@ up-to-data Nvidia driver.</p>
 type:</p>
 <div class="highlight-python"><div class="highlight"><pre>$ conda install cudatoolkit
 </pre></div>
+</div>
+<p>If you are not using Conda or if you want to use a different version of CUDA
+toolkit, the following describe how Numba searches for a CUDA toolkit
+installation.</p>
+<div class="section" id="setting-cuda-installation-path">
+<span id="cudatoolkit-lookup"></span><h4>3.1.3.2.1. Setting CUDA Installation Path<a class="headerlink" href="#setting-cuda-installation-path" title="Permalink to this headline">¶</a></h4>
+<p>Numba searches for a CUDA toolkit installation in the following order:</p>
+<ol class="arabic simple">
+<li>Old and deprecated environment variables: <code class="docutils literal"><span class="pre">NUMBAPRO_NVVM</span></code>,
+<code class="docutils literal"><span class="pre">NUMBAPRO_LIBDEVICE</span></code>, and <code class="docutils literal"><span class="pre">NUMBAPRO_CUDALIB</span></code>.</li>
+<li>Conda installed <cite>cudatoolkit</cite> package.</li>
+<li>Environment variable <code class="docutils literal"><span class="pre">CUDA_HOME</span></code>, which points to the directory of the
+installed CUDA toolkit (i.e. <code class="docutils literal"><span class="pre">/home/user/cuda-10</span></code>)</li>
+<li>System-wide installation at exactly <code class="docutils literal"><span class="pre">/usr/local/cuda</span></code> on Linux platforms.
+Versioned installation paths (i.e. <code class="docutils literal"><span class="pre">/usr/local/cuda-10.0</span></code>) are intentionally
+ignored.  Users can use <code class="docutils literal"><span class="pre">CUDA_HOME</span></code> to select specific versions.</li>
+</ol>
+<p>In addition to the CUDA toolkit libraries, which can be installed by conda into
+an environment  or installed system-wide by the <a class="reference external" href="(https://developer.nvidia.com/cuda-downloads)">CUDA SDK installer</a>, the CUDA target in Numba
+also requires an up-to-date NVIDIA graphics driver.  Updated graphics drivers
+are also installed by the CUDA SDK installer, so there is no need to do both.
+Note that on macOS, the CUDA SDK must be installed to get the required driver,
+and the driver is only supported on macOS prior to 10.14 (Mojave).  If the
+<cite>libcuda.so</cite> library is in a non-standard location, users can set environment
+variable <code class="docutils literal"><span class="pre">NUMBA_CUDA_DRIVER</span></code> to the file path (not the directory path) of the
+shared library file.</p>
 </div>
 </div>
 </div>

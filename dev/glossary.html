@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>9. Glossary &mdash; Numba 0.44.0.dev0+466.gd5c35cd-py2.7-linux-x86_64.egg documentation</title>
+    <title>9. Glossary &mdash; Numba 0.44.0.dev0+500.g5217ce9-py2.7-linux-x86_64.egg documentation</title>
     
     <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '0.44.0.dev0+466.gd5c35cd-py2.7-linux-x86_64.egg',
+        VERSION:     '0.44.0.dev0+500.g5217ce9-py2.7-linux-x86_64.egg',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -27,7 +27,7 @@
     <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="Numba 0.44.0.dev0+466.gd5c35cd-py2.7-linux-x86_64.egg documentation" href="index.html" />
+    <link rel="top" title="Numba 0.44.0.dev0+500.g5217ce9-py2.7-linux-x86_64.egg documentation" href="index.html" />
     <link rel="next" title="10. Release Notes" href="release-notes.html" />
     <link rel="prev" title="8.2.5. NBEP 6: Typing Recursion" href="proposals/typing_recursion.html" />
 <meta charset='utf-8'>
@@ -185,6 +185,14 @@ as Python objects and uses the Python C API to perform all operations
 on those objects.  Code compiled in object mode will often run
 no faster than Python interpreted code, unless the Numba compiler can
 take advantage of <a class="reference internal" href="#term-loop-jitting"><span class="xref std std-term">loop-jitting</span></a>.</dd>
+<dt id="term-optionaltype"><code class="docutils literal"><span class="pre">OptionalType</span></code></dt>
+<dd>An <code class="docutils literal"><span class="pre">OptionalType</span></code> is effectively a type union of a <code class="docutils literal"><span class="pre">type</span></code> and <code class="docutils literal"><span class="pre">None</span></code>.
+They typically occur in practice due to a variable being set to <code class="docutils literal"><span class="pre">None</span></code>
+and then in a branch the variable being set to some other value. It&#8217;s
+often not possible at compile time to determine if the branch will execute
+so to permit <a class="reference internal" href="#term-type-inference"><span class="xref std std-term">type inference</span></a> to complete, the type of the variable
+becomes the union of a <code class="docutils literal"><span class="pre">type</span></code> (from the value) and <code class="docutils literal"><span class="pre">None</span></code>,
+i.e. <code class="docutils literal"><span class="pre">OptionalType(type)</span></code>.</dd>
 <dt id="term-type-inference">type inference</dt>
 <dd>The process by which Numba determines the specialized types of all
 values within a function being compiled.  Type inference can fail
