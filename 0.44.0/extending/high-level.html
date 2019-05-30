@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>6.1. High-level extension API &#8212; Numba 0.44.0-py3.6-macosx-10.7-x86_64.egg documentation</title>
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/numba-docs.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="6.2. Low-level extension API" href="low-level.html" />
+    <link rel="prev" title="6. Extending Numba" href="index.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html"><span><img src="../_static/numba_blue_icon_rgb.png"></span>
+          Numba</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.44</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../user/index.html">1. User Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/index.html">2. Reference Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cuda/index.html">3. Numba for CUDA GPUs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cuda-reference/index.html">4. CUDA Python Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../roc/index.html">5. Numba for AMD ROC GPUs</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">6. Extending Numba</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer/index.html">7. Developer Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../proposals/index.html">8. Numba Enhancement Proposals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">9. Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release-notes.html">10. Release Notes</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">6.1. High-level extension API</a><ul>
+<li><a class="reference internal" href="#implementing-functions">6.1.1. Implementing functions</a></li>
+<li><a class="reference internal" href="#implementing-methods">6.1.2. Implementing methods</a></li>
+<li><a class="reference internal" href="#implementing-attributes">6.1.3. Implementing attributes</a></li>
+<li><a class="reference internal" href="#importing-cython-functions">6.1.4. Importing Cython Functions</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+  <li>
+    <a href="index.html" title="Previous Chapter: 6. Extending Numba"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; 6. Extending Numba</span>
+    </a>
+  </li>
+  <li>
+    <a href="low-level.html" title="Next Chapter: 6.2. Low-level extension API"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">6.2. Low-leve... &raquo;</span>
+    </a>
+  </li>
+              
+            
+            
+            
+            
+              <li class="hidden-sm">
+<div id="sourcelink">
+  <a href="../_sources/extending/high-level.rst.txt"
+     rel="nofollow">Source</a>
+</div></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <div class="section" id="high-level-extension-api">
+<span id="high-level-extending"></span><h1>6.1. High-level extension API<a class="headerlink" href="#high-level-extension-api" title="Permalink to this headline">¶</a></h1>
+<p>This extension API is exposed through the <a class="reference internal" href="index.html#module-numba.extending" title="numba.extending"><code class="xref py py-mod docutils literal notranslate"><span class="pre">numba.extending</span></code></a> module.</p>
+<div class="section" id="implementing-functions">
+<h2>6.1.1. Implementing functions<a class="headerlink" href="#implementing-functions" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">&#64;overload</span></code> decorator allows you to implement arbitrary functions
+for use in <a class="reference internal" href="../glossary.html#term-nopython-mode"><span class="xref std std-term">nopython mode</span></a> functions.  The function decorated with
+<code class="docutils literal notranslate"><span class="pre">&#64;overload</span></code> is called at compile-time with the <em>types</em> of the function’s
+runtime arguments.  It should return a callable representing the
+<em>implementation</em> of the function for the given types.  The returned
+implementation is compiled by Numba as if it were a normal function
+decorated with <code class="docutils literal notranslate"><span class="pre">&#64;jit</span></code>.  Additional options to <code class="docutils literal notranslate"><span class="pre">&#64;jit</span></code> can be passed as
+dictionary using the <code class="docutils literal notranslate"><span class="pre">jit_options</span></code> argument.</p>
+<p>For example, let’s pretend Numba doesn’t support the <a class="reference external" href="https://docs.python.org/3/library/functions.html#len" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">len()</span></code></a> function
+on tuples yet.  Here is how to implement it using <code class="docutils literal notranslate"><span class="pre">&#64;overload</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">numba</span> <span class="k">import</span> <span class="n">types</span>
+<span class="kn">from</span> <span class="nn">numba.extending</span> <span class="k">import</span> <span class="n">overload</span>
+
+<span class="nd">@overload</span><span class="p">(</span><span class="nb">len</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">tuple_len</span><span class="p">(</span><span class="n">seq</span><span class="p">):</span>
+   <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">seq</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">BaseTuple</span><span class="p">):</span>
+       <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">seq</span><span class="p">)</span>
+       <span class="k">def</span> <span class="nf">len_impl</span><span class="p">(</span><span class="n">seq</span><span class="p">):</span>
+           <span class="k">return</span> <span class="n">n</span>
+       <span class="k">return</span> <span class="n">len_impl</span>
+</pre></div>
+</div>
+<p>You might wonder, what happens if <a class="reference external" href="https://docs.python.org/3/library/functions.html#len" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">len()</span></code></a> is called with something
+else than a tuple? If a function decorated with <code class="docutils literal notranslate"><span class="pre">&#64;overload</span></code> doesn’t
+return anything (i.e. returns None), other definitions are tried until
+one succeeds.  Therefore, multiple libraries may overload <a class="reference external" href="https://docs.python.org/3/library/functions.html#len" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">len()</span></code></a>
+for different types without conflicting with each other.</p>
+</div>
+<div class="section" id="implementing-methods">
+<h2>6.1.2. Implementing methods<a class="headerlink" href="#implementing-methods" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">&#64;overload_method</span></code> decorator similarly allows implementing a
+method on a type well-known to Numba. The following example implements
+the <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.take.html#numpy.ndarray.take" title="(in NumPy v1.16)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">take()</span></code></a> method on Numpy arrays:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@overload_method</span><span class="p">(</span><span class="n">types</span><span class="o">.</span><span class="n">Array</span><span class="p">,</span> <span class="s1">&#39;take&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">array_take</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">indices</span><span class="p">):</span>
+   <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">indices</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">Array</span><span class="p">):</span>
+       <span class="k">def</span> <span class="nf">take_impl</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">indices</span><span class="p">):</span>
+           <span class="n">n</span> <span class="o">=</span> <span class="n">indices</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+           <span class="n">res</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">arr</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+           <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+               <span class="n">res</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">arr</span><span class="p">[</span><span class="n">indices</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
+           <span class="k">return</span> <span class="n">res</span>
+       <span class="k">return</span> <span class="n">take_impl</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="implementing-attributes">
+<h2>6.1.3. Implementing attributes<a class="headerlink" href="#implementing-attributes" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">&#64;overload_attribute</span></code> decorator allows implementing a data
+attribute (or property) on a type.  Only reading the attribute is
+possible; writable attributes are only supported through the
+<a class="reference internal" href="low-level.html#low-level-extending"><span class="std std-ref">low-level API</span></a>.</p>
+<p>The following example implements the <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.nbytes.html#numpy.ndarray.nbytes" title="(in NumPy v1.16)"><code class="xref py py-attr docutils literal notranslate"><span class="pre">nbytes</span></code></a> attribute
+on Numpy arrays:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@overload_attribute</span><span class="p">(</span><span class="n">types</span><span class="o">.</span><span class="n">Array</span><span class="p">,</span> <span class="s1">&#39;nbytes&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">array_nbytes</span><span class="p">(</span><span class="n">arr</span><span class="p">):</span>
+   <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="n">arr</span><span class="p">):</span>
+       <span class="k">return</span> <span class="n">arr</span><span class="o">.</span><span class="n">size</span> <span class="o">*</span> <span class="n">arr</span><span class="o">.</span><span class="n">itemsize</span>
+   <span class="k">return</span> <span class="n">get</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="importing-cython-functions">
+<span id="cython-support"></span><h2>6.1.4. Importing Cython Functions<a class="headerlink" href="#importing-cython-functions" title="Permalink to this headline">¶</a></h2>
+<p>The function <code class="docutils literal notranslate"><span class="pre">get_cython_function_address</span></code> obtains the address of a
+C function in a Cython extension module. The address can be used to
+access the C function via a <a class="reference external" href="https://docs.python.org/3/library/ctypes.html#ctypes.CFUNCTYPE" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">ctypes.CFUNCTYPE()</span></code></a> callback, thus
+allowing use of the C function inside a Numba jitted function. For
+example, suppose that you have the file <code class="docutils literal notranslate"><span class="pre">foo.pyx</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">libc.math</span> <span class="n">cimport</span> <span class="n">exp</span>
+
+<span class="n">cdef</span> <span class="n">api</span> <span class="n">double</span> <span class="n">myexp</span><span class="p">(</span><span class="n">double</span> <span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">exp</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>You can access <code class="docutils literal notranslate"><span class="pre">myexp</span></code> from Numba in the following way:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">ctypes</span>
+<span class="kn">from</span> <span class="nn">numba.extending</span> <span class="k">import</span> <span class="n">get_cython_function_address</span>
+
+<span class="n">addr</span> <span class="o">=</span> <span class="n">get_cython_function_address</span><span class="p">(</span><span class="s2">&quot;foo&quot;</span><span class="p">,</span> <span class="s2">&quot;myexp&quot;</span><span class="p">)</span>
+<span class="n">functype</span> <span class="o">=</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">CFUNCTYPE</span><span class="p">(</span><span class="n">ctypes</span><span class="o">.</span><span class="n">c_double</span><span class="p">,</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">c_double</span><span class="p">)</span>
+<span class="n">myexp</span> <span class="o">=</span> <span class="n">functype</span><span class="p">(</span><span class="n">addr</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The function <code class="docutils literal notranslate"><span class="pre">myexp</span></code> can now be used inside jitted functions, for
+example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@njit</span>
+<span class="k">def</span> <span class="nf">double_myexp</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="mi">2</span><span class="o">*</span><span class="n">myexp</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>One caveat is that if your function uses Cython’s fused types, then
+the function’s name will be mangled. To find out the mangled name of
+your function you can check the extension module’s <code class="docutils literal notranslate"><span class="pre">__pyx_capi__</span></code>
+attribute.</p>
+</div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2012, Anaconda, Inc..<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

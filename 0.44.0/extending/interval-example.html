@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>6.3. Example: an interval type &#8212; Numba 0.44.0-py3.6-macosx-10.7-x86_64.egg documentation</title>
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/numba-docs.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="7. Developer Manual" href="../developer/index.html" />
+    <link rel="prev" title="6.2. Low-level extension API" href="low-level.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html"><span><img src="../_static/numba_blue_icon_rgb.png"></span>
+          Numba</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.44</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../user/index.html">1. User Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/index.html">2. Reference Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cuda/index.html">3. Numba for CUDA GPUs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cuda-reference/index.html">4. CUDA Python Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../roc/index.html">5. Numba for AMD ROC GPUs</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">6. Extending Numba</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer/index.html">7. Developer Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../proposals/index.html">8. Numba Enhancement Proposals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">9. Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release-notes.html">10. Release Notes</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">6.3. Example: an interval type</a><ul>
+<li><a class="reference internal" href="#extending-the-typing-layer">6.3.1. Extending the typing layer</a><ul>
+<li><a class="reference internal" href="#creating-a-new-numba-type">6.3.1.1. Creating a new Numba type</a></li>
+<li><a class="reference internal" href="#type-inference-for-python-values">6.3.1.2. Type inference for Python values</a></li>
+<li><a class="reference internal" href="#type-inference-for-operations">6.3.1.3. Type inference for operations</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#extending-the-lowering-layer">6.3.2. Extending the lowering layer</a><ul>
+<li><a class="reference internal" href="#defining-the-data-model-for-native-intervals">6.3.2.1. Defining the data model for native intervals</a></li>
+<li><a class="reference internal" href="#exposing-data-model-attributes">6.3.2.2. Exposing data model attributes</a></li>
+<li><a class="reference internal" href="#exposing-a-property">6.3.2.3. Exposing a property</a></li>
+<li><a class="reference internal" href="#implementing-the-constructor">6.3.2.4. Implementing the constructor</a></li>
+<li><a class="reference internal" href="#boxing-and-unboxing">6.3.2.5. Boxing and unboxing</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#using-it">6.3.3. Using it</a></li>
+<li><a class="reference internal" href="#conclusion">6.3.4. Conclusion</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+  <li>
+    <a href="low-level.html" title="Previous Chapter: 6.2. Low-level extension API"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; 6.2. Low-leve...</span>
+    </a>
+  </li>
+  <li>
+    <a href="../developer/index.html" title="Next Chapter: 7. Developer Manual"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">7. Developer Manual &raquo;</span>
+    </a>
+  </li>
+              
+            
+            
+            
+            
+              <li class="hidden-sm">
+<div id="sourcelink">
+  <a href="../_sources/extending/interval-example.rst.txt"
+     rel="nofollow">Source</a>
+</div></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <div class="section" id="example-an-interval-type">
+<h1>6.3. Example: an interval type<a class="headerlink" href="#example-an-interval-type" title="Permalink to this headline">¶</a></h1>
+<p>We will extend the Numba frontend to support a class that it does not
+currently support so as to allow:</p>
+<ul class="simple">
+<li>Passing an instance of the class to a Numba function</li>
+<li>Accessing attributes of the class in a Numba function</li>
+<li>Constructing and returning a new instance of the class from a Numba function</li>
+</ul>
+<p>(all the above in <a class="reference internal" href="../glossary.html#term-nopython-mode"><span class="xref std std-term">nopython mode</span></a>)</p>
+<p>We will mix APIs from the <a class="reference internal" href="high-level.html#high-level-extending"><span class="std std-ref">high-level extension API</span></a>
+and the <a class="reference internal" href="low-level.html#low-level-extending"><span class="std std-ref">low-level extension API</span></a>, depending on what is
+available for a given task.</p>
+<p>The starting point for our example is the following pure Python class:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Interval</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A half-open interval on the real number line.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lo</span><span class="p">,</span> <span class="n">hi</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lo</span> <span class="o">=</span> <span class="n">lo</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hi</span> <span class="o">=</span> <span class="n">hi</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;Interval(</span><span class="si">%f</span><span class="s1">, </span><span class="si">%f</span><span class="s1">)&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lo</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">hi</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">width</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">hi</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">lo</span>
+</pre></div>
+</div>
+<div class="section" id="extending-the-typing-layer">
+<h2>6.3.1. Extending the typing layer<a class="headerlink" href="#extending-the-typing-layer" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="creating-a-new-numba-type">
+<h3>6.3.1.1. Creating a new Numba type<a class="headerlink" href="#creating-a-new-numba-type" title="Permalink to this headline">¶</a></h3>
+<p>As the <code class="docutils literal notranslate"><span class="pre">Interval</span></code> class is not known to Numba, we must create a new Numba
+type to represent instances of it.  Numba does not deal with Python types
+directly: it has its own type system that allows a different level of
+granularity as well as various meta-information not available with regular
+Python types.</p>
+<p>We first create a type class <code class="docutils literal notranslate"><span class="pre">IntervalType</span></code> and, since we don’t need the
+type to be parametric, we instantiate a single type instance <code class="docutils literal notranslate"><span class="pre">interval_type</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">numba</span> <span class="k">import</span> <span class="n">types</span>
+
+<span class="k">class</span> <span class="nc">IntervalType</span><span class="p">(</span><span class="n">types</span><span class="o">.</span><span class="n">Type</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">IntervalType</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Interval&#39;</span><span class="p">)</span>
+
+<span class="n">interval_type</span> <span class="o">=</span> <span class="n">IntervalType</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="type-inference-for-python-values">
+<h3>6.3.1.2. Type inference for Python values<a class="headerlink" href="#type-inference-for-python-values" title="Permalink to this headline">¶</a></h3>
+<p>In itself, creating a Numba type doesn’t do anything.  We must teach Numba
+how to infer some Python values as instances of that type.  In this example,
+it is trivial: any instance of the <code class="docutils literal notranslate"><span class="pre">Interval</span></code> class should be treated as
+belonging to the type <code class="docutils literal notranslate"><span class="pre">interval_type</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">numba.extending</span> <span class="k">import</span> <span class="n">typeof_impl</span>
+
+<span class="nd">@typeof_impl</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">Interval</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">typeof_index</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">c</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">interval_type</span>
+</pre></div>
+</div>
+<p>Function arguments and global values will thusly be recognized as belonging
+to <code class="docutils literal notranslate"><span class="pre">interval_type</span></code> whenever they are instances of <code class="docutils literal notranslate"><span class="pre">Interval</span></code>.</p>
+</div>
+<div class="section" id="type-inference-for-operations">
+<h3>6.3.1.3. Type inference for operations<a class="headerlink" href="#type-inference-for-operations" title="Permalink to this headline">¶</a></h3>
+<p>We want to be able to construct interval objects from Numba functions, so
+we must teach Numba to recognize the two-argument <code class="docutils literal notranslate"><span class="pre">Interval(lo,</span> <span class="pre">hi)</span></code>
+constructor.  The arguments should be floating-point numbers:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">numba.extending</span> <span class="k">import</span> <span class="n">type_callable</span>
+
+<span class="nd">@type_callable</span><span class="p">(</span><span class="n">Interval</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">type_interval</span><span class="p">(</span><span class="n">context</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">typer</span><span class="p">(</span><span class="n">lo</span><span class="p">,</span> <span class="n">hi</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">lo</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">Float</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">hi</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">Float</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">interval_type</span>
+    <span class="k">return</span> <span class="n">typer</span>
+</pre></div>
+</div>
+<p>The <a class="reference internal" href="low-level.html#type_callable" title="type_callable"><code class="xref py py-func docutils literal notranslate"><span class="pre">type_callable()</span></code></a> decorator specifies that the decorated function
+should be invoked when running type inference for the given callable object
+(here the <code class="docutils literal notranslate"><span class="pre">Interval</span></code> class itself).  The decorated function must simply
+return a typer function that will be called with the argument types.  The
+reason for this seemingly convoluted setup is for the typer function to have
+<em>exactly</em> the same signature as the typed callable.  This allows handling
+keyword arguments correctly.</p>
+<p>The <em>context</em> argument received by the decorated function is useful in
+more sophisticated cases where computing the callable’s return type
+requires resolving other types.</p>
+</div>
+</div>
+<div class="section" id="extending-the-lowering-layer">
+<h2>6.3.2. Extending the lowering layer<a class="headerlink" href="#extending-the-lowering-layer" title="Permalink to this headline">¶</a></h2>
+<p>We have finished teaching Numba about our type inference additions.
+We must now teach Numba how to actually generated code and data for
+the new operations.</p>
+<div class="section" id="defining-the-data-model-for-native-intervals">
+<h3>6.3.2.1. Defining the data model for native intervals<a class="headerlink" href="#defining-the-data-model-for-native-intervals" title="Permalink to this headline">¶</a></h3>
+<p>As a general rule, <a class="reference internal" href="../glossary.html#term-nopython-mode"><span class="xref std std-term">nopython mode</span></a> does not work on Python objects
+as they are generated by the CPython interpreter.  The representations
+used by the interpreter are far too inefficient for fast native code.
+Each type supported in <a class="reference internal" href="../glossary.html#term-nopython-mode"><span class="xref std std-term">nopython mode</span></a> therefore has to define
+a tailored native representation, also called a <em>data model</em>.</p>
+<p>A common case of data model is an immutable struct-like data model, that
+is akin to a C <code class="docutils literal notranslate"><span class="pre">struct</span></code>.  Our interval datatype conveniently falls in
+that category, and here is a possible data model for it:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">numba.extending</span> <span class="k">import</span> <span class="n">models</span><span class="p">,</span> <span class="n">register_model</span>
+
+<span class="nd">@register_model</span><span class="p">(</span><span class="n">IntervalType</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">IntervalModel</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">StructModel</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dmm</span><span class="p">,</span> <span class="n">fe_type</span><span class="p">):</span>
+        <span class="n">members</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">(</span><span class="s1">&#39;lo&#39;</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">float64</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;hi&#39;</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">float64</span><span class="p">),</span>
+            <span class="p">]</span>
+        <span class="n">models</span><span class="o">.</span><span class="n">StructModel</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dmm</span><span class="p">,</span> <span class="n">fe_type</span><span class="p">,</span> <span class="n">members</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This instructs Numba that values of type <code class="docutils literal notranslate"><span class="pre">IntervalType</span></code> (or any instance
+thereof) are represented as a structure of two fields <code class="docutils literal notranslate"><span class="pre">lo</span></code> and <code class="docutils literal notranslate"><span class="pre">hi</span></code>,
+each of them a double-precision floating-point number (<code class="docutils literal notranslate"><span class="pre">types.float64</span></code>).</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Mutable types need more sophisticated data models to be able to
+persist their values after modification.  They typically cannot be
+stored and passed on the stack or in registers like immutable types do.</p>
+</div>
+</div>
+<div class="section" id="exposing-data-model-attributes">
+<h3>6.3.2.2. Exposing data model attributes<a class="headerlink" href="#exposing-data-model-attributes" title="Permalink to this headline">¶</a></h3>
+<p>We want the data model attributes <code class="docutils literal notranslate"><span class="pre">lo</span></code> and <code class="docutils literal notranslate"><span class="pre">hi</span></code> to be exposed under
+the same names for use in Numba functions.  Numba provides a convenience
+function to do exactly that:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">numba.extending</span> <span class="k">import</span> <span class="n">make_attribute_wrapper</span>
+
+<span class="n">make_attribute_wrapper</span><span class="p">(</span><span class="n">IntervalType</span><span class="p">,</span> <span class="s1">&#39;lo&#39;</span><span class="p">,</span> <span class="s1">&#39;lo&#39;</span><span class="p">)</span>
+<span class="n">make_attribute_wrapper</span><span class="p">(</span><span class="n">IntervalType</span><span class="p">,</span> <span class="s1">&#39;hi&#39;</span><span class="p">,</span> <span class="s1">&#39;hi&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This will expose the attributes in read-only mode.  As mentioned above,
+writable attributes don’t fit in this model.</p>
+</div>
+<div class="section" id="exposing-a-property">
+<h3>6.3.2.3. Exposing a property<a class="headerlink" href="#exposing-a-property" title="Permalink to this headline">¶</a></h3>
+<p>As the <code class="docutils literal notranslate"><span class="pre">width</span></code> property is computed rather than stored in the structure,
+we cannot simply expose it like we did for <code class="docutils literal notranslate"><span class="pre">lo</span></code> and <code class="docutils literal notranslate"><span class="pre">hi</span></code>.  We have to
+re-implement it explicitly:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">numba.extending</span> <span class="k">import</span> <span class="n">overload_attribute</span>
+
+<span class="nd">@overload_attribute</span><span class="p">(</span><span class="n">IntervalType</span><span class="p">,</span> <span class="s2">&quot;width&quot;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">get_width</span><span class="p">(</span><span class="n">interval</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">getter</span><span class="p">(</span><span class="n">interval</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">interval</span><span class="o">.</span><span class="n">hi</span> <span class="o">-</span> <span class="n">interval</span><span class="o">.</span><span class="n">lo</span>
+    <span class="k">return</span> <span class="n">getter</span>
+</pre></div>
+</div>
+<p>You might ask why we didn’t need to expose a type inference hook for this
+attribute? The answer is that <code class="docutils literal notranslate"><span class="pre">&#64;overload_attribute</span></code> is part of the
+high-level API: it combines type inference and code generation in a
+single API.</p>
+</div>
+<div class="section" id="implementing-the-constructor">
+<h3>6.3.2.4. Implementing the constructor<a class="headerlink" href="#implementing-the-constructor" title="Permalink to this headline">¶</a></h3>
+<p>Now we want to implement the two-argument <code class="docutils literal notranslate"><span class="pre">Interval</span></code> constructor:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">numba.extending</span> <span class="k">import</span> <span class="n">lower_builtin</span>
+<span class="kn">from</span> <span class="nn">numba</span> <span class="k">import</span> <span class="n">cgutils</span>
+
+<span class="nd">@lower_builtin</span><span class="p">(</span><span class="n">Interval</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">Float</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">Float</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">impl_interval</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">builder</span><span class="p">,</span> <span class="n">sig</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+    <span class="n">typ</span> <span class="o">=</span> <span class="n">sig</span><span class="o">.</span><span class="n">return_type</span>
+    <span class="n">lo</span><span class="p">,</span> <span class="n">hi</span> <span class="o">=</span> <span class="n">args</span>
+    <span class="n">interval</span> <span class="o">=</span> <span class="n">cgutils</span><span class="o">.</span><span class="n">create_struct_proxy</span><span class="p">(</span><span class="n">typ</span><span class="p">)(</span><span class="n">context</span><span class="p">,</span> <span class="n">builder</span><span class="p">)</span>
+    <span class="n">interval</span><span class="o">.</span><span class="n">lo</span> <span class="o">=</span> <span class="n">lo</span>
+    <span class="n">interval</span><span class="o">.</span><span class="n">hi</span> <span class="o">=</span> <span class="n">hi</span>
+    <span class="k">return</span> <span class="n">interval</span><span class="o">.</span><span class="n">_getvalue</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>There is a bit more going on here.  <code class="docutils literal notranslate"><span class="pre">&#64;lower_builtin</span></code> decorates the
+implementation of the given callable or operation (here the <code class="docutils literal notranslate"><span class="pre">Interval</span></code>
+constructor) for some specific argument types.  This allows defining
+type-specific implementations of a given operation, which is important
+for heavily overloaded functions such as <a class="reference external" href="https://docs.python.org/3/library/functions.html#len" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">len()</span></code></a>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">types.Float</span></code> is the class of all floating-point types (<code class="docutils literal notranslate"><span class="pre">types.float64</span></code>
+is an instance of <code class="docutils literal notranslate"><span class="pre">types.Float</span></code>).  It is generally more future-proof
+to match argument types on their class rather than on specific instances
+(however, when <em>returning</em> a type – chiefly during the type inference
+phase –, you must usually return a type instance).</p>
+<p><code class="docutils literal notranslate"><span class="pre">cgutils.create_struct_proxy()</span></code> and <code class="docutils literal notranslate"><span class="pre">interval._getvalue()</span></code> are a bit
+of boilerplate due to how Numba passes values around.  Values are passed
+as instances of <a class="reference external" href="http://llvmlite.pydata.org/en/latest/user-guide/ir/values.html#llvmlite.ir.Value" title="(in llvmlite v0.27.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">llvmlite.ir.Value</span></code></a>, which can be too limited:
+LLVM structure values especially are quite low-level.  A struct proxy
+is a temporary wrapper around a LLVM structure value allowing to easily
+get or set members of the structure. The <code class="docutils literal notranslate"><span class="pre">_getvalue()</span></code> call simply
+gets the LLVM value out of the wrapper.</p>
+</div>
+<div class="section" id="boxing-and-unboxing">
+<h3>6.3.2.5. Boxing and unboxing<a class="headerlink" href="#boxing-and-unboxing" title="Permalink to this headline">¶</a></h3>
+<p>If you try to use an <code class="docutils literal notranslate"><span class="pre">Interval</span></code> instance at this point, you’ll certainly
+get the error <em>“cannot convert Interval to native value”</em>.  This is because
+Numba doesn’t yet know how to make a native interval value from a Python
+<code class="docutils literal notranslate"><span class="pre">Interval</span></code> instance.  Let’s teach it how to do it:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">numba.extending</span> <span class="k">import</span> <span class="n">unbox</span><span class="p">,</span> <span class="n">NativeValue</span>
+
+<span class="nd">@unbox</span><span class="p">(</span><span class="n">IntervalType</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">unbox_interval</span><span class="p">(</span><span class="n">typ</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">c</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convert a Interval object to a native interval structure.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">lo_obj</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">pyapi</span><span class="o">.</span><span class="n">object_getattr_string</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="s2">&quot;lo&quot;</span><span class="p">)</span>
+    <span class="n">hi_obj</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">pyapi</span><span class="o">.</span><span class="n">object_getattr_string</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="s2">&quot;hi&quot;</span><span class="p">)</span>
+    <span class="n">interval</span> <span class="o">=</span> <span class="n">cgutils</span><span class="o">.</span><span class="n">create_struct_proxy</span><span class="p">(</span><span class="n">typ</span><span class="p">)(</span><span class="n">c</span><span class="o">.</span><span class="n">context</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">builder</span><span class="p">)</span>
+    <span class="n">interval</span><span class="o">.</span><span class="n">lo</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">pyapi</span><span class="o">.</span><span class="n">float_as_double</span><span class="p">(</span><span class="n">lo_obj</span><span class="p">)</span>
+    <span class="n">interval</span><span class="o">.</span><span class="n">hi</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">pyapi</span><span class="o">.</span><span class="n">float_as_double</span><span class="p">(</span><span class="n">hi_obj</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">pyapi</span><span class="o">.</span><span class="n">decref</span><span class="p">(</span><span class="n">lo_obj</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">pyapi</span><span class="o">.</span><span class="n">decref</span><span class="p">(</span><span class="n">hi_obj</span><span class="p">)</span>
+    <span class="n">is_error</span> <span class="o">=</span> <span class="n">cgutils</span><span class="o">.</span><span class="n">is_not_null</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">builder</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">pyapi</span><span class="o">.</span><span class="n">err_occurred</span><span class="p">())</span>
+    <span class="k">return</span> <span class="n">NativeValue</span><span class="p">(</span><span class="n">interval</span><span class="o">.</span><span class="n">_getvalue</span><span class="p">(),</span> <span class="n">is_error</span><span class="o">=</span><span class="n">is_error</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><em>Unbox</em> is the other name for “convert a Python object to a native value”
+(it fits the idea of a Python object as a sophisticated box containing
+a simple native value).  The function returns a <code class="docutils literal notranslate"><span class="pre">NativeValue</span></code> object
+which gives its caller access to the computed native value, the error bit
+and possibly other information.</p>
+<p>The snippet above makes abundant use of the <code class="docutils literal notranslate"><span class="pre">c.pyapi</span></code> object, which
+gives access to a subset of the
+<a class="reference external" href="https://docs.python.org/3/c-api/index.html">Python interpreter’s C API</a>.
+Note the use of <code class="docutils literal notranslate"><span class="pre">c.pyapi.err_occurred()</span></code> to detect any errors that
+may have happened when unboxing the object (try passing <code class="docutils literal notranslate"><span class="pre">Interval('a',</span> <span class="pre">'b')</span></code>
+for example).</p>
+<p>We also want to do the reverse operation, called <em>boxing</em>, so as to return
+interval values from Numba functions:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">numba.extending</span> <span class="k">import</span> <span class="n">box</span>
+
+<span class="nd">@box</span><span class="p">(</span><span class="n">IntervalType</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">box_interval</span><span class="p">(</span><span class="n">typ</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="n">c</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convert a native interval structure to an Interval object.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">interval</span> <span class="o">=</span> <span class="n">cgutils</span><span class="o">.</span><span class="n">create_struct_proxy</span><span class="p">(</span><span class="n">typ</span><span class="p">)(</span><span class="n">c</span><span class="o">.</span><span class="n">context</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">builder</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">val</span><span class="p">)</span>
+    <span class="n">lo_obj</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">pyapi</span><span class="o">.</span><span class="n">float_from_double</span><span class="p">(</span><span class="n">interval</span><span class="o">.</span><span class="n">lo</span><span class="p">)</span>
+    <span class="n">hi_obj</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">pyapi</span><span class="o">.</span><span class="n">float_from_double</span><span class="p">(</span><span class="n">interval</span><span class="o">.</span><span class="n">hi</span><span class="p">)</span>
+    <span class="n">class_obj</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">pyapi</span><span class="o">.</span><span class="n">unserialize</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">pyapi</span><span class="o">.</span><span class="n">serialize_object</span><span class="p">(</span><span class="n">Interval</span><span class="p">))</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">pyapi</span><span class="o">.</span><span class="n">call_function_objargs</span><span class="p">(</span><span class="n">class_obj</span><span class="p">,</span> <span class="p">(</span><span class="n">lo_obj</span><span class="p">,</span> <span class="n">hi_obj</span><span class="p">))</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">pyapi</span><span class="o">.</span><span class="n">decref</span><span class="p">(</span><span class="n">lo_obj</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">pyapi</span><span class="o">.</span><span class="n">decref</span><span class="p">(</span><span class="n">hi_obj</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">pyapi</span><span class="o">.</span><span class="n">decref</span><span class="p">(</span><span class="n">class_obj</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">res</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="using-it">
+<h2>6.3.3. Using it<a class="headerlink" href="#using-it" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference internal" href="../glossary.html#term-nopython-mode"><span class="xref std std-term">nopython mode</span></a> functions are now able to make use of Interval objects
+and the various operations you have defined on them.  You can try for
+example the following functions:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">numba</span> <span class="k">import</span> <span class="n">jit</span>
+
+<span class="nd">@jit</span><span class="p">(</span><span class="n">nopython</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">inside_interval</span><span class="p">(</span><span class="n">interval</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">interval</span><span class="o">.</span><span class="n">lo</span> <span class="o">&lt;=</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">interval</span><span class="o">.</span><span class="n">hi</span>
+
+<span class="nd">@jit</span><span class="p">(</span><span class="n">nopython</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">interval_width</span><span class="p">(</span><span class="n">interval</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">interval</span><span class="o">.</span><span class="n">width</span>
+
+<span class="nd">@jit</span><span class="p">(</span><span class="n">nopython</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">sum_intervals</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">Interval</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">lo</span> <span class="o">+</span> <span class="n">j</span><span class="o">.</span><span class="n">lo</span><span class="p">,</span> <span class="n">i</span><span class="o">.</span><span class="n">hi</span> <span class="o">+</span> <span class="n">j</span><span class="o">.</span><span class="n">hi</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="conclusion">
+<h2>6.3.4. Conclusion<a class="headerlink" href="#conclusion" title="Permalink to this headline">¶</a></h2>
+<p>We have shown how to do the following tasks:</p>
+<ul class="simple">
+<li>Define a new Numba type class by subclassing the <code class="docutils literal notranslate"><span class="pre">Type</span></code> class</li>
+<li>Define a singleton Numba type instance for a non-parametric type</li>
+<li>Teach Numba how to infer the Numba type of Python values of a certain class,
+using <code class="docutils literal notranslate"><span class="pre">typeof_impl.register</span></code></li>
+<li>Define the data model for a Numba type using <code class="docutils literal notranslate"><span class="pre">StructModel</span></code>
+and <code class="docutils literal notranslate"><span class="pre">register_model</span></code></li>
+<li>Implementing a boxing function for a Numba type using the <code class="docutils literal notranslate"><span class="pre">&#64;box</span></code> decorator</li>
+<li>Implementing an unboxing function for a Numba type using the <code class="docutils literal notranslate"><span class="pre">&#64;unbox</span></code> decorator
+and the <code class="docutils literal notranslate"><span class="pre">NativeValue</span></code> class</li>
+<li>Type and implement a callable using the <code class="docutils literal notranslate"><span class="pre">&#64;type_callable</span></code> and
+<code class="docutils literal notranslate"><span class="pre">&#64;lower_builtin</span></code> decorators</li>
+<li>Expose a read-only structure attribute using the <code class="docutils literal notranslate"><span class="pre">make_attribute_wrapper</span></code>
+convenience function</li>
+<li>Implement a read-only property using the <code class="docutils literal notranslate"><span class="pre">&#64;overload_attribute</span></code> decorator</li>
+</ul>
+</div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2012, Anaconda, Inc..<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

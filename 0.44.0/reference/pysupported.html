@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>2.6. Supported Python features &#8212; Numba 0.44.0-py3.6-macosx-10.7-x86_64.egg documentation</title>
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/numba-docs.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="2.7. Supported NumPy features" href="numpysupported.html" />
+    <link rel="prev" title="2.5. Environment variables" href="envvars.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html"><span><img src="../_static/numba_blue_icon_rgb.png"></span>
+          Numba</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.44</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../user/index.html">1. User Manual</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">2. Reference Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cuda/index.html">3. Numba for CUDA GPUs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cuda-reference/index.html">4. CUDA Python Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../roc/index.html">5. Numba for AMD ROC GPUs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../extending/index.html">6. Extending Numba</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer/index.html">7. Developer Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../proposals/index.html">8. Numba Enhancement Proposals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">9. Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release-notes.html">10. Release Notes</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">2.6. Supported Python features</a><ul>
+<li><a class="reference internal" href="#language">2.6.1. Language</a><ul>
+<li><a class="reference internal" href="#constructs">2.6.1.1. Constructs</a></li>
+<li><a class="reference internal" href="#functions">2.6.1.2. Functions</a><ul>
+<li><a class="reference internal" href="#function-calls">2.6.1.2.1. Function calls</a></li>
+<li><a class="reference internal" href="#functions-as-arguments">2.6.1.2.2. Functions as arguments</a></li>
+<li><a class="reference internal" href="#inner-function-and-closure">2.6.1.2.3. Inner function and closure</a></li>
+<li><a class="reference internal" href="#recursive-calls">2.6.1.2.4. Recursive calls</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#generators">2.6.1.3. Generators</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#built-in-types">2.6.2. Built-in types</a><ul>
+<li><a class="reference internal" href="#int-bool">2.6.2.1. int, bool</a></li>
+<li><a class="reference internal" href="#float-complex">2.6.2.2. float, complex</a></li>
+<li><a class="reference internal" href="#str">2.6.2.3. str</a></li>
+<li><a class="reference internal" href="#tuple">2.6.2.4. tuple</a></li>
+<li><a class="reference internal" href="#list">2.6.2.5. list</a><ul>
+<li><a class="reference internal" href="#list-reflection">2.6.2.5.1. List Reflection</a></li>
+<li><a class="reference internal" href="#list-comprehension">2.6.2.5.2. List comprehension</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#set">2.6.2.6. set</a></li>
+<li><a class="reference internal" href="#dict">2.6.2.7. dict</a></li>
+<li><a class="reference internal" href="#none">2.6.2.8. None</a></li>
+<li><a class="reference internal" href="#bytes-bytearray-memoryview">2.6.2.9. bytes, bytearray, memoryview</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#built-in-functions">2.6.3. Built-in functions</a><ul>
+<li><a class="reference internal" href="#hashing">2.6.3.1. Hashing</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#standard-library-modules">2.6.4. Standard library modules</a><ul>
+<li><a class="reference internal" href="#array">2.6.4.1. <code class="docutils literal notranslate"><span class="pre">array</span></code></a></li>
+<li><a class="reference internal" href="#cmath">2.6.4.2. <code class="docutils literal notranslate"><span class="pre">cmath</span></code></a></li>
+<li><a class="reference internal" href="#collections">2.6.4.3. <code class="docutils literal notranslate"><span class="pre">collections</span></code></a></li>
+<li><a class="reference internal" href="#ctypes">2.6.4.4. <code class="docutils literal notranslate"><span class="pre">ctypes</span></code></a></li>
+<li><a class="reference internal" href="#enum">2.6.4.5. <code class="docutils literal notranslate"><span class="pre">enum</span></code></a></li>
+<li><a class="reference internal" href="#math">2.6.4.6. <code class="docutils literal notranslate"><span class="pre">math</span></code></a></li>
+<li><a class="reference internal" href="#operator">2.6.4.7. <code class="docutils literal notranslate"><span class="pre">operator</span></code></a></li>
+<li><a class="reference internal" href="#functools">2.6.4.8. <code class="docutils literal notranslate"><span class="pre">functools</span></code></a></li>
+<li><a class="reference internal" href="#random">2.6.4.9. <code class="docutils literal notranslate"><span class="pre">random</span></code></a></li>
+<li><a class="reference internal" href="#heapq">2.6.4.10. <code class="docutils literal notranslate"><span class="pre">heapq</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#third-party-modules">2.6.5. Third-party modules</a><ul>
+<li><a class="reference internal" href="#cffi">2.6.5.1. <code class="docutils literal notranslate"><span class="pre">cffi</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+  <li>
+    <a href="envvars.html" title="Previous Chapter: 2.5. Environment variables"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; 2.5. Environm...</span>
+    </a>
+  </li>
+  <li>
+    <a href="numpysupported.html" title="Next Chapter: 2.7. Supported NumPy features"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">2.7. Supporte... &raquo;</span>
+    </a>
+  </li>
+              
+            
+            
+            
+            
+              <li class="hidden-sm">
+<div id="sourcelink">
+  <a href="../_sources/reference/pysupported.rst.txt"
+     rel="nofollow">Source</a>
+</div></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <div class="section" id="supported-python-features">
+<span id="pysupported"></span><h1>2.6. Supported Python features<a class="headerlink" href="#supported-python-features" title="Permalink to this headline">¶</a></h1>
+<p>Apart from the <a class="reference internal" href="#pysupported-language"><span class="std std-ref">Language</span></a> part below, which applies to both
+<a class="reference internal" href="../glossary.html#term-object-mode"><span class="xref std std-term">object mode</span></a> and <a class="reference internal" href="../glossary.html#term-nopython-mode"><span class="xref std std-term">nopython mode</span></a>, this page only lists the
+features supported in <a class="reference internal" href="../glossary.html#term-nopython-mode"><span class="xref std std-term">nopython mode</span></a>.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Numba behavior differs from Python semantics in some situations.  We
+strongly advise reviewing <a class="reference internal" href="pysemantics.html#pysemantics"><span class="std std-ref">Deviations from Python Semantics</span></a> to become familiar with these
+differences.</p>
+</div>
+<div class="section" id="language">
+<span id="pysupported-language"></span><h2>2.6.1. Language<a class="headerlink" href="#language" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="constructs">
+<h3>2.6.1.1. Constructs<a class="headerlink" href="#constructs" title="Permalink to this headline">¶</a></h3>
+<p>Numba strives to support as much of the Python language as possible, but
+some language features are not available inside Numba-compiled functions. The following Python language features are not currently supported:</p>
+<ul class="simple">
+<li>Class definition</li>
+<li>Exception handling (<code class="docutils literal notranslate"><span class="pre">try</span> <span class="pre">..</span> <span class="pre">except</span></code>, <code class="docutils literal notranslate"><span class="pre">try</span> <span class="pre">..</span> <span class="pre">finally</span></code>)</li>
+<li>Context management (the <code class="docutils literal notranslate"><span class="pre">with</span></code> statement)</li>
+<li>Some comprehensions (list comprehension is supported, but not dict, set or generator comprehensions)</li>
+<li>Generator delegation (<code class="docutils literal notranslate"><span class="pre">yield</span> <span class="pre">from</span></code>)</li>
+</ul>
+<p>The <code class="docutils literal notranslate"><span class="pre">raise</span></code> statement is supported in several forms:</p>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">raise</span></code> (to re-raise the current exception)</li>
+<li><code class="docutils literal notranslate"><span class="pre">raise</span> <span class="pre">SomeException</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">raise</span> <span class="pre">SomeException(&lt;arguments&gt;)</span></code>: in <a class="reference internal" href="../glossary.html#term-nopython-mode"><span class="xref std std-term">nopython mode</span></a>, constructor
+arguments must be <a class="reference internal" href="../glossary.html#term-compile-time-constant"><span class="xref std std-term">compile-time constants</span></a></li>
+</ul>
+<p>Similarly, the <code class="docutils literal notranslate"><span class="pre">assert</span></code> statement is supported with or without an error
+message.</p>
+</div>
+<div class="section" id="functions">
+<h3>2.6.1.2. Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="function-calls">
+<h4>2.6.1.2.1. Function calls<a class="headerlink" href="#function-calls" title="Permalink to this headline">¶</a></h4>
+<p>Numba supports function calls using positional and named arguments, as well
+as arguments with default values and <code class="docutils literal notranslate"><span class="pre">*args</span></code> (note the argument for
+<code class="docutils literal notranslate"><span class="pre">*args</span></code> can only be a tuple, not a list).  Explicit <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code> are
+not supported.</p>
+<p>Function calls to locally defined inner functions are supported as long as
+they can be fully inlined.</p>
+</div>
+<div class="section" id="functions-as-arguments">
+<h4>2.6.1.2.2. Functions as arguments<a class="headerlink" href="#functions-as-arguments" title="Permalink to this headline">¶</a></h4>
+<p>Functions can be passed as argument into another function.  But, they cannot
+be returned. For example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">jit</span>
+
+<span class="nd">@jit</span>
+<span class="k">def</span> <span class="nf">add1</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span>
+
+<span class="nd">@jit</span>
+<span class="k">def</span> <span class="nf">bar</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">fn</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+<span class="nd">@jit</span>
+<span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">bar</span><span class="p">(</span><span class="n">add1</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+
+<span class="c1"># Passing add1 within numba compiled code.</span>
+<span class="k">print</span><span class="p">(</span><span class="n">foo</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+<span class="c1"># Passing add1 into bar from interpreted code</span>
+<span class="k">print</span><span class="p">(</span><span class="n">bar</span><span class="p">(</span><span class="n">add1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Numba does not handle function objects as real objects.  Once a
+function is assigned to a variable, the variable cannot be
+re-assigned to a different function.</p>
+</div>
+</div>
+<div class="section" id="inner-function-and-closure">
+<h4>2.6.1.2.3. Inner function and closure<a class="headerlink" href="#inner-function-and-closure" title="Permalink to this headline">¶</a></h4>
+<p>Numba now supports inner functions as long as they are non-recursive
+and only called locally, but not passed as argument or returned as
+result. The use of closure variables (variables defined in outer scopes)
+within an inner function is also supported.</p>
+</div>
+<div class="section" id="recursive-calls">
+<h4>2.6.1.2.4. Recursive calls<a class="headerlink" href="#recursive-calls" title="Permalink to this headline">¶</a></h4>
+<p>Most recursive call patterns are supported.  The only restriction is that the
+recursive callee must have a control-flow path that returns without recursing.
+Numba is able to type-infer recursive functions without specifying the function
+type signature (which is required in numba 0.28 and earlier).
+Recursive calls can even call into a different overload of the function.</p>
+</div>
+</div>
+<div class="section" id="generators">
+<h3>2.6.1.3. Generators<a class="headerlink" href="#generators" title="Permalink to this headline">¶</a></h3>
+<p>Numba supports generator functions and is able to compile them in
+<a class="reference internal" href="../glossary.html#term-object-mode"><span class="xref std std-term">object mode</span></a> and <a class="reference internal" href="../glossary.html#term-nopython-mode"><span class="xref std std-term">nopython mode</span></a>.  The returned generator
+can be used both from Numba-compiled code and from regular Python code.</p>
+<p>Coroutine features of generators are not supported (i.e. the
+<a class="reference external" href="https://docs.python.org/3/reference/expressions.html#generator.send" title="(in Python v3.7)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">generator.send()</span></code></a>, <a class="reference external" href="https://docs.python.org/3/reference/expressions.html#generator.throw" title="(in Python v3.7)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">generator.throw()</span></code></a>, <a class="reference external" href="https://docs.python.org/3/reference/expressions.html#generator.close" title="(in Python v3.7)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">generator.close()</span></code></a>
+methods).</p>
+</div>
+</div>
+<div class="section" id="built-in-types">
+<span id="pysupported-builtin-types"></span><h2>2.6.2. Built-in types<a class="headerlink" href="#built-in-types" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="int-bool">
+<h3>2.6.2.1. int, bool<a class="headerlink" href="#int-bool" title="Permalink to this headline">¶</a></h3>
+<p>Arithmetic operations as well as truth values are supported.</p>
+<p>The following attributes and methods are supported:</p>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">.conjugate()</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">.real</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">.imag</span></code></li>
+</ul>
+</div>
+<div class="section" id="float-complex">
+<h3>2.6.2.2. float, complex<a class="headerlink" href="#float-complex" title="Permalink to this headline">¶</a></h3>
+<p>Arithmetic operations as well as truth values are supported.</p>
+<p>The following attributes and methods are supported:</p>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">.conjugate()</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">.real</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">.imag</span></code></li>
+</ul>
+</div>
+<div class="section" id="str">
+<h3>2.6.2.3. str<a class="headerlink" href="#str" title="Permalink to this headline">¶</a></h3>
+<p>Numba supports (Unicode) strings in Python 3.  Strings can be passed into
+<a class="reference internal" href="../glossary.html#term-nopython-mode"><span class="xref std std-term">nopython mode</span></a> as arguments, as well as constructed and returned from
+<a class="reference internal" href="../glossary.html#term-nopython-mode"><span class="xref std std-term">nopython mode</span></a>. As in Python, slices (even of length 1) return a new,
+reference counted string.  Optimized code paths for efficiently accessing
+single characters may be introduced in the future.</p>
+<p>The in-memory representation is the same as was introduced in Python 3.4, with
+each string having a tag to indicate whether the string is using a 1, 2, or 4
+byte character width in memory.  When strings of different encodings are
+combined (as in concatenation), the resulting string automatically uses the
+larger character width of the two input strings.  String slices also use the
+same character width as the original string, even if the slice could be
+represented with a narrower character width.  (These details are invisible to
+the user, of course.)</p>
+<p>The following functions, attributes and methods are currently supported:</p>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">len()</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">+</span></code> (concatenation of strings)</li>
+<li><code class="docutils literal notranslate"><span class="pre">*</span></code> (repetition of strings)</li>
+<li><code class="docutils literal notranslate"><span class="pre">in</span></code>, <code class="docutils literal notranslate"><span class="pre">.contains()</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">==</span></code>, <code class="docutils literal notranslate"><span class="pre">&lt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&lt;=</span></code>, <code class="docutils literal notranslate"><span class="pre">&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&gt;=</span></code> (comparison)</li>
+<li><code class="docutils literal notranslate"><span class="pre">.startswith()</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">.endswith()</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">.find()</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">.center()</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">.ljust()</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">.rjust()</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">.split()</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">.join()</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">.lstrip()</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">.rstrip()</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">.strip()</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">.zfill()</span></code></li>
+</ul>
+<p>Additional operations as well as support for Python 2 strings / Python 3 bytes
+will be added in a future version of Numba.  Python 2 Unicode objects will
+likely never be supported.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">The performance of some operations is known to be slower than the CPython
+implementation. These include substring search (<code class="docutils literal notranslate"><span class="pre">in</span></code>, <code class="docutils literal notranslate"><span class="pre">.contains()</span></code>
+and <code class="docutils literal notranslate"><span class="pre">find()</span></code>) and string creation (like <code class="docutils literal notranslate"><span class="pre">.split()</span></code>).  Improving the
+string performance is an ongoing task, but the speed of CPython is
+unlikely to be surpassed for basic string operation in isolation.
+Numba is most successfuly used for larger algorithms that happen to
+involve strings, where basic string operations are not the bottleneck.</p>
+</div>
+</div>
+<div class="section" id="tuple">
+<h3>2.6.2.4. tuple<a class="headerlink" href="#tuple" title="Permalink to this headline">¶</a></h3>
+<p>The following operations are supported:</p>
+<ul class="simple">
+<li>tuple construction</li>
+<li>tuple unpacking</li>
+<li>comparison between tuples</li>
+<li>iteration and indexing over homogeneous tuples</li>
+<li>addition (concatenation) between tuples</li>
+<li>slicing tuples with a constant slice</li>
+<li>the index method on tuples</li>
+</ul>
+</div>
+<div class="section" id="list">
+<h3>2.6.2.5. list<a class="headerlink" href="#list" title="Permalink to this headline">¶</a></h3>
+<p>Creating and returning lists from JIT-compiled functions is supported,
+as well as all methods and operations.  Lists must be strictly homogeneous:
+Numba will reject any list containing objects of different types, even if
+the types are compatible (for example, <code class="docutils literal notranslate"><span class="pre">[1,</span> <span class="pre">2.5]</span></code> is rejected as it
+contains a <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a> and a <a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>).</p>
+<p>For example, to create a list of arrays:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">In</span> <span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="kn">from</span> <span class="nn">numba</span> <span class="k">import</span> <span class="n">njit</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">2</span><span class="p">]:</span> <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">3</span><span class="p">]:</span> <span class="nd">@njit</span>
+  <span class="o">...</span><span class="p">:</span> <span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+  <span class="o">...</span><span class="p">:</span>     <span class="n">lst</span> <span class="o">=</span> <span class="p">[]</span>
+  <span class="o">...</span><span class="p">:</span>     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+  <span class="o">...</span><span class="p">:</span>         <span class="n">lst</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+  <span class="o">...</span><span class="p">:</span>     <span class="k">return</span> <span class="n">lst</span>
+  <span class="o">...</span><span class="p">:</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">4</span><span class="p">]:</span> <span class="n">foo</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">4</span><span class="p">]:</span> <span class="p">[</span><span class="n">array</span><span class="p">([],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">int64</span><span class="p">),</span> <span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">]),</span> <span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]),</span> <span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">])]</span>
+</pre></div>
+</div>
+<div class="section" id="list-reflection">
+<h4>2.6.2.5.1. List Reflection<a class="headerlink" href="#list-reflection" title="Permalink to this headline">¶</a></h4>
+<p>In nopython mode, Numba does not operate on Python objects.  <code class="docutils literal notranslate"><span class="pre">list</span></code> are
+compiled into an internal representation.  Any <code class="docutils literal notranslate"><span class="pre">list</span></code> arguments must be
+converted into this representation on the way in to nopython mode and their
+contained elements must be restored in the original Python objects via a
+process called <a class="reference internal" href="../glossary.html#term-reflection"><span class="xref std std-term">reflection</span></a>.  Reflection is required to maintain the same
+semantics as found in regular Python code.  However, the reflection process
+can be expensive for large lists and it is not supported for lists that contain
+reflected data types.  Users cannot use list-of-list as an argument because
+of this limitation.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">When passing a list into a JIT-compiled function, any modifications
+made to the list will not be visible to the Python interpreter until
+the function returns.  (A limitation of the reflection process.)</p>
+</div>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">List sorting currently uses a quicksort algorithm, which has different
+performance characterics than the algorithm used by Python.</p>
+</div>
+</div>
+<div class="section" id="list-comprehension">
+<span id="pysupported-comprehension"></span><h4>2.6.2.5.2. List comprehension<a class="headerlink" href="#list-comprehension" title="Permalink to this headline">¶</a></h4>
+<p>Numba supports list comprehension.  For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">In</span> <span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="kn">from</span> <span class="nn">numba</span> <span class="k">import</span> <span class="n">njit</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">2</span><span class="p">]:</span> <span class="nd">@njit</span>
+  <span class="o">...</span><span class="p">:</span> <span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+  <span class="o">...</span><span class="p">:</span>     <span class="k">return</span> <span class="p">[[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">)]</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">x</span><span class="p">)]</span>
+  <span class="o">...</span><span class="p">:</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">3</span><span class="p">]:</span> <span class="n">foo</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">3</span><span class="p">]:</span> <span class="p">[[],</span> <span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]]</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Prior to version 0.39.0, Numba did not support the creation of nested lists.</p>
+</div>
+<p>Numba also supports “array comprehension” that is a list comprehension
+followed immediately by a call to <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.array.html#numpy.array" title="(in NumPy v1.16)"><code class="xref py py-func docutils literal notranslate"><span class="pre">numpy.array()</span></code></a>. The following
+is an example that produces a 2D Numpy array:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">numba</span> <span class="k">import</span> <span class="n">jit</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="nd">@jit</span><span class="p">(</span><span class="n">nopython</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+  <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span> <span class="p">[</span> <span class="n">x</span> <span class="o">*</span> <span class="n">y</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="p">]</span> <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="p">])</span>
+</pre></div>
+</div>
+<p>In this case, Numba is able to optimize the program to allocate and
+initialize the result array directly without allocating intermediate
+list objects.  Therefore, the nesting of list comprehension here is
+not a problem since a multi-dimensional array is being created here
+instead of a nested list.</p>
+<p>Additionally, Numba supports parallel array comphension when combined
+with the <a class="reference internal" href="../user/jit.html#parallel-jit-option"><span class="std std-ref">parallel</span></a> option on CPUs.</p>
+</div>
+</div>
+<div class="section" id="set">
+<h3>2.6.2.6. set<a class="headerlink" href="#set" title="Permalink to this headline">¶</a></h3>
+<p>All methods and operations on sets are supported in JIT-compiled functions.</p>
+<p>Sets must be strictly homogeneous: Numba will reject any set containing
+objects of different types, even if the types are compatible (for example,
+<code class="docutils literal notranslate"><span class="pre">{1,</span> <span class="pre">2.5}</span></code> is rejected as it contains a <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a> and a <a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>).</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">When passing a set into a JIT-compiled function, any modifications
+made to the set will not be visible to the Python interpreter until
+the function returns.</p>
+</div>
+</div>
+<div class="section" id="dict">
+<h3>2.6.2.7. dict<a class="headerlink" href="#dict" title="Permalink to this headline">¶</a></h3>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last"><code class="docutils literal notranslate"><span class="pre">numba.typed.Dict</span></code> is an experimental feature.  The API may change
+in the future releases.</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last"><code class="docutils literal notranslate"><span class="pre">dict()</span></code> was not supported in versions prior to 0.44.  Currently, calling
+<code class="docutils literal notranslate"><span class="pre">dict()</span></code> translates to calling <code class="docutils literal notranslate"><span class="pre">numba.typed.Dict()</span></code>.</p>
+</div>
+<p>Numba only supports the use of <code class="docutils literal notranslate"><span class="pre">dict()</span></code> without any arguments.  Such use is
+semantically equivalent to <code class="docutils literal notranslate"><span class="pre">{}</span></code> and <code class="docutils literal notranslate"><span class="pre">numba.typed.Dict()</span></code>.  It will create
+an instance of <code class="docutils literal notranslate"><span class="pre">numba.typed.Dict</span></code> where the key-value types will be later
+inferred by usage.</p>
+<p>Numba does not fully support the Python <code class="docutils literal notranslate"><span class="pre">dict</span></code> because it is an untyped
+container that can have any Python types as members. To generate efficient
+machine code, Numba needs the keys and the values of the dictionary to have
+fixed types, declared in advance. To achieve this, Numba has a typed dictionary,
+<code class="docutils literal notranslate"><span class="pre">numba.typed.Dict</span></code>, for which the type-inference mechanism must be able to
+infer the key-value types by use, or the user must explicitly declare the
+key-value type using the <code class="docutils literal notranslate"><span class="pre">Dict.empty()</span></code> constructor method.
+This typed dictionary has the same API as the Python <code class="docutils literal notranslate"><span class="pre">dict</span></code>,  it implements
+the <code class="docutils literal notranslate"><span class="pre">collections.MutableMapping</span></code> interface and is usable in both interpreted
+Python code and JIT-compiled Numba functions.
+Because the typed dictionary stores keys and values in Numba’s native,
+unboxed data layout, passing a Numba dictionary into nopython mode has very low
+overhead. However, this means that using a typed dictionary from the Python
+interpreter is slower than a regular dictionary because Numba has to box and
+unbox key and value objects when getting or setting items.</p>
+<p>An important difference of the typed dictionary in comparison to Python’s
+<code class="docutils literal notranslate"><span class="pre">dict</span></code> is that <strong>implicit casting</strong> occurs when a key or value is stored.
+As a result the <em>setitem</em> operation may fail should the type-casting fail.</p>
+<p>It should be noted that the Numba typed dictionary is implemented using the same
+algorithm as the CPython 3.7 dictionary. As a consequence, the typed dictionary
+is ordered and has the same collision resolution as the CPython implementation.</p>
+<p>Further to the above in relation to type specification, there are limitations
+placed on the types that can be used as keys and/or values in the typed
+dictionary, most notably the Numba <code class="docutils literal notranslate"><span class="pre">Set</span></code> and <code class="docutils literal notranslate"><span class="pre">List</span></code> types are currently
+unsupported. Acceptable key/value types include but are not limited to: unicode
+strings, arrays, scalars, tuples. It is expected that these limitations will
+be relaxed as Numba continues to improve.</p>
+<p>Here’s an example of using <code class="docutils literal notranslate"><span class="pre">dict()</span></code> and <code class="docutils literal notranslate"><span class="pre">{}</span></code> to create <code class="docutils literal notranslate"><span class="pre">numba.typed.Dict</span></code>
+instances and letting the compiler infer the key-value types:</p>
+<div class="literal-block-wrapper docutils container" id="id2">
+<div class="code-block-caption"><span class="caption-text">from <code class="docutils literal notranslate"><span class="pre">ex_inferred_dict_njit</span></code> of <code class="docutils literal notranslate"><span class="pre">examples/dict_usage.py</span></code></span><a class="headerlink" href="#id2" title="Permalink to this code">¶</a></div>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">njit</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+<span class="nd">@njit</span>
+<span class="k">def</span> <span class="nf">foo</span><span class="p">():</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="n">k</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="mi">2</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">2</span><span class="p">)}</span>
+    <span class="c1"># The following tells the compiler what the key type and the value</span>
+    <span class="c1"># type are for `d`.</span>
+    <span class="n">d</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">d</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">d</span><span class="p">,</span> <span class="n">k</span>
+
+<span class="n">d</span><span class="p">,</span> <span class="n">k</span> <span class="o">=</span> <span class="n">foo</span><span class="p">()</span>
+<span class="k">print</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>    <span class="c1"># {3: [0 1 2], 5: [0 1 2 3 4]}</span>
+<span class="k">print</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>    <span class="c1"># {1: [0], 2: [0 1]}</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<p>Here’s an example of creating a <code class="docutils literal notranslate"><span class="pre">numba.typed.Dict</span></code> instance from interpreted
+code and using the dictionary in jit code:</p>
+<div class="literal-block-wrapper docutils container" id="id3">
+<div class="code-block-caption"><span class="caption-text">from <code class="docutils literal notranslate"><span class="pre">ex_typed_dict_from_cpython</span></code> of <code class="docutils literal notranslate"><span class="pre">examples/dict_usage.py</span></code></span><a class="headerlink" href="#id3" title="Permalink to this code">¶</a></div>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">njit</span>
+<span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">types</span>
+<span class="kn">from</span> <span class="nn">numba.typed</span> <span class="kn">import</span> <span class="n">Dict</span>
+
+<span class="c1"># The Dict.empty() constructs a typed dictionary.</span>
+<span class="c1"># The key and value typed must be explicitly declared.</span>
+<span class="n">d</span> <span class="o">=</span> <span class="n">Dict</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span>
+    <span class="n">key_type</span><span class="o">=</span><span class="n">types</span><span class="o">.</span><span class="n">unicode_type</span><span class="p">,</span>
+    <span class="n">value_type</span><span class="o">=</span><span class="n">types</span><span class="o">.</span><span class="n">float64</span><span class="p">[:],</span>
+<span class="p">)</span>
+
+<span class="c1"># The typed-dict can be used from the interpreter.</span>
+<span class="n">d</span><span class="p">[</span><span class="s1">&#39;posx&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;f8&#39;</span><span class="p">)</span>
+<span class="n">d</span><span class="p">[</span><span class="s1">&#39;posy&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="mf">1.5</span><span class="p">,</span> <span class="mf">3.5</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;f8&#39;</span><span class="p">)</span>
+<span class="n">d</span><span class="p">[</span><span class="s1">&#39;velx&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;f8&#39;</span><span class="p">)</span>
+<span class="n">d</span><span class="p">[</span><span class="s1">&#39;vely&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="mf">0.2</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;f8&#39;</span><span class="p">)</span>
+
+<span class="c1"># Here&#39;s a function that expects a typed-dict as the argument</span>
+<span class="nd">@njit</span>
+<span class="k">def</span> <span class="nf">move</span><span class="p">(</span><span class="n">d</span><span class="p">):</span>
+    <span class="c1"># inplace operations on the arrays</span>
+    <span class="n">d</span><span class="p">[</span><span class="s1">&#39;posx&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;velx&#39;</span><span class="p">]</span>
+    <span class="n">d</span><span class="p">[</span><span class="s1">&#39;posy&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;vely&#39;</span><span class="p">]</span>
+
+<span class="k">print</span><span class="p">(</span><span class="s1">&#39;posx: &#39;</span><span class="p">,</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;posx&#39;</span><span class="p">])</span>  <span class="c1"># Out: posx:  [1.  0.5 2. ]</span>
+<span class="k">print</span><span class="p">(</span><span class="s1">&#39;posy: &#39;</span><span class="p">,</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;posy&#39;</span><span class="p">])</span>  <span class="c1"># Out: posy:  [1.5 3.5 2. ]</span>
+
+<span class="c1"># Call move(d) to inplace update the arrays in the typed-dict.</span>
+<span class="n">move</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+
+<span class="k">print</span><span class="p">(</span><span class="s1">&#39;posx: &#39;</span><span class="p">,</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;posx&#39;</span><span class="p">])</span>  <span class="c1"># Out: posx:  [1.5 0.5 2.7]</span>
+<span class="k">print</span><span class="p">(</span><span class="s1">&#39;posy: &#39;</span><span class="p">,</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;posy&#39;</span><span class="p">])</span>  <span class="c1"># Out: posy:  [1.7 3.3 2.1]</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<p>Here’s an example of creating a <code class="docutils literal notranslate"><span class="pre">numba.typed.Dict</span></code> instance from jit code and
+using the dictionary in interpreted code:</p>
+<div class="literal-block-wrapper docutils container" id="id4">
+<div class="code-block-caption"><span class="caption-text">from <code class="docutils literal notranslate"><span class="pre">ex_typed_dict_njit</span></code> of <code class="docutils literal notranslate"><span class="pre">examples/dict_usage.py</span></code></span><a class="headerlink" href="#id4" title="Permalink to this code">¶</a></div>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">njit</span>
+<span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">types</span>
+<span class="kn">from</span> <span class="nn">numba.typed</span> <span class="kn">import</span> <span class="n">Dict</span>
+
+<span class="c1"># Make array type.  Type-expression is not supported in jit functions.</span>
+<span class="n">float_array</span> <span class="o">=</span> <span class="n">types</span><span class="o">.</span><span class="n">float64</span><span class="p">[:]</span>
+
+<span class="nd">@njit</span>
+<span class="k">def</span> <span class="nf">foo</span><span class="p">():</span>
+    <span class="c1"># Make dictionary</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="n">Dict</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span>
+        <span class="n">key_type</span><span class="o">=</span><span class="n">types</span><span class="o">.</span><span class="n">unicode_type</span><span class="p">,</span>
+        <span class="n">value_type</span><span class="o">=</span><span class="n">float_array</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="c1"># Fill the dictionary</span>
+    <span class="n">d</span><span class="p">[</span><span class="s2">&quot;posx&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+    <span class="n">d</span><span class="p">[</span><span class="s2">&quot;posy&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">d</span>
+
+<span class="n">d</span> <span class="o">=</span> <span class="n">foo</span><span class="p">()</span>
+<span class="c1"># Print the dictionary</span>
+<span class="k">print</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>  <span class="c1"># Out: {posx: [0. 1. 2.], posy: [3. 4. 5.]}</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<p>It should be noted that <code class="docutils literal notranslate"><span class="pre">numba.typed.Dict</span></code> is not thread-safe.
+Specifically, functions which modify a dictionary from multiple
+threads will potentially corrupt memory, causing a
+range of possible failures. However, the dictionary can be safely read from
+multiple threads as long as the contents of the dictionary do not
+change during the parallel access.</p>
+</div>
+<div class="section" id="none">
+<h3>2.6.2.8. None<a class="headerlink" href="#none" title="Permalink to this headline">¶</a></h3>
+<p>The None value is supported for identity testing (when using an
+<a class="reference internal" href="types.html#numba.optional" title="numba.optional"><code class="xref py py-class docutils literal notranslate"><span class="pre">optional</span></code></a> type).</p>
+</div>
+<div class="section" id="bytes-bytearray-memoryview">
+<h3>2.6.2.9. bytes, bytearray, memoryview<a class="headerlink" href="#bytes-bytearray-memoryview" title="Permalink to this headline">¶</a></h3>
+<p>The <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytearray" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bytearray</span></code></a> type and, on Python 3, the <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bytes</span></code></a> type
+support indexing, iteration and retrieving the len().</p>
+<p>The <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#memoryview" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">memoryview</span></code></a> type supports indexing, slicing, iteration,
+retrieving the len(), and also the following attributes:</p>
+<ul class="simple">
+<li><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#memoryview.contiguous" title="(in Python v3.7)"><code class="xref py py-attr docutils literal notranslate"><span class="pre">contiguous</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#memoryview.c_contiguous" title="(in Python v3.7)"><code class="xref py py-attr docutils literal notranslate"><span class="pre">c_contiguous</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#memoryview.f_contiguous" title="(in Python v3.7)"><code class="xref py py-attr docutils literal notranslate"><span class="pre">f_contiguous</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#memoryview.itemsize" title="(in Python v3.7)"><code class="xref py py-attr docutils literal notranslate"><span class="pre">itemsize</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#memoryview.nbytes" title="(in Python v3.7)"><code class="xref py py-attr docutils literal notranslate"><span class="pre">nbytes</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#memoryview.ndim" title="(in Python v3.7)"><code class="xref py py-attr docutils literal notranslate"><span class="pre">ndim</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#memoryview.readonly" title="(in Python v3.7)"><code class="xref py py-attr docutils literal notranslate"><span class="pre">readonly</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#memoryview.shape" title="(in Python v3.7)"><code class="xref py py-attr docutils literal notranslate"><span class="pre">shape</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#memoryview.strides" title="(in Python v3.7)"><code class="xref py py-attr docutils literal notranslate"><span class="pre">strides</span></code></a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="built-in-functions">
+<h2>2.6.3. Built-in functions<a class="headerlink" href="#built-in-functions" title="Permalink to this headline">¶</a></h2>
+<p>The following built-in functions are supported:</p>
+<ul class="simple">
+<li><a class="reference external" href="https://docs.python.org/3/library/functions.html#abs" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">abs()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">complex</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/functions.html#divmod" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">divmod()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/functions.html#enumerate" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">enumerate()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/functions.html#hash" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">hash()</span></code></a> (see <a class="reference internal" href="#pysupported-hashing"><span class="std std-ref">Hashing</span></a> below)</li>
+<li><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>: only the one-argument form</li>
+<li><a class="reference external" href="https://docs.python.org/3/library/functions.html#iter" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">iter()</span></code></a>: only the one-argument form</li>
+<li><a class="reference external" href="https://docs.python.org/3/library/functions.html#len" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">len()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/functions.html#min" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">min()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/functions.html#max" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">max()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/functions.html#next" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">next()</span></code></a>: only the one-argument form</li>
+<li><a class="reference external" href="https://docs.python.org/3/library/functions.html#print" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">print()</span></code></a>: only numbers and strings; no <code class="docutils literal notranslate"><span class="pre">file</span></code> or <code class="docutils literal notranslate"><span class="pre">sep</span></code> argument</li>
+<li><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#range" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">range</span></code></a>: semantics are similar to those of Python 3 even in Python 2:
+a range object is returned instead of an array of values. The only permitted
+use of range is as a callable function (cannot pass range as an argument to a
+jitted function or return a range from a jitted function).</li>
+<li><a class="reference external" href="https://docs.python.org/3/library/functions.html#round" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">round()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/functions.html#sorted" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">sorted()</span></code></a>: the <code class="docutils literal notranslate"><span class="pre">key</span></code> argument is not supported</li>
+<li><code class="xref py py-func docutils literal notranslate"><span class="pre">type()</span></code>: only the one-argument form, and only on some types
+(e.g. numbers and named tuples)</li>
+<li><a class="reference external" href="https://docs.python.org/3/library/functions.html#zip" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">zip()</span></code></a></li>
+</ul>
+<div class="section" id="hashing">
+<span id="pysupported-hashing"></span><h3>2.6.3.1. Hashing<a class="headerlink" href="#hashing" title="Permalink to this headline">¶</a></h3>
+<p>The <a class="reference external" href="https://docs.python.org/3/library/functions.html#hash" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">hash()</span></code></a> built-in is supported and produces hash values for all
+supported hashable types with the following Python version specific behavior:</p>
+<p>Under Python 3, hash values computed by Numba will exactly match those computed
+in CPython under the condition that the <code class="xref py py-attr docutils literal notranslate"><span class="pre">sys.hash_info.algorithm</span></code> is
+<code class="docutils literal notranslate"><span class="pre">siphash24</span></code> (default).</p>
+<p>Under Python 2, hash values computed by Numba will follow the behavior
+described for Python 3 with the <code class="xref py py-attr docutils literal notranslate"><span class="pre">sys.hash_info.algorithm</span></code> emulated as
+<code class="docutils literal notranslate"><span class="pre">siphash24</span></code>. No attempt is made to replicate Python 2 hashing behavior.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">PYTHONHASHSEED</span></code> environment variable influences the hashing behavior in
+precisely the manner described in the CPython documentation.</p>
+</div>
+</div>
+<div class="section" id="standard-library-modules">
+<h2>2.6.4. Standard library modules<a class="headerlink" href="#standard-library-modules" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="array">
+<h3>2.6.4.1. <code class="docutils literal notranslate"><span class="pre">array</span></code><a class="headerlink" href="#array" title="Permalink to this headline">¶</a></h3>
+<p>Limited support for the <a class="reference external" href="https://docs.python.org/3/library/array.html#array.array" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">array.array</span></code></a> type is provided through
+the buffer protocol.  Indexing, iteration and taking the len() is supported.
+All type codes are supported except for <code class="docutils literal notranslate"><span class="pre">&quot;u&quot;</span></code>.</p>
+</div>
+<div class="section" id="cmath">
+<h3>2.6.4.2. <code class="docutils literal notranslate"><span class="pre">cmath</span></code><a class="headerlink" href="#cmath" title="Permalink to this headline">¶</a></h3>
+<p>The following functions from the <a class="reference external" href="https://docs.python.org/3/library/cmath.html#module-cmath" title="(in Python v3.7)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">cmath</span></code></a> module are supported:</p>
+<ul class="simple">
+<li><a class="reference external" href="https://docs.python.org/3/library/cmath.html#cmath.acos" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">cmath.acos()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/cmath.html#cmath.acosh" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">cmath.acosh()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/cmath.html#cmath.asin" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">cmath.asin()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/cmath.html#cmath.asinh" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">cmath.asinh()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/cmath.html#cmath.atan" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">cmath.atan()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/cmath.html#cmath.atanh" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">cmath.atanh()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/cmath.html#cmath.cos" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">cmath.cos()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/cmath.html#cmath.cosh" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">cmath.cosh()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/cmath.html#cmath.exp" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">cmath.exp()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/cmath.html#cmath.isfinite" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">cmath.isfinite()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/cmath.html#cmath.isinf" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">cmath.isinf()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/cmath.html#cmath.isnan" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">cmath.isnan()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/cmath.html#cmath.log" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">cmath.log()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/cmath.html#cmath.log10" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">cmath.log10()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/cmath.html#cmath.phase" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">cmath.phase()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/cmath.html#cmath.polar" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">cmath.polar()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/cmath.html#cmath.rect" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">cmath.rect()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/cmath.html#cmath.sin" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">cmath.sin()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/cmath.html#cmath.sinh" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">cmath.sinh()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/cmath.html#cmath.sqrt" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">cmath.sqrt()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/cmath.html#cmath.tan" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">cmath.tan()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/cmath.html#cmath.tanh" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">cmath.tanh()</span></code></a></li>
+</ul>
+</div>
+<div class="section" id="collections">
+<h3>2.6.4.3. <code class="docutils literal notranslate"><span class="pre">collections</span></code><a class="headerlink" href="#collections" title="Permalink to this headline">¶</a></h3>
+<p>Named tuple classes, as returned by <a class="reference external" href="https://docs.python.org/3/library/collections.html#collections.namedtuple" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">collections.namedtuple()</span></code></a>, are
+supported in the same way regular tuples are supported.  Attribute access
+and named parameters in the constructor are also supported.</p>
+<p>Creating a named tuple class inside Numba code is <em>not</em> supported; the class
+must be created at the global level.</p>
+</div>
+<div class="section" id="ctypes">
+<span id="ctypes-support"></span><h3>2.6.4.4. <code class="docutils literal notranslate"><span class="pre">ctypes</span></code><a class="headerlink" href="#ctypes" title="Permalink to this headline">¶</a></h3>
+<p>Numba is able to call ctypes-declared functions with the following argument
+and return types:</p>
+<ul class="simple">
+<li><a class="reference external" href="https://docs.python.org/3/library/ctypes.html#ctypes.c_int8" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ctypes.c_int8</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/ctypes.html#ctypes.c_int16" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ctypes.c_int16</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/ctypes.html#ctypes.c_int32" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ctypes.c_int32</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/ctypes.html#ctypes.c_int64" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ctypes.c_int64</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/ctypes.html#ctypes.c_uint8" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ctypes.c_uint8</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/ctypes.html#ctypes.c_uint16" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ctypes.c_uint16</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/ctypes.html#ctypes.c_uint32" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ctypes.c_uint32</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/ctypes.html#ctypes.c_uint64" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ctypes.c_uint64</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/ctypes.html#ctypes.c_float" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ctypes.c_float</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/ctypes.html#ctypes.c_double" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ctypes.c_double</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/ctypes.html#ctypes.c_void_p" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ctypes.c_void_p</span></code></a></li>
+</ul>
+</div>
+<div class="section" id="enum">
+<h3>2.6.4.5. <code class="docutils literal notranslate"><span class="pre">enum</span></code><a class="headerlink" href="#enum" title="Permalink to this headline">¶</a></h3>
+<p>Both <a class="reference external" href="https://docs.python.org/3/library/enum.html#enum.Enum" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">enum.Enum</span></code></a> and <a class="reference external" href="https://docs.python.org/3/library/enum.html#enum.IntEnum" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">enum.IntEnum</span></code></a> subclasses are supported.</p>
+</div>
+<div class="section" id="math">
+<h3>2.6.4.6. <code class="docutils literal notranslate"><span class="pre">math</span></code><a class="headerlink" href="#math" title="Permalink to this headline">¶</a></h3>
+<p>The following functions from the <a class="reference external" href="https://docs.python.org/3/library/math.html#module-math" title="(in Python v3.7)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">math</span></code></a> module are supported:</p>
+<ul class="simple">
+<li><a class="reference external" href="https://docs.python.org/3/library/math.html#math.acos" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">math.acos()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/math.html#math.acosh" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">math.acosh()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/math.html#math.asin" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">math.asin()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/math.html#math.asinh" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">math.asinh()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/math.html#math.atan" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">math.atan()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/math.html#math.atan2" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">math.atan2()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/math.html#math.atanh" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">math.atanh()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/math.html#math.ceil" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">math.ceil()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/math.html#math.copysign" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">math.copysign()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/math.html#math.cos" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">math.cos()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/math.html#math.cosh" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">math.cosh()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/math.html#math.degrees" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">math.degrees()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/math.html#math.erf" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">math.erf()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/math.html#math.erfc" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">math.erfc()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/math.html#math.exp" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">math.exp()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/math.html#math.expm1" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">math.expm1()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/math.html#math.fabs" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">math.fabs()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/math.html#math.floor" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">math.floor()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/math.html#math.frexp" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">math.frexp()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/math.html#math.gamma" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">math.gamma()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/math.html#math.hypot" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">math.hypot()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/math.html#math.isfinite" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">math.isfinite()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/math.html#math.isinf" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">math.isinf()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/math.html#math.isnan" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">math.isnan()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/math.html#math.ldexp" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">math.ldexp()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/math.html#math.lgamma" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">math.lgamma()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/math.html#math.log" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">math.log()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/math.html#math.log10" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">math.log10()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/math.html#math.log1p" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">math.log1p()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/math.html#math.pow" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">math.pow()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/math.html#math.radians" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">math.radians()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/math.html#math.sin" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">math.sin()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/math.html#math.sinh" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">math.sinh()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/math.html#math.sqrt" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">math.sqrt()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/math.html#math.tan" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">math.tan()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/math.html#math.tanh" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">math.tanh()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/math.html#math.trunc" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">math.trunc()</span></code></a></li>
+</ul>
+</div>
+<div class="section" id="operator">
+<h3>2.6.4.7. <code class="docutils literal notranslate"><span class="pre">operator</span></code><a class="headerlink" href="#operator" title="Permalink to this headline">¶</a></h3>
+<p>The following functions from the <a class="reference external" href="https://docs.python.org/3/library/operator.html#module-operator" title="(in Python v3.7)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">operator</span></code></a> module are supported:</p>
+<ul class="simple">
+<li><a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.add" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.add()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.and_" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.and_()</span></code></a></li>
+<li><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.div()</span></code> (Python 2 only)</li>
+<li><a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.eq" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.eq()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.floordiv" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.floordiv()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.ge" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.ge()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.gt" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.gt()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.iadd" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.iadd()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.iand" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.iand()</span></code></a></li>
+<li><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.idiv()</span></code> (Python 2 only)</li>
+<li><a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.ifloordiv" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.ifloordiv()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.ilshift" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.ilshift()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.imatmul" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.imatmul()</span></code></a> (Python 3.5 and above)</li>
+<li><a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.imod" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.imod()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.imul" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.imul()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.invert" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.invert()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.ior" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.ior()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.ipow" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.ipow()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.irshift" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.irshift()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.isub" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.isub()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.itruediv" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.itruediv()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.ixor" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.ixor()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.le" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.le()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.lshift" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.lshift()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.lt" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.lt()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.matmul" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.matmul()</span></code></a> (Python 3.5 and above)</li>
+<li><a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.mod" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.mod()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.mul" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.mul()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.ne" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.ne()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.neg" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.neg()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.not_" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.not_()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.or_" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.or_()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.pos" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.pos()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.pow" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.pow()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.rshift" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.rshift()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.sub" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.sub()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.truediv" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.truediv()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.xor" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.xor()</span></code></a></li>
+</ul>
+</div>
+<div class="section" id="functools">
+<h3>2.6.4.8. <code class="docutils literal notranslate"><span class="pre">functools</span></code><a class="headerlink" href="#functools" title="Permalink to this headline">¶</a></h3>
+<p>The <a class="reference external" href="https://docs.python.org/3/library/functools.html#functools.reduce" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">functools.reduce()</span></code></a> function is supported but the <cite>initializer</cite>
+argument is required.</p>
+</div>
+<div class="section" id="random">
+<span id="pysupported-random"></span><h3>2.6.4.9. <code class="docutils literal notranslate"><span class="pre">random</span></code><a class="headerlink" href="#random" title="Permalink to this headline">¶</a></h3>
+<p>Numba supports top-level functions from the <a class="reference external" href="https://docs.python.org/3/library/random.html#module-random" title="(in Python v3.7)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">random</span></code></a> module, but does
+not allow you to create individual Random instances.  A Mersenne-Twister
+generator is used, with a dedicated internal state.  It is initialized at
+startup with entropy drawn from the operating system.</p>
+<ul class="simple">
+<li><a class="reference external" href="https://docs.python.org/3/library/random.html#random.betavariate" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">random.betavariate()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/random.html#random.expovariate" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">random.expovariate()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/random.html#random.gammavariate" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">random.gammavariate()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/random.html#random.gauss" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">random.gauss()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/random.html#random.getrandbits" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">random.getrandbits()</span></code></a>: number of bits must not be greater than 64</li>
+<li><a class="reference external" href="https://docs.python.org/3/library/random.html#random.lognormvariate" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">random.lognormvariate()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/random.html#random.normalvariate" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">random.normalvariate()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/random.html#random.paretovariate" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">random.paretovariate()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/random.html#random.randint" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">random.randint()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/random.html#random.random" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">random.random()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/random.html#random.randrange" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">random.randrange()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/random.html#random.seed" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">random.seed()</span></code></a>: with an integer argument only</li>
+<li><a class="reference external" href="https://docs.python.org/3/library/random.html#random.shuffle" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">random.shuffle()</span></code></a>: the sequence argument must be a one-dimension
+Numpy array or buffer-providing object (such as a <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytearray" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bytearray</span></code></a>
+or <a class="reference external" href="https://docs.python.org/3/library/array.html#array.array" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">array.array</span></code></a>); the second (optional) argument is not supported</li>
+<li><a class="reference external" href="https://docs.python.org/3/library/random.html#random.uniform" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">random.uniform()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/random.html#random.triangular" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">random.triangular()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/random.html#random.vonmisesvariate" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">random.vonmisesvariate()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/random.html#random.weibullvariate" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">random.weibullvariate()</span></code></a></li>
+</ul>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Calling <a class="reference external" href="https://docs.python.org/3/library/random.html#random.seed" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">random.seed()</span></code></a> from non-Numba code (or from <a class="reference internal" href="../glossary.html#term-object-mode"><span class="xref std std-term">object mode</span></a>
+code) will seed the Python random generator, not the Numba random generator.</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Since version 0.28.0, the generator is thread-safe and fork-safe.  Each
+thread and each process will produce independent streams of random numbers.</p>
+</div>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last">Numba also supports most additional distributions from the <a class="reference internal" href="numpysupported.html#numpy-random"><span class="std std-ref">Numpy
+random module</span></a>.</p>
+</div>
+</div>
+<div class="section" id="heapq">
+<h3>2.6.4.10. <code class="docutils literal notranslate"><span class="pre">heapq</span></code><a class="headerlink" href="#heapq" title="Permalink to this headline">¶</a></h3>
+<p>The following functions from the <a class="reference external" href="https://docs.python.org/3/library/heapq.html#module-heapq" title="(in Python v3.7)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">heapq</span></code></a> module are supported:</p>
+<ul class="simple">
+<li><a class="reference external" href="https://docs.python.org/3/library/heapq.html#heapq.heapify" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">heapq.heapify()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/heapq.html#heapq.heappop" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">heapq.heappop()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/heapq.html#heapq.heappush" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">heapq.heappush()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/heapq.html#heapq.heappushpop" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">heapq.heappushpop()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/heapq.html#heapq.heapreplace" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">heapq.heapreplace()</span></code></a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/heapq.html#heapq.nlargest" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">heapq.nlargest()</span></code></a> : first two arguments only</li>
+<li><a class="reference external" href="https://docs.python.org/3/library/heapq.html#heapq.nsmallest" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">heapq.nsmallest()</span></code></a> : first two arguments only</li>
+</ul>
+<p>Note: the heap must be seeded with at least one value to allow its type to be
+inferred; heap items are assumed to be homogeneous in type.</p>
+</div>
+</div>
+<div class="section" id="third-party-modules">
+<h2>2.6.5. Third-party modules<a class="headerlink" href="#third-party-modules" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="cffi">
+<span id="cffi-support"></span><h3>2.6.5.1. <code class="docutils literal notranslate"><span class="pre">cffi</span></code><a class="headerlink" href="#cffi" title="Permalink to this headline">¶</a></h3>
+<p>Similarly to ctypes, Numba is able to call into <a class="reference external" href="https://cffi.readthedocs.org/">cffi</a>-declared external
+functions, using the following C types and any derived pointer types:</p>
+<ul class="simple">
+<li><code class="xref c c-type docutils literal notranslate"><span class="pre">char</span></code></li>
+<li><code class="xref c c-type docutils literal notranslate"><span class="pre">short</span></code></li>
+<li><code class="xref c c-type docutils literal notranslate"><span class="pre">int</span></code></li>
+<li><code class="xref c c-type docutils literal notranslate"><span class="pre">long</span></code></li>
+<li><code class="xref c c-type docutils literal notranslate"><span class="pre">long</span> <span class="pre">long</span></code></li>
+<li><code class="xref c c-type docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">char</span></code></li>
+<li><code class="xref c c-type docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">short</span></code></li>
+<li><code class="xref c c-type docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span></code></li>
+<li><code class="xref c c-type docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span></code></li>
+<li><code class="xref c c-type docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">long</span></code></li>
+<li><code class="xref c c-type docutils literal notranslate"><span class="pre">int8_t</span></code></li>
+<li><code class="xref c c-type docutils literal notranslate"><span class="pre">uint8_t</span></code></li>
+<li><code class="xref c c-type docutils literal notranslate"><span class="pre">int16_t</span></code></li>
+<li><code class="xref c c-type docutils literal notranslate"><span class="pre">uint16_t</span></code></li>
+<li><code class="xref c c-type docutils literal notranslate"><span class="pre">int32_t</span></code></li>
+<li><code class="xref c c-type docutils literal notranslate"><span class="pre">uint32_t</span></code></li>
+<li><code class="xref c c-type docutils literal notranslate"><span class="pre">int64_t</span></code></li>
+<li><code class="xref c c-type docutils literal notranslate"><span class="pre">uint64_t</span></code></li>
+<li><code class="xref c c-type docutils literal notranslate"><span class="pre">float</span></code></li>
+<li><code class="xref c c-type docutils literal notranslate"><span class="pre">double</span></code></li>
+<li><code class="xref c c-type docutils literal notranslate"><span class="pre">ssize_t</span></code></li>
+<li><code class="xref c c-type docutils literal notranslate"><span class="pre">size_t</span></code></li>
+<li><code class="xref c c-type docutils literal notranslate"><span class="pre">void</span></code></li>
+</ul>
+<p>The <code class="docutils literal notranslate"><span class="pre">from_buffer()</span></code> method of <code class="docutils literal notranslate"><span class="pre">cffi.FFI</span></code> and <code class="docutils literal notranslate"><span class="pre">CompiledFFI</span></code> objects is
+supported for passing Numpy arrays and other buffer-like objects.  Only
+<em>contiguous</em> arguments are accepted.  The argument to <code class="docutils literal notranslate"><span class="pre">from_buffer()</span></code>
+is converted to a raw pointer of the appropriate C type (for example a
+<code class="docutils literal notranslate"><span class="pre">double</span> <span class="pre">*</span></code> for a <code class="docutils literal notranslate"><span class="pre">float64</span></code> array).</p>
+<p>Additional type mappings for the conversion from a buffer to the appropriate C
+type may be registered with Numba. This may include struct types, though it is
+only permitted to call functions that accept pointers to structs - passing a
+struct by value is unsupported. For registering a mapping, use:</p>
+<dl class="function">
+<dt id="numba.cffi_support.register_type">
+<code class="descclassname">numba.cffi_support.</code><code class="descname">register_type</code><span class="sig-paren">(</span><em>cffi_type</em>, <em>numba_type</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.cffi_support.register_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Out-of-line cffi modules must be registered with Numba prior to the use of any
+of their functions from within Numba-compiled functions:</p>
+<dl class="function">
+<dt id="numba.cffi_support.register_module">
+<code class="descclassname">numba.cffi_support.</code><code class="descname">register_module</code><span class="sig-paren">(</span><em>mod</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.cffi_support.register_module" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register the cffi out-of-line module <code class="docutils literal notranslate"><span class="pre">mod</span></code> with Numba.</p>
+</dd></dl>
+
+<p>Inline cffi modules require no registration.</p>
+</div>
+</div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2012, Anaconda, Inc..<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>
