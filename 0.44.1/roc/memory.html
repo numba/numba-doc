@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>5.3. Memory management &#8212; Numba 0.44.0 documentation</title>
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/numba-docs.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="5.4. Writing Device Functions" href="device-functions.html" />
+    <link rel="prev" title="5.2. Writing HSA Kernels" href="kernels.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html"><span><img src="../_static/numba_blue_icon_rgb.png"></span>
+          Numba</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.44</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../user/index.html">1. User Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/index.html">2. Reference Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cuda/index.html">3. Numba for CUDA GPUs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cuda-reference/index.html">4. CUDA Python Reference</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">5. Numba for AMD ROC GPUs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../extending/index.html">6. Extending Numba</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer/index.html">7. Developer Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../proposals/index.html">8. Numba Enhancement Proposals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">9. Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release-notes.html">10. Release Notes</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">5.3. Memory management</a><ul>
+<li><a class="reference internal" href="#data-transfer">5.3.1. Data transfer</a><ul>
+<li><a class="reference internal" href="#device-arrays">5.3.1.1. Device arrays</a></li>
+<li><a class="reference internal" href="#data-registration">5.3.1.2. Data Registration</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#streams">5.3.2. Streams</a></li>
+<li><a class="reference internal" href="#shared-memory-and-thread-synchronization">5.3.3. Shared memory and thread synchronization</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+  <li>
+    <a href="kernels.html" title="Previous Chapter: 5.2. Writing HSA Kernels"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; 5.2. Writing ...</span>
+    </a>
+  </li>
+  <li>
+    <a href="device-functions.html" title="Next Chapter: 5.4. Writing Device Functions"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">5.4. Writing ... &raquo;</span>
+    </a>
+  </li>
+              
+            
+            
+            
+            
+              <li class="hidden-sm">
+<div id="sourcelink">
+  <a href="../_sources/roc/memory.rst.txt"
+     rel="nofollow">Source</a>
+</div></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <div class="section" id="memory-management">
+<h1>5.3. Memory management<a class="headerlink" href="#memory-management" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="data-transfer">
+<span id="roc-device-memory"></span><h2>5.3.1. Data transfer<a class="headerlink" href="#data-transfer" title="Permalink to this headline">¶</a></h2>
+<p>Even though Numba can automatically transfer NumPy arrays to the device,
+it can only do so conservatively by always transferring device memory back to
+the host when a kernel finishes. To avoid the unnecessary transfer for
+read-only arrays, you can use the following APIs to manually control the
+transfer:</p>
+<dl class="function">
+<dt>
+<code class="descclassname">numba.roc.</code><code class="descname">device_array</code><span class="sig-paren">(</span><em>shape</em>, <em>dtype=np.float</em>, <em>strides=None</em>, <em>order='C'</em><span class="sig-paren">)</span></dt>
+<dd><p>Allocate an empty device ndarray. Similar to <code class="xref py py-meth docutils literal notranslate"><span class="pre">numpy.empty()</span></code>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="descclassname">numba.roc.</code><code class="descname">device_array_like</code><span class="sig-paren">(</span><em>ary</em><span class="sig-paren">)</span></dt>
+<dd><p>Call roc.devicearray() with information from the array.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="descclassname">numba.roc.</code><code class="descname">to_device</code><span class="sig-paren">(</span><em>obj</em>, <em>context</em>, <em>copy=True</em>, <em>to=None</em><span class="sig-paren">)</span></dt>
+<dd><p>Allocate and transfer a numpy ndarray or structured scalar to the device.</p>
+<p>To copy host-&gt;device a numpy array:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ary</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">d_ary</span> <span class="o">=</span> <span class="n">roc</span><span class="o">.</span><span class="n">to_device</span><span class="p">(</span><span class="n">ary</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The resulting <code class="docutils literal notranslate"><span class="pre">d_ary</span></code> is a <code class="docutils literal notranslate"><span class="pre">DeviceNDArray</span></code>.</p>
+<p>To copy device-&gt;host:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">hary</span> <span class="o">=</span> <span class="n">d_ary</span><span class="o">.</span><span class="n">copy_to_host</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>To copy device-&gt;host to an existing array:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ary</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="n">d_ary</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">d_ary</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+<span class="n">d_ary</span><span class="o">.</span><span class="n">copy_to_host</span><span class="p">(</span><span class="n">ary</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<div class="section" id="device-arrays">
+<h3>5.3.1.1. Device arrays<a class="headerlink" href="#device-arrays" title="Permalink to this headline">¶</a></h3>
+<p>Device array references have the following methods.  These methods are to be
+called in host code, not within ROC-jitted functions.</p>
+<dl class="class">
+<dt>
+<em class="property">class </em><code class="descclassname">numba.roc.hsadrv.devicearray.</code><code class="descname">DeviceNDArray</code><span class="sig-paren">(</span><em>shape</em>, <em>strides</em>, <em>dtype</em>, <em>dgpu_data=None</em><span class="sig-paren">)</span></dt>
+<dd><p>An on-dGPU array type</p>
+<dl class="method">
+<dt>
+<code class="descname">copy_to_host</code><span class="sig-paren">(</span><em>ary=None</em>, <em>stream=None</em><span class="sig-paren">)</span></dt>
+<dd><p>Copy <code class="docutils literal notranslate"><span class="pre">self</span></code> to <code class="docutils literal notranslate"><span class="pre">ary</span></code> or create a new Numpy ndarray
+if <code class="docutils literal notranslate"><span class="pre">ary</span></code> is <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
+<p>The transfer is synchronous: the function returns after the copy
+is finished.</p>
+<p>Always returns the host array.</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">numba</span> <span class="k">import</span> <span class="n">hsa</span>
+
+<span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
+<span class="n">d_arr</span> <span class="o">=</span> <span class="n">hsa</span><span class="o">.</span><span class="n">to_device</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span>
+
+<span class="n">my_kernel</span><span class="p">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">](</span><span class="n">d_arr</span><span class="p">)</span>
+
+<span class="n">result_array</span> <span class="o">=</span> <span class="n">d_arr</span><span class="o">.</span><span class="n">copy_to_host</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">is_c_contiguous</code><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<dd><p>Return true if the array is C-contiguous.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">is_f_contiguous</code><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<dd><p>Return true if the array is Fortran-contiguous.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">ravel</code><span class="sig-paren">(</span><em>order='C'</em><span class="sig-paren">)</span></dt>
+<dd><p>Flatten the array without changing its contents, similar to
+<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.ravel.html#numpy.ndarray.ravel" title="(in NumPy v1.16)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">numpy.ndarray.ravel()</span></code></a>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">reshape</code><span class="sig-paren">(</span><em>*newshape</em>, <em>**kws</em><span class="sig-paren">)</span></dt>
+<dd><p>Reshape the array without changing its contents, similarly to
+<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.reshape.html#numpy.ndarray.reshape" title="(in NumPy v1.16)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">numpy.ndarray.reshape()</span></code></a>. Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">d_arr</span> <span class="o">=</span> <span class="n">d_arr</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="data-registration">
+<h3>5.3.1.2. Data Registration<a class="headerlink" href="#data-registration" title="Permalink to this headline">¶</a></h3>
+<p>The CPU and GPU do not share the same main memory, however, it is recommended to
+register a memory allocation to the HSA runtime for as a performance optimisation
+hint.</p>
+<dl class="function">
+<dt id="roc.register">
+<code class="descclassname">roc.</code><code class="descname">register</code><span class="sig-paren">(</span><em>*arrays</em><span class="sig-paren">)</span><a class="headerlink" href="#roc.register" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register every given array.  The function can be used in a <em>with-context</em>
+for automically deregistration:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">array_a</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">array_b</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="k">with</span> <span class="n">roc</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">array_a</span><span class="p">,</span> <span class="n">array_b</span><span class="p">):</span>
+    <span class="n">some_hsa_code</span><span class="p">(</span><span class="n">array_a</span><span class="p">,</span> <span class="n">array_b</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="roc.deregister">
+<code class="descclassname">roc.</code><code class="descname">deregister</code><span class="sig-paren">(</span><em>*arrays</em><span class="sig-paren">)</span><a class="headerlink" href="#roc.deregister" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deregister every given array</p>
+</dd></dl>
+
+</div>
+</div>
+<div class="section" id="streams">
+<h2>5.3.2. Streams<a class="headerlink" href="#streams" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt>
+<code class="descclassname">numba.roc.</code><code class="descname">stream</code><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<dd></dd></dl>
+
+<p>ROC streams have the following methods:</p>
+<dl class="class">
+<dt>
+<em class="property">class </em><code class="descclassname">numba.roc.hsadrv.driver.</code><code class="descname">Stream</code></dt>
+<dd><p>An asynchronous stream for async API</p>
+<dl class="method">
+<dt>
+<code class="descname">auto_synchronize</code><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<dd><p>A context manager that waits for all commands in this stream to execute
+and commits any pending memory transfers upon exiting the context.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">synchronize</code><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<dd><p>Synchronize the stream.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="shared-memory-and-thread-synchronization">
+<span id="roc-shared-memory"></span><h2>5.3.3. Shared memory and thread synchronization<a class="headerlink" href="#shared-memory-and-thread-synchronization" title="Permalink to this headline">¶</a></h2>
+<p>A limited amount of shared memory can be allocated on the device to speed
+up access to data, when necessary.  That memory will be shared (i.e. both
+readable and writable) amongst all workitems  belonging to a given group
+and has faster access times than regular device memory.  It also allows
+workitems to cooperate on a given solution.  You can think of it as a
+manually-managed data cache.</p>
+<p>The memory is allocated once for the duration of the kernel, unlike
+traditional dynamic memory management.</p>
+<dl class="function">
+<dt id="numba.roc.shared.array">
+<code class="descclassname">numba.roc.shared.</code><code class="descname">array</code><span class="sig-paren">(</span><em>shape</em>, <em>type</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.roc.shared.array" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allocate a shared array of the given <em>shape</em> and <em>type</em> on the device.
+This function must be called on the device (i.e. from a kernel or
+device function).  <em>shape</em> is either an integer or a tuple of integers
+representing the array’s dimensions.  <em>type</em> is a <a class="reference internal" href="../reference/types.html#numba-types"><span class="std std-ref">Numba type</span></a>
+of the elements needing to be stored in the array.</p>
+<p>The returned array-like object can be read and written to like any normal
+device array (e.g. through indexing).</p>
+<p>A common pattern is to have each workitem populate one element in the
+shared array and then wait for all workitems to finish using :func:`
+.barrier`.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.roc.barrier">
+<code class="descclassname">numba.roc.</code><code class="descname">barrier</code><span class="sig-paren">(</span><em>scope</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.roc.barrier" title="Permalink to this definition">¶</a></dt>
+<dd><p>The <code class="docutils literal notranslate"><span class="pre">scope</span></code> argument specifies the level of synchronization.  Set <code class="docutils literal notranslate"><span class="pre">scope</span></code>
+to <code class="docutils literal notranslate"><span class="pre">roc.CLK_GLOBAL_MEM_FENCE</span></code> or <code class="docutils literal notranslate"><span class="pre">roc.CLK_LOCAL_MEM_FENCE</span></code> to synchronize
+all workitems across a workgroup when accessing global memory or local memory
+respectively.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.roc.wavebarrier">
+<code class="descclassname">numba.roc.</code><code class="descname">wavebarrier</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#numba.roc.wavebarrier" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates an execution barrier across a wavefront to force a synchronization
+point.</p>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="examples.html#roc-matmul"><span class="std std-ref">Matrix multiplication example</span></a>.</p>
+</div>
+</div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2012, Anaconda, Inc..<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

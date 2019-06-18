@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>3.2. Writing CUDA Kernels &#8212; Numba 0.44.0 documentation</title>
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/numba-docs.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="3.3. Memory management" href="memory.html" />
+    <link rel="prev" title="3.1. Overview" href="overview.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html"><span><img src="../_static/numba_blue_icon_rgb.png"></span>
+          Numba</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.44</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../user/index.html">1. User Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/index.html">2. Reference Manual</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">3. Numba for CUDA GPUs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cuda-reference/index.html">4. CUDA Python Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../roc/index.html">5. Numba for AMD ROC GPUs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../extending/index.html">6. Extending Numba</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer/index.html">7. Developer Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../proposals/index.html">8. Numba Enhancement Proposals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">9. Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release-notes.html">10. Release Notes</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">3.2. Writing CUDA Kernels</a><ul>
+<li><a class="reference internal" href="#introduction">3.2.1. Introduction</a></li>
+<li><a class="reference internal" href="#kernel-declaration">3.2.2. Kernel declaration</a></li>
+<li><a class="reference internal" href="#kernel-invocation">3.2.3. Kernel invocation</a><ul>
+<li><a class="reference internal" href="#choosing-the-block-size">3.2.3.1. Choosing the block size</a></li>
+<li><a class="reference internal" href="#multi-dimensional-blocks-and-grids">3.2.3.2. Multi-dimensional blocks and grids</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#thread-positioning">3.2.4. Thread positioning</a><ul>
+<li><a class="reference internal" href="#absolute-positions">3.2.4.1. Absolute positions</a></li>
+<li><a class="reference internal" href="#further-reading">3.2.4.2. Further Reading</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+  <li>
+    <a href="overview.html" title="Previous Chapter: 3.1. Overview"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; 3.1. Overview</span>
+    </a>
+  </li>
+  <li>
+    <a href="memory.html" title="Next Chapter: 3.3. Memory management"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">3.3. Memory m... &raquo;</span>
+    </a>
+  </li>
+              
+            
+            
+            
+            
+              <li class="hidden-sm">
+<div id="sourcelink">
+  <a href="../_sources/cuda/kernels.rst.txt"
+     rel="nofollow">Source</a>
+</div></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <div class="section" id="writing-cuda-kernels">
+<h1>3.2. Writing CUDA Kernels<a class="headerlink" href="#writing-cuda-kernels" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="introduction">
+<h2>3.2.1. Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<p>CUDA has an execution model unlike the traditional sequential model used
+for programming CPUs.  In CUDA, the code you write will be executed by
+multiple threads at once (often hundreds or thousands).  Your solution will
+be modeled by defining a thread hierarchy of <em>grid</em>, <em>blocks</em> and <em>threads</em>.</p>
+<p>Numba’s CUDA support exposes facilities to declare and manage this
+hierarchy of threads.  The facilities are largely similar to those
+exposed by NVidia’s CUDA C language.</p>
+<p>Numba also exposes three kinds of GPU memory: global <a class="reference internal" href="memory.html#cuda-device-memory"><span class="std std-ref">device memory</span></a> (the large, relatively slow
+off-chip memory that’s connected to the GPU itself), on-chip
+<a class="reference internal" href="memory.html#cuda-shared-memory"><span class="std std-ref">shared memory</span></a> and <a class="reference internal" href="memory.html#cuda-local-memory"><span class="std std-ref">local memory</span></a>.
+For all but the simplest algorithms, it is important that you carefully
+consider how to use and access memory in order to minimize bandwidth
+requirements and contention.</p>
+</div>
+<div class="section" id="kernel-declaration">
+<h2>3.2.2. Kernel declaration<a class="headerlink" href="#kernel-declaration" title="Permalink to this headline">¶</a></h2>
+<p>A <em>kernel function</em> is a GPU function that is meant to be called from CPU
+code (*).  It gives it two fundamental characteristics:</p>
+<ul class="simple">
+<li>kernels cannot explicitly return a value; all result data must be written
+to an array passed to the function (if computing a scalar, you will
+probably pass a one-element array);</li>
+<li>kernels explicitly declare their thread hierarchy when called: i.e.
+the number of thread blocks and the number of threads per block
+(note that while a kernel is compiled once, it can be called multiple
+times with different block sizes or grid sizes).</li>
+</ul>
+<p>At first sight, writing a CUDA kernel with Numba looks very much like
+writing a <a class="reference internal" href="../glossary.html#term-jit-function"><span class="xref std std-term">JIT function</span></a> for the CPU:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@cuda</span><span class="o">.</span><span class="n">jit</span>
+<span class="k">def</span> <span class="nf">increment_by_one</span><span class="p">(</span><span class="n">an_array</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Increment all array elements by one.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># code elided here; read further for different implementations</span>
+</pre></div>
+</div>
+<p>(*) Note: newer CUDA devices support device-side kernel launching; this feature
+is called <em>dynamic parallelism</em> but Numba does not support it currently)</p>
+</div>
+<div class="section" id="kernel-invocation">
+<span id="cuda-kernel-invocation"></span><h2>3.2.3. Kernel invocation<a class="headerlink" href="#kernel-invocation" title="Permalink to this headline">¶</a></h2>
+<p>A kernel is typically launched in the following way:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">threadsperblock</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="n">blockspergrid</span> <span class="o">=</span> <span class="p">(</span><span class="n">an_array</span><span class="o">.</span><span class="n">size</span> <span class="o">+</span> <span class="p">(</span><span class="n">threadsperblock</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span> <span class="o">//</span> <span class="n">threadsperblock</span>
+<span class="n">increment_by_one</span><span class="p">[</span><span class="n">blockspergrid</span><span class="p">,</span> <span class="n">threadsperblock</span><span class="p">](</span><span class="n">an_array</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We notice two steps here:</p>
+<ul class="simple">
+<li>Instantiate the kernel proper, by specifying a number of blocks
+(or “blocks per grid”), and a number of threads per block.  The product
+of the two will give the total number of threads launched.  Kernel
+instantiation is done by taking the compiled kernel function
+(here <code class="docutils literal notranslate"><span class="pre">increment_by_one</span></code>) and indexing it with a tuple of integers.</li>
+<li>Running the kernel, by passing it the input array (and any separate
+output arrays if necessary).  By default, running a kernel is synchronous:
+the function returns when the kernel has finished executing and the
+data is synchronized back.</li>
+</ul>
+<div class="section" id="choosing-the-block-size">
+<h3>3.2.3.1. Choosing the block size<a class="headerlink" href="#choosing-the-block-size" title="Permalink to this headline">¶</a></h3>
+<p>It might seem curious to have a two-level hierarchy when declaring the
+number of threads needed by a kernel.  The block size (i.e. number of
+threads per block) is often crucial:</p>
+<ul class="simple">
+<li>On the software side, the block size determines how many threads
+share a given area of <a class="reference internal" href="memory.html#cuda-shared-memory"><span class="std std-ref">shared memory</span></a>.</li>
+<li>On the hardware side, the block size must be large enough for full
+occupation of execution units; recommendations can be found in the
+<a class="reference external" href="http://docs.nvidia.com/cuda/cuda-c-programming-guide">CUDA C Programming Guide</a>.</li>
+</ul>
+</div>
+<div class="section" id="multi-dimensional-blocks-and-grids">
+<h3>3.2.3.2. Multi-dimensional blocks and grids<a class="headerlink" href="#multi-dimensional-blocks-and-grids" title="Permalink to this headline">¶</a></h3>
+<p>To help deal with multi-dimensional arrays, CUDA allows you to specify
+multi-dimensional blocks and grids.  In the example above, you could
+make <code class="docutils literal notranslate"><span class="pre">blockspergrid</span></code> and <code class="docutils literal notranslate"><span class="pre">threadsperblock</span></code> tuples of one, two
+or three integers.  Compared to 1D declarations of equivalent sizes,
+this doesn’t change anything to the efficiency or behaviour of generated
+code, but can help you write your algorithms in a more natural way.</p>
+</div>
+</div>
+<div class="section" id="thread-positioning">
+<h2>3.2.4. Thread positioning<a class="headerlink" href="#thread-positioning" title="Permalink to this headline">¶</a></h2>
+<p>When running a kernel, the kernel function’s code is executed by every
+thread once.  It therefore has to know which thread it is in, in order
+to know which array element(s) it is responsible for (complex algorithms
+may define more complex responsibilities, but the underlying principle
+is the same).</p>
+<p>One way is for the thread to determine its position in the grid and block
+and manually compute the corresponding array position:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@cuda</span><span class="o">.</span><span class="n">jit</span>
+<span class="k">def</span> <span class="nf">increment_by_one</span><span class="p">(</span><span class="n">an_array</span><span class="p">):</span>
+    <span class="c1"># Thread id in a 1D block</span>
+    <span class="n">tx</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">threadIdx</span><span class="o">.</span><span class="n">x</span>
+    <span class="c1"># Block id in a 1D grid</span>
+    <span class="n">ty</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">blockIdx</span><span class="o">.</span><span class="n">x</span>
+    <span class="c1"># Block width, i.e. number of threads per block</span>
+    <span class="n">bw</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">blockDim</span><span class="o">.</span><span class="n">x</span>
+    <span class="c1"># Compute flattened index inside the array</span>
+    <span class="n">pos</span> <span class="o">=</span> <span class="n">tx</span> <span class="o">+</span> <span class="n">ty</span> <span class="o">*</span> <span class="n">bw</span>
+    <span class="k">if</span> <span class="n">pos</span> <span class="o">&lt;</span> <span class="n">an_array</span><span class="o">.</span><span class="n">size</span><span class="p">:</span>  <span class="c1"># Check array boundaries</span>
+        <span class="n">an_array</span><span class="p">[</span><span class="n">pos</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Unless you are sure the block size and grid size is a divisor
+of your array size, you <strong>must</strong> check boundaries as shown above.</p>
+</div>
+<p><a class="reference internal" href="../cuda-reference/kernel.html#numba.cuda.threadIdx" title="numba.cuda.threadIdx"><code class="xref py py-attr docutils literal notranslate"><span class="pre">threadIdx</span></code></a>, <a class="reference internal" href="../cuda-reference/kernel.html#numba.cuda.blockIdx" title="numba.cuda.blockIdx"><code class="xref py py-attr docutils literal notranslate"><span class="pre">blockIdx</span></code></a>, <a class="reference internal" href="../cuda-reference/kernel.html#numba.cuda.blockDim" title="numba.cuda.blockDim"><code class="xref py py-attr docutils literal notranslate"><span class="pre">blockDim</span></code></a> and <a class="reference internal" href="../cuda-reference/kernel.html#numba.cuda.gridDim" title="numba.cuda.gridDim"><code class="xref py py-attr docutils literal notranslate"><span class="pre">gridDim</span></code></a>
+are special objects provided by the CUDA backend for the sole purpose of
+knowing the geometry of the thread hierarchy and the position of the
+current thread within that geometry.</p>
+<p>These objects can be 1D, 2D or 3D, depending on how the kernel was
+<a class="reference internal" href="#cuda-kernel-invocation"><span class="std std-ref">invoked</span></a>.  To access the value at each
+dimension, use the <code class="docutils literal notranslate"><span class="pre">x</span></code>, <code class="docutils literal notranslate"><span class="pre">y</span></code> and <code class="docutils literal notranslate"><span class="pre">z</span></code> attributes of these objects,
+respectively.</p>
+<dl class="attribute">
+<dt>
+<code class="descclassname">numba.cuda.</code><code class="descname">threadIdx</code></dt>
+<dd><p>The thread indices in the current thread block.  For 1D blocks, the index
+(given by the <code class="docutils literal notranslate"><span class="pre">x</span></code> attribute) is an integer spanning the range from 0
+inclusive to <a class="reference internal" href="../cuda-reference/kernel.html#numba.cuda.blockDim" title="numba.cuda.blockDim"><code class="xref py py-attr docutils literal notranslate"><span class="pre">numba.cuda.blockDim</span></code></a> exclusive.  A similar rule
+exists for each dimension when more than one dimension is used.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descclassname">numba.cuda.</code><code class="descname">blockDim</code></dt>
+<dd><p>The shape of the block of threads, as declared when instantiating the
+kernel.  This value is the same for all threads in a given kernel, even
+if they belong to different blocks (i.e. each block is “full”).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descclassname">numba.cuda.</code><code class="descname">blockIdx</code></dt>
+<dd><p>The block indices in the grid of threads launched a kernel.  For a 1D grid,
+the index (given by the <code class="docutils literal notranslate"><span class="pre">x</span></code> attribute) is an integer spanning the range
+from 0 inclusive to <a class="reference internal" href="../cuda-reference/kernel.html#numba.cuda.gridDim" title="numba.cuda.gridDim"><code class="xref py py-attr docutils literal notranslate"><span class="pre">numba.cuda.gridDim</span></code></a> exclusive.  A similar rule
+exists for each dimension when more than one dimension is used.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descclassname">numba.cuda.</code><code class="descname">gridDim</code></dt>
+<dd><p>The shape of the grid of blocks, i.e. the total number of blocks launched
+by this kernel invocation, as declared when instantiating the kernel.</p>
+</dd></dl>
+
+<div class="section" id="absolute-positions">
+<h3>3.2.4.1. Absolute positions<a class="headerlink" href="#absolute-positions" title="Permalink to this headline">¶</a></h3>
+<p>Simple algorithms will tend to always use thread indices in the
+same way as shown in the example above.  Numba provides additional facilities
+to automate such calculations:</p>
+<dl class="function">
+<dt>
+<code class="descclassname">numba.cuda.</code><code class="descname">grid</code><span class="sig-paren">(</span><em>ndim</em><span class="sig-paren">)</span></dt>
+<dd><p>Return the absolute position of the current thread in the entire
+grid of blocks.  <em>ndim</em> should correspond to the number of dimensions
+declared when instantiating the kernel.  If <em>ndim</em> is 1, a single integer
+is returned.  If <em>ndim</em> is 2 or 3, a tuple of the given number of
+integers is returned.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="descclassname">numba.cuda.</code><code class="descname">gridsize</code><span class="sig-paren">(</span><em>ndim</em><span class="sig-paren">)</span></dt>
+<dd><p>Return the absolute size (or shape) in threads of the entire grid of
+blocks.  <em>ndim</em> has the same meaning as in <a class="reference internal" href="../cuda-reference/kernel.html#numba.cuda.grid" title="numba.cuda.grid"><code class="xref py py-func docutils literal notranslate"><span class="pre">grid()</span></code></a> above.</p>
+</dd></dl>
+
+<p>With these functions, the incrementation example can become:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@cuda</span><span class="o">.</span><span class="n">jit</span>
+<span class="k">def</span> <span class="nf">increment_by_one</span><span class="p">(</span><span class="n">an_array</span><span class="p">):</span>
+    <span class="n">pos</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">pos</span> <span class="o">&lt;</span> <span class="n">an_array</span><span class="o">.</span><span class="n">size</span><span class="p">:</span>
+        <span class="n">an_array</span><span class="p">[</span><span class="n">pos</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+</pre></div>
+</div>
+<p>The same example for a 2D array and grid of threads would be:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@cuda</span><span class="o">.</span><span class="n">jit</span>
+<span class="k">def</span> <span class="nf">increment_a_2D_array</span><span class="p">(</span><span class="n">an_array</span><span class="p">):</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">an_array</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">and</span> <span class="n">y</span> <span class="o">&lt;</span> <span class="n">an_array</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+       <span class="n">an_array</span><span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+</pre></div>
+</div>
+<p>Note the grid computation when instantiating the kernel must still be
+done manually, for example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">division</span>  <span class="c1"># for Python 2</span>
+
+<span class="n">threadsperblock</span> <span class="o">=</span> <span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>
+<span class="n">blockspergrid_x</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">an_array</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="n">threadsperblock</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">blockspergrid_y</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">an_array</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">threadsperblock</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">blockspergrid</span> <span class="o">=</span> <span class="p">(</span><span class="n">blockspergrid_x</span><span class="p">,</span> <span class="n">blockspergrid_y</span><span class="p">)</span>
+<span class="n">increment_a_2D_array</span><span class="p">[</span><span class="n">blockspergrid</span><span class="p">,</span> <span class="n">threadsperblock</span><span class="p">](</span><span class="n">an_array</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="further-reading">
+<h3>3.2.4.2. Further Reading<a class="headerlink" href="#further-reading" title="Permalink to this headline">¶</a></h3>
+<p>Please refer to the the <a class="reference external" href="http://docs.nvidia.com/cuda/cuda-c-programming-guide">CUDA C Programming Guide</a> for a detailed discussion
+of CUDA programming.</p>
+</div>
+</div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2012, Anaconda, Inc..<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

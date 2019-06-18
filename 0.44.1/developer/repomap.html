@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>7.2. A Map of the Numba Repository &#8212; Numba 0.44.0 documentation</title>
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/numba-docs.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="7.3. Numba architecture" href="architecture.html" />
+    <link rel="prev" title="7.1. Contributing to Numba" href="contributing.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html"><span><img src="../_static/numba_blue_icon_rgb.png"></span>
+          Numba</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.44</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../user/index.html">1. User Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/index.html">2. Reference Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cuda/index.html">3. Numba for CUDA GPUs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cuda-reference/index.html">4. CUDA Python Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../roc/index.html">5. Numba for AMD ROC GPUs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../extending/index.html">6. Extending Numba</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">7. Developer Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../proposals/index.html">8. Numba Enhancement Proposals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">9. Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release-notes.html">10. Release Notes</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">7.2. A Map of the Numba Repository</a><ul>
+<li><a class="reference internal" href="#support-files">7.2.1. Support Files</a><ul>
+<li><a class="reference internal" href="#build-and-packaging">7.2.1.1. Build and Packaging</a></li>
+<li><a class="reference internal" href="#continuous-integration">7.2.1.2. Continuous Integration</a></li>
+<li><a class="reference internal" href="#documentation-examples">7.2.1.3. Documentation / Examples</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#numba-source-code">7.2.2. Numba Source Code</a><ul>
+<li><a class="reference internal" href="#public-api">7.2.2.1. Public API</a></li>
+<li><a class="reference internal" href="#dispatching">7.2.2.2. Dispatching</a></li>
+<li><a class="reference internal" href="#compiler-pipeline">7.2.2.3. Compiler Pipeline</a></li>
+<li><a class="reference internal" href="#type-management">7.2.2.4. Type Management</a></li>
+<li><a class="reference internal" href="#compiled-extensions">7.2.2.5. Compiled Extensions</a></li>
+<li><a class="reference internal" href="#misc-support">7.2.2.6. Misc Support</a></li>
+<li><a class="reference internal" href="#core-python-data-types">7.2.2.7. Core Python Data Types</a></li>
+<li><a class="reference internal" href="#math">7.2.2.8. Math</a></li>
+<li><a class="reference internal" href="#parallelaccelerator">7.2.2.9. ParallelAccelerator</a></li>
+<li><a class="reference internal" href="#deprecated-functionality">7.2.2.10. Deprecated Functionality</a></li>
+<li><a class="reference internal" href="#debugging-support">7.2.2.11. Debugging Support</a></li>
+<li><a class="reference internal" href="#type-signatures-cpu">7.2.2.12. Type Signatures (CPU)</a></li>
+<li><a class="reference internal" href="#target-implementations-cpu">7.2.2.13. Target Implementations (CPU)</a></li>
+<li><a class="reference internal" href="#ufunc-compiler-and-runtime">7.2.2.14. Ufunc Compiler and Runtime</a></li>
+<li><a class="reference internal" href="#unit-tests-cpu">7.2.2.15. Unit Tests (CPU)</a></li>
+<li><a class="reference internal" href="#command-line-utilities">7.2.2.16. Command Line Utilities</a></li>
+<li><a class="reference internal" href="#cuda-gpu-target">7.2.2.17. CUDA GPU Target</a></li>
+<li><a class="reference internal" href="#rocm-gpu-target">7.2.2.18. ROCm GPU Target</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+  <li>
+    <a href="contributing.html" title="Previous Chapter: 7.1. Contributing to Numba"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; 7.1. Contribu...</span>
+    </a>
+  </li>
+  <li>
+    <a href="architecture.html" title="Next Chapter: 7.3. Numba architecture"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">7.3. Numba ar... &raquo;</span>
+    </a>
+  </li>
+              
+            
+            
+            
+            
+              <li class="hidden-sm">
+<div id="sourcelink">
+  <a href="../_sources/developer/repomap.rst.txt"
+     rel="nofollow">Source</a>
+</div></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <div class="section" id="a-map-of-the-numba-repository">
+<h1>7.2. A Map of the Numba Repository<a class="headerlink" href="#a-map-of-the-numba-repository" title="Permalink to this headline">¶</a></h1>
+<p>The Numba repository is quite large, and due to age has functionality spread
+around many locations.  To help orient developers, this document will try to
+summarize where different categories of functionality can be found.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">It is likely that the organization of the code base will change in the
+future to improve organization.  Follow <a class="reference external" href="https://github.com/numba/numba/issues/3807">issue #3807</a>
+for more details.</p>
+</div>
+<div class="section" id="support-files">
+<h2>7.2.1. Support Files<a class="headerlink" href="#support-files" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="build-and-packaging">
+<h3>7.2.1.1. Build and Packaging<a class="headerlink" href="#build-and-packaging" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">setup.py</span></code> - Standard Python distutils/setuptools script</li>
+<li><code class="docutils literal notranslate"><span class="pre">MANIFEST.in</span></code> - Distutils packaging instructions</li>
+<li><code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code> - Pip package requirements, not used by conda</li>
+<li><code class="docutils literal notranslate"><span class="pre">versioneer.py</span></code> - Handles automatic setting of version in
+installed package from git tags</li>
+<li><code class="docutils literal notranslate"><span class="pre">.flake8</span></code> - Preferences for code formatting.  Files should be
+fixed and removed from the exception list as time allows.</li>
+<li><code class="docutils literal notranslate"><span class="pre">buildscripts/condarecipe.local</span></code> - Conda build recipe</li>
+<li><code class="docutils literal notranslate"><span class="pre">buildscripts/remove_unwanted_files.py</span></code> - Helper script to remove
+files that will not compile under Python 2. Used by build recipes.</li>
+<li><code class="docutils literal notranslate"><span class="pre">buildscripts/condarecipe_clone_icc_rt</span></code> - Recipe to build a
+standalone icc_rt package.</li>
+</ul>
+</div>
+<div class="section" id="continuous-integration">
+<h3>7.2.1.2. Continuous Integration<a class="headerlink" href="#continuous-integration" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">.binstar.yml</span></code> - Binstar Build CI config (inactive)</li>
+<li><code class="docutils literal notranslate"><span class="pre">azure-pipelines.yml</span></code> - Azure Pipelines CI config (active:
+Win/Mac/Linux)</li>
+<li><code class="docutils literal notranslate"><span class="pre">buildscripts/azure/</span></code> - Azure Pipeline configuration for specific
+platforms</li>
+<li><code class="docutils literal notranslate"><span class="pre">.travis.yml</span></code> - Travis CI config (active: Mac/Linux, will be
+dropped in the future)</li>
+<li><code class="docutils literal notranslate"><span class="pre">appveyor.yml</span></code> - Appveyor CI config (inactive: Win)</li>
+<li><code class="docutils literal notranslate"><span class="pre">buildscripts/appveyor/</span></code> - Appveyor build scripts</li>
+<li><code class="docutils literal notranslate"><span class="pre">buildscripts/incremental/</span></code> - Generic scripts for building Numba
+on various CI systems</li>
+<li><code class="docutils literal notranslate"><span class="pre">codecov.yml</span></code> - Codecov.io coverage reporting</li>
+</ul>
+</div>
+<div class="section" id="documentation-examples">
+<h3>7.2.1.3. Documentation / Examples<a class="headerlink" href="#documentation-examples" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">LICENSE</span></code> - License for Numba</li>
+<li><code class="docutils literal notranslate"><span class="pre">LICENSES.third-party</span></code> - License for third party code vendored
+into Numba</li>
+<li><code class="docutils literal notranslate"><span class="pre">README.rst</span></code> - README for repo, also uploaded to PyPI</li>
+<li><code class="docutils literal notranslate"><span class="pre">CONTRIBUTING.md</span></code> - Documentation on how to contribute to project
+(out of date, should be updated to point to Sphinx docs)</li>
+<li><code class="docutils literal notranslate"><span class="pre">AUTHORS</span></code> - List of Github users who have contributed PRs (out of
+date)</li>
+<li><code class="docutils literal notranslate"><span class="pre">CHANGE_LOG</span></code> - History of Numba releases, also directly embedded
+into Sphinx documentation</li>
+<li><code class="docutils literal notranslate"><span class="pre">docs/</span></code> - Documentation source</li>
+<li><code class="docutils literal notranslate"><span class="pre">docs/_templates/</span></code> - Directory for templates (to override defaults
+with Sphinx theme)</li>
+<li><code class="docutils literal notranslate"><span class="pre">docs/Makefile</span></code> - Used to build Sphinx docs with <code class="docutils literal notranslate"><span class="pre">make</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">docs/source</span></code> - ReST source for Numba documentation</li>
+<li><code class="docutils literal notranslate"><span class="pre">docs/_static/</span></code> - Static CSS and image assets for Numba docs</li>
+<li><code class="docutils literal notranslate"><span class="pre">docs/gh-pages.py</span></code> - Utility script to update Numba docs (stored
+as gh-pages)</li>
+<li><code class="docutils literal notranslate"><span class="pre">docs/make.bat</span></code> - Not used (remove?)</li>
+<li><code class="docutils literal notranslate"><span class="pre">examples/</span></code> - Example scripts demonstrating numba (re/move to
+numba-examples repo?)</li>
+<li><code class="docutils literal notranslate"><span class="pre">examples/notebooks/</span></code> - Example notebooks (re/move to
+numba-examples repo?)</li>
+<li><code class="docutils literal notranslate"><span class="pre">benchmarks/</span></code> - Benchmark scripts (re/move to numba-examples
+repo?)</li>
+<li><code class="docutils literal notranslate"><span class="pre">tutorials/</span></code> - Tutorial notebooks (definitely out of date, should
+remove and direct to external tutorials)</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/scripts/generate_lower_listing.py</span></code> - Dump all registered
+implementations decorated with <code class="docutils literal notranslate"><span class="pre">&#64;lower*</span></code> for reference
+documentation.  Currently misses implementations from the higher
+level extension API.</li>
+</ul>
+</div>
+</div>
+<div class="section" id="numba-source-code">
+<h2>7.2.2. Numba Source Code<a class="headerlink" href="#numba-source-code" title="Permalink to this headline">¶</a></h2>
+<p>Numba ships with both the source code and tests in one package.</p>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">numba/</span></code> - all of the source code and tests</li>
+</ul>
+<div class="section" id="public-api">
+<h3>7.2.2.1. Public API<a class="headerlink" href="#public-api" title="Permalink to this headline">¶</a></h3>
+<p>These define aspects of the public Numba interface.</p>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">numba/decorators.py</span></code> - User-facing decorators for compiling
+regular functions on the CPU</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/extending.py</span></code> - Public decorators for extending Numba
+(<code class="docutils literal notranslate"><span class="pre">overload</span></code>, <code class="docutils literal notranslate"><span class="pre">intrinsic</span></code>, etc)</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/ccallback.py</span></code> - <code class="docutils literal notranslate"><span class="pre">&#64;cfunc</span></code> decorator for compiling
+functions to a fixed C signature.  Used to make callbacks.</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/npyufunc/decorators.py</span></code> - ufunc/gufunc compilation
+decorators</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/config.py</span></code> - Numba global config options and environment
+variable handling</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/annotations</span></code> - Gathering and printing type annotations of
+Numba IR</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/pretty_annotate.py</span></code> - Code highlighting of Numba functions
+and types (both ANSI terminal and HTML)</li>
+</ul>
+</div>
+<div class="section" id="dispatching">
+<h3>7.2.2.2. Dispatching<a class="headerlink" href="#dispatching" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">numba/dispatcher.py</span></code> - Dispatcher objects are compiled functions
+produced by <code class="docutils literal notranslate"><span class="pre">&#64;jit</span></code>.  A dispatcher has different implementations
+for different type signatures.</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/_dispatcher.{h,c}</span></code> - C interface to C++ dispatcher
+implementation</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/_dispatcherimpl.cpp</span></code> - C++ dispatcher implementation (for
+speed on common data types)</li>
+</ul>
+</div>
+<div class="section" id="compiler-pipeline">
+<h3>7.2.2.3. Compiler Pipeline<a class="headerlink" href="#compiler-pipeline" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">numba/compiler.py</span></code> - Compiler pipelines and flags</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/errors.py</span></code> - Numba exception and warning classes</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/ir.py</span></code> - Numba IR data structure objects</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/bytecode.py</span></code> - Bytecode parsing and function identity (??)</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/interpreter.py</span></code> - Translate Python interpreter bytecode to
+Numba IR</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/analysis.py</span></code> - Utility functions to analyze Numba IR
+(variable lifetime, prune branches, etc)</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/dataflow.py</span></code> - Dataflow analysis for Python bytecode (used
+in analysis.py)</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/controlflow.py</span></code> - Control flow analysis of Numba IR and
+Python bytecode</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/typeinfer.py</span></code> - Type inference algorithm</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/transforms.py</span></code> - Numba IR transformations</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/rewrites</span></code> - Rewrite passes used by compiler</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/rewrites/__init__.py</span></code> - Loads all rewrite passes so they
+are put into the registry</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/rewrites/registry.py</span></code> - Registry object for collecting
+rewrite passes</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/rewrites/ir_print.py</span></code> - Write print() calls into special
+print nodes in the IR</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/rewrites/static_raise.py</span></code> - Converts exceptions with static
+arguments into a special form that can be lowered</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/rewrites/macros.py</span></code> - Generic support for macro expansion
+in the Numba IR</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/rewrites/static_getitem.py</span></code> - Rewrites getitem and setitem
+with constant arguments to allow type inference</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/rewrites/static_binop.py</span></code> - Rewrites binary operations
+(specifically <code class="docutils literal notranslate"><span class="pre">**</span></code>) with constant arguments so faster code can be
+generated</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/inline_closurecall.py</span></code> - Inlines body of closure functions
+to call site.  Support for array comprehensions, reduction inlining,
+and stencil inlining.</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/macro.py</span></code> - Alias to <code class="docutils literal notranslate"><span class="pre">numba.rewrites.macros</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/postproc.py</span></code> - Postprocessor for Numba IR that computes
+variable lifetime, inserts del operations, and handles generators</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/lowering.py</span></code> - General implementation of lowering Numba IR
+to LLVM</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/withcontexts.py</span></code> - General scaffolding for implementing
+context managers in nopython mode, and the objectmode context
+manager</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/pylowering.py</span></code> - Lowering of Numba IR in object mode</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/pythonapi.py</span></code> - LLVM IR code generation to interface with
+CPython API</li>
+</ul>
+</div>
+<div class="section" id="type-management">
+<h3>7.2.2.4. Type Management<a class="headerlink" href="#type-management" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">numba/typeconv/</span></code> - Implementation of type casting and type
+signature matching in both C++ and Python</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/capsulethunk.h</span></code> - Used by typeconv</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/types/</span></code> - definition of the Numba type hierarchy, used
+everywhere in compiler to select implementations</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/consts.py</span></code> - Constant inference (used to make constant
+values available during codegen when possible)</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/datamodel</span></code> - LLVM IR representations of data types in
+different contexts</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/datamodel/models.py</span></code> - Models for most standard types</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/datamodel/registry.py</span></code> - Decorator to register new data
+models</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/datamodel/packer.py</span></code> - Pack typed values into a data
+structure</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/datamodel/testing.py</span></code> - Data model tests (this should
+move??)</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/datamodel/manager.py</span></code> - Map types to data models</li>
+</ul>
+</div>
+<div class="section" id="compiled-extensions">
+<h3>7.2.2.5. Compiled Extensions<a class="headerlink" href="#compiled-extensions" title="Permalink to this headline">¶</a></h3>
+<p>Numba uses a small amount of compiled C/C++ code for core
+functionality, like dispatching and type matching where performance
+matters, and it is more convenient to encapsulate direct interaction
+with CPython APIs.</p>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">numba/_arraystruct.h</span></code> - Struct for holding NumPy array
+attributes.  Used in helperlib and the Numba Runtime.</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/_helperlib.c</span></code> - C functions required by Numba compiled code
+at runtime.  Linked into ahead-of-time compiled modules</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/_helpermod.c</span></code> - Python extension module with pointers to
+functions from <code class="docutils literal notranslate"><span class="pre">_helperlib.c</span></code> and <code class="docutils literal notranslate"><span class="pre">_npymath_exports.c</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/_npymath_exports.c</span></code> - Export function pointer table to
+NumPy C math functions</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/_dynfuncmod.c</span></code> - Python extension module exporting
+_dynfunc.c functionality</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/_dynfunc.c</span></code> - C level Environment and Closure objects (keep
+in sync with numba/target/base.py)</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/mathnames.h</span></code> - Macros for defining names of math functions</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/_pymodule.h</span></code> - C macros for Python 2/3 portable naming of C
+API functions</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/_math_c99.{h,c}</span></code> - C99 math compatibility (needed Python
+2.7 on Windows, compiled with VS2008)</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/mviewbuf.c</span></code> - Handles Python memoryviews</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/_typeof.{h,c}</span></code> - C implementation of type fingerprinting,
+used by dispatcher</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/_numba_common.h</span></code> - Portable C macro for marking symbols
+that can be shared between object files, but not outside the
+library.</li>
+</ul>
+</div>
+<div class="section" id="misc-support">
+<h3>7.2.2.6. Misc Support<a class="headerlink" href="#misc-support" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">numba/_version.py</span></code> - Updated by versioneer</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/runtime</span></code> - Language runtime.  Currently manages
+reference-counted memory allocated on the heap by Numba-compiled
+functions</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/ir_utils.py</span></code> - Utility functions for working with Numba IR
+data structures</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/cgutils.py</span></code> - Utility functions for generating common code
+patterns in LLVM IR</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/six.py</span></code> - Vendored subset of <code class="docutils literal notranslate"><span class="pre">six</span></code> package for Python 2 +
+3 compatibility</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/io_support.py</span></code> - Workaround for various names of StringIO
+in different Python versions (should this be in six?)</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/utils.py</span></code> - Python 2 backports of Python 3 functionality
+(also imports local copy of <code class="docutils literal notranslate"><span class="pre">six</span></code>)</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/appdirs.py</span></code> - Vendored package for determining application
+config directories on every platform</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/compiler_lock.py</span></code> - Global compiler lock because Numba’s usage
+of LLVM is not thread-safe</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/special.py</span></code> - Python stub implementations of special Numba
+functions (prange, gdb*)</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/servicelib/threadlocal.py</span></code> - Thread-local stack used by GPU
+targets</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/servicelib/service.py</span></code> - Should be removed?</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/itanium_mangler.py</span></code> - Python implementation of Itanium C++
+name mangling</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/findlib.py</span></code> - Helper function for locating shared libraries
+on all platforms</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/debuginfo.py</span></code> - Helper functions to construct LLVM IR debug
+info</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/unsafe</span></code> - <code class="docutils literal notranslate"><span class="pre">&#64;intrinsic</span></code> helper functions that can be used
+to implement direct memory/pointer manipulation from nopython mode
+functions</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/unsafe/refcount.py</span></code> - Read reference count of object</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/unsafe/tuple.py</span></code> - Replace a value in a tuple slot</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/unsafe/ndarray.py</span></code> - NumPy array helpers</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/unsafe/bytes.py</span></code> - Copying and dereferencing data from void
+pointers</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/dummyarray.py</span></code> - Used by GPU backends to hold array information
+on the host, but not the data.</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/callwrapper.py</span></code> - Handles argument unboxing and releasing
+the GIL when moving from Python to nopython mode</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/ctypes_support.py</span></code> - Import this instead of <code class="docutils literal notranslate"><span class="pre">ctypes</span></code> to
+workaround portability issue with Python 2.7</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/cffi_support.py</span></code> - Alias of numba.typing.cffi_utils for
+backward compatibility (still needed?)</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/numpy_support.py</span></code> - Helper functions for working with NumPy
+and translating Numba types to and from NumPy dtypes.</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/tracing.py</span></code> - Decorator for tracing Python calls and
+emitting log messages</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/funcdesc.py</span></code> - Classes for describing function metadata
+(used in the compiler)</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/sigutils.py</span></code> - Helper functions for parsing and normalizing
+Numba type signatures</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/serialize.py</span></code> - Support for pickling compiled functions</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/caching.py</span></code> - Disk cache for compiled functions</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/npdatetime.py</span></code> - Helper functions for implementing NumPy
+datetime64 support</li>
+</ul>
+</div>
+<div class="section" id="core-python-data-types">
+<h3>7.2.2.7. Core Python Data Types<a class="headerlink" href="#core-python-data-types" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">numba/_hashtable.{h,c}</span></code> - Adaptation of the Python 3.7 hash table
+implementation</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/_dictobject.{h,c}</span></code> - C level implementation of typed
+dictionary</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/dictobject.py</span></code> - Nopython mode wrapper for typed dictionary</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/unicode.py</span></code> - Unicode strings (Python 3.5 and later)</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/typed</span></code> - Python interfaces to statically typed containers</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/typed/typeddict.py</span></code> - Python interface to typed dictionary</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/jitclass</span></code> - Implementation of JIT compilation of Python
+classes</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/generators.py</span></code> - Support for lowering Python generators</li>
+</ul>
+</div>
+<div class="section" id="math">
+<h3>7.2.2.8. Math<a class="headerlink" href="#math" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">numba/_random.c</span></code> - Reimplementation of NumPy / CPython random
+number generator</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/_lapack.c</span></code> - Wrappers for calling BLAS and LAPACK functions
+(requires SciPy)</li>
+</ul>
+</div>
+<div class="section" id="parallelaccelerator">
+<h3>7.2.2.9. ParallelAccelerator<a class="headerlink" href="#parallelaccelerator" title="Permalink to this headline">¶</a></h3>
+<p>Code transformation passes that extract parallelizable code from
+a function and convert it into multithreaded gufunc calls.</p>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">numba/parfor.py</span></code> - General ParallelAccelerator</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/stencil.py</span></code> - Stencil function decorator (implemented
+without ParallelAccelerator)</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/stencilparfor.py</span></code> - ParallelAccelerator implementation of
+stencil</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/array_analysis.py</span></code> - Array analysis passes used in
+ParallelAccelerator</li>
+</ul>
+</div>
+<div class="section" id="deprecated-functionality">
+<h3>7.2.2.10. Deprecated Functionality<a class="headerlink" href="#deprecated-functionality" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">numba/smartarray.py</span></code> - Experiment with an array object that has
+both CPU and GPU backing.  Should be removed in future.</li>
+</ul>
+</div>
+<div class="section" id="debugging-support">
+<h3>7.2.2.11. Debugging Support<a class="headerlink" href="#debugging-support" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">numba/targets/gdb_hook.py</span></code> - Hooks to jump into GDB from nopython
+mode</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/targets/cmdlang.gdb</span></code> - Commands to setup GDB for setting
+explicit breakpoints from Python</li>
+</ul>
+</div>
+<div class="section" id="type-signatures-cpu">
+<h3>7.2.2.12. Type Signatures (CPU)<a class="headerlink" href="#type-signatures-cpu" title="Permalink to this headline">¶</a></h3>
+<p>Some (usually older) Numba supported functionality separates the
+declaration of allowed type signatures from the definition of
+implementations.  This package contains registries of type signatures
+that must be matched during type inference.</p>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">numba/typing</span></code> - Type signature module</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/typing/templates.py</span></code> - Base classes for type signature
+templates</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/typing/cmathdecl.py</span></code> - Python complex math (<code class="docutils literal notranslate"><span class="pre">cmath</span></code>)
+module</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/typing/bufproto.py</span></code> - Interpreting objects supporting the
+buffer protocol</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/typing/mathdecl.py</span></code> - Python <code class="docutils literal notranslate"><span class="pre">math</span></code> module</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/typing/listdecl.py</span></code> - Python lists</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/typing/builtins.py</span></code> - Python builtin global functions and
+operators</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/typing/randomdecl.py</span></code> - Python and NumPy <code class="docutils literal notranslate"><span class="pre">random</span></code> modules</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/typing/setdecl.py</span></code> - Python sets</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/typing/npydecl.py</span></code> - NumPy ndarray (and operators), NumPy
+functions</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/typing/arraydecl.py</span></code> - Python <code class="docutils literal notranslate"><span class="pre">array</span></code> module</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/typing/context.py</span></code> - Implementation of typing context
+(class that collects methods used in type inference)</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/typing/collections.py</span></code> - Generic container operations and
+namedtuples</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/typing/ctypes_utils.py</span></code> - Typing ctypes-wrapped function
+pointers</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/typing/enumdecl.py</span></code> - Enum types</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/typing/cffi_utils.py</span></code> - Typing of CFFI objects</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/typing/typeof.py</span></code> - Implementation of typeof operations
+(maps Python object to Numba type)</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/typing/npdatetime.py</span></code> - Datetime dtype support for NumPy
+arrays</li>
+</ul>
+</div>
+<div class="section" id="target-implementations-cpu">
+<h3>7.2.2.13. Target Implementations (CPU)<a class="headerlink" href="#target-implementations-cpu" title="Permalink to this headline">¶</a></h3>
+<p>Implementations of Python / NumPy functions and some data models.
+These modules are responsible for generating LLVM IR during lowering.
+Note that some of these modules do not have counterparts in the typing
+package because newer Numba extension APIs (like overload) allow
+typing and implementation to be specified together.</p>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">numba/targets</span></code> - Implementations of compilable operations</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/targets/cpu.py</span></code> - Context for code gen on CPU</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/targets/base.py</span></code> - Base class for all target contexts</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/targets/codegen.py</span></code> - Driver for code generation</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/targets/boxing.py</span></code> - Boxing and unboxing for most data
+types</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/targets/intrinsics.py</span></code> - Utilities for converting LLVM
+intrinsics to other math calls</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/targets/callconv.py</span></code> - Implements different calling
+conventions for Numba-compiled functions</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/targets/iterators.py</span></code> - Iterable data types and iterators</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/targets/hashing.py</span></code> - Hashing algorithms</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/targets/ufunc_db.py</span></code> - Big table mapping types to ufunc
+implementations</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/targets/setobj.py</span></code> - Python set type</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/targets/options.py</span></code> - Container for options that control
+lowering</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/targets/printimpl.py</span></code> - Print function</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/targets/smartarray.py</span></code> - Smart array (deprecated)</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/targets/cmathimpl.py</span></code> - Python complex math module</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/targets/optional.py</span></code> - Special type representing value or
+<code class="docutils literal notranslate"><span class="pre">None</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/targets/tupleobj.py</span></code> - Tuples (statically typed as
+immutable struct)</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/targets/mathimpl.py</span></code> - Python <code class="docutils literal notranslate"><span class="pre">math</span></code> module</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/targets/heapq.py</span></code> - Python <code class="docutils literal notranslate"><span class="pre">heapq</span></code> module</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/targets/registry.py</span></code> - Registry object for collecting
+implementations for a specific target</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/targets/imputils.py</span></code> - Helper functions for lowering</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/targets/builtins.py</span></code> - Python builtin functions and
+operators</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/targets/externals.py</span></code> - Registers external C functions
+needed to link generated code</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/targets/quicksort.py</span></code> - Quicksort implementation used with
+list and array objects</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/targets/mergesort.py</span></code> - Mergesort implementation used with
+array objects</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/targets/randomimpl.py</span></code> - Python and NumPy <code class="docutils literal notranslate"><span class="pre">random</span></code>
+modules</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/targets/npyimpl.py</span></code> - Implementations of most NumPy ufuncs</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/targets/slicing.py</span></code> - Slice objects, and index calculations
+used in slicing</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/targets/numbers.py</span></code> - Numeric values (int, float, etc)</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/targets/listobj.py</span></code> - Python lists</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/targets/fastmathpass.py</span></code> - Rewrite pass to add fastmath
+attributes to function call sites and binary operations</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/targets/removerefctpass.py</span></code> - Rewrite pass to remove
+unnecessary incref/decref pairs</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/targets/cffiimpl.py</span></code> - CFFI functions</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/targets/descriptors.py</span></code> - empty base class for all target
+descriptors (is this needed?)</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/targets/arraymath.py</span></code> - Math operations on arrays (both
+Python and NumPy)</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/targets/linalg.py</span></code> - NumPy linear algebra operations</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/targets/rangeobj.py</span></code> - Python <cite>range</cite> objects</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/targets/npyfuncs.py</span></code> - Kernels used in generating some
+NumPy ufuncs</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/targets/arrayobj.py</span></code> - Array operations (both NumPy and
+buffer protocol)</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/targets/enumimpl.py</span></code> - Enum objects</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/targets/polynomial.py</span></code> - <code class="docutils literal notranslate"><span class="pre">numpy.roots</span></code> function</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/targets/npdatetime.py</span></code> - NumPy datetime operations</li>
+</ul>
+</div>
+<div class="section" id="ufunc-compiler-and-runtime">
+<h3>7.2.2.14. Ufunc Compiler and Runtime<a class="headerlink" href="#ufunc-compiler-and-runtime" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">numba/npyufunc</span></code> - ufunc compiler implementation</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/npyufunc/_internal.{h,c}</span></code> - Python extension module with
+helper functions that use CPython &amp; NumPy C API</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/npyufunc/_ufunc.c</span></code> - Used by <cite>_internal.c</cite></li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/npyufunc/deviceufunc.py</span></code> - Custom ufunc dispatch for
+non-CPU targets</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/npyufunc/gufunc_scheduler.{h,cpp}</span></code> - Schedule work chunks
+to threads</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/npyufunc/dufunc.py</span></code> - Special ufunc that can compile new
+implementations at call time</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/npyufunc/ufuncbuilder.py</span></code> - Top-level orchestration of
+ufunc/gufunc compiler pipeline</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/npyufunc/sigparse.py</span></code> - Parser for generalized ufunc
+indexing signatures</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/npyufunc/parfor.py</span></code> - gufunc lowering for
+ParallelAccelerator</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/npyufunc/parallel.py</span></code> - Codegen for <code class="docutils literal notranslate"><span class="pre">parallel</span></code> target</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/npyufunc/array_exprs.py</span></code> - Rewrite pass for turning array
+expressions in regular functions into ufuncs</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/npyufunc/wrappers.py</span></code> - Wrap scalar function kernel with
+loops</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/npyufunc/workqueue.{h,c}</span></code> - Threading backend based on
+pthreads/Windows threads and queues</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/npyufunc/omppool.cpp</span></code> - Threading backend based on OpenMP</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/npyufunc/tbbpool.cpp</span></code> - Threading backend based on TBB</li>
+</ul>
+</div>
+<div class="section" id="unit-tests-cpu">
+<h3>7.2.2.15. Unit Tests (CPU)<a class="headerlink" href="#unit-tests-cpu" title="Permalink to this headline">¶</a></h3>
+<p>CPU unit tests (GPU target unit tests listed in later sections</p>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">runtests.py</span></code> - Convenience script that launches test runner and
+turns on full compiler tracebacks</li>
+<li><code class="docutils literal notranslate"><span class="pre">run_coverage.py</span></code> - Runs test suite with coverage tracking enabled</li>
+<li><code class="docutils literal notranslate"><span class="pre">.coveragerc</span></code> - Coverage.py configuration</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/runtests.py</span></code> - Entry point to unittest runner</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/_runtests.py</span></code> - Implementation of custom test runner
+command line interface</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/tests/test_*</span></code> - Test cases</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/tests/*_usecases.py</span></code> - Python functions compiled by some
+unit tests</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/tests/support.py</span></code> - Helper functions for testing and
+special TestCase implementation</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/tests/dummy_module.py</span></code> - Module used in
+<code class="docutils literal notranslate"><span class="pre">test_dispatcher.py</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/tests/npyufunc</span></code> - ufunc / gufunc compiler tests</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/unittest_support.py</span></code> - Import instead of unittest to handle
+portability issues</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/testing</span></code> - Support code for testing</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/testing/ddt.py</span></code> - decorators for test cases</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/testing/loader.py</span></code> - Find tests on disk</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/testing/notebook.py</span></code> - Support for testing notebooks</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/testing/main.py</span></code> - Numba test runner</li>
+</ul>
+</div>
+<div class="section" id="command-line-utilities">
+<h3>7.2.2.16. Command Line Utilities<a class="headerlink" href="#command-line-utilities" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">bin/numba</span></code> - Command line stub, delegates to main in
+<code class="docutils literal notranslate"><span class="pre">numba_entry.py</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/numba_entry.py</span></code> - Main function for <code class="docutils literal notranslate"><span class="pre">numba</span></code> command line
+tool</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/pycc</span></code> - Ahead of time compilation of functions to shared
+library extension</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/pycc/__init__.py</span></code> - Main function for <code class="docutils literal notranslate"><span class="pre">pycc</span></code> command line
+tool</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/pycc/cc.py</span></code> - User-facing API for tagging functions to
+compile ahead of time</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/pycc/compiler.py</span></code> - Compiler pipeline for creating
+standalone Python extension modules</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/pycc/llvm_types.py</span></code> - Aliases to LLVM data types used by
+<code class="docutils literal notranslate"><span class="pre">compiler.py</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/pycc/pycc</span></code> - Stub to call main function.  Is this still
+used?</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/pycc/modulemixin.c</span></code> - C file compiled into every compiled
+extension.  Pulls in C source from Numba core that is needed to make
+extension standalone</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/pycc/platform.py</span></code> - Portable interface to platform-specific
+compiler toolchains</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/pycc/decorators.py</span></code> - Deprecated decorators for tagging
+functions to compile.  Use <code class="docutils literal notranslate"><span class="pre">cc.py</span></code> instead.</li>
+</ul>
+</div>
+<div class="section" id="cuda-gpu-target">
+<h3>7.2.2.17. CUDA GPU Target<a class="headerlink" href="#cuda-gpu-target" title="Permalink to this headline">¶</a></h3>
+<p>Note that the CUDA target does reuse some parts of the CPU target.</p>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">numba/cuda/</span></code> - The implementation of the CUDA (NVIDIA GPU) target
+and associated unit tests</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/cuda/decorators.py</span></code> - Compiler decorators for CUDA kernels
+and device functions</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/cuda/dispatcher.py</span></code> - Dispatcher for CUDA JIT functions</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/cuda/printimpl.py</span></code> - Special implementation of device printing</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/cuda/libdevice.py</span></code> - Registers libdevice functions</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/cuda/kernels/</span></code> - Custom kernels for reduction and transpose</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/cuda/device_init.py</span></code> - Initializes the CUDA target when
+imported</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/cuda/compiler.py</span></code> - Compiler pipeline for CUDA target</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/cuda/intrinsic_wrapper.py</span></code> - CUDA device intrinsics
+(shuffle, ballot, etc)</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/cuda/initialize.py</span></code> - Defered initialization of the CUDA
+device and subsystem.  Called only when user imports <code class="docutils literal notranslate"><span class="pre">numba.cuda</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/cuda/simulator_init.py</span></code> - Initalizes the CUDA simulator
+subsystem (only when user requests it with env var)</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/cuda/random.py</span></code> - Implementation of random number generator</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/cuda/api.py</span></code> - User facing APIs imported into <code class="docutils literal notranslate"><span class="pre">numba.cuda.*</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/cuda/stubs.py</span></code> - Python placeholders for functions that
+only can be used in GPU device code</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/cuda/simulator/</span></code> - Simulate execution of CUDA kernels in
+Python interpreter</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/cuda/vectorizers.py</span></code> - Subclasses of ufunc/gufunc compilers
+for CUDA</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/cuda/args.py</span></code> - Management of kernel arguments, including
+host&lt;-&gt;device transfers</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/cuda/target.py</span></code> - Typing and target contexts for GPU</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/cuda/cudamath.py</span></code> - Type signatures for math functions in
+CUDA Python</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/cuda/errors.py</span></code> - Validation of kernel launch configuration</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/cuda/nvvmutils.py</span></code> - Helper functions for generating
+NVVM-specific IR</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/cuda/testing.py</span></code> - Support code for creating CUDA unit
+tests and capturing standard out</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/cuda/cudadecl.py</span></code> - Type signatures of CUDA API (threadIdx,
+blockIdx, atomics) in Python on GPU</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/cuda/cudaimpl.py</span></code> - Implementations of CUDA API functions
+on GPU</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/cuda/codegen.py</span></code> - Code generator object for CUDA target</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/cuda/cudadrv/</span></code> - Wrapper around CUDA driver API</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/cuda/tests/</span></code> - CUDA unit tests, skipped when CUDA is not
+detected</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/cuda/tests/cudasim/</span></code> - Tests of CUDA simulator</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/cuda/tests/nocuda/</span></code> - Tests for NVVM functionality when
+CUDA not present</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/cuda/tests/cudapy/</span></code> - Tests of compiling Python functions
+for GPU</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/cuda/tests/cudadrv/</span></code> - Tests of Python wrapper around CUDA
+API</li>
+</ul>
+</div>
+<div class="section" id="rocm-gpu-target">
+<h3>7.2.2.18. ROCm GPU Target<a class="headerlink" href="#rocm-gpu-target" title="Permalink to this headline">¶</a></h3>
+<p>Note that the ROCm target does reuse some parts of the CPU target, and
+duplicates some code from CUDA target.  A future refactoring could
+pull out the common subset of CUDA and ROCm.  An older version of this
+target was based on the HSA API, so “hsa” appears in many places.</p>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">numba/roc</span></code> - ROCm GPU target for AMD GPUs</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/roc/descriptor.py</span></code> - TargetDescriptor subclass for ROCm
+target</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/roc/enums.py</span></code> - Internal constants</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/roc/mathdecl.py</span></code> - Declarations of math functions that can
+be used on device</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/roc/mathimpl.py</span></code> - Implementations of math functions for
+device</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/roc/compiler.py</span></code> - Compiler pipeline for ROCm target</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/roc/hlc</span></code> - Wrapper around LLVM interface for AMD GPU</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/roc/initialize.py</span></code> - Register ROCm target for ufunc/gufunc
+compiler</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/roc/hsadecl.py</span></code> - Type signatures for ROCm device API in
+Python</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/roc/hsaimpl.py</span></code> - Implementations of ROCm device API</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/roc/dispatch.py</span></code> - ufunc/gufunc dispatcher</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/roc/README.md</span></code> - Notes on testing target (should be
+deleted)</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/roc/api.py</span></code> - Host API for ROCm actions</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/roc/gcn_occupancy.py</span></code> - Heuristic to compute occupancy of
+kernels</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/roc/stubs.py</span></code> - Host stubs for device functions</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/roc/vectorizers.py</span></code> - Builds ufuncs</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/roc/target.py</span></code> - Target and typing contexts</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/roc/hsadrv</span></code> - Python wrapper around ROCm (based on HSA)
+driver API calls</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/roc/codegen.py</span></code> - Codegen subclass for ROCm target</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/roc/decorators.py</span></code> - <code class="docutils literal notranslate"><span class="pre">&#64;jit</span></code> decorator for kernels and
+device functions</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/roc/tests</span></code> - Unit tests for ROCm target</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/roc/tests/hsapy</span></code> - Tests of compiling ROCm kernels written
+in Python syntax</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba/roc/tests/hsadrv</span></code> - Tests of Python wrapper on platform
+API.</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2012, Anaconda, Inc..<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>
