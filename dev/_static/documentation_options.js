@@ -1,6 +1,6 @@
 var DOCUMENTATION_OPTIONS = {
     URL_ROOT: document.getElementById("documentation_options").getAttribute('data-url_root'),
-    VERSION: '0.44.0.dev0+780.gddd1cea-py2.7-linux-x86_64.egg',
+    VERSION: '0.45.0.dev0+469.g44a0dfe-py2.7-linux-x86_64.egg',
     LANGUAGE: 'None',
     COLLAPSE_INDEX: false,
     FILE_SUFFIX: '.html',
