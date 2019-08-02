@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>4.2. CUDA Kernel API &#8212; Numba 0.45.1-py3.6-macosx-10.7-x86_64.egg documentation</title>
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/numba-docs.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="4.3. Memory Management" href="memory.html" />
+    <link rel="prev" title="4.1. CUDA Host API" href="host.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html"><span><img src="../_static/numba_blue_icon_rgb.png"></span>
+          Numba</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.45</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../user/index.html">1. User Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/index.html">2. Reference Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cuda/index.html">3. Numba for CUDA GPUs</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">4. CUDA Python Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../roc/index.html">5. Numba for AMD ROC GPUs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../extending/index.html">6. Extending Numba</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer/index.html">7. Developer Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../proposals/index.html">8. Numba Enhancement Proposals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">9. Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release-notes.html">10. Release Notes</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">4.2. CUDA Kernel API</a><ul>
+<li><a class="reference internal" href="#kernel-declaration">4.2.1. Kernel declaration</a></li>
+<li><a class="reference internal" href="#intrinsic-attributes-and-functions">4.2.2. Intrinsic Attributes and Functions</a><ul>
+<li><a class="reference internal" href="#thread-indexing">4.2.2.1. Thread Indexing</a></li>
+<li><a class="reference internal" href="#memory-management">4.2.2.2. Memory Management</a></li>
+<li><a class="reference internal" href="#synchronization-and-atomic-operations">4.2.2.3. Synchronization and Atomic Operations</a></li>
+<li><a class="reference internal" href="#memory-fences">4.2.2.4. Memory Fences</a></li>
+<li><a class="reference internal" href="#warp-intrinsics">4.2.2.5. Warp Intrinsics</a></li>
+<li><a class="reference internal" href="#integer-intrinsics">4.2.2.6. Integer Intrinsics</a></li>
+<li><a class="reference internal" href="#floating-point-intrinsics">4.2.2.7. Floating Point Intrinsics</a></li>
+<li><a class="reference internal" href="#control-flow-instructions">4.2.2.8. Control Flow Instructions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+  <li>
+    <a href="host.html" title="Previous Chapter: 4.1. CUDA Host API"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; 4.1. CUDA Host API</span>
+    </a>
+  </li>
+  <li>
+    <a href="memory.html" title="Next Chapter: 4.3. Memory Management"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">4.3. Memory M... &raquo;</span>
+    </a>
+  </li>
+              
+            
+            
+            
+            
+              <li class="hidden-sm">
+<div id="sourcelink">
+  <a href="../_sources/cuda-reference/kernel.rst.txt"
+     rel="nofollow">Source</a>
+</div></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <div class="section" id="cuda-kernel-api">
+<h1>4.2. CUDA Kernel API<a class="headerlink" href="#cuda-kernel-api" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="kernel-declaration">
+<h2>4.2.1. Kernel declaration<a class="headerlink" href="#kernel-declaration" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">&#64;cuda.jit</span></code> decorator is used to create a CUDA kernel:</p>
+<dl class="function">
+<dt id="numba.cuda.jit">
+<code class="descclassname">numba.cuda.</code><code class="descname">jit</code><span class="sig-paren">(</span><em>func_or_sig=None</em>, <em>argtypes=None</em>, <em>device=False</em>, <em>inline=False</em>, <em>bind=True</em>, <em>link=[]</em>, <em>debug=None</em>, <em>**kws</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.cuda.jit" title="Permalink to this definition">¶</a></dt>
+<dd><p>JIT compile a python function conforming to the CUDA Python specification.
+If a signature is supplied, then a function is returned that takes a
+function to compile. If</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>func_or_sig</strong> (<em>function</em><em> or </em><em>numba.typing.Signature</em>) – <p>A function to JIT compile, or a signature of a function
+to compile. If a function is supplied, then an <code class="xref py py-class docutils literal notranslate"><span class="pre">AutoJitCUDAKernel</span></code>
+is returned. If a signature is supplied, then a function which takes a
+function to compile and returns an <code class="xref py py-class docutils literal notranslate"><span class="pre">AutoJitCUDAKernel</span></code> is
+returned.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">A kernel cannot have any return value.</p>
+</div>
+</li>
+<li><strong>device</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – Indicates whether this is a device function.</li>
+<li><strong>bind</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – Force binding to CUDA context immediately</li>
+<li><strong>link</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – A list of files containing PTX source to link with the function</li>
+<li><strong>debug</strong> – If True, check for exceptions thrown when executing the
+kernel. Since this degrades performance, this should only be used for
+debugging purposes.  Defaults to False.  (The default value can be
+overriden by setting environment variable <code class="docutils literal notranslate"><span class="pre">NUMBA_CUDA_DEBUGINFO=1</span></code>.)</li>
+<li><strong>fastmath</strong> – If true, enables flush-to-zero and fused-multiply-add,
+disables precise division and square root. This parameter has no effect
+on device function, whose fastmath setting depends on the kernel function
+from which they are called.</li>
+<li><strong>max_registers</strong> – Limit the kernel to using at most this number of
+registers per thread. Useful for increasing occupancy.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="numba.cuda.compiler.AutoJitCUDAKernel">
+<em class="property">class </em><code class="descclassname">numba.cuda.compiler.</code><code class="descname">AutoJitCUDAKernel</code><span class="sig-paren">(</span><em>func</em>, <em>bind</em>, <em>targetoptions</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.cuda.compiler.AutoJitCUDAKernel" title="Permalink to this definition">¶</a></dt>
+<dd><p>CUDA Kernel object. When called, the kernel object will specialize itself
+for the given arguments (if no suitable specialized version already exists)
+&amp; compute capability, and launch on the device associated with the current
+context.</p>
+<p>Kernel objects are not to be constructed by the user, but instead are
+created using the <a class="reference internal" href="#numba.cuda.jit" title="numba.cuda.jit"><code class="xref py py-func docutils literal notranslate"><span class="pre">numba.cuda.jit()</span></code></a> decorator.</p>
+<dl class="attribute">
+<dt id="numba.cuda.compiler.AutoJitCUDAKernel.extensions">
+<code class="descname">extensions</code><a class="headerlink" href="#numba.cuda.compiler.AutoJitCUDAKernel.extensions" title="Permalink to this definition">¶</a></dt>
+<dd><p>A list of objects that must have a <cite>prepare_args</cite> function. When a
+specialized kernel is called, each argument will be passed through
+to the <cite>prepare_args</cite> (from the last object in this list to the
+first). The arguments to <cite>prepare_args</cite> are:</p>
+<ul class="simple">
+<li><cite>ty</cite> the numba type of the argument</li>
+<li><cite>val</cite> the argument value itself</li>
+<li><cite>stream</cite> the CUDA stream used for the current call to the kernel</li>
+<li><cite>retr</cite> a list of zero-arg functions that you may want to append
+post-call cleanup work to.</li>
+</ul>
+<p>The <cite>prepare_args</cite> function must return a tuple <cite>(ty, val)</cite>, which
+will be passed in turn to the next right-most <cite>extension</cite>. After all
+the extensions have been called, the resulting <cite>(ty, val)</cite> will be
+passed into Numba’s default argument marshalling logic.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.compiler.AutoJitCUDAKernel.inspect_asm">
+<code class="descname">inspect_asm</code><span class="sig-paren">(</span><em>signature=None</em>, <em>compute_capability=None</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.cuda.compiler.AutoJitCUDAKernel.inspect_asm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the generated assembly code for all signatures encountered thus
+far, or the LLVM IR for a specific signature and compute_capability
+if given.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.compiler.AutoJitCUDAKernel.inspect_llvm">
+<code class="descname">inspect_llvm</code><span class="sig-paren">(</span><em>signature=None</em>, <em>compute_capability=None</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.cuda.compiler.AutoJitCUDAKernel.inspect_llvm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the LLVM IR for all signatures encountered thus far, or the LLVM
+IR for a specific signature and compute_capability if given.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.compiler.AutoJitCUDAKernel.inspect_types">
+<code class="descname">inspect_types</code><span class="sig-paren">(</span><em>file=None</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.cuda.compiler.AutoJitCUDAKernel.inspect_types" title="Permalink to this definition">¶</a></dt>
+<dd><p>Produce a dump of the Python source of this function annotated with the
+corresponding Numba IR and type information. The dump is written to
+<em>file</em>, or <em>sys.stdout</em> if <em>file</em> is <em>None</em>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.compiler.AutoJitCUDAKernel.specialize">
+<code class="descname">specialize</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.cuda.compiler.AutoJitCUDAKernel.specialize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compile and bind to the current context a version of this kernel
+specialized for the given <em>args</em>.</p>
+</dd></dl>
+
+</dd></dl>
+
+<p>Individual specialized kernels are instances of
+<a class="reference internal" href="#numba.cuda.compiler.CUDAKernel" title="numba.cuda.compiler.CUDAKernel"><code class="xref py py-class docutils literal notranslate"><span class="pre">numba.cuda.compiler.CUDAKernel</span></code></a>:</p>
+<dl class="class">
+<dt id="numba.cuda.compiler.CUDAKernel">
+<em class="property">class </em><code class="descclassname">numba.cuda.compiler.</code><code class="descname">CUDAKernel</code><span class="sig-paren">(</span><em>llvm_module</em>, <em>name</em>, <em>pretty_name</em>, <em>argtypes</em>, <em>call_helper</em>, <em>link=()</em>, <em>debug=False</em>, <em>fastmath=False</em>, <em>type_annotation=None</em>, <em>extensions=[]</em>, <em>max_registers=None</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.cuda.compiler.CUDAKernel" title="Permalink to this definition">¶</a></dt>
+<dd><p>CUDA Kernel specialized for a given set of argument types. When called, this
+object will validate that the argument types match those for which it is
+specialized, and then launch the kernel on the device.</p>
+<dl class="method">
+<dt id="numba.cuda.compiler.CUDAKernel.bind">
+<code class="descname">bind</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#numba.cuda.compiler.CUDAKernel.bind" title="Permalink to this definition">¶</a></dt>
+<dd><p>Force binding to current CUDA context</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="numba.cuda.compiler.CUDAKernel.device">
+<code class="descname">device</code><a class="headerlink" href="#numba.cuda.compiler.CUDAKernel.device" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get current active context</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.compiler.CUDAKernel.inspect_asm">
+<code class="descname">inspect_asm</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#numba.cuda.compiler.CUDAKernel.inspect_asm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the PTX code for this kernel.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.compiler.CUDAKernel.inspect_llvm">
+<code class="descname">inspect_llvm</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#numba.cuda.compiler.CUDAKernel.inspect_llvm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the LLVM IR for this kernel.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.compiler.CUDAKernel.inspect_types">
+<code class="descname">inspect_types</code><span class="sig-paren">(</span><em>file=None</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.cuda.compiler.CUDAKernel.inspect_types" title="Permalink to this definition">¶</a></dt>
+<dd><p>Produce a dump of the Python source of this function annotated with the
+corresponding Numba IR and type information. The dump is written to
+<em>file</em>, or <em>sys.stdout</em> if <em>file</em> is <em>None</em>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="numba.cuda.compiler.CUDAKernel.ptx">
+<code class="descname">ptx</code><a class="headerlink" href="#numba.cuda.compiler.CUDAKernel.ptx" title="Permalink to this definition">¶</a></dt>
+<dd><p>PTX code for this kernel.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="intrinsic-attributes-and-functions">
+<h2>4.2.2. Intrinsic Attributes and Functions<a class="headerlink" href="#intrinsic-attributes-and-functions" title="Permalink to this headline">¶</a></h2>
+<p>The remainder of the attributes and functions in this section may only be called
+from within a CUDA Kernel.</p>
+<div class="section" id="thread-indexing">
+<h3>4.2.2.1. Thread Indexing<a class="headerlink" href="#thread-indexing" title="Permalink to this headline">¶</a></h3>
+<dl class="attribute">
+<dt id="numba.cuda.threadIdx">
+<code class="descclassname">numba.cuda.</code><code class="descname">threadIdx</code><a class="headerlink" href="#numba.cuda.threadIdx" title="Permalink to this definition">¶</a></dt>
+<dd><p>The thread indices in the current thread block, accessed through the
+attributes <code class="docutils literal notranslate"><span class="pre">x</span></code>, <code class="docutils literal notranslate"><span class="pre">y</span></code>, and <code class="docutils literal notranslate"><span class="pre">z</span></code>. Each index is an integer spanning the
+range from 0 inclusive to the corresponding value of the attribute in
+<a class="reference internal" href="#numba.cuda.blockDim" title="numba.cuda.blockDim"><code class="xref py py-attr docutils literal notranslate"><span class="pre">numba.cuda.blockDim</span></code></a> exclusive.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="numba.cuda.blockIdx">
+<code class="descclassname">numba.cuda.</code><code class="descname">blockIdx</code><a class="headerlink" href="#numba.cuda.blockIdx" title="Permalink to this definition">¶</a></dt>
+<dd><p>The block indices in the grid of thread blocks, accessed through the
+attributes <code class="docutils literal notranslate"><span class="pre">x</span></code>, <code class="docutils literal notranslate"><span class="pre">y</span></code>, and <code class="docutils literal notranslate"><span class="pre">z</span></code>. Each index is an integer spanning the
+range from 0 inclusive to the corresponding value of the attribute in
+<a class="reference internal" href="#numba.cuda.gridDim" title="numba.cuda.gridDim"><code class="xref py py-attr docutils literal notranslate"><span class="pre">numba.cuda.gridDim</span></code></a> exclusive.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="numba.cuda.blockDim">
+<code class="descclassname">numba.cuda.</code><code class="descname">blockDim</code><a class="headerlink" href="#numba.cuda.blockDim" title="Permalink to this definition">¶</a></dt>
+<dd><p>The shape of a block of threads, as declared when instantiating the
+kernel.  This value is the same for all threads in a given kernel, even
+if they belong to different blocks (i.e. each block is “full”).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="numba.cuda.gridDim">
+<code class="descclassname">numba.cuda.</code><code class="descname">gridDim</code><a class="headerlink" href="#numba.cuda.gridDim" title="Permalink to this definition">¶</a></dt>
+<dd><p>The shape of the grid of blocks, accessed through the attributes <code class="docutils literal notranslate"><span class="pre">x</span></code>,
+<code class="docutils literal notranslate"><span class="pre">y</span></code>, and <code class="docutils literal notranslate"><span class="pre">z</span></code>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="numba.cuda.laneid">
+<code class="descclassname">numba.cuda.</code><code class="descname">laneid</code><a class="headerlink" href="#numba.cuda.laneid" title="Permalink to this definition">¶</a></dt>
+<dd><p>The thread index in the current warp, as an integer spanning the range
+from 0 inclusive to the <a class="reference internal" href="#numba.cuda.warpsize" title="numba.cuda.warpsize"><code class="xref py py-attr docutils literal notranslate"><span class="pre">numba.cuda.warpsize</span></code></a> exclusive.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="numba.cuda.warpsize">
+<code class="descclassname">numba.cuda.</code><code class="descname">warpsize</code><a class="headerlink" href="#numba.cuda.warpsize" title="Permalink to this definition">¶</a></dt>
+<dd><p>The size in threads of a warp on the GPU. Currently this is always 32.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.grid">
+<code class="descclassname">numba.cuda.</code><code class="descname">grid</code><span class="sig-paren">(</span><em>ndim</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.cuda.grid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the absolute position of the current thread in the entire
+grid of blocks.  <em>ndim</em> should correspond to the number of dimensions
+declared when instantiating the kernel.  If <em>ndim</em> is 1, a single integer
+is returned.  If <em>ndim</em> is 2 or 3, a tuple of the given number of
+integers is returned.</p>
+<p>Computation of the first integer is as follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cuda</span><span class="o">.</span><span class="n">threadIdx</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">cuda</span><span class="o">.</span><span class="n">blockIdx</span><span class="o">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">cuda</span><span class="o">.</span><span class="n">blockDim</span><span class="o">.</span><span class="n">x</span>
+</pre></div>
+</div>
+<p>and is similar for the other two indices, but using the <code class="docutils literal notranslate"><span class="pre">y</span></code> and <code class="docutils literal notranslate"><span class="pre">z</span></code>
+attributes.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.gridsize">
+<code class="descclassname">numba.cuda.</code><code class="descname">gridsize</code><span class="sig-paren">(</span><em>ndim</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.cuda.gridsize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the absolute size (or shape) in threads of the entire grid of
+blocks. <em>ndim</em> should correspond to the number of dimensions declared when
+instantiating the kernel.</p>
+<p>Computation of the first integer is as follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cuda</span><span class="o">.</span><span class="n">blockDim</span><span class="o">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">cuda</span><span class="o">.</span><span class="n">gridDim</span><span class="o">.</span><span class="n">x</span>
+</pre></div>
+</div>
+<p>and is similar for the other two indices, but using the <code class="docutils literal notranslate"><span class="pre">y</span></code> and <code class="docutils literal notranslate"><span class="pre">z</span></code>
+attributes.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="memory-management">
+<h3>4.2.2.2. Memory Management<a class="headerlink" href="#memory-management" title="Permalink to this headline">¶</a></h3>
+<dl class="function">
+<dt id="numba.cuda.shared.array">
+<code class="descclassname">numba.cuda.shared.</code><code class="descname">array</code><span class="sig-paren">(</span><em>shape</em>, <em>dtype</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.cuda.shared.array" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates an array in the local memory space of the CUDA kernel with
+the given <code class="docutils literal notranslate"><span class="pre">shape</span></code> and <code class="docutils literal notranslate"><span class="pre">dtype</span></code>.</p>
+<p>Returns an array with its content uninitialized.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">All threads in the same thread block sees the same array.</p>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.local.array">
+<code class="descclassname">numba.cuda.local.</code><code class="descname">array</code><span class="sig-paren">(</span><em>shape</em>, <em>dtype</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.cuda.local.array" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates an array in the local memory space of the CUDA kernel with the
+given <code class="docutils literal notranslate"><span class="pre">shape</span></code> and <code class="docutils literal notranslate"><span class="pre">dtype</span></code>.</p>
+<p>Returns an array with its content uninitialized.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Each thread sees a unique array.</p>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.const.array_like">
+<code class="descclassname">numba.cuda.const.</code><code class="descname">array_like</code><span class="sig-paren">(</span><em>ary</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.cuda.const.array_like" title="Permalink to this definition">¶</a></dt>
+<dd><p>Copies the <code class="docutils literal notranslate"><span class="pre">ary</span></code> into constant memory space on the CUDA kernel at compile
+time.</p>
+<p>Returns an array like the <code class="docutils literal notranslate"><span class="pre">ary</span></code> argument.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">All threads and blocks see the same array.</p>
+</div>
+</dd></dl>
+
+</div>
+<div class="section" id="synchronization-and-atomic-operations">
+<h3>4.2.2.3. Synchronization and Atomic Operations<a class="headerlink" href="#synchronization-and-atomic-operations" title="Permalink to this headline">¶</a></h3>
+<dl class="function">
+<dt id="numba.cuda.atomic.add">
+<code class="descclassname">numba.cuda.atomic.</code><code class="descname">add</code><span class="sig-paren">(</span><em>array</em>, <em>idx</em>, <em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.cuda.atomic.add" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform <code class="docutils literal notranslate"><span class="pre">array[idx]</span> <span class="pre">+=</span> <span class="pre">value</span></code>. Support int32, int64, float32 and
+float64 only. The <code class="docutils literal notranslate"><span class="pre">idx</span></code> argument can be an integer or a tuple of integer
+indices for indexing into multiple dimensional arrays. The number of element
+in <code class="docutils literal notranslate"><span class="pre">idx</span></code> must match the number of dimension of <code class="docutils literal notranslate"><span class="pre">array</span></code>.</p>
+<p>Returns the value of <code class="docutils literal notranslate"><span class="pre">array[idx]</span></code> before the storing the new value.
+Behaves like an atomic load.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.atomic.max">
+<code class="descclassname">numba.cuda.atomic.</code><code class="descname">max</code><span class="sig-paren">(</span><em>array</em>, <em>idx</em>, <em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.cuda.atomic.max" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform <code class="docutils literal notranslate"><span class="pre">array[idx]</span> <span class="pre">=</span> <span class="pre">max(array[idx],</span> <span class="pre">value)</span></code>. Support int32, int64,
+float32 and float64 only. The <code class="docutils literal notranslate"><span class="pre">idx</span></code> argument can be an integer or a
+tuple of integer indices for indexing into multiple dimensional arrays.
+The number of element in <code class="docutils literal notranslate"><span class="pre">idx</span></code> must match the number of dimension of
+<code class="docutils literal notranslate"><span class="pre">array</span></code>.</p>
+<p>Returns the value of <code class="docutils literal notranslate"><span class="pre">array[idx]</span></code> before the storing the new value.
+Behaves like an atomic load.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.syncthreads">
+<code class="descclassname">numba.cuda.</code><code class="descname">syncthreads</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#numba.cuda.syncthreads" title="Permalink to this definition">¶</a></dt>
+<dd><p>Synchronize all threads in the same thread block.  This function implements
+the same pattern as barriers in traditional multi-threaded programming: this
+function waits until all threads in the block call it, at which point it
+returns control to all its callers.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.syncthreads_count">
+<code class="descclassname">numba.cuda.</code><code class="descname">syncthreads_count</code><span class="sig-paren">(</span><em>predicate</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.cuda.syncthreads_count" title="Permalink to this definition">¶</a></dt>
+<dd><p>An extension to <a class="reference internal" href="#numba.cuda.syncthreads" title="numba.cuda.syncthreads"><code class="xref py py-attr docutils literal notranslate"><span class="pre">numba.cuda.syncthreads</span></code></a> where the return value is a count
+of the threads where <code class="docutils literal notranslate"><span class="pre">predicate</span></code> is true.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.syncthreads_and">
+<code class="descclassname">numba.cuda.</code><code class="descname">syncthreads_and</code><span class="sig-paren">(</span><em>predicate</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.cuda.syncthreads_and" title="Permalink to this definition">¶</a></dt>
+<dd><p>An extension to <a class="reference internal" href="#numba.cuda.syncthreads" title="numba.cuda.syncthreads"><code class="xref py py-attr docutils literal notranslate"><span class="pre">numba.cuda.syncthreads</span></code></a> where 1 is returned if <code class="docutils literal notranslate"><span class="pre">predicate</span></code> is
+true for all threads or 0 otherwise.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.syncthreads_or">
+<code class="descclassname">numba.cuda.</code><code class="descname">syncthreads_or</code><span class="sig-paren">(</span><em>predicate</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.cuda.syncthreads_or" title="Permalink to this definition">¶</a></dt>
+<dd><p>An extension to <a class="reference internal" href="#numba.cuda.syncthreads" title="numba.cuda.syncthreads"><code class="xref py py-attr docutils literal notranslate"><span class="pre">numba.cuda.syncthreads</span></code></a> where 1 is returned if <code class="docutils literal notranslate"><span class="pre">predicate</span></code> is
+true for any thread or 0 otherwise.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">All syncthreads functions must be called by every thread in the
+thread-block. Falling to do so may result in undefined behavior.</p>
+</div>
+</dd></dl>
+
+</div>
+<div class="section" id="memory-fences">
+<h3>4.2.2.4. Memory Fences<a class="headerlink" href="#memory-fences" title="Permalink to this headline">¶</a></h3>
+<p>The memory fences are used to guarantee the effect of memory operations
+are visible by other threads within the same thread-block, the same GPU device,
+and the same system (across GPUs on global memory). Memory loads and stores
+are guaranteed to not move across the memory fences by optimization passes.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">The memory fences are considered to be advanced API and most
+usercases should use the thread barrier (e.g. <code class="docutils literal notranslate"><span class="pre">syncthreads()</span></code>).</p>
+</div>
+<dl class="function">
+<dt id="numba.cuda.threadfence">
+<code class="descclassname">numba.cuda.</code><code class="descname">threadfence</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#numba.cuda.threadfence" title="Permalink to this definition">¶</a></dt>
+<dd><p>A memory fence at device level (within the GPU).</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.threadfence_block">
+<code class="descclassname">numba.cuda.</code><code class="descname">threadfence_block</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#numba.cuda.threadfence_block" title="Permalink to this definition">¶</a></dt>
+<dd><p>A memory fence at thread block level.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.threadfence_system">
+<code class="descclassname">numba.cuda.</code><code class="descname">threadfence_system</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#numba.cuda.threadfence_system" title="Permalink to this definition">¶</a></dt>
+<dd><p>A memory fence at system level (across GPUs).</p>
+</dd></dl>
+
+</div>
+<div class="section" id="warp-intrinsics">
+<h3>4.2.2.5. Warp Intrinsics<a class="headerlink" href="#warp-intrinsics" title="Permalink to this headline">¶</a></h3>
+<p>All warp level operations require at least CUDA 9. The argument <code class="docutils literal notranslate"><span class="pre">membermask</span></code> is
+a 32 bit integer mask with each bit corresponding to a thread in the warp, with 1
+meaning the thread is in the subset of threads within the function call. The
+<code class="docutils literal notranslate"><span class="pre">membermask</span></code> must be all 1 if the GPU compute capability is below 7.x.</p>
+<dl class="function">
+<dt id="numba.cuda.syncwarp">
+<code class="descclassname">numba.cuda.</code><code class="descname">syncwarp</code><span class="sig-paren">(</span><em>membermask</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.cuda.syncwarp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Synchronize a masked subset of the threads in a warp.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.all_sync">
+<code class="descclassname">numba.cuda.</code><code class="descname">all_sync</code><span class="sig-paren">(</span><em>membermask</em>, <em>predicate</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.cuda.all_sync" title="Permalink to this definition">¶</a></dt>
+<dd><p>If the <code class="docutils literal notranslate"><span class="pre">predicate</span></code> is true for all threads in the masked warp, then
+a non-zero value is returned, otherwise 0 is returned.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.any_sync">
+<code class="descclassname">numba.cuda.</code><code class="descname">any_sync</code><span class="sig-paren">(</span><em>membermask</em>, <em>predicate</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.cuda.any_sync" title="Permalink to this definition">¶</a></dt>
+<dd><p>If the <code class="docutils literal notranslate"><span class="pre">predicate</span></code> is true for any thread in the masked warp, then
+a non-zero value is returned, otherwise 0 is returned.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.eq_sync">
+<code class="descclassname">numba.cuda.</code><code class="descname">eq_sync</code><span class="sig-paren">(</span><em>membermask</em>, <em>predicate</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.cuda.eq_sync" title="Permalink to this definition">¶</a></dt>
+<dd><p>If the boolean <code class="docutils literal notranslate"><span class="pre">predicate</span></code> is the same for all threads in the masked warp,
+then a non-zero value is returned, otherwise 0 is returned.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.ballot_sync">
+<code class="descclassname">numba.cuda.</code><code class="descname">ballot_sync</code><span class="sig-paren">(</span><em>membermask</em>, <em>predicate</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.cuda.ballot_sync" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a mask of all threads in the warp whose <code class="docutils literal notranslate"><span class="pre">predicate</span></code> is true,
+and are within the given mask.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.shfl_sync">
+<code class="descclassname">numba.cuda.</code><code class="descname">shfl_sync</code><span class="sig-paren">(</span><em>membermask</em>, <em>value</em>, <em>src_lane</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.cuda.shfl_sync" title="Permalink to this definition">¶</a></dt>
+<dd><p>Shuffles <code class="docutils literal notranslate"><span class="pre">value</span></code> across the masked warp and returns the <code class="docutils literal notranslate"><span class="pre">value</span></code>
+from <code class="docutils literal notranslate"><span class="pre">src_lane</span></code>. If this is outside the warp, then the
+given <code class="docutils literal notranslate"><span class="pre">value</span></code> is returned.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.shfl_up_sync">
+<code class="descclassname">numba.cuda.</code><code class="descname">shfl_up_sync</code><span class="sig-paren">(</span><em>membermask</em>, <em>value</em>, <em>delta</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.cuda.shfl_up_sync" title="Permalink to this definition">¶</a></dt>
+<dd><p>Shuffles <code class="docutils literal notranslate"><span class="pre">value</span></code> across the masked warp and returns the <code class="docutils literal notranslate"><span class="pre">value</span></code>
+from <code class="docutils literal notranslate"><span class="pre">laneid</span> <span class="pre">-</span> <span class="pre">delta</span></code>. If this is outside the warp, then the
+given <code class="docutils literal notranslate"><span class="pre">value</span></code> is returned.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.shfl_down_sync">
+<code class="descclassname">numba.cuda.</code><code class="descname">shfl_down_sync</code><span class="sig-paren">(</span><em>membermask</em>, <em>value</em>, <em>delta</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.cuda.shfl_down_sync" title="Permalink to this definition">¶</a></dt>
+<dd><p>Shuffles <code class="docutils literal notranslate"><span class="pre">value</span></code> across the masked warp and returns the <code class="docutils literal notranslate"><span class="pre">value</span></code>
+from <code class="docutils literal notranslate"><span class="pre">laneid</span> <span class="pre">+</span> <span class="pre">delta</span></code>. If this is outside the warp, then the
+given <code class="docutils literal notranslate"><span class="pre">value</span></code> is returned.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.shfl_xor_sync">
+<code class="descclassname">numba.cuda.</code><code class="descname">shfl_xor_sync</code><span class="sig-paren">(</span><em>membermask</em>, <em>value</em>, <em>lane_mask</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.cuda.shfl_xor_sync" title="Permalink to this definition">¶</a></dt>
+<dd><p>Shuffles <code class="docutils literal notranslate"><span class="pre">value</span></code> across the masked warp and returns the <code class="docutils literal notranslate"><span class="pre">value</span></code>
+from <code class="docutils literal notranslate"><span class="pre">laneid</span> <span class="pre">^</span> <span class="pre">lane_mask</span></code>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.match_any_sync">
+<code class="descclassname">numba.cuda.</code><code class="descname">match_any_sync</code><span class="sig-paren">(</span><em>membermask</em>, <em>value</em>, <em>lane_mask</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.cuda.match_any_sync" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a mask of threads that have same <code class="docutils literal notranslate"><span class="pre">value</span></code> as the given <code class="docutils literal notranslate"><span class="pre">value</span></code>
+from within the masked warp.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.match_all_sync">
+<code class="descclassname">numba.cuda.</code><code class="descname">match_all_sync</code><span class="sig-paren">(</span><em>membermask</em>, <em>value</em>, <em>lane_mask</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.cuda.match_all_sync" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a tuple of (mask, pred), where mask is a mask of threads that have
+same <code class="docutils literal notranslate"><span class="pre">value</span></code> as the given <code class="docutils literal notranslate"><span class="pre">value</span></code> from within the masked warp, if they
+all have the same value, otherwise it is 0. And pred is a boolean of whether
+or not all threads in the mask warp have the same warp.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="integer-intrinsics">
+<h3>4.2.2.6. Integer Intrinsics<a class="headerlink" href="#integer-intrinsics" title="Permalink to this headline">¶</a></h3>
+<p>A subset of the CUDA Math API’s integer intrinsics are available. For further
+documentation, including semantics, please refer to the <a class="reference external" href="https://docs.nvidia.com/cuda/cuda-math-api/group__CUDA__MATH__INTRINSIC__INT.html">CUDA Toolkit
+documentation</a>.</p>
+<dl class="function">
+<dt id="numba.cuda.popc">
+<code class="descclassname">numba.cuda.</code><code class="descname">popc</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#numba.cuda.popc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the number of set bits in the given value.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.brev">
+<code class="descclassname">numba.cuda.</code><code class="descname">brev</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#numba.cuda.brev" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reverses the bit pattern of an integer value, for example 0b10110110
+becomes 0b01101101.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.clz">
+<code class="descclassname">numba.cuda.</code><code class="descname">clz</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#numba.cuda.clz" title="Permalink to this definition">¶</a></dt>
+<dd><p>Counts the number of leading zeros in a value.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.cuda.ffs">
+<code class="descclassname">numba.cuda.</code><code class="descname">ffs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#numba.cuda.ffs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the position of the least significant bit set to 1 in an integer.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="floating-point-intrinsics">
+<h3>4.2.2.7. Floating Point Intrinsics<a class="headerlink" href="#floating-point-intrinsics" title="Permalink to this headline">¶</a></h3>
+<p>A subset of the CUDA Math API’s floating point intrinsics are available. For further
+documentation, including semantics, please refer to the <a class="reference external" href="https://docs.nvidia.com/cuda/cuda-math-api/group__CUDA__MATH__SINGLE.html">single</a> and
+<a class="reference external" href="https://docs.nvidia.com/cuda/cuda-math-api/group__CUDA__MATH__DOUBLE.html">double</a>
+precision parts of the CUDA Toolkit documentation.</p>
+<dl class="function">
+<dt id="numba.cuda.fma">
+<code class="descclassname">numba.cuda.</code><code class="descname">fma</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#numba.cuda.fma" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform the fused multiply-add operation. Named after the <code class="docutils literal notranslate"><span class="pre">fma</span></code> and <code class="docutils literal notranslate"><span class="pre">fmaf</span></code> in
+the C api, but maps to the <code class="docutils literal notranslate"><span class="pre">fma.rn.f32</span></code> and <code class="docutils literal notranslate"><span class="pre">fma.rn.f64</span></code> (round-to-nearest-even)
+PTX instructions.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="control-flow-instructions">
+<h3>4.2.2.8. Control Flow Instructions<a class="headerlink" href="#control-flow-instructions" title="Permalink to this headline">¶</a></h3>
+<p>A subset of the CUDA’s control flow instructions are directly available as
+intrinsics. Avoiding branches is a key way to improve CUDA performance, and
+using these intrinsics mean you don’t have to rely on the <code class="docutils literal notranslate"><span class="pre">nvcc</span></code> optimizer
+identifying and removing branches. For further documentation, including
+semantics, please refer to the <a class="reference external" href="https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#comparison-and-selection-instructions">relevant CUDA Toolkit documentation</a>.</p>
+<dl class="function">
+<dt id="numba.cuda.selp">
+<code class="descclassname">numba.cuda.</code><code class="descname">selp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#numba.cuda.selp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Select between two expressions, depending on the value of the first
+argument. Similar to LLVM’s <code class="docutils literal notranslate"><span class="pre">select</span></code> instruction.</p>
+</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2012, Anaconda, Inc..<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

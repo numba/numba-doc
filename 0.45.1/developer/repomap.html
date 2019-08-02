@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>7.2. A Map of the Numba Repository &#8212; Numba 0.45.1-py3.6-macosx-10.7-x86_64.egg documentation</title>
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/numba-docs.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="7.3. Numba architecture" href="architecture.html" />
+    <link rel="prev" title="7.1. Contributing to Numba" href="contributing.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html"><span><img src="../_static/numba_blue_icon_rgb.png"></span>
+          Numba</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.45</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../user/index.html">1. User Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/index.html">2. Reference Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cuda/index.html">3. Numba for CUDA GPUs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cuda-reference/index.html">4. CUDA Python Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../roc/index.html">5. Numba for AMD ROC GPUs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../extending/index.html">6. Extending Numba</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">7. Developer Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../proposals/index.html">8. Numba Enhancement Proposals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">9. Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release-notes.html">10. Release Notes</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">7.2. A Map of the Numba Repository</a><ul>
+<li><a class="reference internal" href="#support-files">7.2.1. Support Files</a><ul>
+<li><a class="reference internal" href="#build-and-packaging">7.2.1.1. Build and Packaging</a></li>
+<li><a class="reference internal" href="#continuous-integration">7.2.1.2. Continuous Integration</a></li>
+<li><a class="reference internal" href="#documentation-examples">7.2.1.3. Documentation / Examples</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#numba-source-code">7.2.2. Numba Source Code</a><ul>
+<li><a class="reference internal" href="#public-api">7.2.2.1. Public API</a></li>
+<li><a class="reference internal" href="#dispatching">7.2.2.2. Dispatching</a></li>
+<li><a class="reference internal" href="#compiler-pipeline">7.2.2.3. Compiler Pipeline</a></li>
+<li><a class="reference internal" href="#type-management">7.2.2.4. Type Management</a></li>
+<li><a class="reference internal" href="#compiled-extensions">7.2.2.5. Compiled Extensions</a></li>
+<li><a class="reference internal" href="#misc-support">7.2.2.6. Misc Support</a></li>
+<li><a class="reference internal" href="#core-python-data-types">7.2.2.7. Core Python Data Types</a></li>
+<li><a class="reference internal" href="#math">7.2.2.8. Math</a></li>
+<li><a class="reference internal" href="#parallelaccelerator">7.2.2.9. ParallelAccelerator</a></li>
+<li><a class="reference internal" href="#deprecated-functionality">7.2.2.10. Deprecated Functionality</a></li>
+<li><a class="reference internal" href="#debugging-support">7.2.2.11. Debugging Support</a></li>
+<li><a class="reference internal" href="#type-signatures-cpu">7.2.2.12. Type Signatures (CPU)</a></li>
+<li><a class="reference internal" href="#target-implementations-cpu">7.2.2.13. Target Implementations (CPU)</a></li>
+<li><a class="reference internal" href="#ufunc-compiler-and-runtime">7.2.2.14. Ufunc Compiler and Runtime</a></li>
+<li><a class="reference internal" href="#unit-tests-cpu">7.2.2.15. Unit Tests (CPU)</a></li>
+<li><a class="reference internal" href="#command-line-utilities">7.2.2.16. Command Line Utilities</a></li>
+<li><a class="reference internal" href="#cuda-gpu-target">7.2.2.17. CUDA GPU Target</a></li>
+<li><a class="reference internal" href="#rocm-gpu-target">7.2.2.18. ROCm GPU Target</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+  <li>
+    <a href="contributing.html" title="Previous Chapter: 7.1. Contributing to Numba"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; 7.1. Contribu...</span>
+    </a>
+  </li>
+  <li>
+    <a href="architecture.html" title="Next Chapter: 7.3. Numba architecture"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">7.3. Numba ar... &raquo;</span>
+    </a>
+  </li>
+              
+            
+            
+            
+            
+              <li class="hidden-sm">
+<div id="sourcelink">
+  <a href="../_sources/developer/repomap.rst.txt"
+     rel="nofollow">Source</a>
+</div></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <div class="section" id="a-map-of-the-numba-repository">
+<h1>7.2. A Map of the Numba Repository<a class="headerlink" href="#a-map-of-the-numba-repository" title="Permalink to this headline">¶</a></h1>
+<p>The Numba repository is quite large, and due to age has functionality spread
+around many locations.  To help orient developers, this document will try to
+summarize where different categories of functionality can be found.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">It is likely that the organization of the code base will change in the
+future to improve organization.  Follow <a class="reference external" href="https://github.com/numba/numba/issues/3807">issue #3807</a>
+for more details.</p>
+</div>
+<div class="section" id="support-files">
+<h2>7.2.1. Support Files<a class="headerlink" href="#support-files" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="build-and-packaging">
+<h3>7.2.1.1. Build and Packaging<a class="headerlink" href="#build-and-packaging" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/setup.py">setup.py</a> - Standard Python distutils/setuptools script</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/MANIFEST.in">MANIFEST.in</a> - Distutils packaging instructions</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/requirements.txt">requirements.txt</a> - Pip package requirements, not used by conda</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/versioneer.py">versioneer.py</a> - Handles automatic setting of version in
+installed package from git tags</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/.flake8">.flake8</a> - Preferences for code formatting.  Files should be
+fixed and removed from the exception list as time allows.</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/tree/master/buildscripts/condarecipe.local">buildscripts/condarecipe.local</a> - Conda build recipe</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/buildscripts/remove_unwanted_files.py">buildscripts/remove_unwanted_files.py</a> - Helper script to remove
+files that will not compile under Python 2. Used by build recipes.</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/tree/master/buildscripts/condarecipe_clone_icc_rt">buildscripts/condarecipe_clone_icc_rt</a> - Recipe to build a
+standalone icc_rt package.</li>
+</ul>
+</div>
+<div class="section" id="continuous-integration">
+<h3>7.2.1.2. Continuous Integration<a class="headerlink" href="#continuous-integration" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/.binstar.yml">.binstar.yml</a> - Binstar Build CI config (inactive)</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/azure-pipelines.yml">azure-pipelines.yml</a> - Azure Pipelines CI config (active:
+Win/Mac/Linux)</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/tree/master/buildscripts/azure/">buildscripts/azure/</a> - Azure Pipeline configuration for specific
+platforms</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/.travis.yml">.travis.yml</a> - Travis CI config (active: Mac/Linux, will be
+dropped in the future)</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/tree/master/buildscripts/appveyor/">buildscripts/appveyor/</a> - Appveyor build scripts</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/tree/master/buildscripts/incremental/">buildscripts/incremental/</a> - Generic scripts for building Numba
+on various CI systems</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/codecov.yml">codecov.yml</a> - Codecov.io coverage reporting</li>
+</ul>
+</div>
+<div class="section" id="documentation-examples">
+<h3>7.2.1.3. Documentation / Examples<a class="headerlink" href="#documentation-examples" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/LICENSE">LICENSE</a> - License for Numba</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/LICENSES.third-party">LICENSES.third-party</a> - License for third party code vendored
+into Numba</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/README.rst">README.rst</a> - README for repo, also uploaded to PyPI</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/CONTRIBUTING.md">CONTRIBUTING.md</a> - Documentation on how to contribute to project
+(out of date, should be updated to point to Sphinx docs)</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/AUTHORS">AUTHORS</a> - List of Github users who have contributed PRs (out of
+date)</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/CHANGE_LOG">CHANGE_LOG</a> - History of Numba releases, also directly embedded
+into Sphinx documentation</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/tree/master/docs/">docs/</a> - Documentation source</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/tree/master/docs/_templates/">docs/_templates/</a> - Directory for templates (to override defaults
+with Sphinx theme)</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/docs/Makefile">docs/Makefile</a> - Used to build Sphinx docs with <code class="docutils literal notranslate"><span class="pre">make</span></code></li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/tree/master/docs/source">docs/source</a> - ReST source for Numba documentation</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/tree/master/docs/_static/">docs/_static/</a> - Static CSS and image assets for Numba docs</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/docs/gh-pages.py">docs/gh-pages.py</a> - Utility script to update Numba docs (stored
+as gh-pages)</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/docs/make.bat">docs/make.bat</a> - Not used (remove?)</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/tree/master/examples/">examples/</a> - Example scripts demonstrating numba (re/move to
+numba-examples repo?)</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/tree/master/examples/notebooks/">examples/notebooks/</a> - Example notebooks (re/move to
+numba-examples repo?)</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/tree/master/benchmarks/">benchmarks/</a> - Benchmark scripts (re/move to numba-examples
+repo?)</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/tree/master/tutorials/">tutorials/</a> - Tutorial notebooks (definitely out of date, should
+remove and direct to external tutorials)</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/scripts/generate_lower_listing.py">numba/scripts/generate_lower_listing.py</a> - Dump all registered
+implementations decorated with <code class="docutils literal notranslate"><span class="pre">&#64;lower*</span></code> for reference
+documentation.  Currently misses implementations from the higher
+level extension API.</li>
+</ul>
+</div>
+</div>
+<div class="section" id="numba-source-code">
+<h2>7.2.2. Numba Source Code<a class="headerlink" href="#numba-source-code" title="Permalink to this headline">¶</a></h2>
+<p>Numba ships with both the source code and tests in one package.</p>
+<ul class="simple">
+<li><a class="reference external" href="https://www.github.com/numba/numba/tree/master/numba/">numba/</a> - all of the source code and tests</li>
+</ul>
+<div class="section" id="public-api">
+<h3>7.2.2.1. Public API<a class="headerlink" href="#public-api" title="Permalink to this headline">¶</a></h3>
+<p>These define aspects of the public Numba interface.</p>
+<ul class="simple">
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/decorators.py">numba/decorators.py</a> - User-facing decorators for compiling
+regular functions on the CPU</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/extending.py">numba/extending.py</a> - Public decorators for extending Numba
+(<code class="docutils literal notranslate"><span class="pre">overload</span></code>, <code class="docutils literal notranslate"><span class="pre">intrinsic</span></code>, etc)</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/ccallback.py">numba/ccallback.py</a> - <code class="docutils literal notranslate"><span class="pre">&#64;cfunc</span></code> decorator for compiling
+functions to a fixed C signature.  Used to make callbacks.</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/npyufunc/decorators.py">numba/npyufunc/decorators.py</a> - ufunc/gufunc compilation
+decorators</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/config.py">numba/config.py</a> - Numba global config options and environment
+variable handling</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/tree/master/numba/annotations">numba/annotations</a> - Gathering and printing type annotations of
+Numba IR</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/pretty_annotate.py">numba/pretty_annotate.py</a> - Code highlighting of Numba functions
+and types (both ANSI terminal and HTML)</li>
+</ul>
+</div>
+<div class="section" id="dispatching">
+<h3>7.2.2.2. Dispatching<a class="headerlink" href="#dispatching" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/dispatcher.py">numba/dispatcher.py</a> - Dispatcher objects are compiled functions
+produced by <code class="docutils literal notranslate"><span class="pre">&#64;jit</span></code>.  A dispatcher has different implementations
+for different type signatures.</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/_dispatcher.h">numba/_dispatcher.h</a> | <a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/_dispatcher.c">numba/_dispatcher.c</a> - C interface to C++ dispatcher
+implementation</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/_dispatcherimpl.cpp">numba/_dispatcherimpl.cpp</a> - C++ dispatcher implementation (for
+speed on common data types)</li>
+</ul>
+</div>
+<div class="section" id="compiler-pipeline">
+<h3>7.2.2.3. Compiler Pipeline<a class="headerlink" href="#compiler-pipeline" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/compiler.py">numba/compiler.py</a> - Compiler pipelines and flags</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/errors.py">numba/errors.py</a> - Numba exception and warning classes</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/ir.py">numba/ir.py</a> - Numba IR data structure objects</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/bytecode.py">numba/bytecode.py</a> - Bytecode parsing and function identity (??)</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/interpreter.py">numba/interpreter.py</a> - Translate Python interpreter bytecode to
+Numba IR</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/analysis.py">numba/analysis.py</a> - Utility functions to analyze Numba IR
+(variable lifetime, prune branches, etc)</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/dataflow.py">numba/dataflow.py</a> - Dataflow analysis for Python bytecode (used
+in analysis.py)</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/controlflow.py">numba/controlflow.py</a> - Control flow analysis of Numba IR and
+Python bytecode</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/typeinfer.py">numba/typeinfer.py</a> - Type inference algorithm</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/transforms.py">numba/transforms.py</a> - Numba IR transformations</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/tree/master/numba/rewrites">numba/rewrites</a> - Rewrite passes used by compiler</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/rewrites/__init__.py">numba/rewrites/__init__.py</a> - Loads all rewrite passes so they
+are put into the registry</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/rewrites/registry.py">numba/rewrites/registry.py</a> - Registry object for collecting
+rewrite passes</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/rewrites/ir_print.py">numba/rewrites/ir_print.py</a> - Write print() calls into special
+print nodes in the IR</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/rewrites/static_raise.py">numba/rewrites/static_raise.py</a> - Converts exceptions with static
+arguments into a special form that can be lowered</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/rewrites/macros.py">numba/rewrites/macros.py</a> - Generic support for macro expansion
+in the Numba IR</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/rewrites/static_getitem.py">numba/rewrites/static_getitem.py</a> - Rewrites getitem and setitem
+with constant arguments to allow type inference</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/rewrites/static_binop.py">numba/rewrites/static_binop.py</a> - Rewrites binary operations
+(specifically <code class="docutils literal notranslate"><span class="pre">**</span></code>) with constant arguments so faster code can be
+generated</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/inline_closurecall.py">numba/inline_closurecall.py</a> - Inlines body of closure functions
+to call site.  Support for array comprehensions, reduction inlining,
+and stencil inlining.</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/macro.py">numba/macro.py</a> - Alias to <code class="docutils literal notranslate"><span class="pre">numba.rewrites.macros</span></code></li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/postproc.py">numba/postproc.py</a> - Postprocessor for Numba IR that computes
+variable lifetime, inserts del operations, and handles generators</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/lowering.py">numba/lowering.py</a> - General implementation of lowering Numba IR
+to LLVM</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/withcontexts.py">numba/withcontexts.py</a> - General scaffolding for implementing
+context managers in nopython mode, and the objectmode context
+manager</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/pylowering.py">numba/pylowering.py</a> - Lowering of Numba IR in object mode</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/pythonapi.py">numba/pythonapi.py</a> - LLVM IR code generation to interface with
+CPython API</li>
+</ul>
+</div>
+<div class="section" id="type-management">
+<h3>7.2.2.4. Type Management<a class="headerlink" href="#type-management" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><a class="reference external" href="https://www.github.com/numba/numba/tree/master/numba/typeconv/">numba/typeconv/</a> - Implementation of type casting and type
+signature matching in both C++ and Python</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/capsulethunk.h">numba/capsulethunk.h</a> - Used by typeconv</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/tree/master/numba/types/">numba/types/</a> - definition of the Numba type hierarchy, used
+everywhere in compiler to select implementations</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/consts.py">numba/consts.py</a> - Constant inference (used to make constant
+values available during codegen when possible)</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/tree/master/numba/datamodel">numba/datamodel</a> - LLVM IR representations of data types in
+different contexts</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/datamodel/models.py">numba/datamodel/models.py</a> - Models for most standard types</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/datamodel/registry.py">numba/datamodel/registry.py</a> - Decorator to register new data
+models</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/datamodel/packer.py">numba/datamodel/packer.py</a> - Pack typed values into a data
+structure</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/datamodel/testing.py">numba/datamodel/testing.py</a> - Data model tests (this should
+move??)</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/datamodel/manager.py">numba/datamodel/manager.py</a> - Map types to data models</li>
+</ul>
+</div>
+<div class="section" id="compiled-extensions">
+<h3>7.2.2.5. Compiled Extensions<a class="headerlink" href="#compiled-extensions" title="Permalink to this headline">¶</a></h3>
+<p>Numba uses a small amount of compiled C/C++ code for core
+functionality, like dispatching and type matching where performance
+matters, and it is more convenient to encapsulate direct interaction
+with CPython APIs.</p>
+<ul class="simple">
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/_arraystruct.h">numba/_arraystruct.h</a> - Struct for holding NumPy array
+attributes.  Used in helperlib and the Numba Runtime.</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/_helperlib.c">numba/_helperlib.c</a> - C functions required by Numba compiled code
+at runtime.  Linked into ahead-of-time compiled modules</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/_helpermod.c">numba/_helpermod.c</a> - Python extension module with pointers to
+functions from <code class="docutils literal notranslate"><span class="pre">_helperlib.c</span></code> and <code class="docutils literal notranslate"><span class="pre">_npymath_exports.c</span></code></li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/_npymath_exports.c">numba/_npymath_exports.c</a> - Export function pointer table to
+NumPy C math functions</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/_dynfuncmod.c">numba/_dynfuncmod.c</a> - Python extension module exporting
+_dynfunc.c functionality</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/_dynfunc.c">numba/_dynfunc.c</a> - C level Environment and Closure objects (keep
+in sync with numba/target/base.py)</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/mathnames.h">numba/mathnames.h</a> - Macros for defining names of math functions</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/_pymodule.h">numba/_pymodule.h</a> - C macros for Python 2/3 portable naming of C
+API functions</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/_math_c99.h">numba/_math_c99.h</a> | <a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/_math_c99.c">numba/_math_c99.c</a> - C99 math compatibility (needed Python
+2.7 on Windows, compiled with VS2008)</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/mviewbuf.c">numba/mviewbuf.c</a> - Handles Python memoryviews</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/_typeof.h">numba/_typeof.h</a> | <a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/_typeof.c">numba/_typeof.c</a> - C implementation of type fingerprinting,
+used by dispatcher</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/_numba_common.h">numba/_numba_common.h</a> - Portable C macro for marking symbols
+that can be shared between object files, but not outside the
+library.</li>
+</ul>
+</div>
+<div class="section" id="misc-support">
+<h3>7.2.2.6. Misc Support<a class="headerlink" href="#misc-support" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/_version.py">numba/_version.py</a> - Updated by versioneer</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/tree/master/numba/runtime">numba/runtime</a> - Language runtime.  Currently manages
+reference-counted memory allocated on the heap by Numba-compiled
+functions</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/ir_utils.py">numba/ir_utils.py</a> - Utility functions for working with Numba IR
+data structures</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/cgutils.py">numba/cgutils.py</a> - Utility functions for generating common code
+patterns in LLVM IR</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/six.py">numba/six.py</a> - Vendored subset of <code class="docutils literal notranslate"><span class="pre">six</span></code> package for Python 2 +
+3 compatibility</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/io_support.py">numba/io_support.py</a> - Workaround for various names of StringIO
+in different Python versions (should this be in six?)</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/utils.py">numba/utils.py</a> - Python 2 backports of Python 3 functionality
+(also imports local copy of <code class="docutils literal notranslate"><span class="pre">six</span></code>)</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/appdirs.py">numba/appdirs.py</a> - Vendored package for determining application
+config directories on every platform</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/compiler_lock.py">numba/compiler_lock.py</a> - Global compiler lock because Numba’s usage
+of LLVM is not thread-safe</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/special.py">numba/special.py</a> - Python stub implementations of special Numba
+functions (prange, gdb*)</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/servicelib/threadlocal.py">numba/servicelib/threadlocal.py</a> - Thread-local stack used by GPU
+targets</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/servicelib/service.py">numba/servicelib/service.py</a> - Should be removed?</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/itanium_mangler.py">numba/itanium_mangler.py</a> - Python implementation of Itanium C++
+name mangling</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/findlib.py">numba/findlib.py</a> - Helper function for locating shared libraries
+on all platforms</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/debuginfo.py">numba/debuginfo.py</a> - Helper functions to construct LLVM IR debug
+info</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/tree/master/numba/unsafe">numba/unsafe</a> - <code class="docutils literal notranslate"><span class="pre">&#64;intrinsic</span></code> helper functions that can be used
+to implement direct memory/pointer manipulation from nopython mode
+functions</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/unsafe/refcount.py">numba/unsafe/refcount.py</a> - Read reference count of object</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/unsafe/tuple.py">numba/unsafe/tuple.py</a> - Replace a value in a tuple slot</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/unsafe/ndarray.py">numba/unsafe/ndarray.py</a> - NumPy array helpers</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/unsafe/bytes.py">numba/unsafe/bytes.py</a> - Copying and dereferencing data from void
+pointers</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/dummyarray.py">numba/dummyarray.py</a> - Used by GPU backends to hold array information
+on the host, but not the data.</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/callwrapper.py">numba/callwrapper.py</a> - Handles argument unboxing and releasing
+the GIL when moving from Python to nopython mode</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/ctypes_support.py">numba/ctypes_support.py</a> - Import this instead of <code class="docutils literal notranslate"><span class="pre">ctypes</span></code> to
+workaround portability issue with Python 2.7</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/cffi_support.py">numba/cffi_support.py</a> - Alias of numba.typing.cffi_utils for
+backward compatibility (still needed?)</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/numpy_support.py">numba/numpy_support.py</a> - Helper functions for working with NumPy
+and translating Numba types to and from NumPy dtypes.</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/tracing.py">numba/tracing.py</a> - Decorator for tracing Python calls and
+emitting log messages</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/funcdesc.py">numba/funcdesc.py</a> - Classes for describing function metadata
+(used in the compiler)</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/sigutils.py">numba/sigutils.py</a> - Helper functions for parsing and normalizing
+Numba type signatures</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/serialize.py">numba/serialize.py</a> - Support for pickling compiled functions</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/caching.py">numba/caching.py</a> - Disk cache for compiled functions</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/npdatetime.py">numba/npdatetime.py</a> - Helper functions for implementing NumPy
+datetime64 support</li>
+</ul>
+</div>
+<div class="section" id="core-python-data-types">
+<h3>7.2.2.7. Core Python Data Types<a class="headerlink" href="#core-python-data-types" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/_hashtable.h">numba/_hashtable.h</a> | <a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/_hashtable.c">numba/_hashtable.c</a> - Adaptation of the Python 3.7 hash table
+implementation</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/_dictobject.h">numba/_dictobject.h</a> | <a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/_dictobject.c">numba/_dictobject.c</a> - C level implementation of typed
+dictionary</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/dictobject.py">numba/dictobject.py</a> - Nopython mode wrapper for typed dictionary</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/_listobject.h">numba/_listobject.h</a> | <a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/_listobject.c">numba/_listobject.c</a> - C level implementation of typed list</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/listobject.py">numba/listobject.py</a> - Nopython mode wrapper for typed list</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/typedobjectutils.py">numba/typedobjectutils.py</a> - Common utilities for typed dictionary
+and list</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/unicode.py">numba/unicode.py</a> - Unicode strings (Python 3.5 and later)</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/tree/master/numba/typed">numba/typed</a> - Python interfaces to statically typed containers</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/typed/typeddict.py">numba/typed/typeddict.py</a> - Python interface to typed dictionary</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/typed/typedlist.py">numba/typed/typedlist.py</a> - Python interface to typed list</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/tree/master/numba/jitclass">numba/jitclass</a> - Implementation of JIT compilation of Python
+classes</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/generators.py">numba/generators.py</a> - Support for lowering Python generators</li>
+</ul>
+</div>
+<div class="section" id="math">
+<h3>7.2.2.8. Math<a class="headerlink" href="#math" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/_random.c">numba/_random.c</a> - Reimplementation of NumPy / CPython random
+number generator</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/_lapack.c">numba/_lapack.c</a> - Wrappers for calling BLAS and LAPACK functions
+(requires SciPy)</li>
+</ul>
+</div>
+<div class="section" id="parallelaccelerator">
+<h3>7.2.2.9. ParallelAccelerator<a class="headerlink" href="#parallelaccelerator" title="Permalink to this headline">¶</a></h3>
+<p>Code transformation passes that extract parallelizable code from
+a function and convert it into multithreaded gufunc calls.</p>
+<ul class="simple">
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/parfor.py">numba/parfor.py</a> - General ParallelAccelerator</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/stencil.py">numba/stencil.py</a> - Stencil function decorator (implemented
+without ParallelAccelerator)</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/stencilparfor.py">numba/stencilparfor.py</a> - ParallelAccelerator implementation of
+stencil</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/array_analysis.py">numba/array_analysis.py</a> - Array analysis passes used in
+ParallelAccelerator</li>
+</ul>
+</div>
+<div class="section" id="deprecated-functionality">
+<h3>7.2.2.10. Deprecated Functionality<a class="headerlink" href="#deprecated-functionality" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/smartarray.py">numba/smartarray.py</a> - Experiment with an array object that has
+both CPU and GPU backing.  Should be removed in future.</li>
+</ul>
+</div>
+<div class="section" id="debugging-support">
+<h3>7.2.2.11. Debugging Support<a class="headerlink" href="#debugging-support" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/targets/gdb_hook.py">numba/targets/gdb_hook.py</a> - Hooks to jump into GDB from nopython
+mode</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/targets/cmdlang.gdb">numba/targets/cmdlang.gdb</a> - Commands to setup GDB for setting
+explicit breakpoints from Python</li>
+</ul>
+</div>
+<div class="section" id="type-signatures-cpu">
+<h3>7.2.2.12. Type Signatures (CPU)<a class="headerlink" href="#type-signatures-cpu" title="Permalink to this headline">¶</a></h3>
+<p>Some (usually older) Numba supported functionality separates the
+declaration of allowed type signatures from the definition of
+implementations.  This package contains registries of type signatures
+that must be matched during type inference.</p>
+<ul class="simple">
+<li><a class="reference external" href="https://www.github.com/numba/numba/tree/master/numba/typing">numba/typing</a> - Type signature module</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/typing/templates.py">numba/typing/templates.py</a> - Base classes for type signature
+templates</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/typing/cmathdecl.py">numba/typing/cmathdecl.py</a> - Python complex math (<code class="docutils literal notranslate"><span class="pre">cmath</span></code>)
+module</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/typing/bufproto.py">numba/typing/bufproto.py</a> - Interpreting objects supporting the
+buffer protocol</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/typing/mathdecl.py">numba/typing/mathdecl.py</a> - Python <code class="docutils literal notranslate"><span class="pre">math</span></code> module</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/typing/listdecl.py">numba/typing/listdecl.py</a> - Python lists</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/typing/builtins.py">numba/typing/builtins.py</a> - Python builtin global functions and
+operators</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/typing/randomdecl.py">numba/typing/randomdecl.py</a> - Python and NumPy <code class="docutils literal notranslate"><span class="pre">random</span></code> modules</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/typing/setdecl.py">numba/typing/setdecl.py</a> - Python sets</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/typing/npydecl.py">numba/typing/npydecl.py</a> - NumPy ndarray (and operators), NumPy
+functions</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/typing/arraydecl.py">numba/typing/arraydecl.py</a> - Python <code class="docutils literal notranslate"><span class="pre">array</span></code> module</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/typing/context.py">numba/typing/context.py</a> - Implementation of typing context
+(class that collects methods used in type inference)</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/typing/collections.py">numba/typing/collections.py</a> - Generic container operations and
+namedtuples</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/typing/ctypes_utils.py">numba/typing/ctypes_utils.py</a> - Typing ctypes-wrapped function
+pointers</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/typing/enumdecl.py">numba/typing/enumdecl.py</a> - Enum types</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/typing/cffi_utils.py">numba/typing/cffi_utils.py</a> - Typing of CFFI objects</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/typing/typeof.py">numba/typing/typeof.py</a> - Implementation of typeof operations
+(maps Python object to Numba type)</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/typing/npdatetime.py">numba/typing/npdatetime.py</a> - Datetime dtype support for NumPy
+arrays</li>
+</ul>
+</div>
+<div class="section" id="target-implementations-cpu">
+<h3>7.2.2.13. Target Implementations (CPU)<a class="headerlink" href="#target-implementations-cpu" title="Permalink to this headline">¶</a></h3>
+<p>Implementations of Python / NumPy functions and some data models.
+These modules are responsible for generating LLVM IR during lowering.
+Note that some of these modules do not have counterparts in the typing
+package because newer Numba extension APIs (like overload) allow
+typing and implementation to be specified together.</p>
+<ul class="simple">
+<li><a class="reference external" href="https://www.github.com/numba/numba/tree/master/numba/targets">numba/targets</a> - Implementations of compilable operations</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/targets/cpu.py">numba/targets/cpu.py</a> - Context for code gen on CPU</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/targets/base.py">numba/targets/base.py</a> - Base class for all target contexts</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/targets/codegen.py">numba/targets/codegen.py</a> - Driver for code generation</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/targets/boxing.py">numba/targets/boxing.py</a> - Boxing and unboxing for most data
+types</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/targets/intrinsics.py">numba/targets/intrinsics.py</a> - Utilities for converting LLVM
+intrinsics to other math calls</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/targets/callconv.py">numba/targets/callconv.py</a> - Implements different calling
+conventions for Numba-compiled functions</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/targets/iterators.py">numba/targets/iterators.py</a> - Iterable data types and iterators</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/targets/hashing.py">numba/targets/hashing.py</a> - Hashing algorithms</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/targets/ufunc_db.py">numba/targets/ufunc_db.py</a> - Big table mapping types to ufunc
+implementations</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/targets/setobj.py">numba/targets/setobj.py</a> - Python set type</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/targets/options.py">numba/targets/options.py</a> - Container for options that control
+lowering</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/targets/printimpl.py">numba/targets/printimpl.py</a> - Print function</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/targets/smartarray.py">numba/targets/smartarray.py</a> - Smart array (deprecated)</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/targets/cmathimpl.py">numba/targets/cmathimpl.py</a> - Python complex math module</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/targets/optional.py">numba/targets/optional.py</a> - Special type representing value or
+<code class="docutils literal notranslate"><span class="pre">None</span></code></li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/targets/tupleobj.py">numba/targets/tupleobj.py</a> - Tuples (statically typed as
+immutable struct)</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/targets/mathimpl.py">numba/targets/mathimpl.py</a> - Python <code class="docutils literal notranslate"><span class="pre">math</span></code> module</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/targets/heapq.py">numba/targets/heapq.py</a> - Python <code class="docutils literal notranslate"><span class="pre">heapq</span></code> module</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/targets/registry.py">numba/targets/registry.py</a> - Registry object for collecting
+implementations for a specific target</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/targets/imputils.py">numba/targets/imputils.py</a> - Helper functions for lowering</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/targets/builtins.py">numba/targets/builtins.py</a> - Python builtin functions and
+operators</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/targets/externals.py">numba/targets/externals.py</a> - Registers external C functions
+needed to link generated code</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/targets/quicksort.py">numba/targets/quicksort.py</a> - Quicksort implementation used with
+list and array objects</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/targets/mergesort.py">numba/targets/mergesort.py</a> - Mergesort implementation used with
+array objects</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/targets/randomimpl.py">numba/targets/randomimpl.py</a> - Python and NumPy <code class="docutils literal notranslate"><span class="pre">random</span></code>
+modules</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/targets/npyimpl.py">numba/targets/npyimpl.py</a> - Implementations of most NumPy ufuncs</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/targets/slicing.py">numba/targets/slicing.py</a> - Slice objects, and index calculations
+used in slicing</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/targets/numbers.py">numba/targets/numbers.py</a> - Numeric values (int, float, etc)</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/targets/listobj.py">numba/targets/listobj.py</a> - Python lists</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/targets/fastmathpass.py">numba/targets/fastmathpass.py</a> - Rewrite pass to add fastmath
+attributes to function call sites and binary operations</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/targets/removerefctpass.py">numba/targets/removerefctpass.py</a> - Rewrite pass to remove
+unnecessary incref/decref pairs</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/targets/cffiimpl.py">numba/targets/cffiimpl.py</a> - CFFI functions</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/targets/descriptors.py">numba/targets/descriptors.py</a> - empty base class for all target
+descriptors (is this needed?)</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/targets/arraymath.py">numba/targets/arraymath.py</a> - Math operations on arrays (both
+Python and NumPy)</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/targets/linalg.py">numba/targets/linalg.py</a> - NumPy linear algebra operations</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/targets/rangeobj.py">numba/targets/rangeobj.py</a> - Python <cite>range</cite> objects</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/targets/npyfuncs.py">numba/targets/npyfuncs.py</a> - Kernels used in generating some
+NumPy ufuncs</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/targets/arrayobj.py">numba/targets/arrayobj.py</a> - Array operations (both NumPy and
+buffer protocol)</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/targets/enumimpl.py">numba/targets/enumimpl.py</a> - Enum objects</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/targets/polynomial.py">numba/targets/polynomial.py</a> - <code class="docutils literal notranslate"><span class="pre">numpy.roots</span></code> function</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/targets/npdatetime.py">numba/targets/npdatetime.py</a> - NumPy datetime operations</li>
+</ul>
+</div>
+<div class="section" id="ufunc-compiler-and-runtime">
+<h3>7.2.2.14. Ufunc Compiler and Runtime<a class="headerlink" href="#ufunc-compiler-and-runtime" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><a class="reference external" href="https://www.github.com/numba/numba/tree/master/numba/npyufunc">numba/npyufunc</a> - ufunc compiler implementation</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/npyufunc/_internal.h">numba/npyufunc/_internal.h</a> | <a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/npyufunc/_internal.c">numba/npyufunc/_internal.c</a> - Python extension module with
+helper functions that use CPython &amp; NumPy C API</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/npyufunc/_ufunc.c">numba/npyufunc/_ufunc.c</a> - Used by <cite>_internal.c</cite></li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/npyufunc/deviceufunc.py">numba/npyufunc/deviceufunc.py</a> - Custom ufunc dispatch for
+non-CPU targets</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/npyufunc/gufunc_scheduler.h">numba/npyufunc/gufunc_scheduler.h</a> | <a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/npyufunc/gufunc_scheduler.cpp">numba/npyufunc/gufunc_scheduler.cpp</a> - Schedule work chunks
+to threads</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/npyufunc/dufunc.py">numba/npyufunc/dufunc.py</a> - Special ufunc that can compile new
+implementations at call time</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/npyufunc/ufuncbuilder.py">numba/npyufunc/ufuncbuilder.py</a> - Top-level orchestration of
+ufunc/gufunc compiler pipeline</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/npyufunc/sigparse.py">numba/npyufunc/sigparse.py</a> - Parser for generalized ufunc
+indexing signatures</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/npyufunc/parfor.py">numba/npyufunc/parfor.py</a> - gufunc lowering for
+ParallelAccelerator</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/npyufunc/parallel.py">numba/npyufunc/parallel.py</a> - Codegen for <code class="docutils literal notranslate"><span class="pre">parallel</span></code> target</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/npyufunc/array_exprs.py">numba/npyufunc/array_exprs.py</a> - Rewrite pass for turning array
+expressions in regular functions into ufuncs</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/npyufunc/wrappers.py">numba/npyufunc/wrappers.py</a> - Wrap scalar function kernel with
+loops</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/npyufunc/workqueue.h">numba/npyufunc/workqueue.h</a> | <a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/npyufunc/workqueue.c">numba/npyufunc/workqueue.c</a> - Threading backend based on
+pthreads/Windows threads and queues</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/npyufunc/omppool.cpp">numba/npyufunc/omppool.cpp</a> - Threading backend based on OpenMP</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/npyufunc/tbbpool.cpp">numba/npyufunc/tbbpool.cpp</a> - Threading backend based on TBB</li>
+</ul>
+</div>
+<div class="section" id="unit-tests-cpu">
+<h3>7.2.2.15. Unit Tests (CPU)<a class="headerlink" href="#unit-tests-cpu" title="Permalink to this headline">¶</a></h3>
+<p>CPU unit tests (GPU target unit tests listed in later sections</p>
+<ul class="simple">
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/runtests.py">runtests.py</a> - Convenience script that launches test runner and
+turns on full compiler tracebacks</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/run_coverage.py">run_coverage.py</a> - Runs test suite with coverage tracking enabled</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/.coveragerc">.coveragerc</a> - Coverage.py configuration</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/runtests.py">numba/runtests.py</a> - Entry point to unittest runner</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/_runtests.py">numba/_runtests.py</a> - Implementation of custom test runner
+command line interface</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/tree/master/numba/tests/">numba/tests/test_*</a> - Test cases</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/tree/master/numba/tests/">numba/tests/*_usecases.py</a> - Python functions compiled by some
+unit tests</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/tests/support.py">numba/tests/support.py</a> - Helper functions for testing and
+special TestCase implementation</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/tests/dummy_module.py">numba/tests/dummy_module.py</a> - Module used in
+<code class="docutils literal notranslate"><span class="pre">test_dispatcher.py</span></code></li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/tree/master/numba/tests/npyufunc">numba/tests/npyufunc</a> - ufunc / gufunc compiler tests</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/unittest_support.py">numba/unittest_support.py</a> - Import instead of unittest to handle
+portability issues</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/tree/master/numba/testing">numba/testing</a> - Support code for testing</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/testing/ddt.py">numba/testing/ddt.py</a> - decorators for test cases</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/testing/loader.py">numba/testing/loader.py</a> - Find tests on disk</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/testing/notebook.py">numba/testing/notebook.py</a> - Support for testing notebooks</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/testing/main.py">numba/testing/main.py</a> - Numba test runner</li>
+</ul>
+</div>
+<div class="section" id="command-line-utilities">
+<h3>7.2.2.16. Command Line Utilities<a class="headerlink" href="#command-line-utilities" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/bin/numba">bin/numba</a> - Command line stub, delegates to main in
+<code class="docutils literal notranslate"><span class="pre">numba_entry.py</span></code></li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/numba_entry.py">numba/numba_entry.py</a> - Main function for <code class="docutils literal notranslate"><span class="pre">numba</span></code> command line
+tool</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/tree/master/numba/pycc">numba/pycc</a> - Ahead of time compilation of functions to shared
+library extension</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/pycc/__init__.py">numba/pycc/__init__.py</a> - Main function for <code class="docutils literal notranslate"><span class="pre">pycc</span></code> command line
+tool</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/pycc/cc.py">numba/pycc/cc.py</a> - User-facing API for tagging functions to
+compile ahead of time</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/pycc/compiler.py">numba/pycc/compiler.py</a> - Compiler pipeline for creating
+standalone Python extension modules</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/pycc/llvm_types.py">numba/pycc/llvm_types.py</a> - Aliases to LLVM data types used by
+<code class="docutils literal notranslate"><span class="pre">compiler.py</span></code></li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/pycc/pycc">numba/pycc/pycc</a> - Stub to call main function.  Is this still
+used?</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/pycc/modulemixin.c">numba/pycc/modulemixin.c</a> - C file compiled into every compiled
+extension.  Pulls in C source from Numba core that is needed to make
+extension standalone</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/pycc/platform.py">numba/pycc/platform.py</a> - Portable interface to platform-specific
+compiler toolchains</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/pycc/decorators.py">numba/pycc/decorators.py</a> - Deprecated decorators for tagging
+functions to compile.  Use <code class="docutils literal notranslate"><span class="pre">cc.py</span></code> instead.</li>
+</ul>
+</div>
+<div class="section" id="cuda-gpu-target">
+<h3>7.2.2.17. CUDA GPU Target<a class="headerlink" href="#cuda-gpu-target" title="Permalink to this headline">¶</a></h3>
+<p>Note that the CUDA target does reuse some parts of the CPU target.</p>
+<ul class="simple">
+<li><a class="reference external" href="https://www.github.com/numba/numba/tree/master/numba/cuda/">numba/cuda/</a> - The implementation of the CUDA (NVIDIA GPU) target
+and associated unit tests</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/cuda/decorators.py">numba/cuda/decorators.py</a> - Compiler decorators for CUDA kernels
+and device functions</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/cuda/dispatcher.py">numba/cuda/dispatcher.py</a> - Dispatcher for CUDA JIT functions</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/cuda/printimpl.py">numba/cuda/printimpl.py</a> - Special implementation of device printing</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/cuda/libdevice.py">numba/cuda/libdevice.py</a> - Registers libdevice functions</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/tree/master/numba/cuda/kernels/">numba/cuda/kernels/</a> - Custom kernels for reduction and transpose</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/cuda/device_init.py">numba/cuda/device_init.py</a> - Initializes the CUDA target when
+imported</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/cuda/compiler.py">numba/cuda/compiler.py</a> - Compiler pipeline for CUDA target</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/cuda/intrinsic_wrapper.py">numba/cuda/intrinsic_wrapper.py</a> - CUDA device intrinsics
+(shuffle, ballot, etc)</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/cuda/initialize.py">numba/cuda/initialize.py</a> - Defered initialization of the CUDA
+device and subsystem.  Called only when user imports <code class="docutils literal notranslate"><span class="pre">numba.cuda</span></code></li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/cuda/simulator_init.py">numba/cuda/simulator_init.py</a> - Initalizes the CUDA simulator
+subsystem (only when user requests it with env var)</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/cuda/random.py">numba/cuda/random.py</a> - Implementation of random number generator</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/cuda/api.py">numba/cuda/api.py</a> - User facing APIs imported into <code class="docutils literal notranslate"><span class="pre">numba.cuda.*</span></code></li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/cuda/stubs.py">numba/cuda/stubs.py</a> - Python placeholders for functions that
+only can be used in GPU device code</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/tree/master/numba/cuda/simulator/">numba/cuda/simulator/</a> - Simulate execution of CUDA kernels in
+Python interpreter</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/cuda/vectorizers.py">numba/cuda/vectorizers.py</a> - Subclasses of ufunc/gufunc compilers
+for CUDA</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/cuda/args.py">numba/cuda/args.py</a> - Management of kernel arguments, including
+host&lt;-&gt;device transfers</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/cuda/target.py">numba/cuda/target.py</a> - Typing and target contexts for GPU</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/cuda/cudamath.py">numba/cuda/cudamath.py</a> - Type signatures for math functions in
+CUDA Python</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/cuda/errors.py">numba/cuda/errors.py</a> - Validation of kernel launch configuration</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/cuda/nvvmutils.py">numba/cuda/nvvmutils.py</a> - Helper functions for generating
+NVVM-specific IR</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/cuda/testing.py">numba/cuda/testing.py</a> - Support code for creating CUDA unit
+tests and capturing standard out</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/cuda/cudadecl.py">numba/cuda/cudadecl.py</a> - Type signatures of CUDA API (threadIdx,
+blockIdx, atomics) in Python on GPU</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/cuda/cudaimpl.py">numba/cuda/cudaimpl.py</a> - Implementations of CUDA API functions
+on GPU</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/cuda/codegen.py">numba/cuda/codegen.py</a> - Code generator object for CUDA target</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/tree/master/numba/cuda/cudadrv/">numba/cuda/cudadrv/</a> - Wrapper around CUDA driver API</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/tree/master/numba/cuda/tests/">numba/cuda/tests/</a> - CUDA unit tests, skipped when CUDA is not
+detected</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/tree/master/numba/cuda/tests/cudasim/">numba/cuda/tests/cudasim/</a> - Tests of CUDA simulator</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/tree/master/numba/cuda/tests/nocuda/">numba/cuda/tests/nocuda/</a> - Tests for NVVM functionality when
+CUDA not present</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/tree/master/numba/cuda/tests/cudapy/">numba/cuda/tests/cudapy/</a> - Tests of compiling Python functions
+for GPU</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/tree/master/numba/cuda/tests/cudadrv/">numba/cuda/tests/cudadrv/</a> - Tests of Python wrapper around CUDA
+API</li>
+</ul>
+</div>
+<div class="section" id="rocm-gpu-target">
+<h3>7.2.2.18. ROCm GPU Target<a class="headerlink" href="#rocm-gpu-target" title="Permalink to this headline">¶</a></h3>
+<p>Note that the ROCm target does reuse some parts of the CPU target, and
+duplicates some code from CUDA target.  A future refactoring could
+pull out the common subset of CUDA and ROCm.  An older version of this
+target was based on the HSA API, so “hsa” appears in many places.</p>
+<ul class="simple">
+<li><a class="reference external" href="https://www.github.com/numba/numba/tree/master/numba/roc">numba/roc</a> - ROCm GPU target for AMD GPUs</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/roc/descriptor.py">numba/roc/descriptor.py</a> - TargetDescriptor subclass for ROCm
+target</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/roc/enums.py">numba/roc/enums.py</a> - Internal constants</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/roc/mathdecl.py">numba/roc/mathdecl.py</a> - Declarations of math functions that can
+be used on device</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/roc/mathimpl.py">numba/roc/mathimpl.py</a> - Implementations of math functions for
+device</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/roc/compiler.py">numba/roc/compiler.py</a> - Compiler pipeline for ROCm target</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/tree/master/numba/roc/hlc">numba/roc/hlc</a> - Wrapper around LLVM interface for AMD GPU</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/roc/initialize.py">numba/roc/initialize.py</a> - Register ROCm target for ufunc/gufunc
+compiler</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/roc/hsadecl.py">numba/roc/hsadecl.py</a> - Type signatures for ROCm device API in
+Python</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/roc/hsaimpl.py">numba/roc/hsaimpl.py</a> - Implementations of ROCm device API</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/roc/dispatch.py">numba/roc/dispatch.py</a> - ufunc/gufunc dispatcher</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/roc/README.md">numba/roc/README.md</a> - Notes on testing target (should be
+deleted)</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/roc/api.py">numba/roc/api.py</a> - Host API for ROCm actions</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/roc/gcn_occupancy.py">numba/roc/gcn_occupancy.py</a> - Heuristic to compute occupancy of
+kernels</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/roc/stubs.py">numba/roc/stubs.py</a> - Host stubs for device functions</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/roc/vectorizers.py">numba/roc/vectorizers.py</a> - Builds ufuncs</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/roc/target.py">numba/roc/target.py</a> - Target and typing contexts</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/tree/master/numba/roc/hsadrv">numba/roc/hsadrv</a> - Python wrapper around ROCm (based on HSA)
+driver API calls</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/roc/codegen.py">numba/roc/codegen.py</a> - Codegen subclass for ROCm target</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/roc/decorators.py">numba/roc/decorators.py</a> - <code class="docutils literal notranslate"><span class="pre">&#64;jit</span></code> decorator for kernels and
+device functions</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/tree/master/numba/roc/tests">numba/roc/tests</a> - Unit tests for ROCm target</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/tree/master/numba/roc/tests/hsapy">numba/roc/tests/hsapy</a> - Tests of compiling ROCm kernels written
+in Python syntax</li>
+<li><a class="reference external" href="https://www.github.com/numba/numba/tree/master/numba/roc/tests/hsadrv">numba/roc/tests/hsadrv</a> - Tests of Python wrapper on platform
+API.</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2012, Anaconda, Inc..<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>
