@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>7.11. Notes on Custom Pipelines &#8212; Numba 0.46.0.dev0+240.g2c92522-py2.7-linux-x86_64.egg documentation</title>
+    <title>7.11. Notes on Custom Pipelines &#8212; Numba 0.46.0.dev0+254.g3a1e088-py2.7-linux-x86_64.egg documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/numba-docs.css" />
@@ -134,81 +134,18 @@ the compiler behavior can invalidate internal assumptions in the
 numba source code.</p>
 </div>
 <p>For library developers looking for a way to extend or modify the compiler
-behavior, you can do so by defining a custom compiler pipeline by inheriting
-from <code class="docutils literal notranslate"><span class="pre">numba.compiler.BasePipeline</span></code>.  The default numba pipeline is defined
-as <code class="docutils literal notranslate"><span class="pre">numba.compiler.Pipeline</span></code>, implementing the <code class="docutils literal notranslate"><span class="pre">.define_pipelines()</span></code>
+behavior, you can do so by defining a custom compiler by inheriting from
+<code class="docutils literal notranslate"><span class="pre">numba.compiler.CompilerBase</span></code>.  The default Numba compiler is defined
+as <code class="docutils literal notranslate"><span class="pre">numba.compiler.Compiler</span></code>, implementing the <code class="docutils literal notranslate"><span class="pre">.define_pipelines()</span></code>
 method, which adds the <em>nopython-mode</em>, <em>object-mode</em> and <em>interpreted-mode</em>
-pipelines.  These three pipelines are defined in <code class="docutils literal notranslate"><span class="pre">BasePipeline</span></code> by the
-methods <code class="docutils literal notranslate"><span class="pre">.define_nopython_pipeline</span></code>, <code class="docutils literal notranslate"><span class="pre">.define_objectmode_pipeline</span></code>
-and <code class="docutils literal notranslate"><span class="pre">.define_interpreted_pipeline</span></code>, respectively..</p>
-<p>To use a custom subclass of <code class="docutils literal notranslate"><span class="pre">BasePipeline</span></code>, supply it as the
+pipelines.  These three pipelines are defined in
+<code class="docutils literal notranslate"><span class="pre">numba.compiler.DefaultPassBuilder</span></code> by the methods
+<code class="docutils literal notranslate"><span class="pre">.define_nopython_pipeline</span></code>, <code class="docutils literal notranslate"><span class="pre">.define_objectmode_pipeline</span></code> and
+<code class="docutils literal notranslate"><span class="pre">.define_interpreted_pipeline</span></code>, respectively.</p>
+<p>To use a custom subclass of <code class="docutils literal notranslate"><span class="pre">CompilerBase</span></code>, supply it as the
 <code class="docutils literal notranslate"><span class="pre">pipeline_class</span></code> keyword argument to the <code class="docutils literal notranslate"><span class="pre">&#64;jit</span></code> and <code class="docutils literal notranslate"><span class="pre">&#64;generated_jit</span></code>
 decorators.  By doing so, the effect of the custom pipeline is limited to the
 function being decorated.</p>
-<p>Below are the common methods available to implementors of the <code class="docutils literal notranslate"><span class="pre">BasePipeline</span></code>
-class:</p>
-<dl class="class">
-<dt id="numba.compiler.BasePipeline">
-<em class="property">class </em><code class="descclassname">numba.compiler.</code><code class="descname">BasePipeline</code><span class="sig-paren">(</span><em>typingctx</em>, <em>targetctx</em>, <em>library</em>, <em>args</em>, <em>return_type</em>, <em>flags</em>, <em>locals</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.compiler.BasePipeline" title="Permalink to this definition">¶</a></dt>
-<dd><p>Stores and manages states for the compiler pipeline</p>
-<dl class="method">
-<dt id="numba.compiler.BasePipeline.add_cleanup_stage">
-<code class="descname">add_cleanup_stage</code><span class="sig-paren">(</span><em>pm</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.compiler.BasePipeline.add_cleanup_stage" title="Permalink to this definition">¶</a></dt>
-<dd><p>Add the clean-up stage to remove intermediate results.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="numba.compiler.BasePipeline.add_lowering_stage">
-<code class="descname">add_lowering_stage</code><span class="sig-paren">(</span><em>pm</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.compiler.BasePipeline.add_lowering_stage" title="Permalink to this definition">¶</a></dt>
-<dd><p>Add the lowering (code-generation) stage for nopython-mode</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="numba.compiler.BasePipeline.add_optimization_stage">
-<code class="descname">add_optimization_stage</code><span class="sig-paren">(</span><em>pm</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.compiler.BasePipeline.add_optimization_stage" title="Permalink to this definition">¶</a></dt>
-<dd><p>Add optimization stages.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="numba.compiler.BasePipeline.add_pre_typing_stage">
-<code class="descname">add_pre_typing_stage</code><span class="sig-paren">(</span><em>pm</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.compiler.BasePipeline.add_pre_typing_stage" title="Permalink to this definition">¶</a></dt>
-<dd><p>Add any stages that go before type-inference.
-The current stages contain type-agnostic rewrite passes.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="numba.compiler.BasePipeline.add_preprocessing_stage">
-<code class="descname">add_preprocessing_stage</code><span class="sig-paren">(</span><em>pm</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.compiler.BasePipeline.add_preprocessing_stage" title="Permalink to this definition">¶</a></dt>
-<dd><p>Add the preprocessing stage that analyzes the bytecode to prepare
-the Numba IR.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="numba.compiler.BasePipeline.add_typing_stage">
-<code class="descname">add_typing_stage</code><span class="sig-paren">(</span><em>pm</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.compiler.BasePipeline.add_typing_stage" title="Permalink to this definition">¶</a></dt>
-<dd><p>Add the type-inference stage necessary for nopython mode.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="numba.compiler.BasePipeline.define_interpreted_pipeline">
-<code class="descname">define_interpreted_pipeline</code><span class="sig-paren">(</span><em>pm</em>, <em>name='interp'</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.compiler.BasePipeline.define_interpreted_pipeline" title="Permalink to this definition">¶</a></dt>
-<dd><p>Add the interpreted-mode (fallback) pipeline to the pipeline manager</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="numba.compiler.BasePipeline.define_nopython_pipeline">
-<code class="descname">define_nopython_pipeline</code><span class="sig-paren">(</span><em>pm</em>, <em>name='nopython'</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.compiler.BasePipeline.define_nopython_pipeline" title="Permalink to this definition">¶</a></dt>
-<dd><p>Add the nopython-mode pipeline to the pipeline manager</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="numba.compiler.BasePipeline.define_objectmode_pipeline">
-<code class="descname">define_objectmode_pipeline</code><span class="sig-paren">(</span><em>pm</em>, <em>name='object'</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.compiler.BasePipeline.define_objectmode_pipeline" title="Permalink to this definition">¶</a></dt>
-<dd><p>Add the object-mode pipeline to the pipeline manager</p>
-</dd></dl>
-
-</dd></dl>
-
 </div>
 
 
