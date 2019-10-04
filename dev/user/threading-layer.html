@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>1.15. The Threading Layers &#8212; Numba 0.46.0.dev0+363.g2da803c-py2.7-linux-x86_64.egg documentation</title>
+    <title>1.15. The Threading Layers &#8212; Numba 0.46.0.dev0+566.g5bd018f-py3.7-linux-x86_64.egg documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/numba-docs.css" />
@@ -12,10 +12,6 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
-    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="1.16. Command line interface" href="cli.html" />
@@ -24,6 +20,10 @@
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-sphinx.js "></script>
 
   </head><body>
 
@@ -132,7 +132,7 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-md-12 content">
+    <div class="body col-md-12 content" role="main">
       
   <div class="section" id="the-threading-layers">
 <span id="numba-threading-layer"></span><h1>1.15. The Threading Layers<a class="headerlink" href="#the-threading-layers" title="Permalink to this headline">¶</a></h1>
@@ -162,11 +162,11 @@ layer that ship with Numba will work well, no further action is required!</p>
 The <code class="docutils literal notranslate"><span class="pre">omp</span></code> layer requires the presence of a suitable OpenMP runtime library.
 The <code class="docutils literal notranslate"><span class="pre">tbb</span></code> layer requires the presence of Intel’s TBB libraries, these can be
 obtained via the conda command:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre>$ conda install tbb
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ conda install tbb
 </pre></div>
 </div>
 <p>If you installed Numba with <code class="docutils literal notranslate"><span class="pre">pip</span></code>, TBB can be enabled by running:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre>$ pip install tbb
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ pip install tbb
 </pre></div>
 </div>
 <p>Due to compatibility issues with manylinux1 and other portability concerns,
@@ -219,29 +219,29 @@ follows:</p>
 <p>To discover the threading layer that was selected, the function
 <code class="docutils literal notranslate"><span class="pre">numba.threading_layer()</span></code> may be called after parallel execution. For example,
 on a Linux machine with no TBB installed:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">numba</span> <span class="k">import</span> <span class="n">config</span><span class="p">,</span> <span class="n">njit</span><span class="p">,</span> <span class="n">threading_layer</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">numba</span> <span class="k">import</span> <span class="n">config</span><span class="p">,</span> <span class="n">njit</span><span class="p">,</span> <span class="n">threading_layer</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-<span class="c"># set the threading layer before any parallel target compilation</span>
-<span class="n">config</span><span class="o">.</span><span class="n">THREADING_LAYER</span> <span class="o">=</span> <span class="s">&#39;threadsafe&#39;</span>
+<span class="c1"># set the threading layer before any parallel target compilation</span>
+<span class="n">config</span><span class="o">.</span><span class="n">THREADING_LAYER</span> <span class="o">=</span> <span class="s1">&#39;threadsafe&#39;</span>
 
-<span class="nd">@njit</span><span class="p">(</span><span class="n">parallel</span><span class="o">=</span><span class="k">True</span><span class="p">)</span>
+<span class="nd">@njit</span><span class="p">(</span><span class="n">parallel</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
 
 <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">10.</span><span class="p">)</span>
 <span class="n">y</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 
-<span class="c"># this will force the compilation of the function, select a threading layer</span>
-<span class="c"># and then execute in parallel</span>
+<span class="c1"># this will force the compilation of the function, select a threading layer</span>
+<span class="c1"># and then execute in parallel</span>
 <span class="n">foo</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 
-<span class="c"># demonstrate the threading layer chosen</span>
-<span class="nb">print</span><span class="p">(</span><span class="s">&quot;Threading layer chosen: %s&quot;</span> <span class="o">%</span> <span class="n">threading_layer</span><span class="p">())</span>
+<span class="c1"># demonstrate the threading layer chosen</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Threading layer chosen: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">threading_layer</span><span class="p">())</span>
 </pre></div>
 </div>
 <p>which produces:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span class="n">Threading</span> <span class="n">layer</span> <span class="n">chosen</span><span class="p">:</span> <span class="n">omp</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Threading</span> <span class="n">layer</span> <span class="n">chosen</span><span class="p">:</span> <span class="n">omp</span>
 </pre></div>
 </div>
 <p>and this makes sense as GNU OpenMP, as present on Linux, is thread safe.</p>

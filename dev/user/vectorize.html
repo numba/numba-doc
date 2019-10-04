@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>1.6. Creating Numpy universal functions &#8212; Numba 0.46.0.dev0+363.g2da803c-py2.7-linux-x86_64.egg documentation</title>
+    <title>1.6. Creating Numpy universal functions &#8212; Numba 0.46.0.dev0+566.g5bd018f-py3.7-linux-x86_64.egg documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/numba-docs.css" />
@@ -12,10 +12,6 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
-    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="1.7. Compiling Python classes with @jitclass" href="jitclass.html" />
@@ -24,6 +20,10 @@
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-sphinx.js "></script>
 
   </head><body>
 
@@ -128,7 +128,7 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-md-12 content">
+    <div class="body col-md-12 content" role="main">
       
   <div class="section" id="creating-numpy-universal-functions">
 <h1>1.6. Creating Numpy universal functions<a class="headerlink" href="#creating-numpy-universal-functions" title="Permalink to this headline">¶</a></h1>
@@ -160,7 +160,7 @@ more depth.</li>
 <a class="reference internal" href="../reference/jit-compilation.html#numba.vectorize" title="numba.vectorize"><code class="xref py py-func docutils literal notranslate"><span class="pre">vectorize()</span></code></a> decorator, your function will be compiled
 into a Numpy ufunc.  In the basic case, only one signature will be
 passed:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">numba</span> <span class="k">import</span> <span class="n">vectorize</span><span class="p">,</span> <span class="n">float64</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">numba</span> <span class="k">import</span> <span class="n">vectorize</span><span class="p">,</span> <span class="n">float64</span>
 
 <span class="nd">@vectorize</span><span class="p">([</span><span class="n">float64</span><span class="p">(</span><span class="n">float64</span><span class="p">,</span> <span class="n">float64</span><span class="p">)])</span>
 <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
@@ -171,7 +171,7 @@ passed:</p>
 signatures before least specific ones (e.g., single-precision floats
 before double-precision floats), otherwise type-based dispatching will not work
 as expected:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span class="nd">@vectorize</span><span class="p">([</span><span class="n">int32</span><span class="p">(</span><span class="n">int32</span><span class="p">,</span> <span class="n">int32</span><span class="p">),</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@vectorize</span><span class="p">([</span><span class="n">int32</span><span class="p">(</span><span class="n">int32</span><span class="p">,</span> <span class="n">int32</span><span class="p">),</span>
             <span class="n">int64</span><span class="p">(</span><span class="n">int64</span><span class="p">,</span> <span class="n">int64</span><span class="p">),</span>
             <span class="n">float32</span><span class="p">(</span><span class="n">float32</span><span class="p">,</span> <span class="n">float32</span><span class="p">),</span>
             <span class="n">float64</span><span class="p">(</span><span class="n">float64</span><span class="p">,</span> <span class="n">float64</span><span class="p">)])</span>
@@ -180,7 +180,7 @@ as expected:</p>
 </pre></div>
 </div>
 <p>The function will work as expected over the specified array types:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
 <span class="go">array([ 0,  2,  4,  6,  8, 10])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
@@ -189,7 +189,7 @@ as expected:</p>
 </pre></div>
 </div>
 <p>but it will fail working on other types:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="o">+</span><span class="mi">1</span><span class="n">j</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="o">+</span><span class="mi">1</span><span class="n">j</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
 <span class="gt">Traceback (most recent call last):</span>
   File <span class="nb">&quot;&lt;stdin&gt;&quot;</span>, line <span class="m">1</span>, in <span class="n">&lt;module&gt;</span>
@@ -200,7 +200,7 @@ as expected:</p>
 a simple iteration loop using the <a class="reference internal" href="jit.html#jit"><span class="std std-ref">&#64;jit</span></a> decorator?”.  The
 answer is that NumPy ufuncs automatically get other features such as
 reduction, accumulation or broadcasting.  Using the example above:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span>
 <span class="go">array([[ 0,  1,  2,  3],</span>
 <span class="go">       [ 4,  5,  6,  7],</span>
@@ -276,7 +276,7 @@ argument, which must be filled in by the function.  This is because the
 array is actually allocated by NumPy’s dispatch mechanism, which calls into
 the Numba-generated code.</p>
 <p>Here is a very simple example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span class="nd">@guvectorize</span><span class="p">([(</span><span class="n">int64</span><span class="p">[:],</span> <span class="n">int64</span><span class="p">,</span> <span class="n">int64</span><span class="p">[:])],</span> <span class="s">&#39;(n),()-&gt;(n)&#39;</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@guvectorize</span><span class="p">([(</span><span class="n">int64</span><span class="p">[:],</span> <span class="n">int64</span><span class="p">,</span> <span class="n">int64</span><span class="p">[:])],</span> <span class="s1">&#39;(n),()-&gt;(n)&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">g</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">res</span><span class="p">):</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
         <span class="n">res</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">y</span>
@@ -300,7 +300,7 @@ In the above example, the second argument also could be declared as
 <code class="docutils literal notranslate"><span class="pre">int64[:]</span></code>.  In that case, the value must be read by <code class="docutils literal notranslate"><span class="pre">y[0]</span></code>.</p>
 </div>
 <p>We can now check what the compiled ufunc does, over a simple example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span>
 <span class="go">array([0, 1, 2, 3, 4])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">g</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
@@ -309,7 +309,7 @@ In the above example, the second argument also could be declared as
 </div>
 <p>The nice thing is that NumPy will automatically dispatch over more
 complicated inputs, depending on their shapes:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span>
 <span class="go">array([[0, 1, 2],</span>
 <span class="go">       [3, 4, 5]])</span>
@@ -335,7 +335,7 @@ Use it to ensure the generated code does not fallback to
 <a class="reference internal" href="../reference/jit-compilation.html#numba.vectorize" title="numba.vectorize"><code class="xref py py-func docutils literal notranslate"><span class="pre">vectorize()</span></code></a> decorator, your Python function will be used
 to build a dynamic universal function, or <a class="reference internal" href="../reference/jit-compilation.html#numba.DUFunc" title="numba.DUFunc"><code class="xref py py-class docutils literal notranslate"><span class="pre">DUFunc</span></code></a>.  For
 example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">numba</span> <span class="k">import</span> <span class="n">vectorize</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">numba</span> <span class="k">import</span> <span class="n">vectorize</span>
 
 <span class="nd">@vectorize</span>
 <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
@@ -347,7 +347,7 @@ starts with no supported input types.  As you make calls to <code class="xref py
 Numba generates new kernels whenever you pass a previously unsupported
 input type.  Given the example above, the following set of interpreter
 interactions illustrate how dynamic compilation works:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span>
 <span class="go">&lt;numba._DUFunc &#39;f&#39;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="o">.</span><span class="n">ufunc</span>
 <span class="go">&lt;ufunc &#39;f&#39;&gt;</span>
@@ -362,9 +362,9 @@ then delegating ufunc property reads and method calls to this member
 (also known as type aggregation).  When we look at the initial types
 supported by the ufunc, we can verify there are none.</p>
 <p>Let’s try to make a call to <code class="xref py py-func docutils literal notranslate"><span class="pre">f()</span></code>:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span>
 <span class="go">12</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="o">.</span><span class="n">types</span>   <span class="c"># shorthand for f.ufunc.types</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="o">.</span><span class="n">types</span>   <span class="c1"># shorthand for f.ufunc.types</span>
 <span class="go">[&#39;ll-&gt;l&#39;]</span>
 </pre></div>
 </div>
@@ -374,7 +374,7 @@ call <code class="xref py py-func docutils literal notranslate"><span class="pre
 answer, but we can verify that Numba created a loop supporting C
 <code class="code docutils literal notranslate"><span class="pre">long</span></code> integers.</p>
 <p>We can add additional loops by calling <code class="xref py py-func docutils literal notranslate"><span class="pre">f()</span></code> with different inputs:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="p">(</span><span class="mf">1.</span><span class="p">,</span><span class="mf">2.</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="p">(</span><span class="mf">1.</span><span class="p">,</span><span class="mf">2.</span><span class="p">)</span>
 <span class="go">2.0</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="o">.</span><span class="n">types</span>
 <span class="go">[&#39;ll-&gt;l&#39;, &#39;dd-&gt;d&#39;]</span>
@@ -384,7 +384,7 @@ answer, but we can verify that Numba created a loop supporting C
 floating-point inputs, <code class="code docutils literal notranslate"><span class="pre">&quot;dd-&gt;d&quot;</span></code>.</p>
 <p>If we mix input types to <code class="xref py py-func docutils literal notranslate"><span class="pre">f()</span></code>, we can verify that <a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/ufuncs.html#casting-rules">Numpy ufunc
 casting rules</a> are still in effect:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mf">2.</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mf">2.</span><span class="p">)</span>
 <span class="go">2.0</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="o">.</span><span class="n">types</span>
 <span class="go">[&#39;ll-&gt;l&#39;, &#39;dd-&gt;d&#39;]</span>
@@ -400,7 +400,7 @@ but instead of signature declaration order in the decorator, call
 order matters.  If we had passed in floating-point arguments first,
 any calls with integer arguments would be cast to double-precision
 floating-point values.  For example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="nd">@vectorize</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nd">@vectorize</span>
 <span class="gp">... </span><span class="k">def</span> <span class="nf">g</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span> <span class="k">return</span> <span class="n">a</span> <span class="o">/</span> <span class="n">b</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">g</span><span class="p">(</span><span class="mf">2.</span><span class="p">,</span><span class="mf">3.</span><span class="p">)</span>

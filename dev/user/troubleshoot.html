@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>1.17. Troubleshooting and tips &#8212; Numba 0.46.0.dev0+363.g2da803c-py2.7-linux-x86_64.egg documentation</title>
+    <title>1.17. Troubleshooting and tips &#8212; Numba 0.46.0.dev0+566.g5bd018f-py3.7-linux-x86_64.egg documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/numba-docs.css" />
@@ -12,10 +12,6 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
-    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="1.18. Frequently Asked Questions" href="faq.html" />
@@ -24,6 +20,10 @@
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-sphinx.js "></script>
 
   </head><body>
 
@@ -151,7 +151,7 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-md-12 content">
+    <div class="body col-md-12 content" role="main">
       
   <div class="section" id="troubleshooting-and-tips">
 <span id="numba-troubleshooting"></span><h1>1.17. Troubleshooting and tips<a class="headerlink" href="#troubleshooting-and-tips" title="Permalink to this headline">¶</a></h1>
@@ -185,20 +185,20 @@ reason for Numba failing to compile (especially in <a class="reference internal"
 type inference failure, essentially Numba cannot work out what the type of all
 the variables in your code should be.</p>
 <p>For example, let’s consider this trivial function:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span class="nd">@jit</span><span class="p">(</span><span class="n">nopython</span><span class="o">=</span><span class="k">True</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@jit</span><span class="p">(</span><span class="n">nopython</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
 </pre></div>
 </div>
 <p>If you call it with two numbers, Numba is able to infer the types properly:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 <span class="go">    3</span>
 </pre></div>
 </div>
 <p>If however you call it with a tuple and a number, Numba is unable to say
 what the result of adding a tuple and number is, and therefore compilation
 errors out:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre>&gt;&gt;&gt; f(1, (2,))
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; f(1, (2,))
 Traceback (most recent call last):
 File &quot;&lt;stdin&gt;&quot;, line 1, in &lt;module&gt;
 File &quot;&lt;path&gt;/numba/numba/dispatcher.py&quot;, line 339, in _compile_for_args
@@ -240,14 +240,14 @@ interpreted as “Numba encountered an addition of variables typed as integer
 and 1-tuple of integer, respectively, and doesn’t know about any such
 operation”.</p>
 <p>Note that if you allow object mode:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span class="nd">@jit</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@jit</span>
 <span class="k">def</span> <span class="nf">g</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
 </pre></div>
 </div>
 <p>compilation will succeed and the compiled function will raise at runtime as
 Python would do:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">g</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,))</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">g</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,))</span>
 <span class="gt">Traceback (most recent call last):</span>
   File <span class="nb">&quot;&lt;stdin&gt;&quot;</span>, line <span class="m">1</span>, in <span class="n">&lt;module&gt;</span>
 <span class="gr">TypeError</span>: <span class="n">unsupported operand type(s) for +: &#39;int&#39; and &#39;tuple&#39;</span>
@@ -266,9 +266,9 @@ float and a 64 bit complex number could both be represented in a 128 bit complex
 number.</p>
 <p>As an example of type unification failure, this function has a return type that
 is determined at runtime based on the value of <cite>x</cite>:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span class="n">In</span> <span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="kn">from</span> <span class="nn">numba</span> <span class="k">import</span> <span class="n">jit</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">In</span> <span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="kn">from</span> <span class="nn">numba</span> <span class="k">import</span> <span class="n">jit</span>
 
-<span class="n">In</span> <span class="p">[</span><span class="mi">2</span><span class="p">]:</span> <span class="nd">@jit</span><span class="p">(</span><span class="n">nopython</span><span class="o">=</span><span class="k">True</span><span class="p">)</span>
+<span class="n">In</span> <span class="p">[</span><span class="mi">2</span><span class="p">]:</span> <span class="nd">@jit</span><span class="p">(</span><span class="n">nopython</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="o">...</span><span class="p">:</span> <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
 <span class="o">...</span><span class="p">:</span>     <span class="k">if</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">10</span><span class="p">:</span>
 <span class="o">...</span><span class="p">:</span>         <span class="k">return</span> <span class="p">(</span><span class="mi">1</span><span class="p">,)</span>
@@ -280,17 +280,17 @@ is determined at runtime based on the value of <cite>x</cite>:</p>
 </pre></div>
 </div>
 <p>Trying to execute this function, errors out as follows:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span class="n">TypingError</span><span class="p">:</span> <span class="n">Failed</span> <span class="n">at</span> <span class="n">nopython</span> <span class="p">(</span><span class="n">nopython</span> <span class="n">frontend</span><span class="p">)</span>
-<span class="n">Can</span><span class="s">&#39;t unify return type from the following types: tuple(int64 x 1), int64</span>
-<span class="n">Return</span> <span class="n">of</span><span class="p">:</span> <span class="n">IR</span> <span class="n">name</span> <span class="s">&#39;$8.2&#39;</span><span class="p">,</span> <span class="nb">type</span> <span class="s">&#39;(int64 x 1)&#39;</span><span class="p">,</span> <span class="n">location</span><span class="p">:</span>
-<span class="n">File</span> <span class="s">&quot;&lt;ipython-input-2-51ef1cc64bea&gt;&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">4</span><span class="p">:</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">TypingError</span><span class="p">:</span> <span class="n">Failed</span> <span class="n">at</span> <span class="n">nopython</span> <span class="p">(</span><span class="n">nopython</span> <span class="n">frontend</span><span class="p">)</span>
+<span class="n">Can</span><span class="s1">&#39;t unify return type from the following types: tuple(int64 x 1), int64</span>
+<span class="n">Return</span> <span class="n">of</span><span class="p">:</span> <span class="n">IR</span> <span class="n">name</span> <span class="s1">&#39;$8.2&#39;</span><span class="p">,</span> <span class="nb">type</span> <span class="s1">&#39;(int64 x 1)&#39;</span><span class="p">,</span> <span class="n">location</span><span class="p">:</span>
+<span class="n">File</span> <span class="s2">&quot;&lt;ipython-input-2-51ef1cc64bea&gt;&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">4</span><span class="p">:</span>
 <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
     <span class="o">&lt;</span><span class="n">source</span> <span class="n">elided</span><span class="o">&gt;</span>
     <span class="k">if</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">10</span><span class="p">:</span>
         <span class="k">return</span> <span class="p">(</span><span class="mi">1</span><span class="p">,)</span>
         <span class="o">^</span>
-<span class="n">Return</span> <span class="n">of</span><span class="p">:</span> <span class="n">IR</span> <span class="n">name</span> <span class="s">&#39;$12.2&#39;</span><span class="p">,</span> <span class="nb">type</span> <span class="s">&#39;int64&#39;</span><span class="p">,</span> <span class="n">location</span><span class="p">:</span>
-<span class="n">File</span> <span class="s">&quot;&lt;ipython-input-2-51ef1cc64bea&gt;&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">6</span><span class="p">:</span>
+<span class="n">Return</span> <span class="n">of</span><span class="p">:</span> <span class="n">IR</span> <span class="n">name</span> <span class="s1">&#39;$12.2&#39;</span><span class="p">,</span> <span class="nb">type</span> <span class="s1">&#39;int64&#39;</span><span class="p">,</span> <span class="n">location</span><span class="p">:</span>
+<span class="n">File</span> <span class="s2">&quot;&lt;ipython-input-2-51ef1cc64bea&gt;&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">6</span><span class="p">:</span>
 <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
     <span class="o">&lt;</span><span class="n">source</span> <span class="n">elided</span><span class="o">&gt;</span>
     <span class="k">else</span><span class="p">:</span>
@@ -310,40 +310,40 @@ or can be empty if the type can be inferred from some later operation. What is
 not possible is to have a list which is defined as empty and has no inferable
 type (i.e. an untyped list).</p>
 <p>For example, this is using a list of a known type:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">numba</span> <span class="k">import</span> <span class="n">jit</span>
-<span class="nd">@jit</span><span class="p">(</span><span class="n">nopython</span><span class="o">=</span><span class="k">True</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">numba</span> <span class="k">import</span> <span class="n">jit</span>
+<span class="nd">@jit</span><span class="p">(</span><span class="n">nopython</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">f</span><span class="p">():</span>
-    <span class="k">return</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span> <span class="c"># this list is defined on construction with `int` type</span>
+    <span class="k">return</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span> <span class="c1"># this list is defined on construction with `int` type</span>
 </pre></div>
 </div>
 <p>This is using an empty list, but the type can be inferred:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">numba</span> <span class="k">import</span> <span class="n">jit</span>
-<span class="nd">@jit</span><span class="p">(</span><span class="n">nopython</span><span class="o">=</span><span class="k">True</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">numba</span> <span class="k">import</span> <span class="n">jit</span>
+<span class="nd">@jit</span><span class="p">(</span><span class="n">nopython</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-    <span class="n">tmp</span> <span class="o">=</span> <span class="p">[]</span> <span class="c"># defined empty</span>
+    <span class="n">tmp</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1"># defined empty</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-        <span class="n">tmp</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="c"># list type can be inferred from the type of `i`</span>
+        <span class="n">tmp</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="c1"># list type can be inferred from the type of `i`</span>
     <span class="k">return</span> <span class="n">tmp</span>
 </pre></div>
 </div>
 <p>This is using an empty list and the type cannot be inferred:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">numba</span> <span class="k">import</span> <span class="n">jit</span>
-<span class="nd">@jit</span><span class="p">(</span><span class="n">nopython</span><span class="o">=</span><span class="k">True</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">numba</span> <span class="k">import</span> <span class="n">jit</span>
+<span class="nd">@jit</span><span class="p">(</span><span class="n">nopython</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-    <span class="n">tmp</span> <span class="o">=</span> <span class="p">[]</span> <span class="c"># defined empty</span>
-    <span class="k">return</span> <span class="p">(</span><span class="n">tmp</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="c"># ERROR: the type of `tmp` is unknown</span>
+    <span class="n">tmp</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1"># defined empty</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">tmp</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="c1"># ERROR: the type of `tmp` is unknown</span>
 </pre></div>
 </div>
 <p>Whilst slightly contrived, if you need an empty list and the type cannot be
 inferred but you know what type you want the list to be, this “trick” can be
 used to instruct the typing mechanism:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">numba</span> <span class="k">import</span> <span class="n">jit</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">numba</span> <span class="k">import</span> <span class="n">jit</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="nd">@jit</span><span class="p">(</span><span class="n">nopython</span><span class="o">=</span><span class="k">True</span><span class="p">)</span>
+<span class="nd">@jit</span><span class="p">(</span><span class="n">nopython</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-    <span class="c"># define empty list, but instruct that the type is np.complex64</span>
+    <span class="c1"># define empty list, but instruct that the type is np.complex64</span>
     <span class="n">tmp</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">complex64</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">)]</span>
-    <span class="k">return</span> <span class="p">(</span><span class="n">tmp</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="c"># the type of `tmp` is known, but it is still empty</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">tmp</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="c1"># the type of `tmp` is known, but it is still empty</span>
 </pre></div>
 </div>
 </div>
@@ -360,7 +360,7 @@ inner loops.</p>
 <p>To find out if type inference succeeded on your function, you can use
 the <a class="reference internal" href="../reference/jit-compilation.html#Dispatcher.inspect_types" title="Dispatcher.inspect_types"><code class="xref py py-meth docutils literal notranslate"><span class="pre">inspect_types()</span></code></a> method on the compiled function.</p>
 <p>For example, let’s take the following function:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span class="nd">@jit</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@jit</span>
 <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
     <span class="n">s</span> <span class="o">=</span> <span class="n">a</span> <span class="o">+</span> <span class="nb">float</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">s</span>
@@ -368,7 +368,7 @@ the <a class="reference internal" href="../reference/jit-compilation.html#Dispat
 </div>
 <p>When called with numbers, this function should be fast as Numba is able
 to convert number types to floating-point numbers.  Let’s see:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 <span class="go">3.0</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="o">.</span><span class="n">inspect_types</span><span class="p">()</span>
 <span class="go">f (int64, int64)</span>
@@ -414,7 +414,7 @@ the type <code class="docutils literal notranslate"><span class="pre">float64</s
 <p>However, if <em>b</em> is passed as a string, compilation will fall back on object
 mode as the float() constructor with a string is currently not supported
 by Numba:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s">&quot;2&quot;</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;2&quot;</span><span class="p">)</span>
 <span class="go">3.0</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="o">.</span><span class="n">inspect_types</span><span class="p">()</span>
 <span class="go">[... snip annotations for other signatures, see above ...]</span>
@@ -463,9 +463,9 @@ when caring about the speed of your code.</p>
 <p>If a function fails to compile in <code class="docutils literal notranslate"><span class="pre">nopython</span></code> mode warnings will be emitted
 with explanation as to why compilation failed. For example with the <code class="docutils literal notranslate"><span class="pre">f()</span></code>
 function above (slightly edited for documentation purposes):</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 <span class="go">3.0</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s">&quot;2&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;2&quot;</span><span class="p">)</span>
 <span class="go">example.py:7: NumbaWarning:</span>
 <span class="go">Compilation is falling back to object mode WITH looplifting enabled because Function &quot;f&quot; failed type inference due to: Invalid use of Function(&lt;class &#39;float&#39;&gt;) with argument(s) of type(s): (unicode_type)</span>
 <span class="go">* parameterized</span>
@@ -548,9 +548,9 @@ debug info.</li>
 <li><p class="first">Since Python semantics allow variables to bind to value of different types,
 Numba internally creates multiple versions of the variable for each type.
 So for code like:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span class="n">x</span> <span class="o">=</span> <span class="mi">1</span>         <span class="c"># type int</span>
-<span class="n">x</span> <span class="o">=</span> <span class="mf">2.3</span>       <span class="c"># type float</span>
-<span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="c"># type 3-tuple of int</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="mi">1</span>         <span class="c1"># type int</span>
+<span class="n">x</span> <span class="o">=</span> <span class="mf">2.3</span>       <span class="c1"># type float</span>
+<span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="c1"># type 3-tuple of int</span>
 </pre></div>
 </div>
 <p>Each assignments will store to a different variable name.  In the debugger,
@@ -573,7 +573,7 @@ the variables will be <code class="docutils literal notranslate"><span class="pr
  8
  9
 10
-11</pre></div></td><td class="code"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">njit</span>
+11</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">njit</span>
 
 <span class="nd">@njit</span><span class="p">(</span><span class="n">debug</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
@@ -587,7 +587,7 @@ the variables will be <code class="docutils literal notranslate"><span class="pr
 </pre></div>
 </td></tr></table></div>
 <p>In the terminal:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span class="hll">$ NUMBA_OPT=1 gdb -q python
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll">$ NUMBA_OPT=1 gdb -q python
 </span>Reading symbols from python...done.
 (gdb) break /home/user/chk_debug.py:5
 No source file named /home/user/chk_debug.py.
@@ -698,12 +698,12 @@ example used above:</p>
  9
 10
 11
-12</pre></div></td><td class="code"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">njit</span><span class="p">,</span> <span class="n">gdb</span>
+12</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">njit</span><span class="p">,</span> <span class="n">gdb</span>
 
 <span class="nd">@njit</span><span class="p">(</span><span class="n">debug</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
     <span class="n">b</span> <span class="o">=</span> <span class="n">a</span> <span class="o">+</span> <span class="mi">1</span>
-    <span class="n">gdb</span><span class="p">()</span> <span class="c"># instruct Numba to attach gdb at this location and pause execution</span>
+    <span class="n">gdb</span><span class="p">()</span> <span class="c1"># instruct Numba to attach gdb at this location and pause execution</span>
     <span class="n">c</span> <span class="o">=</span> <span class="n">a</span> <span class="o">*</span> <span class="mf">2.34</span>
     <span class="n">d</span> <span class="o">=</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
     <span class="k">print</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
@@ -714,7 +714,7 @@ example used above:</p>
 </td></tr></table></div>
 <p>In the terminal (<code class="docutils literal notranslate"><span class="pre">...</span></code> on a line by itself indicates output that is not
 presented for brevity):</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span class="hll">$ NUMBA_OPT=0 python demo_gdb.py
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll">$ NUMBA_OPT=0 python demo_gdb.py
 </span>Attaching to PID: 27157
 GNU gdb (GDB) Red Hat Enterprise Linux 8.0.1-36.el7
 ...
@@ -796,18 +796,18 @@ by example, debugging a ‘segfault’ (memory access violation signalling
 12
 13
 14
-15</pre></div></td><td class="code"><div class="highlight"><pre>  <span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">njit</span><span class="p">,</span> <span class="n">gdb_init</span>
+15</pre></div></td><td class="code"><div class="highlight"><pre><span></span>  <span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">njit</span><span class="p">,</span> <span class="n">gdb_init</span>
   <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 
   <span class="nd">@njit</span><span class="p">(</span><span class="n">debug</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
   <span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
-      <span class="n">gdb_init</span><span class="p">()</span> <span class="c"># instruct Numba to attach gdb at this location, but not to pause execution</span>
+      <span class="n">gdb_init</span><span class="p">()</span> <span class="c1"># instruct Numba to attach gdb at this location, but not to pause execution</span>
       <span class="n">b</span> <span class="o">=</span> <span class="n">a</span> <span class="o">+</span> <span class="mi">1</span>
       <span class="n">c</span> <span class="o">=</span> <span class="n">a</span> <span class="o">*</span> <span class="mf">2.34</span>
-      <span class="n">d</span> <span class="o">=</span> <span class="n">c</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="c"># access an address that is a) invalid b) out of the page</span>
+      <span class="n">d</span> <span class="o">=</span> <span class="n">c</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="c1"># access an address that is a) invalid b) out of the page</span>
       <span class="k">print</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
 
-  <span class="n">bad_index</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mf">1e9</span><span class="p">)</span> <span class="c"># this index is invalid</span>
+  <span class="n">bad_index</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mf">1e9</span><span class="p">)</span> <span class="c1"># this index is invalid</span>
   <span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
   <span class="n">r</span> <span class="o">=</span> <span class="n">foo</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">bad_index</span><span class="p">)</span>
   <span class="k">print</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
@@ -815,7 +815,7 @@ by example, debugging a ‘segfault’ (memory access violation signalling
 </td></tr></table></div>
 <p>In the terminal (<code class="docutils literal notranslate"><span class="pre">...</span></code> on a line by itself indicates output that is not
 presented for brevity):</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span class="hll">$ python demo_gdb_segfault.py
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll">$ python demo_gdb_segfault.py
 </span>Attaching to PID: 5444
 GNU gdb (GDB) Red Hat Enterprise Linux 8.0.1-36.el7
 ...
@@ -852,17 +852,17 @@ the type needs looking up. The type of <code class="docutils literal notranslate
 <code class="docutils literal notranslate"><span class="pre">c</span></code> based on its <code class="docutils literal notranslate"><span class="pre">DataModel</span></code> (look in the Numba source
 <code class="docutils literal notranslate"><span class="pre">numba.datamodel.models</span></code> for the layouts, the <code class="docutils literal notranslate"><span class="pre">ArrayModel</span></code> is presented
 below for ease).</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span class="k">class</span> <span class="nc">ArrayModel</span><span class="p">(</span><span class="n">StructModel</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dmm</span><span class="p">,</span> <span class="n">fe_type</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">ArrayModel</span><span class="p">(</span><span class="n">StructModel</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dmm</span><span class="p">,</span> <span class="n">fe_type</span><span class="p">):</span>
         <span class="n">ndim</span> <span class="o">=</span> <span class="n">fe_type</span><span class="o">.</span><span class="n">ndim</span>
         <span class="n">members</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="p">(</span><span class="s">&#39;meminfo&#39;</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">MemInfoPointer</span><span class="p">(</span><span class="n">fe_type</span><span class="o">.</span><span class="n">dtype</span><span class="p">)),</span>
-            <span class="p">(</span><span class="s">&#39;parent&#39;</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">pyobject</span><span class="p">),</span>
-            <span class="p">(</span><span class="s">&#39;nitems&#39;</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">intp</span><span class="p">),</span>
-            <span class="p">(</span><span class="s">&#39;itemsize&#39;</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">intp</span><span class="p">),</span>
-            <span class="p">(</span><span class="s">&#39;data&#39;</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">CPointer</span><span class="p">(</span><span class="n">fe_type</span><span class="o">.</span><span class="n">dtype</span><span class="p">)),</span>
-            <span class="p">(</span><span class="s">&#39;shape&#39;</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">UniTuple</span><span class="p">(</span><span class="n">types</span><span class="o">.</span><span class="n">intp</span><span class="p">,</span> <span class="n">ndim</span><span class="p">)),</span>
-            <span class="p">(</span><span class="s">&#39;strides&#39;</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">UniTuple</span><span class="p">(</span><span class="n">types</span><span class="o">.</span><span class="n">intp</span><span class="p">,</span> <span class="n">ndim</span><span class="p">)),</span>
+            <span class="p">(</span><span class="s1">&#39;meminfo&#39;</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">MemInfoPointer</span><span class="p">(</span><span class="n">fe_type</span><span class="o">.</span><span class="n">dtype</span><span class="p">)),</span>
+            <span class="p">(</span><span class="s1">&#39;parent&#39;</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">pyobject</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;nitems&#39;</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">intp</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;itemsize&#39;</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">intp</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">CPointer</span><span class="p">(</span><span class="n">fe_type</span><span class="o">.</span><span class="n">dtype</span><span class="p">)),</span>
+            <span class="p">(</span><span class="s1">&#39;shape&#39;</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">UniTuple</span><span class="p">(</span><span class="n">types</span><span class="o">.</span><span class="n">intp</span><span class="p">,</span> <span class="n">ndim</span><span class="p">)),</span>
+            <span class="p">(</span><span class="s1">&#39;strides&#39;</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">UniTuple</span><span class="p">(</span><span class="n">types</span><span class="o">.</span><span class="n">intp</span><span class="p">,</span> <span class="n">ndim</span><span class="p">)),</span>
         <span class="p">]</span>
 </pre></div>
 </div>
@@ -897,16 +897,16 @@ through the invocation of the <code class="xref py py-func docutils literal notr
 11
 12
 13
-14</pre></div></td><td class="code"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">njit</span><span class="p">,</span> <span class="n">gdb_init</span><span class="p">,</span> <span class="n">gdb_breakpoint</span>
+14</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">njit</span><span class="p">,</span> <span class="n">gdb_init</span><span class="p">,</span> <span class="n">gdb_breakpoint</span>
 
 <span class="nd">@njit</span><span class="p">(</span><span class="n">debug</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
-    <span class="n">gdb_init</span><span class="p">()</span> <span class="c"># instruct Numba to attach gdb at this location</span>
+    <span class="n">gdb_init</span><span class="p">()</span> <span class="c1"># instruct Numba to attach gdb at this location</span>
     <span class="n">b</span> <span class="o">=</span> <span class="n">a</span> <span class="o">+</span> <span class="mi">1</span>
-    <span class="n">gdb_breakpoint</span><span class="p">()</span> <span class="c"># instruct gdb to break at this location</span>
+    <span class="n">gdb_breakpoint</span><span class="p">()</span> <span class="c1"># instruct gdb to break at this location</span>
     <span class="n">c</span> <span class="o">=</span> <span class="n">a</span> <span class="o">*</span> <span class="mf">2.34</span>
     <span class="n">d</span> <span class="o">=</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
-    <span class="n">gdb_breakpoint</span><span class="p">()</span> <span class="c"># and to break again at this location</span>
+    <span class="n">gdb_breakpoint</span><span class="p">()</span> <span class="c1"># and to break again at this location</span>
     <span class="k">print</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
 
 <span class="n">r</span><span class="o">=</span> <span class="n">foo</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
@@ -915,7 +915,7 @@ through the invocation of the <code class="xref py py-func docutils literal notr
 </td></tr></table></div>
 <p>In the terminal (<code class="docutils literal notranslate"><span class="pre">...</span></code> on a line by itself indicates output that is not
 presented for brevity):</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span class="hll">$ NUMBA_OPT=0 python demo_gdb_breakpoints.py
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll">$ NUMBA_OPT=0 python demo_gdb_breakpoints.py
 </span>Attaching to PID: 20366
 GNU gdb (GDB) Red Hat Enterprise Linux 8.0.1-36.el7
 ...
@@ -1000,11 +1000,11 @@ function that is presenting a segfault for unknown reasons.</p>
 26
 27
 28
-29</pre></div></td><td class="code"><div class="highlight"><pre>  <span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">njit</span><span class="p">,</span> <span class="n">prange</span><span class="p">,</span> <span class="n">gdb_init</span><span class="p">,</span> <span class="n">gdb_breakpoint</span>
+29</pre></div></td><td class="code"><div class="highlight"><pre><span></span>  <span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">njit</span><span class="p">,</span> <span class="n">prange</span><span class="p">,</span> <span class="n">gdb_init</span><span class="p">,</span> <span class="n">gdb_breakpoint</span>
   <span class="kn">import</span> <span class="nn">ctypes</span>
 
   <span class="k">def</span> <span class="nf">get_free</span><span class="p">():</span>
-      <span class="n">lib</span> <span class="o">=</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">cdll</span><span class="o">.</span><span class="n">LoadLibrary</span><span class="p">(</span><span class="s">&#39;libc.so.6&#39;</span><span class="p">)</span>
+      <span class="n">lib</span> <span class="o">=</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">cdll</span><span class="o">.</span><span class="n">LoadLibrary</span><span class="p">(</span><span class="s1">&#39;libc.so.6&#39;</span><span class="p">)</span>
       <span class="n">free_binding</span> <span class="o">=</span> <span class="n">lib</span><span class="o">.</span><span class="n">free</span>
       <span class="n">free_binding</span><span class="o">.</span><span class="n">argtypes</span> <span class="o">=</span> <span class="p">[</span><span class="n">ctypes</span><span class="o">.</span><span class="n">c_void_p</span><span class="p">,]</span>
       <span class="n">free_binding</span><span class="o">.</span><span class="n">restype</span> <span class="o">=</span> <span class="bp">None</span>
@@ -1014,14 +1014,14 @@ function that is presenting a segfault for unknown reasons.</p>
 
   <span class="nd">@njit</span><span class="p">(</span><span class="n">debug</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">parallel</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
   <span class="k">def</span> <span class="nf">foo</span><span class="p">():</span>
-      <span class="n">gdb_init</span><span class="p">()</span> <span class="c"># instruct Numba to attach gdb at this location, but not to pause execution</span>
+      <span class="n">gdb_init</span><span class="p">()</span> <span class="c1"># instruct Numba to attach gdb at this location, but not to pause execution</span>
       <span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span>
       <span class="n">n</span> <span class="o">=</span> <span class="mi">9</span>
       <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">prange</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
-          <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">3</span> <span class="ow">and</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">8</span><span class="p">:</span> <span class="c"># iterations 4, 5, 6, 7 will break here</span>
+          <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">3</span> <span class="ow">and</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">8</span><span class="p">:</span> <span class="c1"># iterations 4, 5, 6, 7 will break here</span>
               <span class="n">gdb_breakpoint</span><span class="p">()</span>
 
-          <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">8</span><span class="p">:</span> <span class="c"># last iteration segfaults</span>
+          <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">8</span><span class="p">:</span> <span class="c1"># last iteration segfaults</span>
               <span class="n">work</span><span class="p">(</span><span class="mh">0xBADADD</span><span class="p">)</span>
 
           <span class="n">counter</span> <span class="o">+=</span> <span class="mi">1</span>
@@ -1034,7 +1034,7 @@ function that is presenting a segfault for unknown reasons.</p>
 <p>In the terminal (<code class="docutils literal notranslate"><span class="pre">...</span></code> on a line by itself indicates output that is not
 presented for brevity), note the setting of <code class="docutils literal notranslate"><span class="pre">NUMBA_NUM_THREADS</span></code> to 4 to ensure
 that there are 4 threads running in the parallel section:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span class="hll">$ NUMBA_NUM_THREADS=4 NUMBA_OPT=0 python demo_gdb_threads.py
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll">$ NUMBA_NUM_THREADS=4 NUMBA_OPT=0 python demo_gdb_threads.py
 </span>Attaching to PID: 21462
 ...
 Attaching to process 21462
@@ -1144,21 +1144,21 @@ double precision divide and conqueror SVD function need debugging).</p>
 16
 17
 18
-19</pre></div></td><td class="code"><div class="highlight"><pre>  <span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">njit</span><span class="p">,</span> <span class="n">gdb</span>
+19</pre></div></td><td class="code"><div class="highlight"><pre><span></span>  <span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">njit</span><span class="p">,</span> <span class="n">gdb</span>
   <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 
   <span class="nd">@njit</span><span class="p">(</span><span class="n">debug</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
   <span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
-      <span class="c"># instruct Numba to attach gdb at this location and on launch, switch</span>
-      <span class="c"># breakpoint pending on , and then set a breakpoint on the function</span>
-      <span class="c"># _dgesdd, continue execution, and once the breakpoint is hit, backtrace</span>
-      <span class="n">gdb</span><span class="p">(</span><span class="s">&#39;-ex&#39;</span><span class="p">,</span> <span class="s">&#39;set breakpoint pending on&#39;</span><span class="p">,</span>
-          <span class="s">&#39;-ex&#39;</span><span class="p">,</span> <span class="s">&#39;b dgesdd_&#39;</span><span class="p">,</span>
-          <span class="s">&#39;-ex&#39;</span><span class="p">,</span><span class="s">&#39;c&#39;</span><span class="p">,</span>
-          <span class="s">&#39;-ex&#39;</span><span class="p">,</span><span class="s">&#39;bt&#39;</span><span class="p">)</span>
+      <span class="c1"># instruct Numba to attach gdb at this location and on launch, switch</span>
+      <span class="c1"># breakpoint pending on , and then set a breakpoint on the function</span>
+      <span class="c1"># _dgesdd, continue execution, and once the breakpoint is hit, backtrace</span>
+      <span class="n">gdb</span><span class="p">(</span><span class="s1">&#39;-ex&#39;</span><span class="p">,</span> <span class="s1">&#39;set breakpoint pending on&#39;</span><span class="p">,</span>
+          <span class="s1">&#39;-ex&#39;</span><span class="p">,</span> <span class="s1">&#39;b dgesdd_&#39;</span><span class="p">,</span>
+          <span class="s1">&#39;-ex&#39;</span><span class="p">,</span><span class="s1">&#39;c&#39;</span><span class="p">,</span>
+          <span class="s1">&#39;-ex&#39;</span><span class="p">,</span><span class="s1">&#39;bt&#39;</span><span class="p">)</span>
       <span class="n">b</span> <span class="o">=</span> <span class="n">a</span> <span class="o">+</span> <span class="mi">10</span>
       <span class="n">u</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">vh</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">svd</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
-      <span class="k">return</span> <span class="n">s</span> <span class="c"># just return singular values</span>
+      <span class="k">return</span> <span class="n">s</span> <span class="c1"># just return singular values</span>
 
   <span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">70.</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span>
   <span class="n">r</span> <span class="o">=</span> <span class="n">foo</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
@@ -1168,7 +1168,7 @@ double precision divide and conqueror SVD function need debugging).</p>
 <p>In the terminal (<code class="docutils literal notranslate"><span class="pre">...</span></code> on a line by itself indicates output that is not
 presented for brevity), note that no interaction is required to break and
 backtrace:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span class="hll">$ NUMBA_OPT=0 python demo_gdb_args.py
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll">$ NUMBA_OPT=0 python demo_gdb_args.py
 </span>Attaching to PID: 22300
 GNU gdb (GDB) Red Hat Enterprise Linux 8.0.1-36.el7
 ...
@@ -1275,7 +1275,7 @@ is sufficient to debug memory error with
 6
 7
 8
-9</pre></div></td><td class="code"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+9</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">cuda</span>
 
 <span class="nd">@cuda.jit</span><span class="p">(</span><span class="n">debug</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
@@ -1283,11 +1283,11 @@ is sufficient to debug memory error with
     <span class="n">arr</span><span class="p">[</span><span class="n">cuda</span><span class="o">.</span><span class="n">threadIdx</span><span class="o">.</span><span class="n">x</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
 
 <span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span>
-<span class="n">foo</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">32</span><span class="p">](</span><span class="n">arr</span><span class="p">)</span>   <span class="c"># more threads than array elements</span>
+<span class="n">foo</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">32</span><span class="p">](</span><span class="n">arr</span><span class="p">)</span>   <span class="c1"># more threads than array elements</span>
 </pre></div>
 </td></tr></table></div>
 <p>We can use <code class="docutils literal notranslate"><span class="pre">cuda-memcheck</span></code> to find the memory error:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre>$ cuda-memcheck python chk_cuda_debug.py
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ cuda-memcheck python chk_cuda_debug.py
 ========= CUDA-MEMCHECK
 ========= Invalid __global__ write of size 8
 =========     at 0x00000148 in /home/user/chk_cuda_debug.py:6:cudapy::__main__::foo$241(Array&lt;__int64, int=1, C, mutable, aligned&gt;)

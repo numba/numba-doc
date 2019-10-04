@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>1.10. Automatic parallelization with @jit &#8212; Numba 0.46.0.dev0+363.g2da803c-py2.7-linux-x86_64.egg documentation</title>
+    <title>1.10. Automatic parallelization with @jit &#8212; Numba 0.46.0.dev0+566.g5bd018f-py3.7-linux-x86_64.egg documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/numba-docs.css" />
@@ -12,10 +12,6 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
-    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="1.11. Using the @stencil decorator" href="stencil.html" />
@@ -24,6 +20,10 @@
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-sphinx.js "></script>
 
   </head><body>
 
@@ -132,7 +132,7 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-md-12 content">
+    <div class="body col-md-12 content" role="main">
       
   <div class="section" id="automatic-parallelization-with-jit">
 <span id="numba-parallel"></span><h1>1.10. Automatic parallelization with <code class="docutils literal notranslate"><span class="pre">&#64;jit</span></code><a class="headerlink" href="#automatic-parallelization-with-jit" title="Permalink to this headline">¶</a></h1>
@@ -212,23 +212,23 @@ value right before entering the <code class="docutils literal notranslate"><span
 are supported for scalars and for arrays of arbitrary dimensions.</p>
 <p>The example below demonstrates a parallel loop with a
 reduction (<code class="docutils literal notranslate"><span class="pre">A</span></code> is a one-dimensional Numpy array):</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">numba</span> <span class="k">import</span> <span class="n">njit</span><span class="p">,</span> <span class="n">prange</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">numba</span> <span class="k">import</span> <span class="n">njit</span><span class="p">,</span> <span class="n">prange</span>
 
-<span class="nd">@njit</span><span class="p">(</span><span class="n">parallel</span><span class="o">=</span><span class="k">True</span><span class="p">)</span>
+<span class="nd">@njit</span><span class="p">(</span><span class="n">parallel</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">prange_test</span><span class="p">(</span><span class="n">A</span><span class="p">):</span>
     <span class="n">s</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="c"># Without &quot;parallel=True&quot; in the jit-decorator</span>
-    <span class="c"># the prange statement is equivalent to range</span>
+    <span class="c1"># Without &quot;parallel=True&quot; in the jit-decorator</span>
+    <span class="c1"># the prange statement is equivalent to range</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">prange</span><span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
         <span class="n">s</span> <span class="o">+=</span> <span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">s</span>
 </pre></div>
 </div>
 <p>The following example demonstrates a product reduction on a two-dimensional array:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">numba</span> <span class="k">import</span> <span class="n">njit</span><span class="p">,</span> <span class="n">prange</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">numba</span> <span class="k">import</span> <span class="n">njit</span><span class="p">,</span> <span class="n">prange</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-<span class="nd">@njit</span><span class="p">(</span><span class="n">parallel</span><span class="o">=</span><span class="k">True</span><span class="p">)</span>
+<span class="nd">@njit</span><span class="p">(</span><span class="n">parallel</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">two_d_array_reduction_prod</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
     <span class="n">shp</span> <span class="o">=</span> <span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="mi">17</span><span class="p">)</span>
     <span class="n">result1</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">shp</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">int_</span><span class="p">)</span>
@@ -246,42 +246,42 @@ multiple parallel threads. The compiler may not detect such cases and then a rac
 would occur.</p>
 <p>The following example demonstrates such a case where a race condition in the execution of the
 parallel for-loop results in an incorrect return value:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">numba</span> <span class="k">import</span> <span class="n">njit</span><span class="p">,</span> <span class="n">prange</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">numba</span> <span class="k">import</span> <span class="n">njit</span><span class="p">,</span> <span class="n">prange</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-<span class="nd">@njit</span><span class="p">(</span><span class="n">parallel</span><span class="o">=</span><span class="k">True</span><span class="p">)</span>
+<span class="nd">@njit</span><span class="p">(</span><span class="n">parallel</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">prange_wrong_result</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
     <span class="n">n</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">prange</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
-        <span class="c"># accumulating into the same element of `y` from different</span>
-        <span class="c"># parallel iterations of the loop results in a race condition</span>
+        <span class="c1"># accumulating into the same element of `y` from different</span>
+        <span class="c1"># parallel iterations of the loop results in a race condition</span>
         <span class="n">y</span><span class="p">[:]</span> <span class="o">+=</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
 
     <span class="k">return</span> <span class="n">y</span>
 </pre></div>
 </div>
 <p>as does the following example where the accumulating element is explicitly specified:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">numba</span> <span class="k">import</span> <span class="n">njit</span><span class="p">,</span> <span class="n">prange</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">numba</span> <span class="k">import</span> <span class="n">njit</span><span class="p">,</span> <span class="n">prange</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-<span class="nd">@njit</span><span class="p">(</span><span class="n">parallel</span><span class="o">=</span><span class="k">True</span><span class="p">)</span>
+<span class="nd">@njit</span><span class="p">(</span><span class="n">parallel</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">prange_wrong_result</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
     <span class="n">n</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">prange</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
-        <span class="c"># accumulating into the same element of `y` from different</span>
-        <span class="c"># parallel iterations of the loop results in a race condition</span>
+        <span class="c1"># accumulating into the same element of `y` from different</span>
+        <span class="c1"># parallel iterations of the loop results in a race condition</span>
         <span class="n">y</span><span class="p">[</span><span class="n">i</span> <span class="o">%</span> <span class="mi">4</span><span class="p">]</span> <span class="o">+=</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
 
     <span class="k">return</span> <span class="n">y</span>
 </pre></div>
 </div>
 <p>whereas performing a whole array reduction is fine:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">numba</span> <span class="k">import</span> <span class="n">njit</span><span class="p">,</span> <span class="n">prange</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">numba</span> <span class="k">import</span> <span class="n">njit</span><span class="p">,</span> <span class="n">prange</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-<span class="nd">@njit</span><span class="p">(</span><span class="n">parallel</span><span class="o">=</span><span class="k">True</span><span class="p">)</span>
+<span class="nd">@njit</span><span class="p">(</span><span class="n">parallel</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">prange_ok_result_whole_arr</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
     <span class="n">n</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
@@ -291,10 +291,10 @@ parallel for-loop results in an incorrect return value:</p>
 </pre></div>
 </div>
 <p>as is creating a slice reference outside of the parallel reduction loop:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">numba</span> <span class="k">import</span> <span class="n">njit</span><span class="p">,</span> <span class="n">prange</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">numba</span> <span class="k">import</span> <span class="n">njit</span><span class="p">,</span> <span class="n">prange</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-<span class="nd">@njit</span><span class="p">(</span><span class="n">parallel</span><span class="o">=</span><span class="k">True</span><span class="p">)</span>
+<span class="nd">@njit</span><span class="p">(</span><span class="n">parallel</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">prange_ok_result_outer_slice</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
     <span class="n">n</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
@@ -309,7 +309,7 @@ parallel for-loop results in an incorrect return value:</p>
 <h2>1.10.3. Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
 <p>In this section, we give an example of how this feature helps
 parallelize Logistic Regression:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span class="nd">@numba</span><span class="o">.</span><span class="n">jit</span><span class="p">(</span><span class="n">nopython</span><span class="o">=</span><span class="k">True</span><span class="p">,</span> <span class="n">parallel</span><span class="o">=</span><span class="k">True</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@numba</span><span class="o">.</span><span class="n">jit</span><span class="p">(</span><span class="n">nopython</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">parallel</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">logistic_regression</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">iterations</span><span class="p">):</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">iterations</span><span class="p">):</span>
         <span class="n">w</span> <span class="o">-=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(((</span><span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">Y</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">w</span><span class="p">)))</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">*</span> <span class="n">Y</span><span class="p">),</span> <span class="n">X</span><span class="p">)</span>
@@ -358,7 +358,7 @@ the first is by setting the environment variable
 and print to <code class="docutils literal notranslate"><span class="pre">STDOUT</span></code>. The level of verbosity in the diagnostic information is
 controlled by an integer argument of value between 1 and 4 inclusive, 1 being
 the least verbose and 4 the most. For example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span class="nd">@njit</span><span class="p">(</span><span class="n">parallel</span><span class="o">=</span><span class="k">True</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@njit</span><span class="p">(</span><span class="n">parallel</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
     <span class="n">n</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
@@ -375,7 +375,7 @@ the least verbose and 4 the most. For example:</p>
 </pre></div>
 </div>
 <p>produces:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre>================================================================================
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>================================================================================
 ======= Parallel Accelerator Optimizing:  Function test, example.py (4)  =======
 ================================================================================
 
@@ -485,38 +485,38 @@ computation.</p>
 <dd><p class="first">Allocation hoisting is a specialized case of loop invariant code motion that
 is possible due to the design of some common NumPy allocation methods.
 Explanation of this technique is best driven by an example:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span class="nd">@njit</span><span class="p">(</span><span class="n">parallel</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@njit</span><span class="p">(</span><span class="n">parallel</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">prange</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
-        <span class="n">temp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">))</span> <span class="c"># &lt;--- Allocate a temporary array with np.zeros()</span>
+        <span class="n">temp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">))</span> <span class="c1"># &lt;--- Allocate a temporary array with np.zeros()</span>
         <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">50</span><span class="p">):</span>
             <span class="n">temp</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span>
 
-    <span class="c"># ...do something with temp</span>
+    <span class="c1"># ...do something with temp</span>
 </pre></div>
 </div>
 <p>internally, this is transformed to approximately the following:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span class="nd">@njit</span><span class="p">(</span><span class="n">parallel</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@njit</span><span class="p">(</span><span class="n">parallel</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">prange</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
-        <span class="n">temp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">))</span> <span class="c"># &lt;--- np.zeros() is rewritten as np.empty()</span>
-        <span class="n">temp</span><span class="p">[:]</span> <span class="o">=</span> <span class="mi">0</span>               <span class="c"># &lt;--- and then a zero initialisation</span>
+        <span class="n">temp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">))</span> <span class="c1"># &lt;--- np.zeros() is rewritten as np.empty()</span>
+        <span class="n">temp</span><span class="p">[:]</span> <span class="o">=</span> <span class="mi">0</span>               <span class="c1"># &lt;--- and then a zero initialisation</span>
         <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">50</span><span class="p">):</span>
             <span class="n">temp</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span>
 
-    <span class="c"># ...do something with temp</span>
+    <span class="c1"># ...do something with temp</span>
 </pre></div>
 </div>
 <p>then after hoisting:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span class="nd">@njit</span><span class="p">(</span><span class="n">parallel</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@njit</span><span class="p">(</span><span class="n">parallel</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
-    <span class="n">temp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">))</span> <span class="c"># &lt;--- allocation is hoisted as a loop invariant as `np.empty` is considered pure</span>
+    <span class="n">temp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">))</span> <span class="c1"># &lt;--- allocation is hoisted as a loop invariant as `np.empty` is considered pure</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">prange</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
-        <span class="n">temp</span><span class="p">[:]</span> <span class="o">=</span> <span class="mi">0</span>           <span class="c"># &lt;--- this remains as assignment is a side effect</span>
+        <span class="n">temp</span><span class="p">[:]</span> <span class="o">=</span> <span class="mi">0</span>           <span class="c1"># &lt;--- this remains as assignment is a side effect</span>
         <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">50</span><span class="p">):</span>
             <span class="n">temp</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span>
 
-    <span class="c"># ...do something with temp</span>
+    <span class="c1"># ...do something with temp</span>
 </pre></div>
 </div>
 <p class="last">it can be seen that the <code class="docutils literal notranslate"><span class="pre">np.zeros</span></code> allocation is split into an allocation
@@ -538,16 +538,16 @@ function with loops that have parallel semantics identified and enumerated.
 The <code class="docutils literal notranslate"><span class="pre">loop</span> <span class="pre">#ID</span></code> column on the right of the source code lines up with
 identified parallel loops. From the example, <code class="docutils literal notranslate"><span class="pre">#0</span></code> is <code class="docutils literal notranslate"><span class="pre">np.sin</span></code>, <code class="docutils literal notranslate"><span class="pre">#1</span></code>
 is <code class="docutils literal notranslate"><span class="pre">np.cos</span></code> and <code class="docutils literal notranslate"><span class="pre">#2</span></code> and <code class="docutils literal notranslate"><span class="pre">#3</span></code> are <code class="docutils literal notranslate"><span class="pre">prange()</span></code>:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span class="n">Parallel</span> <span class="n">loop</span> <span class="n">listing</span> <span class="k">for</span>  <span class="n">Function</span> <span class="n">test</span><span class="p">,</span> <span class="n">example</span><span class="o">.</span><span class="n">py</span> <span class="p">(</span><span class="mi">4</span><span class="p">)</span>
-<span class="o">--------------------------------------|</span><span class="n">loop</span> <span class="c">#ID</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">Parallel</span> <span class="n">loop</span> <span class="n">listing</span> <span class="k">for</span>  <span class="n">Function</span> <span class="n">test</span><span class="p">,</span> <span class="n">example</span><span class="o">.</span><span class="n">py</span> <span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<span class="o">--------------------------------------|</span><span class="n">loop</span> <span class="c1">#ID</span>
 <span class="nd">@njit</span><span class="p">(</span><span class="n">parallel</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>                  <span class="o">|</span>
 <span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>                          <span class="o">|</span>
     <span class="n">n</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>                    <span class="o">|</span>
-    <span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">---------------------|</span> <span class="c">#0</span>
-    <span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">a</span> <span class="o">*</span> <span class="n">a</span><span class="p">)</span><span class="o">-----------------|</span> <span class="c">#1</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">---------------------|</span> <span class="c1">#0</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">a</span> <span class="o">*</span> <span class="n">a</span><span class="p">)</span><span class="o">-----------------|</span> <span class="c1">#1</span>
     <span class="n">acc</span> <span class="o">=</span> <span class="mi">0</span>                           <span class="o">|</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">prange</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">2</span><span class="p">):</span><span class="o">-----------|</span> <span class="c">#3</span>
-        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">prange</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span><span class="o">-------|</span> <span class="c">#2</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">prange</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">2</span><span class="p">):</span><span class="o">-----------|</span> <span class="c1">#3</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">prange</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span><span class="o">-------|</span> <span class="c1">#2</span>
             <span class="n">acc</span> <span class="o">+=</span> <span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">b</span><span class="p">[</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>    <span class="o">|</span>
     <span class="k">return</span> <span class="n">acc</span>                        <span class="o">|</span>
 </pre></div>
@@ -566,7 +566,7 @@ optimizations/transforms taking place that are invisible to the user.</p>
 <dd><p class="first">This section describes the attempts made at fusing discovered
 loops noting which succeeded and which failed. In the case of failure to
 fuse a reason is given (e.g. dependency on other data). From the example:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre>--------------------------------- Fusing loops ---------------------------------
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>--------------------------------- Fusing loops ---------------------------------
 Attempting fusion of parallel loops (combines loops with similar properties)...
 Trying to fuse loops #0 and #1:
     - fusion succeeded: parallel for-loop #1 is fused into for-loop #0.
@@ -592,7 +592,7 @@ parallel region (this is to make before/after optimization output directly
 comparable). Multiple parallel regions may exist if there are loops which
 cannot be fused, in this case code within each region will execute in
 parallel, but each parallel region will run sequentially. From the example:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre>Parallel region 0:
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Parallel region 0:
 +--0 (parallel)
 +--1 (parallel)
 
@@ -615,7 +615,7 @@ no optimization has taken place yet.</p>
 optimization has taken place. Again, parallel regions are enumerated with
 their corresponding loops but this time loops which are fused or serialized
 are noted and a summary is presented. From the example:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre>Parallel region 0:
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Parallel region 0:
 +--0 (parallel, fused with loop(s): 1)
 
 
@@ -647,7 +647,7 @@ body of loop <code class="docutils literal notranslate"><span class="pre">#3</sp
 <li>any allocation hoisting that may have occurred.</li>
 </ul>
 <p>From the example:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre>Instruction hoisting:
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Instruction hoisting:
 loop #0:
 Failed to hoist the following:
     dependency: $arg_out_var.10 = getitem(value=x, index=$parfor__index_5.99)

@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>7. Developer Manual &#8212; Numba 0.46.0.dev0+363.g2da803c-py2.7-linux-x86_64.egg documentation</title>
+    <title>7. Developer Manual &#8212; Numba 0.46.0.dev0+566.g5bd018f-py3.7-linux-x86_64.egg documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/numba-docs.css" />
@@ -12,10 +12,6 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
-    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="7.1. Contributing to Numba" href="contributing.html" />
@@ -24,6 +20,10 @@
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-sphinx.js "></script>
 
   </head><body>
 
@@ -123,7 +123,7 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-md-12 content">
+    <div class="body col-md-12 content" role="main">
       
   <div class="section" id="developer-manual">
 <span id="id1"></span><h1>7. Developer Manual<a class="headerlink" href="#developer-manual" title="Permalink to this headline">¶</a></h1>
@@ -165,7 +165,8 @@
 <li class="toctree-l1"><a class="reference internal" href="numba-runtime.html">7.6. Notes on Numba Runtime</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="numba-runtime.html#memory-management">7.6.1. Memory Management</a></li>
 <li class="toctree-l2"><a class="reference internal" href="numba-runtime.html#recursion-support">7.6.2. Recursion Support</a></li>
-<li class="toctree-l2"><a class="reference internal" href="numba-runtime.html#future-plan">7.6.3. Future Plan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="numba-runtime.html#using-the-nrt-from-c-code">7.6.3. Using the NRT from C code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="numba-runtime.html#future-plan">7.6.4. Future Plan</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="rewrites.html">7.7. Using the Numba Rewrite Pass for Fun and Optimization</a><ul>
@@ -181,7 +182,8 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="listings.html">7.9. Listings</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="autogen_lower_listing.html">7.9.1. Lowering Listing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="listings.html#new-style-listings">7.9.1. New style listings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="listings.html#old-style-listings">7.9.2. Old style listings</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="stencil.html">7.10. Notes on stencils</a><ul>
@@ -191,29 +193,38 @@
 <li class="toctree-l2"><a class="reference internal" href="stencil.html#exceptions-raised">7.10.4. Exceptions raised</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="custom_pipeline.html">7.11. Notes on Custom Pipelines</a></li>
-<li class="toctree-l1"><a class="reference internal" href="environment.html">7.12. Environment Object</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="environment.html#the-implementation">7.12.1. The Implementation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="custom_pipeline.html">7.11. Customizing the Compiler</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="custom_pipeline.html#implementing-a-compiler-pass">7.11.1. Implementing a compiler pass</a></li>
+<li class="toctree-l2"><a class="reference internal" href="custom_pipeline.html#debugging-compiler-passes">7.11.2. Debugging compiler passes</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="hashing.html">7.13. Notes on Hashing</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="hashing.html#the-implementation">7.13.1. The Implementation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="inlining.html">7.12. Notes on Inlining</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="inlining.html#example-using-numba-jit">7.12.1. Example using <code class="docutils literal notranslate"><span class="pre">numba.jit()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="inlining.html#example-using-numba-extending-overload">7.12.2. Example using <code class="docutils literal notranslate"><span class="pre">numba.extending.overload()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="caching.html">7.14. Notes on Caching</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="caching.html#the-implementation">7.14.1. The Implementation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="environment.html">7.13. Environment Object</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="environment.html#the-implementation">7.13.1. The Implementation</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="literal.html">7.15. Notes on Literal Types</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="literal.html#literal-type">7.15.1. <code class="docutils literal notranslate"><span class="pre">Literal</span></code> Type</a></li>
-<li class="toctree-l2"><a class="reference internal" href="literal.html#specifying-for-literal-typing">7.15.2. Specifying for Literal Typing</a></li>
-<li class="toctree-l2"><a class="reference internal" href="literal.html#inside-extensions">7.15.3. Inside Extensions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hashing.html">7.14. Notes on Hashing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="hashing.html#the-implementation">7.14.1. The Implementation</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="roadmap.html">7.16. Numba Project Roadmap</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="roadmap.html#short-term-2019h1">7.16.1. Short Term: 2019H1</a></li>
-<li class="toctree-l2"><a class="reference internal" href="roadmap.html#medium-term-2019h2">7.16.2. Medium Term: 2019H2</a></li>
-<li class="toctree-l2"><a class="reference internal" href="roadmap.html#long-term-2020-and-beyond">7.16.3. Long Term: 2020 and beyond</a></li>
+<li class="toctree-l1"><a class="reference internal" href="caching.html">7.15. Notes on Caching</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="caching.html#the-implementation">7.15.1. The Implementation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="literal.html">7.16. Notes on Literal Types</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="literal.html#literal-type">7.16.1. <code class="docutils literal notranslate"><span class="pre">Literal</span></code> Type</a></li>
+<li class="toctree-l2"><a class="reference internal" href="literal.html#specifying-for-literal-typing">7.16.2. Specifying for Literal Typing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="literal.html#inside-extensions">7.16.3. Inside Extensions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="roadmap.html">7.17. Numba Project Roadmap</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="roadmap.html#short-term-2019h1">7.17.1. Short Term: 2019H1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="roadmap.html#medium-term-2019h2">7.17.2. Medium Term: 2019H2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="roadmap.html#long-term-2020-and-beyond">7.17.3. Long Term: 2020 and beyond</a></li>
 </ul>
 </li>
 </ul>

@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>7.15. Notes on Literal Types &#8212; Numba 0.46.0.dev0+363.g2da803c-py2.7-linux-x86_64.egg documentation</title>
+    <title>7.16. Notes on Literal Types &#8212; Numba 0.46.0.dev0+566.g5bd018f-py3.7-linux-x86_64.egg documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/numba-docs.css" />
@@ -12,18 +12,18 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
-    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="7.16. Numba Project Roadmap" href="roadmap.html" />
-    <link rel="prev" title="7.14. Notes on Caching" href="caching.html" />
+    <link rel="next" title="7.17. Numba Project Roadmap" href="roadmap.html" />
+    <link rel="prev" title="7.15. Notes on Caching" href="caching.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-sphinx.js "></script>
 
   </head><body>
 
@@ -77,14 +77,14 @@
   <ul class="dropdown-menu localtoc"
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul>
-<li><a class="reference internal" href="#">7.15. Notes on Literal Types</a><ul>
-<li><a class="reference internal" href="#literal-type">7.15.1. <code class="docutils literal notranslate"><span class="pre">Literal</span></code> Type</a></li>
-<li><a class="reference internal" href="#specifying-for-literal-typing">7.15.2. Specifying for Literal Typing</a><ul>
-<li><a class="reference internal" href="#code-example">7.15.2.1. Code Example</a></li>
-<li><a class="reference internal" href="#internal-details">7.15.2.2. Internal Details</a></li>
+<li><a class="reference internal" href="#">7.16. Notes on Literal Types</a><ul>
+<li><a class="reference internal" href="#literal-type">7.16.1. <code class="docutils literal notranslate"><span class="pre">Literal</span></code> Type</a></li>
+<li><a class="reference internal" href="#specifying-for-literal-typing">7.16.2. Specifying for Literal Typing</a><ul>
+<li><a class="reference internal" href="#code-example">7.16.2.1. Code Example</a></li>
+<li><a class="reference internal" href="#internal-details">7.16.2.2. Internal Details</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#inside-extensions">7.15.3. Inside Extensions</a></li>
+<li><a class="reference internal" href="#inside-extensions">7.16.3. Inside Extensions</a></li>
 </ul>
 </li>
 </ul>
@@ -96,11 +96,11 @@
               
                 
   <li>
-    <a href="caching.html" title="Previous Chapter: 7.14. Notes on Caching"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; 7.14. Notes o...</span>
+    <a href="caching.html" title="Previous Chapter: 7.15. Notes on Caching"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; 7.15. Notes o...</span>
     </a>
   </li>
   <li>
-    <a href="roadmap.html" title="Next Chapter: 7.16. Numba Project Roadmap"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">7.16. Numba P... &raquo;</span>
+    <a href="roadmap.html" title="Next Chapter: 7.17. Numba Project Roadmap"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">7.17. Numba P... &raquo;</span>
     </a>
   </li>
               
@@ -132,10 +132,10 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-md-12 content">
+    <div class="body col-md-12 content" role="main">
       
   <div class="section" id="notes-on-literal-types">
-<span id="developer-literally"></span><h1>7.15. Notes on Literal Types<a class="headerlink" href="#notes-on-literal-types" title="Permalink to this headline">¶</a></h1>
+<span id="developer-literally"></span><h1>7.16. Notes on Literal Types<a class="headerlink" href="#notes-on-literal-types" title="Permalink to this headline">¶</a></h1>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">This document describes an advanced feature designed to overcome
@@ -146,7 +146,7 @@ compliation to produce type stable code necessary for successful compilation in
 Numba. This can be achieved by propagating the literal value through the type
 system. Numba recognizes inline literal values as <a class="reference internal" href="#numba.types.Literal" title="numba.types.Literal"><code class="xref py py-class docutils literal notranslate"><span class="pre">numba.types.Literal</span></code></a>.
 For example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
     <span class="n">a</span> <span class="o">=</span> <span class="mi">123</span>
     <span class="k">return</span> <span class="n">bar</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
 </pre></div>
@@ -155,7 +155,7 @@ For example:</p>
 <code class="docutils literal notranslate"><span class="pre">bar()</span></code> can subsequently specialize its implementation knowing that the
 second argument is an <code class="docutils literal notranslate"><span class="pre">int</span></code> with the value <code class="docutils literal notranslate"><span class="pre">123</span></code>.</p>
 <div class="section" id="literal-type">
-<h2>7.15.1. <code class="docutils literal notranslate"><span class="pre">Literal</span></code> Type<a class="headerlink" href="#literal-type" title="Permalink to this headline">¶</a></h2>
+<h2>7.16.1. <code class="docutils literal notranslate"><span class="pre">Literal</span></code> Type<a class="headerlink" href="#literal-type" title="Permalink to this headline">¶</a></h2>
 <p>Classes and methods related to the <code class="docutils literal notranslate"><span class="pre">Literal</span></code> type.</p>
 <dl class="class">
 <dt id="numba.types.Literal">
@@ -186,7 +186,7 @@ function.</p>
 
 </div>
 <div class="section" id="specifying-for-literal-typing">
-<h2>7.15.2. Specifying for Literal Typing<a class="headerlink" href="#specifying-for-literal-typing" title="Permalink to this headline">¶</a></h2>
+<h2>7.16.2. Specifying for Literal Typing<a class="headerlink" href="#specifying-for-literal-typing" title="Permalink to this headline">¶</a></h2>
 <p>To specify a value as a <code class="docutils literal notranslate"><span class="pre">Literal</span></code> type in code scheduled for JIT compilation,
 use the following function:</p>
 <dl class="function">
@@ -212,7 +212,7 @@ function.</p>
 </dd></dl>
 
 <div class="section" id="code-example">
-<h3>7.15.2.1. Code Example<a class="headerlink" href="#code-example" title="Permalink to this headline">¶</a></h3>
+<h3>7.16.2.1. Code Example<a class="headerlink" href="#code-example" title="Permalink to this headline">¶</a></h3>
 <div class="literal-block-wrapper docutils container" id="id1">
 <div class="code-block-caption"><span class="caption-text">from <code class="docutils literal notranslate"><span class="pre">ex_literally_usage</span></code> of <code class="docutils literal notranslate"><span class="pre">examples/literally_usage.py</span></code></span><a class="headerlink" href="#id1" title="Permalink to this code">¶</a></div>
 <div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
@@ -248,7 +248,7 @@ function.</p>
 31
 32
 33
-34</pre></div></td><td class="code"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">numba</span>
+34</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numba</span>
 
 <span class="k">def</span> <span class="nf">power</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
     <span class="k">raise</span> <span class="ne">NotImplementedError</span>
@@ -256,30 +256,30 @@ function.</p>
 <span class="nd">@numba.extending.overload</span><span class="p">(</span><span class="n">power</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">ov_power</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">numba</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">Literal</span><span class="p">):</span>
-        <span class="c"># only if `n` is a literal</span>
+        <span class="c1"># only if `n` is a literal</span>
         <span class="k">if</span> <span class="n">n</span><span class="o">.</span><span class="n">literal_value</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
-            <span class="c"># special case: square</span>
-            <span class="k">print</span><span class="p">(</span><span class="s">&quot;square&quot;</span><span class="p">)</span>
+            <span class="c1"># special case: square</span>
+            <span class="k">print</span><span class="p">(</span><span class="s2">&quot;square&quot;</span><span class="p">)</span>
             <span class="k">return</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">n</span><span class="p">:</span> <span class="n">x</span> <span class="o">*</span> <span class="n">x</span>
         <span class="k">elif</span> <span class="n">n</span><span class="o">.</span><span class="n">literal_value</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
-            <span class="c"># special case: cubic</span>
-            <span class="k">print</span><span class="p">(</span><span class="s">&quot;cubic&quot;</span><span class="p">)</span>
+            <span class="c1"># special case: cubic</span>
+            <span class="k">print</span><span class="p">(</span><span class="s2">&quot;cubic&quot;</span><span class="p">)</span>
             <span class="k">return</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">n</span><span class="p">:</span> <span class="n">x</span> <span class="o">*</span> <span class="n">x</span> <span class="o">*</span> <span class="n">x</span>
 
-    <span class="k">print</span><span class="p">(</span><span class="s">&quot;generic&quot;</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;generic&quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">n</span><span class="p">:</span> <span class="n">x</span> <span class="o">**</span> <span class="n">n</span>
 
 <span class="nd">@numba.njit</span>
 <span class="k">def</span> <span class="nf">test_power</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">power</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">numba</span><span class="o">.</span><span class="n">literally</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
 
-<span class="c"># should print &quot;square&quot; and &quot;9&quot;</span>
+<span class="c1"># should print &quot;square&quot; and &quot;9&quot;</span>
 <span class="k">print</span><span class="p">(</span><span class="n">test_power</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
 
-<span class="c"># should print &quot;cubic&quot; and &quot;27&quot;</span>
+<span class="c1"># should print &quot;cubic&quot; and &quot;27&quot;</span>
 <span class="k">print</span><span class="p">(</span><span class="n">test_power</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
 
-<span class="c"># should print &quot;generic&quot; and &quot;81&quot;</span>
+<span class="c1"># should print &quot;generic&quot; and &quot;81&quot;</span>
 <span class="k">print</span><span class="p">(</span><span class="n">test_power</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
 
 </pre></div>
@@ -287,7 +287,7 @@ function.</p>
 </div>
 </div>
 <div class="section" id="internal-details">
-<h3>7.15.2.2. Internal Details<a class="headerlink" href="#internal-details" title="Permalink to this headline">¶</a></h3>
+<h3>7.16.2.2. Internal Details<a class="headerlink" href="#internal-details" title="Permalink to this headline">¶</a></h3>
 <p>Internally, the compiler raises a <code class="docutils literal notranslate"><span class="pre">ForceLiteralArgs</span></code> exception to signal
 the dispatcher to wrap specified arguments using the <code class="docutils literal notranslate"><span class="pre">Literal</span></code> type.</p>
 <dl class="class">
@@ -348,7 +348,7 @@ the <code class="docutils literal notranslate"><span class="pre">args</span></co
 </div>
 </div>
 <div class="section" id="inside-extensions">
-<h2>7.15.3. Inside Extensions<a class="headerlink" href="#inside-extensions" title="Permalink to this headline">¶</a></h2>
+<h2>7.16.3. Inside Extensions<a class="headerlink" href="#inside-extensions" title="Permalink to this headline">¶</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">&#64;overload</span></code> extensions can use <code class="docutils literal notranslate"><span class="pre">literally</span></code> inside the implementation body
 like in normal jit-code.</p>
 <p>Explicit handling of literal requirements is possible through use of the
@@ -371,11 +371,11 @@ following:</p>
 </table>
 <p class="rubric">Examples</p>
 <p>The following line:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">SentryLiteralArgs</span><span class="p">(</span><span class="n">literal_args</span><span class="p">)</span><span class="o">.</span><span class="n">for_pysig</span><span class="p">(</span><span class="n">pysig</span><span class="p">)</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">SentryLiteralArgs</span><span class="p">(</span><span class="n">literal_args</span><span class="p">)</span><span class="o">.</span><span class="n">for_pysig</span><span class="p">(</span><span class="n">pysig</span><span class="p">)</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>is equivalent to:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">sentry_literal_args</span><span class="p">(</span><span class="n">pysig</span><span class="p">,</span> <span class="n">literal_args</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sentry_literal_args</span><span class="p">(</span><span class="n">pysig</span><span class="p">,</span> <span class="n">literal_args</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">)</span>
 </pre></div>
 </div>
 <dl class="method">
@@ -448,7 +448,7 @@ following:</p>
 literally typed for a function with the python signature <em>pysig</em> and the
 list of literal argument names in <em>literal_args</em>.</p>
 <p>Alternatively, this is the same as:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span class="n">SentryLiteralArgs</span><span class="p">(</span><span class="n">literal_args</span><span class="p">)</span><span class="o">.</span><span class="n">for_pysig</span><span class="p">(</span><span class="n">pysig</span><span class="p">)</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">SentryLiteralArgs</span><span class="p">(</span><span class="n">literal_args</span><span class="p">)</span><span class="o">.</span><span class="n">for_pysig</span><span class="p">(</span><span class="n">pysig</span><span class="p">)</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 </pre></div>
 </div>
 </dd></dl>

@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>6.4. A guide to using @overload &#8212; Numba 0.46.0.dev0+363.g2da803c-py2.7-linux-x86_64.egg documentation</title>
+    <title>6.4. A guide to using @overload &#8212; Numba 0.46.0.dev0+566.g5bd018f-py3.7-linux-x86_64.egg documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/numba-docs.css" />
@@ -12,10 +12,6 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
-    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="6.5. Registering Extensions with Entry Points" href="entrypoints.html" />
@@ -24,6 +20,10 @@
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-sphinx.js "></script>
 
   </head><body>
 
@@ -127,7 +127,7 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-md-12 content">
+    <div class="body col-md-12 content" role="main">
       
   <div class="section" id="a-guide-to-using-overload">
 <span id="overloading-guide"></span><h1>6.4. A guide to using <code class="docutils literal notranslate"><span class="pre">&#64;overload</span></code><a class="headerlink" href="#a-guide-to-using-overload" title="Permalink to this headline">¶</a></h1>
@@ -152,11 +152,11 @@ sound like an artificial example, especially because a Numba implementation of
 <code class="docutils literal notranslate"><span class="pre">numpy.linalg.norm</span></code> exists, it is largely pedagogical and serves to
 illustrate how and when to use <code class="docutils literal notranslate"><span class="pre">&#64;overload</span></code>).</p>
 <p>The skeleton might look something like this:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span class="k">def</span> <span class="nf">algorithm</span><span class="p">():</span>
-    <span class="c"># setup</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">algorithm</span><span class="p">():</span>
+    <span class="c1"># setup</span>
     <span class="n">v</span> <span class="o">=</span> <span class="o">...</span>
-    <span class="k">while</span> <span class="k">True</span><span class="p">:</span>
-        <span class="c"># take a step</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="c1"># take a step</span>
         <span class="n">d</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">d</span> <span class="o">&lt;</span> <span class="n">tolerance</span><span class="p">:</span>
             <span class="k">break</span>
@@ -168,31 +168,31 @@ it to accelerate your function. However, after adding the
 decorator, Numba complains that <code class="docutils literal notranslate"><span class="pre">scipy.linalg.norm</span></code> isn’t supported. From
 looking at the documentation, you realize that a norm is probably fairly easy
 to implement using NumPy. A good starting point is the following template.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span class="c"># Declare that function `myfunc` is going to be overloaded (have a</span>
-<span class="c"># substitutable Numba implementation)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Declare that function `myfunc` is going to be overloaded (have a</span>
+<span class="c1"># substitutable Numba implementation)</span>
 <span class="nd">@overload</span><span class="p">(</span><span class="n">myfunc</span><span class="p">)</span>
-<span class="c"># Define the overload function with formal arguments</span>
-<span class="c"># these arguments must be matched in the inner function implementation</span>
+<span class="c1"># Define the overload function with formal arguments</span>
+<span class="c1"># these arguments must be matched in the inner function implementation</span>
 <span class="k">def</span> <span class="nf">jit_myfunc</span><span class="p">(</span><span class="n">arg0</span><span class="p">,</span> <span class="n">arg1</span><span class="p">,</span> <span class="n">arg2</span><span class="p">,</span> <span class="o">...</span><span class="p">):</span>
-    <span class="c"># This scope is for typing, access is available to the *type* of all</span>
-    <span class="c"># arguments. This information can be used to change the behaviour of the</span>
-    <span class="c"># implementing function and check that the types are actually supported</span>
-    <span class="c"># by the implementation.</span>
+    <span class="c1"># This scope is for typing, access is available to the *type* of all</span>
+    <span class="c1"># arguments. This information can be used to change the behaviour of the</span>
+    <span class="c1"># implementing function and check that the types are actually supported</span>
+    <span class="c1"># by the implementation.</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="n">arg0</span><span class="p">)</span> <span class="c"># this will show the Numba type of arg0</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">arg0</span><span class="p">)</span> <span class="c1"># this will show the Numba type of arg0</span>
 
-    <span class="c"># This is the definition of the function that implements the `myfunc` work.</span>
-    <span class="c"># It does whatever algorithm is needed to implement myfunc.</span>
-    <span class="k">def</span> <span class="nf">myfunc_impl</span><span class="p">(</span><span class="n">arg0</span><span class="p">,</span> <span class="n">arg1</span><span class="p">,</span> <span class="n">arg2</span><span class="p">,</span> <span class="o">...</span><span class="p">):</span> <span class="c"># match arguments to jit_myfunc</span>
-        <span class="c"># &lt; Implementation goes here &gt;</span>
-        <span class="k">return</span> <span class="c"># whatever needs to be returned by the algorithm</span>
+    <span class="c1"># This is the definition of the function that implements the `myfunc` work.</span>
+    <span class="c1"># It does whatever algorithm is needed to implement myfunc.</span>
+    <span class="k">def</span> <span class="nf">myfunc_impl</span><span class="p">(</span><span class="n">arg0</span><span class="p">,</span> <span class="n">arg1</span><span class="p">,</span> <span class="n">arg2</span><span class="p">,</span> <span class="o">...</span><span class="p">):</span> <span class="c1"># match arguments to jit_myfunc</span>
+        <span class="c1"># &lt; Implementation goes here &gt;</span>
+        <span class="k">return</span> <span class="c1"># whatever needs to be returned by the algorithm</span>
 
-    <span class="c"># return the implementation</span>
+    <span class="c1"># return the implementation</span>
     <span class="k">return</span> <span class="n">myfunc_impl</span>
 </pre></div>
 </div>
 <p>After some deliberation and tinkering, you end up with the following code:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">numba</span> <span class="k">import</span> <span class="n">njit</span><span class="p">,</span> <span class="n">types</span>
 <span class="kn">from</span> <span class="nn">numba.extending</span> <span class="k">import</span> <span class="n">overload</span><span class="p">,</span> <span class="n">register_jitable</span>
 <span class="kn">from</span> <span class="nn">numba.errors</span> <span class="k">import</span> <span class="n">TypingError</span>
@@ -202,34 +202,34 @@ to implement using NumPy. A good starting point is the following template.</p>
 
 <span class="nd">@register_jitable</span>
 <span class="k">def</span> <span class="nf">_oneD_norm_2</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
-    <span class="c"># re-usable implementation of the 2-norm</span>
+    <span class="c1"># re-usable implementation of the 2-norm</span>
     <span class="n">val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">val</span> <span class="o">*</span> <span class="n">val</span><span class="p">))</span>
 
 
 <span class="nd">@overload</span><span class="p">(</span><span class="n">scipy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">jit_norm</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="nb">ord</span><span class="o">=</span><span class="k">None</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">jit_norm</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="nb">ord</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="nb">ord</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">Optional</span><span class="p">):</span>
         <span class="nb">ord</span> <span class="o">=</span> <span class="nb">ord</span><span class="o">.</span><span class="n">type</span>
-    <span class="c"># Reject non integer, floating-point or None types for ord</span>
+    <span class="c1"># Reject non integer, floating-point or None types for ord</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="nb">ord</span><span class="p">,</span> <span class="p">(</span><span class="n">types</span><span class="o">.</span><span class="n">Integer</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">Float</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">NoneType</span><span class="p">)):</span>
-        <span class="k">raise</span> <span class="n">TypingError</span><span class="p">(</span><span class="s">&quot;&#39;ord&#39; must be either integer or floating-point&quot;</span><span class="p">)</span>
-    <span class="c"># Reject non-ndarray types</span>
+        <span class="k">raise</span> <span class="n">TypingError</span><span class="p">(</span><span class="s2">&quot;&#39;ord&#39; must be either integer or floating-point&quot;</span><span class="p">)</span>
+    <span class="c1"># Reject non-ndarray types</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">Array</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="n">TypingError</span><span class="p">(</span><span class="s">&quot;Only accepts NumPy ndarray&quot;</span><span class="p">)</span>
-    <span class="c"># Reject ndarrays with non integer or floating-point dtype</span>
+        <span class="k">raise</span> <span class="n">TypingError</span><span class="p">(</span><span class="s2">&quot;Only accepts NumPy ndarray&quot;</span><span class="p">)</span>
+    <span class="c1"># Reject ndarrays with non integer or floating-point dtype</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="p">(</span><span class="n">types</span><span class="o">.</span><span class="n">Integer</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">Float</span><span class="p">)):</span>
-        <span class="k">raise</span> <span class="n">TypingError</span><span class="p">(</span><span class="s">&quot;Only integer and floating point types accepted&quot;</span><span class="p">)</span>
-    <span class="c"># Reject ndarrays with unsupported dimensionality</span>
+        <span class="k">raise</span> <span class="n">TypingError</span><span class="p">(</span><span class="s2">&quot;Only integer and floating point types accepted&quot;</span><span class="p">)</span>
+    <span class="c1"># Reject ndarrays with unsupported dimensionality</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">a</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&lt;=</span> <span class="mi">2</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="n">TypingError</span><span class="p">(</span><span class="s">&#39;3D and beyond are not allowed&#39;</span><span class="p">)</span>
-    <span class="c"># Implementation for scalars/0d-arrays</span>
+        <span class="k">raise</span> <span class="n">TypingError</span><span class="p">(</span><span class="s1">&#39;3D and beyond are not allowed&#39;</span><span class="p">)</span>
+    <span class="c1"># Implementation for scalars/0d-arrays</span>
     <span class="k">elif</span> <span class="n">a</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">a</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
-    <span class="c"># Implementation for vectors</span>
+    <span class="c1"># Implementation for vectors</span>
     <span class="k">elif</span> <span class="n">a</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="k">def</span> <span class="nf">_oneD_norm_x</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="nb">ord</span><span class="o">=</span><span class="k">None</span><span class="p">):</span>
-            <span class="k">if</span> <span class="nb">ord</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">or</span> <span class="nb">ord</span> <span class="ow">is</span> <span class="k">None</span><span class="p">:</span>
+        <span class="k">def</span> <span class="nf">_oneD_norm_x</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="nb">ord</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">ord</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">or</span> <span class="nb">ord</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">_oneD_norm_2</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
             <span class="k">elif</span> <span class="nb">ord</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
@@ -242,25 +242,25 @@ to implement using NumPy. A good starting point is the following template.</p>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="o">**</span><span class="nb">ord</span><span class="p">)</span><span class="o">**</span><span class="p">(</span><span class="mf">1.</span> <span class="o">/</span> <span class="nb">ord</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">_oneD_norm_x</span>
-    <span class="c"># Implementation for matrices</span>
+    <span class="c1"># Implementation for matrices</span>
     <span class="k">elif</span> <span class="n">a</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
-        <span class="k">def</span> <span class="nf">_two_D_norm_2</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="nb">ord</span><span class="o">=</span><span class="k">None</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">_two_D_norm_2</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="nb">ord</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">_oneD_norm_2</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">ravel</span><span class="p">())</span>
         <span class="k">return</span> <span class="n">_two_D_norm_2</span>
 
 
-<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&quot;__main__&quot;</span><span class="p">:</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
     <span class="nd">@njit</span>
-    <span class="k">def</span> <span class="nf">use</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="nb">ord</span><span class="o">=</span><span class="k">None</span><span class="p">):</span>
-        <span class="c"># simple test function to check that the overload works</span>
+    <span class="k">def</span> <span class="nf">use</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="nb">ord</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="c1"># simple test function to check that the overload works</span>
         <span class="k">return</span> <span class="n">scipy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="nb">ord</span><span class="p">)</span>
 
-    <span class="c"># spot check for vectors</span>
+    <span class="c1"># spot check for vectors</span>
     <span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">use</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">scipy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
 
-    <span class="c"># spot check for matrices</span>
+    <span class="c1"># spot check for matrices</span>
     <span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">9</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">use</span><span class="p">(</span><span class="n">b</span><span class="p">))</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">scipy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">b</span><span class="p">))</span>
@@ -321,15 +321,15 @@ input might also ‘work’ if given a bool or complex input).</p>
 <li><p class="first">When writing tests for exceptions, for example if adding tests to
 <code class="docutils literal notranslate"><span class="pre">numba/tests/test_np_functions.py</span></code>, you may encounter the following error
 message:</p>
-<div class="code highlight-default notranslate"><div class="highlight"><pre><span class="o">======================================================================</span>
+<div class="code highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">======================================================================</span>
 <span class="n">FAIL</span><span class="p">:</span> <span class="n">test_foo</span> <span class="p">(</span><span class="n">numba</span><span class="o">.</span><span class="n">tests</span><span class="o">.</span><span class="n">test_np_functions</span><span class="o">.</span><span class="n">TestNPFunctions</span><span class="p">)</span>
 <span class="o">----------------------------------------------------------------------</span>
 <span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">):</span>
-<span class="n">File</span> <span class="s">&quot;&lt;path&gt;/numba/numba/tests/support.py&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">645</span><span class="p">,</span> <span class="ow">in</span> <span class="n">tearDown</span>
+<span class="n">File</span> <span class="s2">&quot;&lt;path&gt;/numba/numba/tests/support.py&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">645</span><span class="p">,</span> <span class="ow">in</span> <span class="n">tearDown</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">memory_leak_teardown</span><span class="p">()</span>
-<span class="n">File</span> <span class="s">&quot;&lt;path&gt;/numba/numba/tests/support.py&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">619</span><span class="p">,</span> <span class="ow">in</span> <span class="n">memory_leak_teardown</span>
+<span class="n">File</span> <span class="s2">&quot;&lt;path&gt;/numba/numba/tests/support.py&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">619</span><span class="p">,</span> <span class="ow">in</span> <span class="n">memory_leak_teardown</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">assert_no_memory_leak</span><span class="p">()</span>
-<span class="n">File</span> <span class="s">&quot;&lt;path&gt;/numba/numba/tests/support.py&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">628</span><span class="p">,</span> <span class="ow">in</span> <span class="n">assert_no_memory_leak</span>
+<span class="n">File</span> <span class="s2">&quot;&lt;path&gt;/numba/numba/tests/support.py&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">628</span><span class="p">,</span> <span class="ow">in</span> <span class="n">assert_no_memory_leak</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">total_alloc</span><span class="p">,</span> <span class="n">total_free</span><span class="p">)</span>
 <span class="ne">AssertionError</span><span class="p">:</span> <span class="mi">36</span> <span class="o">!=</span> <span class="mi">35</span>
 </pre></div>
@@ -344,11 +344,11 @@ that available).</p>
 corresponding methods defined on the NumPy <code class="docutils literal notranslate"><span class="pre">ndarray</span></code> type. For example, the
 function <code class="docutils literal notranslate"><span class="pre">repeat</span></code> is available as a NumPy module level function and a
 member function on the <code class="docutils literal notranslate"><span class="pre">ndarray</span></code> class.</p>
-<div class="code python highlight-default notranslate"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
-<span class="c"># function</span>
+<span class="c1"># function</span>
 <span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
-<span class="c"># method</span>
+<span class="c1"># method</span>
 <span class="n">a</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -356,10 +356,10 @@ member function on the <code class="docutils literal notranslate"><span class="p
 <code class="docutils literal notranslate"><span class="pre">&#64;overload_method</span></code> and reuse it. Just be sure to check that NumPy doesn’t
 diverge in the implementations of its function/method.</p>
 <p>As an example, the <code class="docutils literal notranslate"><span class="pre">repeat</span></code> function/method:</p>
-<div class="code python highlight-default notranslate"><div class="highlight"><pre><span class="nd">@extending</span><span class="o">.</span><span class="n">overload_method</span><span class="p">(</span><span class="n">types</span><span class="o">.</span><span class="n">Array</span><span class="p">,</span> <span class="s">&#39;repeat&#39;</span><span class="p">)</span>
+<div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@extending</span><span class="o">.</span><span class="n">overload_method</span><span class="p">(</span><span class="n">types</span><span class="o">.</span><span class="n">Array</span><span class="p">,</span> <span class="s1">&#39;repeat&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">array_repeat</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">repeats</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">array_repeat_impl</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">repeat</span><span class="p">):</span>
-        <span class="c"># np.repeat has already been overloaded</span>
+        <span class="c1"># np.repeat has already been overloaded</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">repeat</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">array_repeat_impl</span>

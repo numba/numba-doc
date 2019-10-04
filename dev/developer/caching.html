@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>7.14. Notes on Caching &#8212; Numba 0.46.0.dev0+363.g2da803c-py2.7-linux-x86_64.egg documentation</title>
+    <title>7.15. Notes on Caching &#8212; Numba 0.46.0.dev0+566.g5bd018f-py3.7-linux-x86_64.egg documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/numba-docs.css" />
@@ -12,18 +12,18 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
-    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="7.15. Notes on Literal Types" href="literal.html" />
-    <link rel="prev" title="7.13. Notes on Hashing" href="hashing.html" />
+    <link rel="next" title="7.16. Notes on Literal Types" href="literal.html" />
+    <link rel="prev" title="7.14. Notes on Hashing" href="hashing.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-sphinx.js "></script>
 
   </head><body>
 
@@ -77,14 +77,14 @@
   <ul class="dropdown-menu localtoc"
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul>
-<li><a class="reference internal" href="#">7.14. Notes on Caching</a><ul>
-<li><a class="reference internal" href="#the-implementation">7.14.1. The Implementation</a><ul>
-<li><a class="reference internal" href="#requirements-for-cacheability">7.14.1.1. Requirements for Cacheability</a></li>
-<li><a class="reference internal" href="#features-compatible-with-caching">7.14.1.2. Features Compatible with Caching</a></li>
-<li><a class="reference internal" href="#caching-limitations">7.14.1.3. Caching Limitations</a></li>
-<li><a class="reference internal" href="#cache-sharing">7.14.1.4. Cache Sharing</a></li>
-<li><a class="reference internal" href="#cache-clearing">7.14.1.5. Cache Clearing</a></li>
-<li><a class="reference internal" href="#related-environment-variables">7.14.1.6. Related Environment Variables</a></li>
+<li><a class="reference internal" href="#">7.15. Notes on Caching</a><ul>
+<li><a class="reference internal" href="#the-implementation">7.15.1. The Implementation</a><ul>
+<li><a class="reference internal" href="#requirements-for-cacheability">7.15.1.1. Requirements for Cacheability</a></li>
+<li><a class="reference internal" href="#features-compatible-with-caching">7.15.1.2. Features Compatible with Caching</a></li>
+<li><a class="reference internal" href="#caching-limitations">7.15.1.3. Caching Limitations</a></li>
+<li><a class="reference internal" href="#cache-sharing">7.15.1.4. Cache Sharing</a></li>
+<li><a class="reference internal" href="#cache-clearing">7.15.1.5. Cache Clearing</a></li>
+<li><a class="reference internal" href="#related-environment-variables">7.15.1.6. Related Environment Variables</a></li>
 </ul>
 </li>
 </ul>
@@ -98,11 +98,11 @@
               
                 
   <li>
-    <a href="hashing.html" title="Previous Chapter: 7.13. Notes on Hashing"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; 7.13. Notes o...</span>
+    <a href="hashing.html" title="Previous Chapter: 7.14. Notes on Hashing"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; 7.14. Notes o...</span>
     </a>
   </li>
   <li>
-    <a href="literal.html" title="Next Chapter: 7.15. Notes on Literal Types"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">7.15. Notes o... &raquo;</span>
+    <a href="literal.html" title="Next Chapter: 7.16. Notes on Literal Types"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">7.16. Notes o... &raquo;</span>
     </a>
   </li>
               
@@ -134,14 +134,14 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-md-12 content">
+    <div class="body col-md-12 content" role="main">
       
   <div class="section" id="notes-on-caching">
-<span id="developer-caching"></span><h1>7.14. Notes on Caching<a class="headerlink" href="#notes-on-caching" title="Permalink to this headline">¶</a></h1>
+<span id="developer-caching"></span><h1>7.15. Notes on Caching<a class="headerlink" href="#notes-on-caching" title="Permalink to this headline">¶</a></h1>
 <p>Numba supports caching of compiled functions into the filesystem for future
 use of the same functions.</p>
 <div class="section" id="the-implementation">
-<h2>7.14.1. The Implementation<a class="headerlink" href="#the-implementation" title="Permalink to this headline">¶</a></h2>
+<h2>7.15.1. The Implementation<a class="headerlink" href="#the-implementation" title="Permalink to this headline">¶</a></h2>
 <p>Caching is done by saving the compiled <em>object code</em>, the ELF object of the
 executable code.  By using the <em>object code</em>, cached functions have minimal
 overhead because no compilation is needed. The cached data is saved under the
@@ -150,7 +150,7 @@ stored in a <code class="docutils literal notranslate"><span class="pre">.nbi</s
 overloaded signatures compiled for the function. The <em>object code</em> is stored in
 files with an <code class="docutils literal notranslate"><span class="pre">.nbc</span></code> extension, one file per overload.</p>
 <div class="section" id="requirements-for-cacheability">
-<h3>7.14.1.1. Requirements for Cacheability<a class="headerlink" href="#requirements-for-cacheability" title="Permalink to this headline">¶</a></h3>
+<h3>7.15.1.1. Requirements for Cacheability<a class="headerlink" href="#requirements-for-cacheability" title="Permalink to this headline">¶</a></h3>
 <p>Developers should note the requirements of a function to permit it to be cached
 to ensure that the features they are working on are compatible with caching.</p>
 <p>Requirements for cacheable function:</p>
@@ -175,7 +175,7 @@ Linking should start from the leaf nodes of the dependency graph.</li>
 </ul>
 </div>
 <div class="section" id="features-compatible-with-caching">
-<h3>7.14.1.2. Features Compatible with Caching<a class="headerlink" href="#features-compatible-with-caching" title="Permalink to this headline">¶</a></h3>
+<h3>7.15.1.2. Features Compatible with Caching<a class="headerlink" href="#features-compatible-with-caching" title="Permalink to this headline">¶</a></h3>
 <p>The following features are explicitly verified to work with caching.</p>
 <ul class="simple">
 <li>ufuncs and gufuncs for the <code class="docutils literal notranslate"><span class="pre">cpu</span></code> and <code class="docutils literal notranslate"><span class="pre">parallel</span></code> target</li>
@@ -183,7 +183,7 @@ Linking should start from the leaf nodes of the dependency graph.</li>
 </ul>
 </div>
 <div class="section" id="caching-limitations">
-<h3>7.14.1.3. Caching Limitations<a class="headerlink" href="#caching-limitations" title="Permalink to this headline">¶</a></h3>
+<h3>7.15.1.3. Caching Limitations<a class="headerlink" href="#caching-limitations" title="Permalink to this headline">¶</a></h3>
 <p>This is a list of known limitation of the cache:</p>
 <ul class="simple">
 <li>Cache invalidation fails to recognize changes in symbols defined in a
@@ -194,7 +194,7 @@ function will not rebind to the new value of the global variable.</li>
 </ul>
 </div>
 <div class="section" id="cache-sharing">
-<span id="id1"></span><h3>7.14.1.4. Cache Sharing<a class="headerlink" href="#cache-sharing" title="Permalink to this headline">¶</a></h3>
+<span id="id1"></span><h3>7.15.1.4. Cache Sharing<a class="headerlink" href="#cache-sharing" title="Permalink to this headline">¶</a></h3>
 <p>It is safe to share and reuse the contents in the cache directory on a
 different machine. The cache remembers the CPU model and the available
 CPU features during compilation. If the CPU model and the CPU features do
@@ -207,7 +207,7 @@ then replaces the target cache file path with the temporary file. Numba is
 tolerant against lost cache files and lost cache entries.</p>
 </div>
 <div class="section" id="cache-clearing">
-<span id="id2"></span><h3>7.14.1.5. Cache Clearing<a class="headerlink" href="#cache-clearing" title="Permalink to this headline">¶</a></h3>
+<span id="id2"></span><h3>7.15.1.5. Cache Clearing<a class="headerlink" href="#cache-clearing" title="Permalink to this headline">¶</a></h3>
 <p>The cache is invalidated when the corresponding source file is modified.
 However, it is necessary sometimes to clear the cache directory manually.
 For instance, changes in the compiler will not be recognized because the source
@@ -217,7 +217,7 @@ files are not modified.</p>
 <code class="docutils literal notranslate"><span class="pre">OSError</span></code> exception to be raised at the compilation site.</p>
 </div>
 <div class="section" id="related-environment-variables">
-<h3>7.14.1.6. Related Environment Variables<a class="headerlink" href="#related-environment-variables" title="Permalink to this headline">¶</a></h3>
+<h3>7.15.1.6. Related Environment Variables<a class="headerlink" href="#related-environment-variables" title="Permalink to this headline">¶</a></h3>
 <p>See <a class="reference internal" href="../reference/envvars.html#numba-envvars-caching"><span class="std std-ref">env-vars for caching</span></a>.</p>
 </div>
 </div>

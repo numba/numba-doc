@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>7.5. Notes on generators &#8212; Numba 0.46.0.dev0+363.g2da803c-py2.7-linux-x86_64.egg documentation</title>
+    <title>7.5. Notes on generators &#8212; Numba 0.46.0.dev0+566.g5bd018f-py3.7-linux-x86_64.egg documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/numba-docs.css" />
@@ -12,10 +12,6 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
-    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="7.6. Notes on Numba Runtime" href="numba-runtime.html" />
@@ -24,6 +20,10 @@
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-sphinx.js "></script>
 
   </head><body>
 
@@ -136,7 +136,7 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-md-12 content">
+    <div class="body col-md-12 content" role="main">
       
   <div class="section" id="notes-on-generators">
 <span id="arch-generators"></span><h1>7.5. Notes on generators<a class="headerlink" href="#notes-on-generators" title="Permalink to this headline">¶</a></h1>
@@ -156,13 +156,13 @@ is resumed when <a class="reference external" href="https://docs.python.org/3/li
 <div class="section" id="function-analysis">
 <h2>7.5.2. Function analysis<a class="headerlink" href="#function-analysis" title="Permalink to this headline">¶</a></h2>
 <p>Suppose we have the following simple generator function:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span class="k">def</span> <span class="nf">gen</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">gen</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
     <span class="k">yield</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
     <span class="k">yield</span> <span class="n">x</span> <span class="o">-</span> <span class="n">y</span>
 </pre></div>
 </div>
 <p>Here is its CPython bytecode, as printed out using <a class="reference external" href="https://docs.python.org/3/library/dis.html#dis.dis" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">dis.dis()</span></code></a>:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span class="mi">7</span>           <span class="mi">0</span> <span class="n">LOAD_FAST</span>                <span class="mi">0</span> <span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">7</span>           <span class="mi">0</span> <span class="n">LOAD_FAST</span>                <span class="mi">0</span> <span class="p">(</span><span class="n">x</span><span class="p">)</span>
             <span class="mi">3</span> <span class="n">LOAD_FAST</span>                <span class="mi">1</span> <span class="p">(</span><span class="n">y</span><span class="p">)</span>
             <span class="mi">6</span> <span class="n">BINARY_ADD</span>
             <span class="mi">7</span> <span class="n">YIELD_VALUE</span>
@@ -173,13 +173,13 @@ is resumed when <a class="reference external" href="https://docs.python.org/3/li
            <span class="mi">15</span> <span class="n">BINARY_SUBTRACT</span>
            <span class="mi">16</span> <span class="n">YIELD_VALUE</span>
            <span class="mi">17</span> <span class="n">POP_TOP</span>
-           <span class="mi">18</span> <span class="n">LOAD_CONST</span>               <span class="mi">0</span> <span class="p">(</span><span class="k">None</span><span class="p">)</span>
+           <span class="mi">18</span> <span class="n">LOAD_CONST</span>               <span class="mi">0</span> <span class="p">(</span><span class="kc">None</span><span class="p">)</span>
            <span class="mi">21</span> <span class="n">RETURN_VALUE</span>
 </pre></div>
 </div>
 <p>When compiling this function with <span class="target" id="index-0"></span><a class="reference internal" href="../reference/envvars.html#envvar-NUMBA_DUMP_IR"><code class="xref std std-envvar docutils literal notranslate"><span class="pre">NUMBA_DUMP_IR</span></code></a> set to 1, the
 following information is printed out:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre>----------------------------------IR DUMP: gen----------------------------------
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>----------------------------------IR DUMP: gen----------------------------------
 label 0:
     x = arg(0, name=x)                       [&#39;x&#39;]
     y = arg(1, name=y)                       [&#39;y&#39;]
@@ -227,9 +227,9 @@ are restored from the saved generator state.</p>
 where appropriate.</p>
 </div>
 <p>Let’s go over the generator info again:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span class="n">generator</span> <span class="n">state</span> <span class="n">variables</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;$0.3&#39;</span><span class="p">,</span> <span class="s">&#39;$0.7&#39;</span><span class="p">,</span> <span class="s">&#39;x&#39;</span><span class="p">,</span> <span class="s">&#39;y&#39;</span><span class="p">]</span>
-<span class="k">yield</span> <span class="n">point</span> <span class="c">#1: live variables = [&#39;x&#39;, &#39;y&#39;], weak live variables = [&#39;$0.3&#39;]</span>
-<span class="k">yield</span> <span class="n">point</span> <span class="c">#2: live variables = [], weak live variables = [&#39;$0.7&#39;]</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">generator</span> <span class="n">state</span> <span class="n">variables</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;$0.3&#39;</span><span class="p">,</span> <span class="s1">&#39;$0.7&#39;</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">]</span>
+<span class="k">yield</span> <span class="n">point</span> <span class="c1">#1: live variables = [&#39;x&#39;, &#39;y&#39;], weak live variables = [&#39;$0.3&#39;]</span>
+<span class="k">yield</span> <span class="n">point</span> <span class="c1">#2: live variables = [], weak live variables = [&#39;$0.7&#39;]</span>
 </pre></div>
 </div>
 <p>Numba has computed the union of all live variables (denoted as “state
@@ -252,7 +252,7 @@ to ensure proper reference cleanup</li>
 layout of the generator structure, which will store the entire execution
 state of a generator.  Here is a sketch of the generator structure’s layout,
 in pseudo-code:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span class="n">struct</span> <span class="n">gen_struct_t</span> <span class="p">{</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">struct</span> <span class="n">gen_struct_t</span> <span class="p">{</span>
    <span class="n">int32_t</span> <span class="n">resume_index</span><span class="p">;</span>
    <span class="n">struct</span> <span class="n">gen_args_t</span> <span class="p">{</span>
       <span class="n">arg_0_t</span> <span class="n">arg0</span><span class="p">;</span>
@@ -286,7 +286,7 @@ computed above.</li>
 </ul>
 <p>Concretely, our example’s generator structure (assuming the generator
 function is called with floating-point numbers) is then:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre>struct gen_struct_t {
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>struct gen_struct_t {
    int32_t resume_index;
    struct gen_args_t {
       double arg0;
@@ -346,19 +346,19 @@ generator is destroyed without having been exhausted.</li>
 functions.  It starts with a trampoline which dispatches execution to the
 right resume point depending on the <em>resume index</em> stored in the generator
 structure.  Here is how the function start may look like in our example:</p>
-<div class="highlight-llvm notranslate"><div class="highlight"><pre><span class="k">define</span> <span class="k">i32</span> <span class="vg">@&quot;__main__.gen.next&quot;</span><span class="p">(</span>
-   <span class="kt">double</span><span class="p">*</span> <span class="k">nocapture</span> <span class="nv">%retptr</span><span class="p">,</span>
+<div class="highlight-llvm notranslate"><div class="highlight"><pre><span></span><span class="k">define</span> <span class="k">i32</span> <span class="vg">@&quot;__main__.gen.next&quot;</span><span class="p">(</span>
+   <span class="k">double</span><span class="p">*</span> <span class="k">nocapture</span> <span class="nv">%retptr</span><span class="p">,</span>
    <span class="p">{</span> <span class="k">i8</span><span class="p">*,</span> <span class="k">i32</span> <span class="p">}**</span> <span class="k">nocapture</span> <span class="k">readnone</span> <span class="nv">%excinfo</span><span class="p">,</span>
    <span class="k">i8</span><span class="p">*</span> <span class="k">nocapture</span> <span class="k">readnone</span> <span class="nv">%env</span><span class="p">,</span>
-   <span class="p">{</span> <span class="k">i32</span><span class="p">,</span> <span class="p">{</span> <span class="kt">double</span><span class="p">,</span> <span class="kt">double</span> <span class="p">},</span> <span class="p">{</span> <span class="kt">double</span><span class="p">,</span> <span class="kt">double</span><span class="p">,</span> <span class="kt">double</span><span class="p">,</span> <span class="kt">double</span> <span class="p">}</span> <span class="p">}*</span> <span class="k">nocapture</span> <span class="nv">%arg.gen</span><span class="p">)</span>
+   <span class="p">{</span> <span class="k">i32</span><span class="p">,</span> <span class="p">{</span> <span class="k">double</span><span class="p">,</span> <span class="k">double</span> <span class="p">},</span> <span class="p">{</span> <span class="k">double</span><span class="p">,</span> <span class="k">double</span><span class="p">,</span> <span class="k">double</span><span class="p">,</span> <span class="k">double</span> <span class="p">}</span> <span class="p">}*</span> <span class="k">nocapture</span> <span class="nv">%arg.gen</span><span class="p">)</span>
 <span class="p">{</span>
   <span class="nl">entry:</span>
-     <span class="nv">%gen.resume_index</span> <span class="p">=</span> <span class="k">getelementptr</span> <span class="p">{</span> <span class="k">i32</span><span class="p">,</span> <span class="p">{</span> <span class="kt">double</span><span class="p">,</span> <span class="kt">double</span> <span class="p">},</span> <span class="p">{</span> <span class="kt">double</span><span class="p">,</span> <span class="kt">double</span><span class="p">,</span> <span class="kt">double</span><span class="p">,</span> <span class="kt">double</span> <span class="p">}</span> <span class="p">}*</span> <span class="nv">%arg.gen</span><span class="p">,</span> <span class="k">i64</span> <span class="m">0</span><span class="p">,</span> <span class="k">i32</span> <span class="m">0</span>
+     <span class="nv">%gen.resume_index</span> <span class="p">=</span> <span class="k">getelementptr</span> <span class="p">{</span> <span class="k">i32</span><span class="p">,</span> <span class="p">{</span> <span class="k">double</span><span class="p">,</span> <span class="k">double</span> <span class="p">},</span> <span class="p">{</span> <span class="k">double</span><span class="p">,</span> <span class="k">double</span><span class="p">,</span> <span class="k">double</span><span class="p">,</span> <span class="k">double</span> <span class="p">}</span> <span class="p">}*</span> <span class="nv">%arg.gen</span><span class="p">,</span> <span class="k">i64</span> <span class="m">0</span><span class="p">,</span> <span class="k">i32</span> <span class="m">0</span>
      <span class="nv">%.47</span> <span class="p">=</span> <span class="k">load</span> <span class="k">i32</span><span class="p">*</span> <span class="nv">%gen.resume_index</span><span class="p">,</span> <span class="k">align</span> <span class="m">4</span>
-     <span class="k">switch</span> <span class="k">i32</span> <span class="nv">%.47</span><span class="p">,</span> <span class="kt">label</span> <span class="nv">%stop_iteration</span> <span class="p">[</span>
-       <span class="k">i32</span> <span class="m">0</span><span class="p">,</span> <span class="kt">label</span> <span class="nv">%B0</span>
-       <span class="k">i32</span> <span class="m">1</span><span class="p">,</span> <span class="kt">label</span> <span class="nv">%generator_resume1</span>
-       <span class="k">i32</span> <span class="m">2</span><span class="p">,</span> <span class="kt">label</span> <span class="nv">%generator_resume2</span>
+     <span class="k">switch</span> <span class="k">i32</span> <span class="nv">%.47</span><span class="p">,</span> <span class="k">label</span> <span class="nv">%stop_iteration</span> <span class="p">[</span>
+       <span class="k">i32</span> <span class="m">0</span><span class="p">,</span> <span class="k">label</span> <span class="nv">%B0</span>
+       <span class="k">i32</span> <span class="m">1</span><span class="p">,</span> <span class="k">label</span> <span class="nv">%generator_resume1</span>
+       <span class="k">i32</span> <span class="m">2</span><span class="p">,</span> <span class="k">label</span> <span class="nv">%generator_resume2</span>
      <span class="p">]</span>
 
   <span class="c">; rest of the function snipped</span>
@@ -373,7 +373,7 @@ represents the function’s start, <code class="docutils literal notranslate"><s
 (resp. second) yield point.</p>
 <p>After generation by LLVM, the whole native assembly code for this function
 may look like this (on x86-64):</p>
-<div class="highlight-asm notranslate"><div class="highlight"><pre>        <span class="na">.globl</span>  <span class="no">__main__.gen.next</span>
+<div class="highlight-asm notranslate"><div class="highlight"><pre><span></span>        <span class="na">.globl</span>  <span class="no">__main__.gen.next</span>
         <span class="na">.align</span>  <span class="mi">16</span><span class="p">,</span> <span class="mi">0x90</span>
 <span class="nl">__main__.gen.next:</span>
         <span class="nf">movl</span>    <span class="p">(</span><span class="nv">%rcx</span><span class="p">),</span> <span class="nv">%eax</span>

@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>7.6. Notes on Numba Runtime &#8212; Numba 0.46.0.dev0+363.g2da803c-py2.7-linux-x86_64.egg documentation</title>
+    <title>7.6. Notes on Numba Runtime &#8212; Numba 0.46.0.dev0+566.g5bd018f-py3.7-linux-x86_64.egg documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/numba-docs.css" />
@@ -12,10 +12,6 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
-    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="7.7. Using the Numba Rewrite Pass for Fun and Optimization" href="rewrites.html" />
@@ -24,6 +20,10 @@
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-sphinx.js "></script>
 
   </head><body>
 
@@ -88,7 +88,8 @@
 </ul>
 </li>
 <li><a class="reference internal" href="#recursion-support">7.6.2. Recursion Support</a></li>
-<li><a class="reference internal" href="#future-plan">7.6.3. Future Plan</a></li>
+<li><a class="reference internal" href="#using-the-nrt-from-c-code">7.6.3. Using the NRT from C code</a></li>
+<li><a class="reference internal" href="#future-plan">7.6.4. Future Plan</a></li>
 </ul>
 </li>
 </ul>
@@ -136,7 +137,7 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-md-12 content">
+    <div class="body col-md-12 content" role="main">
       
   <div class="section" id="notes-on-numba-runtime">
 <span id="arch-numba-runtime"></span><h1>7.6. Notes on Numba Runtime<a class="headerlink" href="#notes-on-numba-runtime" title="Permalink to this headline">¶</a></h1>
@@ -199,7 +200,7 @@ simplest way to know if the NRT is leaking.</p>
 <h3>7.6.1.6. Debugging Leaks in C<a class="headerlink" href="#debugging-leaks-in-c" title="Permalink to this headline">¶</a></h3>
 <p>The start of <a class="reference external" href="https://github.com/numba/numba/blob/master/numba/runtime/nrt.h">numba/runtime/nrt.h</a>
 has these lines:</p>
-<div class="highlight-C notranslate"><div class="highlight"><pre><span class="cm">/* Debugging facilities - enabled at compile-time */</span>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="cm">/* Debugging facilities - enabled at compile-time */</span>
 <span class="cm">/* #undef NDEBUG */</span>
 <span class="cp">#if 0</span><span class="c"></span>
 <span class="c">#   define NRT_Debug(X) X</span>
@@ -228,8 +229,89 @@ the abort function will be called, raising a <code class="docutils literal notra
 signature. The caller is safe to call it with arbitrary number of
 arguments.  Therefore, it is safe to be used inplace of the intended callee.</p>
 </div>
+<div class="section" id="using-the-nrt-from-c-code">
+<h2>7.6.3. Using the NRT from C code<a class="headerlink" href="#using-the-nrt-from-c-code" title="Permalink to this headline">¶</a></h2>
+<p>Externally compiled C code should use the <code class="docutils literal notranslate"><span class="pre">NRT_api_functions</span></code> struct as a
+function table to access the NRT API. The struct is defined in
+<a class="reference external" href="https://www.github.com/numba/numba/blob/master/numba/runtime/nrt_external.h">numba/runtime/nrt_external.h</a>. Users can use the utility function
+<code class="docutils literal notranslate"><span class="pre">numba.extending.include_path()</span></code> to determine the include directory for
+Numba provided C headers.</p>
+<div class="literal-block-wrapper docutils container" id="id1">
+<div class="code-block-caption"><span class="caption-text"><cite>numba/runtime/nrt_external.h</cite></span><a class="headerlink" href="#id1" title="Permalink to this code">¶</a></div>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="cp">#ifndef NUMBA_NRT_EXTERNAL_H_</span>
+<span class="cp">#define NUMBA_NRT_EXTERNAL_H_</span>
+
+<span class="cp">#include</span> <span class="cpf">&lt;stdlib.h&gt;</span><span class="cp"></span>
+
+<span class="k">typedef</span> <span class="k">struct</span> <span class="n">MemInfo</span> <span class="n">NRT_MemInfo</span><span class="p">;</span>
+
+<span class="k">typedef</span> <span class="kt">void</span> <span class="nf">NRT_managed_dtor</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">data</span><span class="p">);</span>
+
+
+<span class="k">typedef</span> <span class="k">struct</span> <span class="p">{</span>
+    <span class="cm">/* Methods to create MemInfos.</span>
+
+<span class="cm">    MemInfos are like smart pointers for objects that are managed by the Numba.</span>
+<span class="cm">    */</span>
+
+    <span class="cm">/* Allocate memory</span>
+
+<span class="cm">    *nbytes* is the number of bytes to be allocated</span>
+
+<span class="cm">    Returning a new reference.</span>
+<span class="cm">    */</span>
+    <span class="n">NRT_MemInfo</span><span class="o">*</span> <span class="p">(</span><span class="o">*</span><span class="n">allocate</span><span class="p">)(</span><span class="kt">size_t</span> <span class="n">nbytes</span><span class="p">);</span>
+
+    <span class="cm">/* Convert externally allocated memory into a MemInfo.</span>
+
+<span class="cm">    *data* is the memory pointer</span>
+<span class="cm">    *dtor* is the deallocator of the memory</span>
+<span class="cm">    */</span>
+    <span class="n">NRT_MemInfo</span><span class="o">*</span> <span class="p">(</span><span class="o">*</span><span class="n">manage_memory</span><span class="p">)(</span><span class="kt">void</span> <span class="o">*</span><span class="n">data</span><span class="p">,</span> <span class="n">NRT_managed_dtor</span> <span class="n">dtor</span><span class="p">);</span>
+
+    <span class="cm">/* Acquire a reference */</span>
+    <span class="kt">void</span> <span class="p">(</span><span class="o">*</span><span class="n">acquire</span><span class="p">)(</span><span class="n">NRT_MemInfo</span><span class="o">*</span> <span class="n">mi</span><span class="p">);</span>
+
+    <span class="cm">/* Release a reference */</span>
+    <span class="kt">void</span> <span class="p">(</span><span class="o">*</span><span class="n">release</span><span class="p">)(</span><span class="n">NRT_MemInfo</span><span class="o">*</span> <span class="n">mi</span><span class="p">);</span>
+
+    <span class="cm">/* Get MemInfo data pointer */</span>
+    <span class="kt">void</span><span class="o">*</span> <span class="p">(</span><span class="o">*</span><span class="n">get_data</span><span class="p">)(</span><span class="n">NRT_MemInfo</span><span class="o">*</span> <span class="n">mi</span><span class="p">);</span>
+
+<span class="p">}</span> <span class="n">NRT_api_functions</span><span class="p">;</span>
+
+
+
+<span class="cp">#endif </span><span class="cm">/* NUMBA_NRT_EXTERNAL_H_ */</span><span class="cp"></span>
+</pre></div>
+</div>
+</div>
+<p>Inside Numba compiled code, the <code class="docutils literal notranslate"><span class="pre">numba.unsafe.nrt.NRT_get_api()</span></code> intrinsic
+can be used to obtain a pointer to the <code class="docutils literal notranslate"><span class="pre">NRT_api_functions</span></code>.</p>
+<p>Here is an example that uses the <code class="docutils literal notranslate"><span class="pre">nrt_external.h</span></code>:</p>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;numba/runtime/nrt_external.h&quot;</span><span class="cp"></span>
+
+<span class="kt">void</span> <span class="nf">my_dtor</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">ptr</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">free</span><span class="p">(</span><span class="n">ptr</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">NRT_MemInfo</span><span class="o">*</span> <span class="nf">my_allocate</span><span class="p">(</span><span class="n">NRT_api_functions</span> <span class="o">*</span><span class="n">nrt</span><span class="p">)</span> <span class="p">{</span>
+    <span class="cm">/* heap allocate some memory */</span>
+    <span class="kt">void</span> <span class="o">*</span> <span class="n">data</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+    <span class="cm">/* wrap the allocated memory; yield a new reference */</span>
+    <span class="n">NRT_MemInfo</span> <span class="o">*</span><span class="n">mi</span> <span class="o">=</span> <span class="n">nrt</span><span class="o">-&gt;</span><span class="n">manage_memory</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">my_dtor</span><span class="p">);</span>
+    <span class="cm">/* acquire reference */</span>
+    <span class="n">nrt</span><span class="o">-&gt;</span><span class="n">acquire</span><span class="p">(</span><span class="n">mi</span><span class="p">);</span>
+    <span class="cm">/* release reference */</span>
+    <span class="n">nrt</span><span class="o">-&gt;</span><span class="n">release</span><span class="p">(</span><span class="n">mi</span><span class="p">);</span>
+    <span class="k">return</span> <span class="n">mi</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
 <div class="section" id="future-plan">
-<h2>7.6.3. Future Plan<a class="headerlink" href="#future-plan" title="Permalink to this headline">¶</a></h2>
+<h2>7.6.4. Future Plan<a class="headerlink" href="#future-plan" title="Permalink to this headline">¶</a></h2>
 <p>The plan for NRT is to make a standalone shared library that can be linked to
 Numba compiled code, including use within the Python interpreter and without
 the Python interpreter.  To make that work, we will be doing some refactoring:</p>
