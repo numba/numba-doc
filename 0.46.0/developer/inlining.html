@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>7.12. Notes on Inlining &#8212; Numba 0.46.0.dev0+566.g5bd018fd5.dirty-py3.6-macosx-10.7-x86_64.egg documentation</title>
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/numba-docs.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="7.13. Environment Object" href="environment.html" />
+    <link rel="prev" title="7.11. Customizing the Compiler" href="custom_pipeline.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html"><span><img src="../_static/numba_blue_icon_rgb.png"></span>
+          Numba</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.46</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../user/index.html">1. User Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/index.html">2. Reference Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cuda/index.html">3. Numba for CUDA GPUs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cuda-reference/index.html">4. CUDA Python Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../roc/index.html">5. Numba for AMD ROC GPUs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../extending/index.html">6. Extending Numba</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">7. Developer Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../proposals/index.html">8. Numba Enhancement Proposals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">9. Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release-notes.html">10. Release Notes</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">7.12. Notes on Inlining</a><ul>
+<li><a class="reference internal" href="#example-using-numba-jit">7.12.1. Example using <code class="docutils literal notranslate"><span class="pre">numba.jit()</span></code></a></li>
+<li><a class="reference internal" href="#example-using-numba-extending-overload">7.12.2. Example using <code class="docutils literal notranslate"><span class="pre">numba.extending.overload()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+  <li>
+    <a href="custom_pipeline.html" title="Previous Chapter: 7.11. Customizing the Compiler"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; 7.11. Customi...</span>
+    </a>
+  </li>
+  <li>
+    <a href="environment.html" title="Next Chapter: 7.13. Environment Object"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">7.13. Environ... &raquo;</span>
+    </a>
+  </li>
+              
+            
+            
+            
+            
+              <li class="hidden-sm">
+<div id="sourcelink">
+  <a href="../_sources/developer/inlining.rst.txt"
+     rel="nofollow">Source</a>
+</div></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <div class="section" id="notes-on-inlining">
+<h1>7.12. Notes on Inlining<a class="headerlink" href="#notes-on-inlining" title="Permalink to this headline">¶</a></h1>
+<p>There are occasions where it is useful to be able to inline a function
+at its call site, at the Numba IR level of representation. The decorators
+<a class="reference internal" href="../reference/jit-compilation.html#numba.jit" title="numba.jit"><code class="xref py py-func docutils literal notranslate"><span class="pre">numba.jit()</span></code></a> and <code class="xref py py-func docutils literal notranslate"><span class="pre">numba.extending.overload()</span></code> both
+support the keyword argument <code class="docutils literal notranslate"><span class="pre">inline</span></code>, to facilitate this behaviour.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">inline</span></code> keyword argument can be one of three values:</p>
+<ul>
+<li><p class="first">The string <code class="docutils literal notranslate"><span class="pre">'never'</span></code>, this is the default and results in the function not
+being inlined under any circumstances.</p>
+</li>
+<li><p class="first">The string <code class="docutils literal notranslate"><span class="pre">'always'</span></code>, this results in the function being inlined at all
+call sites.</p>
+</li>
+<li><p class="first">A python function that takes three arguments. The first argument is always the
+<code class="docutils literal notranslate"><span class="pre">ir.Expr</span></code> node that is the <code class="docutils literal notranslate"><span class="pre">call</span></code> requesting the inline, this is present
+to allow the function to make call contextually aware decisions. The second
+and third arguments are:</p>
+<ul>
+<li><p class="first">In the case of an untyped inline, i.e. that which occurs when using the
+<a class="reference internal" href="../reference/jit-compilation.html#numba.jit" title="numba.jit"><code class="xref py py-func docutils literal notranslate"><span class="pre">numba.jit()</span></code></a> family of decorators, both arguments are
+<code class="docutils literal notranslate"><span class="pre">numba.ir.FunctionIR</span></code> instances. The second argument corresponding to the
+IR of the caller, the third argument corresponding to the IR of the callee.</p>
+</li>
+<li><p class="first">In the case of a typed inline, i.e. that which occurs when using
+<code class="xref py py-func docutils literal notranslate"><span class="pre">numba.extending.overload()</span></code>, both arguments are instances of a
+<code class="docutils literal notranslate"><span class="pre">namedtuple</span></code> with fields (corresponding to their standard use in the
+compiler internals):</p>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">func_ir</span></code> - the function’s Numba IR.</li>
+<li><code class="docutils literal notranslate"><span class="pre">typemap</span></code> - the function’s type map.</li>
+<li><code class="docutils literal notranslate"><span class="pre">calltypes</span></code> - the call types of any calls in the function.</li>
+<li><code class="docutils literal notranslate"><span class="pre">signature</span></code> - the function’s signature.</li>
+</ul>
+<p>The second argument holds the information from the caller, the third holds
+the information from the callee.</p>
+</li>
+</ul>
+<p>In all cases the function should return True to inline and return False to not
+inline, this essentially permitting custom inlining rules (typical use might
+be cost models).</p>
+</li>
+</ul>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">No guarantee is made about the order in which functions are assessed
+for inlining or about the order in which they are inlined.</p>
+</div>
+<div class="section" id="example-using-numba-jit">
+<h2>7.12.1. Example using <a class="reference internal" href="../reference/jit-compilation.html#numba.jit" title="numba.jit"><code class="xref py py-func docutils literal notranslate"><span class="pre">numba.jit()</span></code></a><a class="headerlink" href="#example-using-numba-jit" title="Permalink to this headline">¶</a></h2>
+<p>An example of using all three options to <code class="docutils literal notranslate"><span class="pre">inline</span></code> in the <code class="xref py py-func docutils literal notranslate"><span class="pre">numba.njit()</span></code>
+decorator:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">numba</span> <span class="k">import</span> <span class="n">njit</span><span class="p">,</span> <span class="n">ir</span>
+<span class="kn">import</span> <span class="nn">numba</span>
+
+
+<span class="nd">@njit</span><span class="p">(</span><span class="n">inline</span><span class="o">=</span><span class="s1">&#39;never&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">never_inline</span><span class="p">():</span>
+    <span class="k">return</span> <span class="mi">100</span>
+
+
+<span class="nd">@njit</span><span class="p">(</span><span class="n">inline</span><span class="o">=</span><span class="s1">&#39;always&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">always_inline</span><span class="p">():</span>
+    <span class="k">return</span> <span class="mi">200</span>
+
+
+<span class="k">def</span> <span class="nf">sentinel_cost_model</span><span class="p">(</span><span class="n">expr</span><span class="p">,</span> <span class="n">caller_info</span><span class="p">,</span> <span class="n">callee_info</span><span class="p">):</span>
+    <span class="c1"># this cost model will return True (i.e. do inlining) if either:</span>
+    <span class="c1"># a) the callee IR contains an `ir.Const(37)`</span>
+    <span class="c1"># b) the caller IR contains an `ir.Const(13)` logically prior to the call</span>
+    <span class="c1">#    site</span>
+
+    <span class="c1"># check the callee</span>
+    <span class="k">for</span> <span class="n">blk</span> <span class="ow">in</span> <span class="n">callee_info</span><span class="o">.</span><span class="n">blocks</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">stmt</span> <span class="ow">in</span> <span class="n">blk</span><span class="o">.</span><span class="n">body</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">stmt</span><span class="p">,</span> <span class="n">ir</span><span class="o">.</span><span class="n">Assign</span><span class="p">):</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">stmt</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">ir</span><span class="o">.</span><span class="n">Const</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">stmt</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="mi">37</span><span class="p">:</span>
+                        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="c1"># check the caller</span>
+    <span class="n">before_expr</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">for</span> <span class="n">blk</span> <span class="ow">in</span> <span class="n">caller_info</span><span class="o">.</span><span class="n">blocks</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">stmt</span> <span class="ow">in</span> <span class="n">blk</span><span class="o">.</span><span class="n">body</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">stmt</span><span class="p">,</span> <span class="n">ir</span><span class="o">.</span><span class="n">Assign</span><span class="p">):</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">stmt</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">ir</span><span class="o">.</span><span class="n">Expr</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">stmt</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="n">expr</span><span class="p">:</span>
+                        <span class="n">before_expr</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">stmt</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">ir</span><span class="o">.</span><span class="n">Const</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">stmt</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="mi">13</span><span class="p">:</span>
+                        <span class="k">return</span> <span class="kc">True</span> <span class="o">&amp;</span> <span class="n">before_expr</span>
+    <span class="k">return</span> <span class="kc">False</span>
+
+
+<span class="nd">@njit</span><span class="p">(</span><span class="n">inline</span><span class="o">=</span><span class="n">sentinel_cost_model</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">maybe_inline1</span><span class="p">():</span>
+    <span class="c1"># Will not inline based on the callee IR with the declared cost model</span>
+    <span class="c1"># The following is ir.Const(300).</span>
+    <span class="k">return</span> <span class="mi">300</span>
+
+
+<span class="nd">@njit</span><span class="p">(</span><span class="n">inline</span><span class="o">=</span><span class="n">sentinel_cost_model</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">maybe_inline2</span><span class="p">():</span>
+    <span class="c1"># Will inline based on the callee IR with the declared cost model</span>
+    <span class="c1"># The following is ir.Const(37).</span>
+    <span class="k">return</span> <span class="mi">37</span>
+
+
+<span class="nd">@njit</span>
+<span class="k">def</span> <span class="nf">foo</span><span class="p">():</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">never_inline</span><span class="p">()</span>  <span class="c1"># will never inline</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">always_inline</span><span class="p">()</span>  <span class="c1"># will always inline</span>
+
+    <span class="c1"># will not inline as the function does not contain a magic constant known to</span>
+    <span class="c1"># the cost model, and the IR up to the call site does not contain a magic</span>
+    <span class="c1"># constant either</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="n">maybe_inline1</span><span class="p">()</span>
+
+    <span class="c1"># declare this magic constant to trigger inlining of maybe_inline1 in a</span>
+    <span class="c1"># subsequent call</span>
+    <span class="n">magic_const</span> <span class="o">=</span> <span class="mi">13</span>
+
+    <span class="c1"># will inline due to above constant declaration</span>
+    <span class="n">e</span> <span class="o">=</span> <span class="n">maybe_inline1</span><span class="p">()</span>
+
+    <span class="c1"># will inline as the maybe_inline2 function contains a magic constant known</span>
+    <span class="c1"># to the cost model</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">maybe_inline2</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span> <span class="o">+</span> <span class="n">c</span> <span class="o">+</span> <span class="n">d</span> <span class="o">+</span> <span class="n">e</span> <span class="o">+</span> <span class="n">magic_const</span>
+
+
+<span class="n">foo</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>which produces the following when executed (with a print of the IR after the
+legalization pass, enabled via the environment variable
+<code class="docutils literal notranslate"><span class="pre">NUMBA_DEBUG_PRINT_AFTER=&quot;ir_legalization&quot;</span></code>):</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>label 0:
+<span class="hll">    $0.1 = global(never_inline: CPUDispatcher(&lt;function never_inline at 0x7f890ccf9048&gt;)) [&#39;$0.1&#39;]
+</span><span class="hll">    $0.2 = call $0.1(func=$0.1, args=[], kws=(), vararg=None) [&#39;$0.1&#39;, &#39;$0.2&#39;]
+</span>    del $0.1                                 []
+    a = $0.2                                 [&#39;$0.2&#39;, &#39;a&#39;]
+    del $0.2                                 []
+    $0.3 = global(always_inline: CPUDispatcher(&lt;function always_inline at 0x7f890ccf9598&gt;)) [&#39;$0.3&#39;]
+    del $0.3                                 []
+<span class="hll">    $const0.1.0 = const(int, 200)            [&#39;$const0.1.0&#39;]
+</span>    $0.2.1 = $const0.1.0                     [&#39;$0.2.1&#39;, &#39;$const0.1.0&#39;]
+    del $const0.1.0                          []
+    $0.4 = $0.2.1                            [&#39;$0.2.1&#39;, &#39;$0.4&#39;]
+    del $0.2.1                               []
+    b = $0.4                                 [&#39;$0.4&#39;, &#39;b&#39;]
+    del $0.4                                 []
+<span class="hll">    $0.5 = global(maybe_inline1: CPUDispatcher(&lt;function maybe_inline1 at 0x7f890ccf9ae8&gt;)) [&#39;$0.5&#39;]
+</span><span class="hll">    $0.6 = call $0.5(func=$0.5, args=[], kws=(), vararg=None) [&#39;$0.5&#39;, &#39;$0.6&#39;]
+</span>    del $0.5                                 []
+    d = $0.6                                 [&#39;$0.6&#39;, &#39;d&#39;]
+    del $0.6                                 []
+<span class="hll">    $const0.7 = const(int, 13)               [&#39;$const0.7&#39;]
+</span><span class="hll">    magic_const = $const0.7                  [&#39;$const0.7&#39;, &#39;magic_const&#39;]
+</span>    del $const0.7                            []
+    $0.8 = global(maybe_inline1: CPUDispatcher(&lt;function maybe_inline1 at 0x7f890ccf9ae8&gt;)) [&#39;$0.8&#39;]
+    del $0.8                                 []
+<span class="hll">    $const0.1.2 = const(int, 300)            [&#39;$const0.1.2&#39;]
+</span>    $0.2.3 = $const0.1.2                     [&#39;$0.2.3&#39;, &#39;$const0.1.2&#39;]
+    del $const0.1.2                          []
+    $0.9 = $0.2.3                            [&#39;$0.2.3&#39;, &#39;$0.9&#39;]
+    del $0.2.3                               []
+    e = $0.9                                 [&#39;$0.9&#39;, &#39;e&#39;]
+    del $0.9                                 []
+    $0.10 = global(maybe_inline2: CPUDispatcher(&lt;function maybe_inline2 at 0x7f890ccf9b70&gt;)) [&#39;$0.10&#39;]
+    del $0.10                                []
+<span class="hll">    $const0.1.4 = const(int, 37)             [&#39;$const0.1.4&#39;]
+</span>    $0.2.5 = $const0.1.4                     [&#39;$0.2.5&#39;, &#39;$const0.1.4&#39;]
+    del $const0.1.4                          []
+    $0.11 = $0.2.5                           [&#39;$0.11&#39;, &#39;$0.2.5&#39;]
+    del $0.2.5                               []
+    c = $0.11                                [&#39;$0.11&#39;, &#39;c&#39;]
+    del $0.11                                []
+    $0.14 = a + b                            [&#39;$0.14&#39;, &#39;a&#39;, &#39;b&#39;]
+    del b                                    []
+    del a                                    []
+    $0.16 = $0.14 + c                        [&#39;$0.14&#39;, &#39;$0.16&#39;, &#39;c&#39;]
+    del c                                    []
+    del $0.14                                []
+    $0.18 = $0.16 + d                        [&#39;$0.16&#39;, &#39;$0.18&#39;, &#39;d&#39;]
+    del d                                    []
+    del $0.16                                []
+    $0.20 = $0.18 + e                        [&#39;$0.18&#39;, &#39;$0.20&#39;, &#39;e&#39;]
+    del e                                    []
+    del $0.18                                []
+    $0.22 = $0.20 + magic_const              [&#39;$0.20&#39;, &#39;$0.22&#39;, &#39;magic_const&#39;]
+    del magic_const                          []
+    del $0.20                                []
+    $0.23 = cast(value=$0.22)                [&#39;$0.22&#39;, &#39;$0.23&#39;]
+    del $0.22                                []
+    return $0.23                             [&#39;$0.23&#39;]
+</pre></div>
+</div>
+<p>Things to note in the above:</p>
+<ol class="arabic simple">
+<li>The call to the function <code class="docutils literal notranslate"><span class="pre">never_inline</span></code> remains as a call.</li>
+<li>The <code class="docutils literal notranslate"><span class="pre">always_inline</span></code> function has been inlined, note its
+<code class="docutils literal notranslate"><span class="pre">const(int,</span> <span class="pre">200)</span></code> in the caller body.</li>
+<li>There is a call to <code class="docutils literal notranslate"><span class="pre">maybe_inline1</span></code> before the <code class="docutils literal notranslate"><span class="pre">const(int,</span> <span class="pre">13)</span></code>
+declaration, the cost model prevented this from being inlined.</li>
+<li>After the <code class="docutils literal notranslate"><span class="pre">const(int,</span> <span class="pre">13)</span></code> the subsequent call to <code class="docutils literal notranslate"><span class="pre">maybe_inline1</span></code> has
+been inlined as shown by the <code class="docutils literal notranslate"><span class="pre">const(int,</span> <span class="pre">300)</span></code> in the caller body.</li>
+<li>The function <code class="docutils literal notranslate"><span class="pre">maybe_inline2</span></code> has been inlined as demonstrated by
+<code class="docutils literal notranslate"><span class="pre">const(int,</span> <span class="pre">37)</span></code> in the caller body.</li>
+<li>That dead code elimination has not been performed and as a result there are
+superfluous statements present in the IR.</li>
+</ol>
+</div>
+<div class="section" id="example-using-numba-extending-overload">
+<h2>7.12.2. Example using <code class="xref py py-func docutils literal notranslate"><span class="pre">numba.extending.overload()</span></code><a class="headerlink" href="#example-using-numba-extending-overload" title="Permalink to this headline">¶</a></h2>
+<p>An example of using inlining with the  <code class="xref py py-func docutils literal notranslate"><span class="pre">numba.extending.overload()</span></code>
+decorator. It is most interesting to note that if a function is supplied as the
+argument to <code class="docutils literal notranslate"><span class="pre">inline</span></code> a lot more information is available via the supplied
+function arguments for use in decision making. Also that different
+<code class="docutils literal notranslate"><span class="pre">&#64;overload</span></code> s can have different inlining behaviours, with multiple ways to
+achieve this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numba</span>
+<span class="kn">from</span> <span class="nn">numba.extending</span> <span class="k">import</span> <span class="n">overload</span>
+<span class="kn">from</span> <span class="nn">numba</span> <span class="k">import</span> <span class="n">njit</span><span class="p">,</span> <span class="n">types</span>
+
+
+<span class="k">def</span> <span class="nf">bar</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;A function stub to overload&quot;&quot;&quot;</span>
+    <span class="k">pass</span>
+
+
+<span class="nd">@overload</span><span class="p">(</span><span class="n">bar</span><span class="p">,</span> <span class="n">inline</span><span class="o">=</span><span class="s1">&#39;always&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">ol_bar_tuple</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="c1"># An overload that will always inline, there is a type guard so that this</span>
+    <span class="c1"># only applies to UniTuples.</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">UniTuple</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">impl</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">impl</span>
+
+
+<span class="k">def</span> <span class="nf">cost_model</span><span class="p">(</span><span class="n">expr</span><span class="p">,</span> <span class="n">caller</span><span class="p">,</span> <span class="n">callee</span><span class="p">):</span>
+    <span class="c1"># Only inline if the type of the argument is an Integer</span>
+    <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">caller</span><span class="o">.</span><span class="n">typemap</span><span class="p">[</span><span class="n">expr</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">name</span><span class="p">],</span> <span class="n">types</span><span class="o">.</span><span class="n">Integer</span><span class="p">)</span>
+
+
+<span class="nd">@overload</span><span class="p">(</span><span class="n">bar</span><span class="p">,</span> <span class="n">inline</span><span class="o">=</span><span class="n">cost_model</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">ol_bar_scalar</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="c1"># An overload that will inline based on a cost model, it only applies to</span>
+    <span class="c1"># scalar values in the numerical domain as per the type guard on Number</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">Number</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">impl</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">impl</span>
+
+
+<span class="nd">@njit</span>
+<span class="k">def</span> <span class="nf">foo</span><span class="p">():</span>
+
+    <span class="c1"># This will resolve via `ol_bar_tuple` as the argument is a types.UniTuple</span>
+    <span class="c1"># instance. It will always be inlined as specified in the decorator for this</span>
+    <span class="c1"># overload.</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">bar</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+
+    <span class="c1"># This will resolve via `ol_bar_scalar` as the argument is a types.Number</span>
+    <span class="c1"># instance, hence the cost_model will be used to determine whether to</span>
+    <span class="c1"># inline.</span>
+    <span class="c1"># The function will be inlined as the value 100 is an IntegerLiteral which</span>
+    <span class="c1"># is an instance of a types.Integer as required by the cost_model function.</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">bar</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+
+    <span class="c1"># This will also resolve via `ol_bar_scalar` as the argument is a</span>
+    <span class="c1"># types.Number instance, again the cost_model will be used to determine</span>
+    <span class="c1"># whether to inline.</span>
+    <span class="c1"># The function will not be inlined as the complex value is not an instance</span>
+    <span class="c1"># of a types.Integer as required by the cost_model function.</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">bar</span><span class="p">(</span><span class="mi">300</span><span class="n">j</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span> <span class="o">+</span> <span class="n">c</span>
+
+
+<span class="n">foo</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>which produces the following when executed (with a print of the IR after the
+legalization pass, enabled via the environment variable
+<code class="docutils literal notranslate"><span class="pre">NUMBA_DEBUG_PRINT_AFTER=&quot;ir_legalization&quot;</span></code>):</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>label 0:
+<span class="hll">    $const0.2 = const(tuple, (1, 2, 3))      [&#39;$const0.2&#39;]
+</span><span class="hll">    x.0 = $const0.2                          [&#39;$const0.2&#39;, &#39;x.0&#39;]
+</span><span class="hll">    del $const0.2                            []
+</span><span class="hll">    $const0.2.2 = const(int, 0)              [&#39;$const0.2.2&#39;]
+</span><span class="hll">    $0.3.3 = getitem(value=x.0, index=$const0.2.2) [&#39;$0.3.3&#39;, &#39;$const0.2.2&#39;, &#39;x.0&#39;]
+</span>    del x.0                                  []
+    del $const0.2.2                          []
+    $0.4.4 = $0.3.3                          [&#39;$0.3.3&#39;, &#39;$0.4.4&#39;]
+    del $0.3.3                               []
+    $0.3 = $0.4.4                            [&#39;$0.3&#39;, &#39;$0.4.4&#39;]
+    del $0.4.4                               []
+    a = $0.3                                 [&#39;$0.3&#39;, &#39;a&#39;]
+    del $0.3                                 []
+<span class="hll">    $const0.5 = const(int, 100)              [&#39;$const0.5&#39;]
+</span><span class="hll">    x.5 = $const0.5                          [&#39;$const0.5&#39;, &#39;x.5&#39;]
+</span><span class="hll">    del $const0.5                            []
+</span><span class="hll">    $const0.2.7 = const(int, 1)              [&#39;$const0.2.7&#39;]
+</span><span class="hll">    $0.3.8 = x.5 + $const0.2.7               [&#39;$0.3.8&#39;, &#39;$const0.2.7&#39;, &#39;x.5&#39;]
+</span><span class="hll">    del x.5                                  []
+</span><span class="hll">    del $const0.2.7                          []
+</span><span class="hll">    $0.4.9 = $0.3.8                          [&#39;$0.3.8&#39;, &#39;$0.4.9&#39;]
+</span>    del $0.3.8                               []
+    $0.6 = $0.4.9                            [&#39;$0.4.9&#39;, &#39;$0.6&#39;]
+    del $0.4.9                               []
+    b = $0.6                                 [&#39;$0.6&#39;, &#39;b&#39;]
+    del $0.6                                 []
+<span class="hll">    $0.7 = global(bar: &lt;function bar at 0x7f6c3710d268&gt;) [&#39;$0.7&#39;]
+</span><span class="hll">    $const0.8 = const(complex, 300j)         [&#39;$const0.8&#39;]
+</span><span class="hll">    $0.9 = call $0.7($const0.8, func=$0.7, args=[Var($const0.8, inline_overload_example.py (56))], kws=(), vararg=None) [&#39;$0.7&#39;, &#39;$0.9&#39;, &#39;$const0.8&#39;]
+</span>    del $const0.8                            []
+    del $0.7                                 []
+    c = $0.9                                 [&#39;$0.9&#39;, &#39;c&#39;]
+    del $0.9                                 []
+    $0.12 = a + b                            [&#39;$0.12&#39;, &#39;a&#39;, &#39;b&#39;]
+    del b                                    []
+    del a                                    []
+    $0.14 = $0.12 + c                        [&#39;$0.12&#39;, &#39;$0.14&#39;, &#39;c&#39;]
+    del c                                    []
+    del $0.12                                []
+    $0.15 = cast(value=$0.14)                [&#39;$0.14&#39;, &#39;$0.15&#39;]
+    del $0.14                                []
+    return $0.15                             [&#39;$0.15&#39;]
+</pre></div>
+</div>
+<p>Things to note in the above:</p>
+<ol class="arabic simple">
+<li>The first highlighted section is the always inlined overload for the
+<code class="docutils literal notranslate"><span class="pre">UniTuple</span></code> argument type.</li>
+<li>The second highlighted section is the overload for the <code class="docutils literal notranslate"><span class="pre">Number</span></code> argument
+type that has been inlined as the cost model function decided to do so as the
+argument was an <code class="docutils literal notranslate"><span class="pre">Integer</span></code> type instance.</li>
+<li>The third highlighted section is the overload for the <code class="docutils literal notranslate"><span class="pre">Number</span></code> argument
+type that has not inlined as the cost model function decided to reject it as
+the argument was an <code class="docutils literal notranslate"><span class="pre">Complex</span></code> type instance.</li>
+<li>That dead code elimination has not been performed and as a result there are
+superfluous statements present in the IR.</li>
+</ol>
+</div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2012, Anaconda, Inc..<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>
