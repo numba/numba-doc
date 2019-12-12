@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>2.6. Supported Python features &#8212; Numba 0.47.0.dev0+476.g50a00b1-py3.7-linux-x86_64.egg documentation</title>
+    <title>2.6. Supported Python features &#8212; Numba 0.47.0.dev0+537.gadfdcdd-py3.7-linux-x86_64.egg documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/numba-docs.css" />
@@ -95,18 +95,20 @@
 <li><a class="reference internal" href="#float-complex">2.6.2.2. float, complex</a></li>
 <li><a class="reference internal" href="#str">2.6.2.3. str</a></li>
 <li><a class="reference internal" href="#tuple">2.6.2.4. tuple</a></li>
-<li><a class="reference internal" href="#list">2.6.2.5. list</a><ul>
-<li><a class="reference internal" href="#list-reflection">2.6.2.5.1. List Reflection</a></li>
-<li><a class="reference internal" href="#typed-list">2.6.2.5.2. Typed List</a></li>
-<li><a class="reference internal" href="#list-comprehension">2.6.2.5.3. List comprehension</a></li>
+<li><a class="reference internal" href="#homogeneous-tuples">2.6.2.5. homogeneous tuples</a></li>
+<li><a class="reference internal" href="#heterogeneous-tuples">2.6.2.6. heterogeneous tuples</a></li>
+<li><a class="reference internal" href="#list">2.6.2.7. list</a><ul>
+<li><a class="reference internal" href="#list-reflection">2.6.2.7.1. List Reflection</a></li>
+<li><a class="reference internal" href="#typed-list">2.6.2.7.2. Typed List</a></li>
+<li><a class="reference internal" href="#list-comprehension">2.6.2.7.3. List comprehension</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#set">2.6.2.6. set</a><ul>
-<li><a class="reference internal" href="#typed-dict">2.6.2.6.1. Typed Dict</a></li>
+<li><a class="reference internal" href="#set">2.6.2.8. set</a><ul>
+<li><a class="reference internal" href="#typed-dict">2.6.2.8.1. Typed Dict</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#none">2.6.2.7. None</a></li>
-<li><a class="reference internal" href="#bytes-bytearray-memoryview">2.6.2.8. bytes, bytearray, memoryview</a></li>
+<li><a class="reference internal" href="#none">2.6.2.9. None</a></li>
+<li><a class="reference internal" href="#bytes-bytearray-memoryview">2.6.2.10. bytes, bytearray, memoryview</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#built-in-functions">2.6.3. Built-in functions</a><ul>
@@ -371,19 +373,123 @@ involve strings, where basic string operations are not the bottleneck.</p>
 </div>
 <div class="section" id="tuple">
 <h3>2.6.2.4. tuple<a class="headerlink" href="#tuple" title="Permalink to this headline">¶</a></h3>
-<p>The following operations are supported:</p>
+<p>Tuple support is categorised into two categories based on the contents of a
+tuple. The first category is homogeneous tuples, these are tuples where the type
+of all the values in the tuple are the same, the second is heterogeneous tuples,
+these are tuples where the types of the values are different.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The <code class="docutils literal notranslate"><span class="pre">tuple()</span></code> constructor itself is NOT supported.</p>
+</div>
+</div>
+<div class="section" id="homogeneous-tuples">
+<h3>2.6.2.5. homogeneous tuples<a class="headerlink" href="#homogeneous-tuples" title="Permalink to this headline">¶</a></h3>
+<p>An example of a homogeneous tuple:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">homogeneous_tuple</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The following operations are supported on homogeneous tuples:</p>
 <ul class="simple">
-<li>tuple construction</li>
-<li>tuple unpacking</li>
-<li>comparison between tuples</li>
-<li>iteration and indexing over homogeneous tuples</li>
-<li>addition (concatenation) between tuples</li>
-<li>slicing tuples with a constant slice</li>
-<li>the index method on tuples</li>
+<li>Tuple construction.</li>
+<li>Tuple unpacking.</li>
+<li>Comparison between tuples.</li>
+<li>Iteration and indexing.</li>
+<li>Addition (concatenation) between tuples.</li>
+<li>Slicing tuples with a constant slice.</li>
+<li>The index method on tuples.</li>
 </ul>
 </div>
+<div class="section" id="heterogeneous-tuples">
+<h3>2.6.2.6. heterogeneous tuples<a class="headerlink" href="#heterogeneous-tuples" title="Permalink to this headline">¶</a></h3>
+<p>An example of a heterogeneous tuple:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">heterogeneous_tuple</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2j</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The following operations are supported on heterogeneous tuples:</p>
+<ul class="simple">
+<li>Comparison between tuples.</li>
+<li>Indexing using an index value that is a compile time constant
+e.g. <code class="docutils literal notranslate"><span class="pre">mytuple[7]</span></code>, where <code class="docutils literal notranslate"><span class="pre">7</span></code> is evidently a constant.</li>
+<li>Iteration over a tuple (requires experimental <code class="xref py py-func docutils literal notranslate"><span class="pre">literal_unroll()</span></code> feature,
+see below).</li>
+</ul>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">The following feature (<code class="xref py py-func docutils literal notranslate"><span class="pre">literal_unroll()</span></code>) is experimental and was added
+in version 0.47.</p>
+</div>
+<p>To permit iteration over a heterogeneous tuple the special function
+<code class="xref py py-func docutils literal notranslate"><span class="pre">numba.literal_unroll()</span></code> must be used. This function has no effect other
+than to act as a token to permit the use of this feature. Example use:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">njit</span><span class="p">,</span> <span class="n">literal_unroll</span>
+
+<span class="nd">@njit</span>
+<span class="k">def</span> <span class="nf">foo</span><span class="p">()</span>
+    <span class="n">heterogeneous_tuple</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2j</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">literal_unroll</span><span class="p">(</span><span class="n">heterogeneous_tuple</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p>The following restrictions apply to the use of <code class="xref py py-func docutils literal notranslate"><span class="pre">literal_unroll()</span></code>:</p>
+<ul class="last simple">
+<li>This feature is only available for Python versions &gt;= 3.6.</li>
+<li><code class="xref py py-func docutils literal notranslate"><span class="pre">literal_unroll()</span></code> can only be used on tuples and constant lists of
+compile time constants, e.g. <code class="docutils literal notranslate"><span class="pre">[1,</span> <span class="pre">2j,</span> <span class="pre">3,</span> <span class="pre">&quot;a&quot;]</span></code> and the list not being
+mutated.</li>
+<li>The only supported use pattern for <code class="xref py py-func docutils literal notranslate"><span class="pre">literal_unroll()</span></code> is loop
+iteration.</li>
+<li>Only one <code class="xref py py-func docutils literal notranslate"><span class="pre">literal_unroll()</span></code> call is permitted per loop nest (i.e.
+nested heterogeneous tuple iteration loops are forbidden).</li>
+<li>The usual type inference/stability rules still apply.</li>
+</ul>
+</div>
+<p>A more involved use of <code class="xref py py-func docutils literal notranslate"><span class="pre">literal_unroll()</span></code> might be type specific dispatch,
+recall that string and integer literal values are considered their own type,
+for example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">njit</span><span class="p">,</span> <span class="n">types</span><span class="p">,</span> <span class="n">literal_unroll</span>
+<span class="kn">from</span> <span class="nn">numba.extending</span> <span class="kn">import</span> <span class="n">overload</span>
+
+<span class="k">def</span> <span class="nf">dt</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="c1"># dummy function to overload</span>
+    <span class="k">pass</span>
+
+<span class="nd">@overload</span><span class="p">(</span><span class="n">dt</span><span class="p">,</span> <span class="n">inline</span><span class="o">=</span><span class="s1">&#39;always&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">ol_dt</span><span class="p">(</span><span class="n">li</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">li</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">StringLiteral</span><span class="p">):</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">li</span><span class="o">.</span><span class="n">literal_value</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="o">==</span> <span class="s2">&quot;apple&quot;</span><span class="p">:</span>
+            <span class="k">def</span> <span class="nf">impl</span><span class="p">(</span><span class="n">li</span><span class="p">):</span>
+                <span class="k">return</span> <span class="mi">1</span>
+        <span class="k">elif</span> <span class="n">value</span> <span class="o">==</span> <span class="s2">&quot;orange&quot;</span><span class="p">:</span>
+            <span class="k">def</span> <span class="nf">impl</span><span class="p">(</span><span class="n">li</span><span class="p">):</span>
+                <span class="k">return</span> <span class="mi">2</span>
+        <span class="k">elif</span> <span class="n">value</span> <span class="o">==</span> <span class="s2">&quot;banana&quot;</span><span class="p">:</span>
+            <span class="k">def</span> <span class="nf">impl</span><span class="p">(</span><span class="n">li</span><span class="p">):</span>
+                <span class="k">return</span> <span class="mi">3</span>
+        <span class="k">return</span> <span class="n">impl</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">li</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">IntegerLiteral</span><span class="p">):</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">li</span><span class="o">.</span><span class="n">literal_value</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="o">==</span> <span class="mh">0xca11ab1e</span><span class="p">:</span>
+            <span class="k">def</span> <span class="nf">impl</span><span class="p">(</span><span class="n">li</span><span class="p">):</span>
+                <span class="c1"># capture the dispatcher literal value</span>
+                <span class="k">return</span> <span class="mh">0x5ca1ab1e</span> <span class="o">+</span> <span class="n">value</span>
+            <span class="k">return</span> <span class="n">impl</span>
+
+<span class="nd">@njit</span>
+<span class="k">def</span> <span class="nf">foo</span><span class="p">():</span>
+    <span class="n">acc</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">literal_unroll</span><span class="p">((</span><span class="s1">&#39;apple&#39;</span><span class="p">,</span> <span class="s1">&#39;orange&#39;</span><span class="p">,</span> <span class="s1">&#39;banana&#39;</span><span class="p">,</span> <span class="mi">3390155550</span><span class="p">)):</span>
+        <span class="n">acc</span> <span class="o">+=</span> <span class="n">dt</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">acc</span>
+
+<span class="k">print</span><span class="p">(</span><span class="n">foo</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
 <div class="section" id="list">
-<h3>2.6.2.5. list<a class="headerlink" href="#list" title="Permalink to this headline">¶</a></h3>
+<h3>2.6.2.7. list<a class="headerlink" href="#list" title="Permalink to this headline">¶</a></h3>
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
 <p class="last">As of version 0.45.x the internal implementation for the list datatype in
@@ -417,7 +523,7 @@ contains a <a class="reference external" href="https://docs.python.org/3/library
 </pre></div>
 </div>
 <div class="section" id="list-reflection">
-<span id="feature-reflected-list"></span><h4>2.6.2.5.1. List Reflection<a class="headerlink" href="#list-reflection" title="Permalink to this headline">¶</a></h4>
+<span id="feature-reflected-list"></span><h4>2.6.2.7.1. List Reflection<a class="headerlink" href="#list-reflection" title="Permalink to this headline">¶</a></h4>
 <p>In nopython mode, Numba does not operate on Python objects.  <code class="docutils literal notranslate"><span class="pre">list</span></code> are
 compiled into an internal representation.  Any <code class="docutils literal notranslate"><span class="pre">list</span></code> arguments must be
 converted into this representation on the way in to nopython mode and their
@@ -440,7 +546,7 @@ performance characterics than the algorithm used by Python.</p>
 </div>
 </div>
 <div class="section" id="typed-list">
-<span id="feature-typed-list"></span><h4>2.6.2.5.2. Typed List<a class="headerlink" href="#typed-list" title="Permalink to this headline">¶</a></h4>
+<span id="feature-typed-list"></span><h4>2.6.2.7.2. Typed List<a class="headerlink" href="#typed-list" title="Permalink to this headline">¶</a></h4>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last"><code class="docutils literal notranslate"><span class="pre">numba.typed.List</span></code> is an experimental feature, if you encounter any bugs in
@@ -613,7 +719,7 @@ function:</p>
 </div>
 </div>
 <div class="section" id="list-comprehension">
-<span id="pysupported-comprehension"></span><h4>2.6.2.5.3. List comprehension<a class="headerlink" href="#list-comprehension" title="Permalink to this headline">¶</a></h4>
+<span id="pysupported-comprehension"></span><h4>2.6.2.7.3. List comprehension<a class="headerlink" href="#list-comprehension" title="Permalink to this headline">¶</a></h4>
 <p>Numba supports list comprehension.  For example:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">In</span> <span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="kn">from</span> <span class="nn">numba</span> <span class="k">import</span> <span class="n">njit</span>
 
@@ -651,7 +757,7 @@ with the <a class="reference internal" href="../user/jit.html#parallel-jit-optio
 </div>
 </div>
 <div class="section" id="set">
-<h3>2.6.2.6. set<a class="headerlink" href="#set" title="Permalink to this headline">¶</a></h3>
+<h3>2.6.2.8. set<a class="headerlink" href="#set" title="Permalink to this headline">¶</a></h3>
 <p>All methods and operations on sets are supported in JIT-compiled functions.</p>
 <p>Sets must be strictly homogeneous: Numba will reject any set containing
 objects of different types, even if the types are compatible (for example,
@@ -663,7 +769,7 @@ made to the set will not be visible to the Python interpreter until
 the function returns.</p>
 </div>
 <div class="section" id="typed-dict">
-<span id="feature-typed-dict"></span><h4>2.6.2.6.1. Typed Dict<a class="headerlink" href="#typed-dict" title="Permalink to this headline">¶</a></h4>
+<span id="feature-typed-dict"></span><h4>2.6.2.8.1. Typed Dict<a class="headerlink" href="#typed-dict" title="Permalink to this headline">¶</a></h4>
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
 <p class="last"><code class="docutils literal notranslate"><span class="pre">numba.typed.Dict</span></code> is an experimental feature.  The API may change
@@ -876,12 +982,12 @@ change during the parallel access.</p>
 </div>
 </div>
 <div class="section" id="none">
-<h3>2.6.2.7. None<a class="headerlink" href="#none" title="Permalink to this headline">¶</a></h3>
+<h3>2.6.2.9. None<a class="headerlink" href="#none" title="Permalink to this headline">¶</a></h3>
 <p>The None value is supported for identity testing (when using an
 <a class="reference internal" href="types.html#numba.optional" title="numba.optional"><code class="xref py py-class docutils literal notranslate"><span class="pre">optional</span></code></a> type).</p>
 </div>
 <div class="section" id="bytes-bytearray-memoryview">
-<h3>2.6.2.8. bytes, bytearray, memoryview<a class="headerlink" href="#bytes-bytearray-memoryview" title="Permalink to this headline">¶</a></h3>
+<h3>2.6.2.10. bytes, bytearray, memoryview<a class="headerlink" href="#bytes-bytearray-memoryview" title="Permalink to this headline">¶</a></h3>
 <p>The <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytearray" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bytearray</span></code></a> type and, on Python 3, the <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bytes</span></code></a> type
 support indexing, iteration and retrieving the len().</p>
 <p>The <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#memoryview" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">memoryview</span></code></a> type supports indexing, slicing, iteration,
