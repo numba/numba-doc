@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>2.5. Environment variables &#8212; Numba 0.47.0.dev0+580.g823653c-py3.7-linux-x86_64.egg documentation</title>
+    <title>2.5. Environment variables &#8212; Numba 0.47.0.dev0+652.g63fbcfd-py3.7-linux-x86_64.egg documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/numba-docs.css" />
@@ -78,11 +78,12 @@
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul>
 <li><a class="reference internal" href="#">2.5. Environment variables</a><ul>
-<li><a class="reference internal" href="#debugging">2.5.1. Debugging</a></li>
-<li><a class="reference internal" href="#compilation-options">2.5.2. Compilation options</a></li>
-<li><a class="reference internal" href="#caching-options">2.5.3. Caching options</a></li>
-<li><a class="reference internal" href="#gpu-support">2.5.4. GPU support</a></li>
-<li><a class="reference internal" href="#threading-control">2.5.5. Threading Control</a></li>
+<li><a class="reference internal" href="#jit-flags">2.5.1. Jit flags</a></li>
+<li><a class="reference internal" href="#debugging">2.5.2. Debugging</a></li>
+<li><a class="reference internal" href="#compilation-options">2.5.3. Compilation options</a></li>
+<li><a class="reference internal" href="#caching-options">2.5.4. Caching options</a></li>
+<li><a class="reference internal" href="#gpu-support">2.5.5. GPU support</a></li>
+<li><a class="reference internal" href="#threading-control">2.5.6. Threading Control</a></li>
 </ul>
 </li>
 </ul>
@@ -163,8 +164,25 @@ for permanent use by adding:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">color_scheme</span><span class="p">:</span> <span class="n">dark_bg</span>
 </pre></div>
 </div>
+<div class="section" id="jit-flags">
+<h2>2.5.1. Jit flags<a class="headerlink" href="#jit-flags" title="Permalink to this headline">¶</a></h2>
+<p>These variables globally override flags to the <a class="reference internal" href="jit-compilation.html#numba.jit" title="numba.jit"><code class="xref py py-func docutils literal notranslate"><span class="pre">jit()</span></code></a> decorator.</p>
+<dl class="envvar">
+<dt id="envvar-NUMBA_BOUNDSCHECK">
+<code class="descname">NUMBA_BOUNDSCHECK</code><a class="headerlink" href="#envvar-NUMBA_BOUNDSCHECK" title="Permalink to this definition">¶</a></dt>
+<dd><p>If set to 0 or 1, globally disable or enable bounds checking, respectively.
+The default if the variable is not set or set to an empty string is to use
+the <code class="docutils literal notranslate"><span class="pre">boundscheck</span></code> flag passed to the <a class="reference internal" href="jit-compilation.html#numba.jit" title="numba.jit"><code class="xref py py-func docutils literal notranslate"><span class="pre">jit()</span></code></a> decorator for a
+given function. See the documentation of <a class="reference internal" href="jit-compilation.html#jit-decorator-boundscheck"><span class="std std-ref">&#64;jit</span></a> for more information.</p>
+<p>Note, due to limitations in numba, the bounds checking currently produces
+exception messages that do not match those from NumPy. If you set
+<code class="docutils literal notranslate"><span class="pre">NUMBA_FULL_TRACEBACKS=1</span></code>, the full exception message with the axis,
+index, and shape information will be printed to the terminal.</p>
+</dd></dl>
+
+</div>
 <div class="section" id="debugging">
-<h2>2.5.1. Debugging<a class="headerlink" href="#debugging" title="Permalink to this headline">¶</a></h2>
+<h2>2.5.2. Debugging<a class="headerlink" href="#debugging" title="Permalink to this headline">¶</a></h2>
 <p>These variables influence what is printed out during compilation of
 <a class="reference internal" href="../glossary.html#term-jit-function"><span class="xref std std-term">JIT functions</span></a>.</p>
 <dl class="envvar">
@@ -387,7 +405,7 @@ higher the value set the more detailed the information produced.</p>
 </div>
 </div>
 <div class="section" id="compilation-options">
-<h2>2.5.2. Compilation options<a class="headerlink" href="#compilation-options" title="Permalink to this headline">¶</a></h2>
+<h2>2.5.3. Compilation options<a class="headerlink" href="#compilation-options" title="Permalink to this headline">¶</a></h2>
 <dl class="envvar">
 <dt id="envvar-NUMBA_OPT">
 <code class="descname">NUMBA_OPT</code><a class="headerlink" href="#envvar-NUMBA_OPT" title="Permalink to this definition">¶</a></dt>
@@ -483,7 +501,7 @@ most situations.</p>
 
 </div>
 <div class="section" id="caching-options">
-<span id="numba-envvars-caching"></span><h2>2.5.3. Caching options<a class="headerlink" href="#caching-options" title="Permalink to this headline">¶</a></h2>
+<span id="numba-envvars-caching"></span><h2>2.5.4. Caching options<a class="headerlink" href="#caching-options" title="Permalink to this headline">¶</a></h2>
 <p>Options for the compilation cache.</p>
 <dl class="envvar">
 <dt id="envvar-NUMBA_DEBUG_CACHE">
@@ -515,7 +533,7 @@ Stores are made under the <code class="docutils literal notranslate"><span class
 
 </div>
 <div class="section" id="gpu-support">
-<h2>2.5.4. GPU support<a class="headerlink" href="#gpu-support" title="Permalink to this headline">¶</a></h2>
+<h2>2.5.5. GPU support<a class="headerlink" href="#gpu-support" title="Permalink to this headline">¶</a></h2>
 <dl class="envvar">
 <dt id="envvar-NUMBA_DISABLE_CUDA">
 <code class="descname">NUMBA_DISABLE_CUDA</code><a class="headerlink" href="#envvar-NUMBA_DISABLE_CUDA" title="Permalink to this definition">¶</a></dt>
@@ -538,7 +556,7 @@ Simulator instead. For debugging purposes.</p>
 
 </div>
 <div class="section" id="threading-control">
-<h2>2.5.5. Threading Control<a class="headerlink" href="#threading-control" title="Permalink to this headline">¶</a></h2>
+<h2>2.5.6. Threading Control<a class="headerlink" href="#threading-control" title="Permalink to this headline">¶</a></h2>
 <dl class="envvar">
 <dt id="envvar-NUMBA_NUM_THREADS">
 <code class="descname">NUMBA_NUM_THREADS</code><a class="headerlink" href="#envvar-NUMBA_NUM_THREADS" title="Permalink to this definition">¶</a></dt>
