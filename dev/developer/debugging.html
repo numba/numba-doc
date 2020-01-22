@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>7.17. Notes on Debugging &#8212; Numba 0.49.0.dev0+18.ge2dc1ae-py3.7-linux-x86_64.egg documentation</title>
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/numba-docs.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="7.18. Numba Project Roadmap" href="roadmap.html" />
+    <link rel="prev" title="7.16. Notes on Literal Types" href="literal.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-sphinx.js "></script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html"><span><img src="../_static/numba_blue_icon_rgb.png"></span>
+          Numba</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.49</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../user/index.html">1. User Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/index.html">2. Reference Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cuda/index.html">3. Numba for CUDA GPUs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cuda-reference/index.html">4. CUDA Python Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../roc/index.html">5. Numba for AMD ROC GPUs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../extending/index.html">6. Extending Numba</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">7. Developer Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../proposals/index.html">8. Numba Enhancement Proposals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">9. Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release-notes.html">10. Release Notes</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">7.17. Notes on Debugging</a><ul>
+<li><a class="reference internal" href="#memcheck">7.17.1. Memcheck</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+  <li>
+    <a href="literal.html" title="Previous Chapter: 7.16. Notes on Literal Types"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; 7.16. Notes o...</span>
+    </a>
+  </li>
+  <li>
+    <a href="roadmap.html" title="Next Chapter: 7.18. Numba Project Roadmap"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">7.18. Numba P... &raquo;</span>
+    </a>
+  </li>
+              
+            
+            
+            
+            
+              <li class="hidden-sm">
+<div id="sourcelink">
+  <a href="../_sources/developer/debugging.rst.txt"
+     rel="nofollow">Source</a>
+</div></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+      
+  <div class="section" id="notes-on-debugging">
+<span id="developer-debugging"></span><h1>7.17. Notes on Debugging<a class="headerlink" href="#notes-on-debugging" title="Permalink to this headline">¶</a></h1>
+<p>This section describes techniques that can be useful in debugging the
+compilation and execution of generated code.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../user/troubleshoot.html#debugging-jit-compiled-code"><span class="std std-ref">Debugging JIT compiled code with GDB</span></a></p>
+</div>
+<div class="section" id="memcheck">
+<h2>7.17.1. Memcheck<a class="headerlink" href="#memcheck" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="https://valgrind.org/docs/manual/mc-manual.html">Memcheck</a> is a memory error detector implemented using <a class="reference external" href="https://valgrind.org/">Valgrind</a>. It is useful
+for detecting memory errors in compiled code, particularly out-of-bounds
+accesses and use-after-free errors. Buggy or miscompiled native code can
+generate these kinds of errors. The <a class="reference external" href="https://valgrind.org/docs/manual/mc-manual.html">Memcheck documentation</a> explains its usage; here, we
+discuss only the specifics of using it with Numba.</p>
+<p>The Python interpreter and some of the libraries used by Numba can generate
+false positives with Memcheck - see <a class="reference external" href="https://valgrind.org/docs/manual/mc-manual.html#mc-manual.machine">this section of the manual</a> for more
+information on why false positives occur. The false positives can make it
+difficult to determine when an actual error has occurred, so it is helpful to
+suppress known false positives. This can be done by supplying a suppressions
+file, which instructs Memcheck to ignore errors that match the suppressions
+defined in it.</p>
+<p>The CPython source distribution includes a suppressions file, in the file
+<code class="docutils literal notranslate"><span class="pre">Misc/valgrind-python.supp</span></code>. Using this file prevents a lot of spurious errors
+generated by Python’s memory allocation implementation. Additionally, the Numba
+repository includes a suppressions file in <code class="docutils literal notranslate"><span class="pre">contrib/valgrind-numba.supp</span></code>.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">It is important to use the suppressions files from the versions of the
+Python interpreter and Numba that you are using - these files evolve over
+time, so non-current versions can fail to suppress some errors, or
+erroneously suppress actual errors.</p>
+</div>
+<p>To run the Python interpreter under Memcheck with both suppressions
+files, it is invoked with the following command:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>valgrind --tool=memcheck \
+         --suppressions=${CPYTHON_SRC_DIR}/Misc/valgrind-python.supp \
+         --suppressions=${NUMBA_SRC_DIR}/contrib/valgrind-numba.supp \
+         python ${PYTHON_ARGS}
+</pre></div>
+</div>
+<p>where <code class="docutils literal notranslate"><span class="pre">${CPYTHON_SRC_DIR}</span></code> is set to the location of the CPython source
+distribution, <code class="docutils literal notranslate"><span class="pre">${NUMBA_SRC_DIR}</span></code> is the location of the Numba source dir, and
+<code class="docutils literal notranslate"><span class="pre">${PYTHON_ARGS}</span></code> are the arguments to the Python interpreter.</p>
+<p>If there are errors, then messages describing them will be printed to standard
+error. An example of an error is:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">==</span><span class="mi">77113</span><span class="o">==</span>    <span class="n">at</span> <span class="mh">0x24169A</span><span class="p">:</span> <span class="n">PyLong_FromLong</span> <span class="p">(</span><span class="n">longobject</span><span class="o">.</span><span class="n">c</span><span class="p">:</span><span class="mi">251</span><span class="p">)</span>
+<span class="o">==</span><span class="mi">77113</span><span class="o">==</span>    <span class="n">by</span> <span class="mh">0x241881</span><span class="p">:</span> <span class="n">striter_next</span> <span class="p">(</span><span class="n">bytesobject</span><span class="o">.</span><span class="n">c</span><span class="p">:</span><span class="mi">3084</span><span class="p">)</span>
+<span class="o">==</span><span class="mi">77113</span><span class="o">==</span>    <span class="n">by</span> <span class="mh">0x2D3C95</span><span class="p">:</span> <span class="n">_PyEval_EvalFrameDefault</span> <span class="p">(</span><span class="n">ceval</span><span class="o">.</span><span class="n">c</span><span class="p">:</span><span class="mi">2809</span><span class="p">)</span>
+<span class="o">==</span><span class="mi">77113</span><span class="o">==</span>    <span class="n">by</span> <span class="mh">0x21B499</span><span class="p">:</span> <span class="n">_PyEval_EvalCodeWithName</span> <span class="p">(</span><span class="n">ceval</span><span class="o">.</span><span class="n">c</span><span class="p">:</span><span class="mi">3930</span><span class="p">)</span>
+<span class="o">==</span><span class="mi">77113</span><span class="o">==</span>    <span class="n">by</span> <span class="mh">0x26B436</span><span class="p">:</span> <span class="n">_PyFunction_FastCallKeywords</span> <span class="p">(</span><span class="n">call</span><span class="o">.</span><span class="n">c</span><span class="p">:</span><span class="mi">433</span><span class="p">)</span>
+<span class="o">==</span><span class="mi">77113</span><span class="o">==</span>    <span class="n">by</span> <span class="mh">0x2D3605</span><span class="p">:</span> <span class="n">call_function</span> <span class="p">(</span><span class="n">ceval</span><span class="o">.</span><span class="n">c</span><span class="p">:</span><span class="mi">4616</span><span class="p">)</span>
+<span class="o">==</span><span class="mi">77113</span><span class="o">==</span>    <span class="n">by</span> <span class="mh">0x2D3605</span><span class="p">:</span> <span class="n">_PyEval_EvalFrameDefault</span> <span class="p">(</span><span class="n">ceval</span><span class="o">.</span><span class="n">c</span><span class="p">:</span><span class="mi">3124</span><span class="p">)</span>
+<span class="o">==</span><span class="mi">77113</span><span class="o">==</span>    <span class="n">by</span> <span class="mh">0x21B977</span><span class="p">:</span> <span class="n">_PyEval_EvalCodeWithName</span> <span class="p">(</span><span class="n">ceval</span><span class="o">.</span><span class="n">c</span><span class="p">:</span><span class="mi">3930</span><span class="p">)</span>
+<span class="o">==</span><span class="mi">77113</span><span class="o">==</span>    <span class="n">by</span> <span class="mh">0x21C2A4</span><span class="p">:</span> <span class="n">_PyFunction_FastCallDict</span> <span class="p">(</span><span class="n">call</span><span class="o">.</span><span class="n">c</span><span class="p">:</span><span class="mi">376</span><span class="p">)</span>
+<span class="o">==</span><span class="mi">77113</span><span class="o">==</span>    <span class="n">by</span> <span class="mh">0x2D5129</span><span class="p">:</span> <span class="n">do_call_core</span> <span class="p">(</span><span class="n">ceval</span><span class="o">.</span><span class="n">c</span><span class="p">:</span><span class="mi">4645</span><span class="p">)</span>
+<span class="o">==</span><span class="mi">77113</span><span class="o">==</span>    <span class="n">by</span> <span class="mh">0x2D5129</span><span class="p">:</span> <span class="n">_PyEval_EvalFrameDefault</span> <span class="p">(</span><span class="n">ceval</span><span class="o">.</span><span class="n">c</span><span class="p">:</span><span class="mi">3191</span><span class="p">)</span>
+<span class="o">==</span><span class="mi">77113</span><span class="o">==</span>    <span class="n">by</span> <span class="mh">0x21B499</span><span class="p">:</span> <span class="n">_PyEval_EvalCodeWithName</span> <span class="p">(</span><span class="n">ceval</span><span class="o">.</span><span class="n">c</span><span class="p">:</span><span class="mi">3930</span><span class="p">)</span>
+<span class="o">==</span><span class="mi">77113</span><span class="o">==</span>    <span class="n">by</span> <span class="mh">0x26B436</span><span class="p">:</span> <span class="n">_PyFunction_FastCallKeywords</span> <span class="p">(</span><span class="n">call</span><span class="o">.</span><span class="n">c</span><span class="p">:</span><span class="mi">433</span><span class="p">)</span>
+<span class="o">==</span><span class="mi">77113</span><span class="o">==</span>    <span class="n">by</span> <span class="mh">0x2D46DA</span><span class="p">:</span> <span class="n">call_function</span> <span class="p">(</span><span class="n">ceval</span><span class="o">.</span><span class="n">c</span><span class="p">:</span><span class="mi">4616</span><span class="p">)</span>
+<span class="o">==</span><span class="mi">77113</span><span class="o">==</span>    <span class="n">by</span> <span class="mh">0x2D46DA</span><span class="p">:</span> <span class="n">_PyEval_EvalFrameDefault</span> <span class="p">(</span><span class="n">ceval</span><span class="o">.</span><span class="n">c</span><span class="p">:</span><span class="mi">3139</span><span class="p">)</span>
+<span class="o">==</span><span class="mi">77113</span><span class="o">==</span>
+<span class="o">==</span><span class="mi">77113</span><span class="o">==</span> <span class="n">Use</span> <span class="n">of</span> <span class="n">uninitialised</span> <span class="n">value</span> <span class="n">of</span> <span class="n">size</span> <span class="mi">8</span>
+</pre></div>
+</div>
+<p>The traceback provided only outlines the C call stack, which can make it
+difficult to determine what the Python interpreter was doing at the time of the
+error. One can learn more about the state of the stack by looking at the
+backtrace in the <a class="reference external" href="https://www.gnu.org/software/gdb/">GNU Debugger (GDB)</a>.
+Launch <code class="docutils literal notranslate"><span class="pre">valgrind</span></code> with an additional argument, <code class="docutils literal notranslate"><span class="pre">--vgdb-error=0</span></code> and attach
+to the process using GDB as instructed by the output. Once an error is
+encountered, GDB will stop at the error and the stack can be inspected.</p>
+<p>GDB does provide support for backtracing through the Python stack, but this
+requires symbols which may not be easily available in your Python distribution.
+In this case, it is still possible to determine some information about what was
+happening in Python, but this depends on examining the backtrace closely. For
+example, in a backtrace corresponding to the above error, we see items such as:</p>
+<p>We can see some of the arguments, in particular the names of the compiled functions, e.g:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>_ZN5numba4cuda5tests6cudapy13test_constmem19cuconstRecAlign$247E5ArrayIdLi1E1C7mutable7alignedE5ArrayIdLi1E1C7mutable7alignedE5ArrayIdLi1E1C7mutable7alignedE5ArrayIdLi1E1C7mutable7alignedE5ArrayIdLi1E1C7mutable7alignedE
+</pre></div>
+</div>
+<p>We can run this through <code class="docutils literal notranslate"><span class="pre">c++filt</span></code> to see a more human-readable representation:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>numba::cuda::tests::cudapy::test_constmem::cuconstRecAlign$247(
+  Array&lt;double, 1, C, mutable, aligned&gt;,
+  Array&lt;double, 1, C, mutable, aligned&gt;,
+  Array&lt;double, 1, C, mutable, aligned&gt;,
+  Array&lt;double, 1, C, mutable, aligned&gt;,
+  Array&lt;double, 1, C, mutable, aligned&gt;)
+</pre></div>
+</div>
+<p>which is the fully qualified name of a jitted function and the types with which
+it was called.</p>
+</div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2012, Anaconda, Inc..<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>
