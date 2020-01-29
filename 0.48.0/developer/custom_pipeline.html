@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>7.11. Customizing the Compiler &#8212; Numba 0.48.0-py3.6-macosx-10.7-x86_64.egg documentation</title>
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/numba-docs.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="7.12. Notes on Inlining" href="inlining.html" />
+    <link rel="prev" title="7.10. Notes on stencils" href="stencil.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html"><span><img src="../_static/numba_blue_icon_rgb.png"></span>
+          Numba</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.48</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../user/index.html">1. User Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/index.html">2. Reference Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cuda/index.html">3. Numba for CUDA GPUs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cuda-reference/index.html">4. CUDA Python Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../roc/index.html">5. Numba for AMD ROC GPUs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../extending/index.html">6. Extending Numba</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">7. Developer Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../proposals/index.html">8. Numba Enhancement Proposals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">9. Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release-notes.html">10. Release Notes</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">7.11. Customizing the Compiler</a><ul>
+<li><a class="reference internal" href="#implementing-a-compiler-pass">7.11.1. Implementing a compiler pass</a><ul>
+<li><a class="reference internal" href="#compiler-pass-classes">7.11.1.1. Compiler pass classes</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#debugging-compiler-passes">7.11.2. Debugging compiler passes</a><ul>
+<li><a class="reference internal" href="#observing-ir-changes">7.11.2.1. Observing IR Changes</a></li>
+<li><a class="reference internal" href="#pass-execution-times">7.11.2.2. Pass execution times</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+  <li>
+    <a href="stencil.html" title="Previous Chapter: 7.10. Notes on stencils"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; 7.10. Notes o...</span>
+    </a>
+  </li>
+  <li>
+    <a href="inlining.html" title="Next Chapter: 7.12. Notes on Inlining"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">7.12. Notes o... &raquo;</span>
+    </a>
+  </li>
+              
+            
+            
+            
+            
+              <li class="hidden-sm">
+<div id="sourcelink">
+  <a href="../_sources/developer/custom_pipeline.rst.txt"
+     rel="nofollow">Source</a>
+</div></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <div class="section" id="customizing-the-compiler">
+<span id="arch-pipeline"></span><h1>7.11. Customizing the Compiler<a class="headerlink" href="#customizing-the-compiler" title="Permalink to this headline">¶</a></h1>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">The custom pipeline feature is for expert use only.  Modifying
+the compiler behavior can invalidate internal assumptions in the
+numba source code.</p>
+</div>
+<p>For library developers looking for a way to extend or modify the compiler
+behavior, you can do so by defining a custom compiler by inheriting from
+<code class="docutils literal notranslate"><span class="pre">numba.compiler.CompilerBase</span></code>.  The default Numba compiler is defined
+as <code class="docutils literal notranslate"><span class="pre">numba.compiler.Compiler</span></code>, implementing the <code class="docutils literal notranslate"><span class="pre">.define_pipelines()</span></code>
+method, which adds the <em>nopython-mode</em>, <em>object-mode</em> and <em>interpreted-mode</em>
+pipelines. For convenience these three pipelines are defined in
+<code class="docutils literal notranslate"><span class="pre">numba.compiler.DefaultPassBuilder</span></code> by the methods:</p>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">.define_nopython_pipeline()</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">.define_objectmode_pipeline()</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">.define_interpreted_pipeline()</span></code></li>
+</ul>
+<p>respectively.</p>
+<p>To use a custom subclass of <code class="docutils literal notranslate"><span class="pre">CompilerBase</span></code>, supply it as the
+<code class="docutils literal notranslate"><span class="pre">pipeline_class</span></code> keyword argument to the <code class="docutils literal notranslate"><span class="pre">&#64;jit</span></code> and <code class="docutils literal notranslate"><span class="pre">&#64;generated_jit</span></code>
+decorators.  By doing so, the effect of the custom pipeline is limited to the
+function being decorated.</p>
+<div class="section" id="implementing-a-compiler-pass">
+<h2>7.11.1. Implementing a compiler pass<a class="headerlink" href="#implementing-a-compiler-pass" title="Permalink to this headline">¶</a></h2>
+<p>Numba makes it possible to implement a new compiler pass and does so through the
+use of an API similar to that of LLVM. The following demonstrates the basic
+process involved.</p>
+<div class="section" id="compiler-pass-classes">
+<h3>7.11.1.1. Compiler pass classes<a class="headerlink" href="#compiler-pass-classes" title="Permalink to this headline">¶</a></h3>
+<p>All passes must inherit from <code class="docutils literal notranslate"><span class="pre">numba.compiler_machinery.CompilerPass</span></code>, commonly
+used subclasses are:</p>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">numba.compiler_machinery.FunctionPass</span></code> for describing a pass that operates
+on a function-at-once level and may mutate the IR state.</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba.compiler_machinery.AnalysisPass</span></code> for describing a pass that performs
+analysis only.</li>
+<li><code class="docutils literal notranslate"><span class="pre">numba.compiler_machinery.LoweringPass</span></code> for describing a pass that performs
+lowering only.</li>
+</ul>
+<p>In this example a new compiler pass will be implemented that will rewrite all
+<code class="docutils literal notranslate"><span class="pre">ir.Const(x)</span></code> nodes, where <code class="docutils literal notranslate"><span class="pre">x</span></code> is a subclass of <code class="docutils literal notranslate"><span class="pre">numbers.Number</span></code>, such
+that the value of x is incremented by one. There is no use for this pass other
+than to serve as a pedagogical vehicle!</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">numba.compiler_machinery.FunctionPass</span></code> is appropriate for the suggested
+pass behavior and so is the base class of the new pass. Further, a <code class="docutils literal notranslate"><span class="pre">run_pass</span></code>
+method is defined to do the work (this method is abstract, all compiler passes
+must implement it).</p>
+<p>First the new class:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">njit</span>
+<span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">ir</span>
+<span class="kn">from</span> <span class="nn">numba.compiler</span> <span class="kn">import</span> <span class="n">CompilerBase</span><span class="p">,</span> <span class="n">DefaultPassBuilder</span>
+<span class="kn">from</span> <span class="nn">numba.compiler_machinery</span> <span class="kn">import</span> <span class="n">FunctionPass</span><span class="p">,</span> <span class="n">register_pass</span>
+<span class="kn">from</span> <span class="nn">numba.untyped_passes</span> <span class="kn">import</span> <span class="n">IRProcessing</span>
+<span class="kn">from</span> <span class="nn">numbers</span> <span class="kn">import</span> <span class="n">Number</span>
+
+<span class="c1"># Register this pass with the compiler framework, declare that it will not</span>
+<span class="c1"># mutate the control flow graph and that it is not an analysis_only pass (it</span>
+<span class="c1"># potentially mutates the IR).</span>
+<span class="nd">@register_pass</span><span class="p">(</span><span class="n">mutates_CFG</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">analysis_only</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">ConstsAddOne</span><span class="p">(</span><span class="n">FunctionPass</span><span class="p">):</span>
+    <span class="n">_name</span> <span class="o">=</span> <span class="s2">&quot;consts_add_one&quot;</span> <span class="c1"># the common name for the pass</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">FunctionPass</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+    <span class="c1"># implement method to do the work, &quot;state&quot; is the internal compiler</span>
+    <span class="c1"># state from the CompilerBase instance.</span>
+    <span class="k">def</span> <span class="nf">run_pass</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+        <span class="n">func_ir</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">func_ir</span> <span class="c1"># get the FunctionIR object</span>
+        <span class="n">mutated</span> <span class="o">=</span> <span class="bp">False</span> <span class="c1"># used to record whether this pass mutates the IR</span>
+        <span class="c1"># walk the blocks</span>
+        <span class="k">for</span> <span class="n">blk</span> <span class="ow">in</span> <span class="n">func_ir</span><span class="o">.</span><span class="n">blocks</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="c1"># find the assignment nodes in the block and walk them</span>
+            <span class="k">for</span> <span class="n">assgn</span> <span class="ow">in</span> <span class="n">blk</span><span class="o">.</span><span class="n">find_insts</span><span class="p">(</span><span class="n">ir</span><span class="o">.</span><span class="n">Assign</span><span class="p">):</span>
+                <span class="c1"># if an assignment value is a ir.Consts</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">assgn</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">ir</span><span class="o">.</span><span class="n">Const</span><span class="p">):</span>
+                    <span class="n">const_val</span> <span class="o">=</span> <span class="n">assgn</span><span class="o">.</span><span class="n">value</span>
+                    <span class="c1"># if the value of the ir.Const is a Number</span>
+                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">const_val</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">Number</span><span class="p">):</span>
+                        <span class="c1"># then add one!</span>
+                        <span class="n">const_val</span><span class="o">.</span><span class="n">value</span> <span class="o">+=</span> <span class="mi">1</span>
+                        <span class="n">mutated</span> <span class="o">|=</span> <span class="bp">True</span>
+        <span class="k">return</span> <span class="n">mutated</span> <span class="c1"># return True if the IR was mutated, False if not.</span>
+</pre></div>
+</div>
+<p>Note also that the class must be registered with Numba’s compiler machinery
+using <code class="docutils literal notranslate"><span class="pre">&#64;register_pass</span></code>. This in part is to allow the declaration of whether
+the pass mutates the control flow graph and whether it is an analysis only pass.</p>
+<p>Next, define a new compiler based on the existing
+<code class="docutils literal notranslate"><span class="pre">numba.compiler.CompilerBase</span></code>. The compiler pipeline is defined through the
+use of an existing pipeline and the new pass declared above is added to be run
+after the <code class="docutils literal notranslate"><span class="pre">IRProcessing</span></code> pass.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MyCompiler</span><span class="p">(</span><span class="n">CompilerBase</span><span class="p">):</span> <span class="c1"># custom compiler extends from CompilerBase</span>
+
+    <span class="k">def</span> <span class="nf">define_pipelines</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># define a new set of pipelines (just one in this case) and for ease</span>
+        <span class="c1"># base it on an existing pipeline from the DefaultPassBuilder,</span>
+        <span class="c1"># namely the &quot;nopython&quot; pipeline</span>
+        <span class="n">pm</span> <span class="o">=</span> <span class="n">DefaultPassBuilder</span><span class="o">.</span><span class="n">define_nopython_pipeline</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">)</span>
+        <span class="c1"># Add the new pass to run after IRProcessing</span>
+        <span class="n">pm</span><span class="o">.</span><span class="n">add_pass_after</span><span class="p">(</span><span class="n">ConstsAddOne</span><span class="p">,</span> <span class="n">IRProcessing</span><span class="p">)</span>
+        <span class="c1"># finalize</span>
+        <span class="n">pm</span><span class="o">.</span><span class="n">finalize</span><span class="p">()</span>
+        <span class="c1"># return as an iterable, any number of pipelines may be defined!</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">pm</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Finally update the <code class="docutils literal notranslate"><span class="pre">&#64;njit</span></code> decorator at the call site to make use of the newly
+defined compilation pipeline.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@njit</span><span class="p">(</span><span class="n">pipeline_class</span><span class="o">=</span><span class="n">MyCompiler</span><span class="p">)</span> <span class="c1"># JIT compile using the custom compiler</span>
+<span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="mf">20.2</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
+    <span class="k">return</span> <span class="n">c</span>
+
+<span class="k">print</span><span class="p">(</span><span class="n">foo</span><span class="p">(</span><span class="mi">100</span><span class="p">))</span> <span class="c1"># 100 + 10 + 20.2 (+ 1 + 1), extra + 1 + 1 from the rewrite!</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="debugging-compiler-passes">
+<h2>7.11.2. Debugging compiler passes<a class="headerlink" href="#debugging-compiler-passes" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="observing-ir-changes">
+<h3>7.11.2.1. Observing IR Changes<a class="headerlink" href="#observing-ir-changes" title="Permalink to this headline">¶</a></h3>
+<p>It is often useful to be able to see the changes a pass makes to the IR. Numba
+conveniently permits this through the use of the environment variable
+<span class="target" id="index-0"></span><a class="reference internal" href="../reference/envvars.html#envvar-NUMBA_DEBUG_PRINT_AFTER"><code class="xref std std-envvar docutils literal notranslate"><span class="pre">NUMBA_DEBUG_PRINT_AFTER</span></code></a>. In the case of the above pass, running the
+example code with <code class="docutils literal notranslate"><span class="pre">NUMBA_DEBUG_PRINT_AFTER=&quot;ir_processing,consts_add_one&quot;</span></code>
+gives:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>----------------------------nopython: ir_processing-----------------------------
+label 0:
+    x = arg(0, name=x)                       [&#39;x&#39;]
+<span class="hll">    $const0.1 = const(int, 10)               [&#39;$const0.1&#39;]
+</span>    a = $const0.1                            [&#39;$const0.1&#39;, &#39;a&#39;]
+    del $const0.1                            []
+<span class="hll">    $const0.2 = const(float, 20.2)           [&#39;$const0.2&#39;]
+</span>    b = $const0.2                            [&#39;$const0.2&#39;, &#39;b&#39;]
+    del $const0.2                            []
+    $0.5 = x + a                             [&#39;$0.5&#39;, &#39;a&#39;, &#39;x&#39;]
+    del x                                    []
+    del a                                    []
+    $0.7 = $0.5 + b                          [&#39;$0.5&#39;, &#39;$0.7&#39;, &#39;b&#39;]
+    del b                                    []
+    del $0.5                                 []
+    c = $0.7                                 [&#39;$0.7&#39;, &#39;c&#39;]
+    del $0.7                                 []
+    $0.9 = cast(value=c)                     [&#39;$0.9&#39;, &#39;c&#39;]
+    del c                                    []
+    return $0.9                              [&#39;$0.9&#39;]
+----------------------------nopython: consts_add_one----------------------------
+label 0:
+    x = arg(0, name=x)                       [&#39;x&#39;]
+<span class="hll">    $const0.1 = const(int, 11)               [&#39;$const0.1&#39;]
+</span>    a = $const0.1                            [&#39;$const0.1&#39;, &#39;a&#39;]
+    del $const0.1                            []
+<span class="hll">    $const0.2 = const(float, 21.2)           [&#39;$const0.2&#39;]
+</span>    b = $const0.2                            [&#39;$const0.2&#39;, &#39;b&#39;]
+    del $const0.2                            []
+    $0.5 = x + a                             [&#39;$0.5&#39;, &#39;a&#39;, &#39;x&#39;]
+    del x                                    []
+    del a                                    []
+    $0.7 = $0.5 + b                          [&#39;$0.5&#39;, &#39;$0.7&#39;, &#39;b&#39;]
+    del b                                    []
+    del $0.5                                 []
+    c = $0.7                                 [&#39;$0.7&#39;, &#39;c&#39;]
+    del $0.7                                 []
+    $0.9 = cast(value=c)                     [&#39;$0.9&#39;, &#39;c&#39;]
+    del c                                    []
+    return $0.9                              [&#39;$0.9&#39;]
+</pre></div>
+</div>
+<p>Note the change in the values in the <code class="docutils literal notranslate"><span class="pre">const</span></code> nodes.</p>
+</div>
+<div class="section" id="pass-execution-times">
+<h3>7.11.2.2. Pass execution times<a class="headerlink" href="#pass-execution-times" title="Permalink to this headline">¶</a></h3>
+<p>Numba has built-in support for timing all compiler passes, the execution times
+are stored in the metadata associated with a compilation result. This
+demonstrates one way of accessing this information based on the previously
+defined function, <code class="docutils literal notranslate"><span class="pre">foo</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">compile_result</span> <span class="o">=</span> <span class="n">foo</span><span class="o">.</span><span class="n">overloads</span><span class="p">[</span><span class="n">foo</span><span class="o">.</span><span class="n">signatures</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+<span class="n">nopython_times</span> <span class="o">=</span> <span class="n">compile_result</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;pipeline_times&#39;</span><span class="p">][</span><span class="s1">&#39;nopython&#39;</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">nopython_times</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+    <span class="k">if</span> <span class="n">ConstsAddOne</span><span class="o">.</span><span class="n">_name</span> <span class="ow">in</span> <span class="n">k</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">nopython_times</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>the output of which is, for example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pass_timings</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="mf">1.914000677061267e-06</span><span class="p">,</span> <span class="n">run</span><span class="o">=</span><span class="mf">4.308700044930447e-05</span><span class="p">,</span> <span class="n">finalize</span><span class="o">=</span><span class="mf">1.7400006981915794e-06</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>this displaying the pass initialization, run and finalization times in seconds.</p>
+</div>
+</div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2012, Anaconda, Inc..<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>
