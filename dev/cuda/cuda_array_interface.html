@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>3.15. CUDA Array Interface (Version 2) &#8212; Numba 0.49.0.dev0+97.g9447fa4-py3.7-linux-x86_64.egg documentation</title>
+    <title>3.15. CUDA Array Interface (Version 2) &#8212; Numba 0.49.0.dev0+110.gfb5adbf-py3.7-linux-x86_64.egg documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/numba-docs.css" />
@@ -81,6 +81,7 @@
 <li><a class="reference internal" href="#python-interface-specification">3.15.1. Python Interface Specification</a><ul>
 <li><a class="reference internal" href="#differences-with-cuda-array-interface-version-0">3.15.1.1. Differences with CUDA Array Interface (Version 0)</a></li>
 <li><a class="reference internal" href="#differences-with-cuda-array-interface-version-1">3.15.1.2. Differences with CUDA Array Interface (Version 1)</a></li>
+<li><a class="reference internal" href="#interoperability">3.15.1.3. Interoperability</a></li>
 </ul>
 </li>
 </ul>
@@ -153,65 +154,51 @@ compiled code.</p>
 that must contain the following entries:</p>
 <ul>
 <li><p class="first"><strong>shape</strong>: <code class="docutils literal notranslate"><span class="pre">(integer,</span> <span class="pre">...)</span></code></p>
-<blockquote>
-<div><p>A tuple of <cite>int</cite> (or <cite>long</cite>) representing the size of each dimension.</p>
-</div></blockquote>
+<p>A tuple of <code class="docutils literal notranslate"><span class="pre">int</span></code> (or <code class="docutils literal notranslate"><span class="pre">long</span></code>) representing the size of each dimension.</p>
 </li>
-<li><p class="first"><strong>typestr</strong>: <cite>str</cite></p>
-<blockquote>
-<div><p>The type string.  This has the same definition as <em>typestr</em> in the
+<li><p class="first"><strong>typestr</strong>: <code class="docutils literal notranslate"><span class="pre">str</span></code></p>
+<p>The type string.  This has the same definition as <code class="docutils literal notranslate"><span class="pre">typestr</span></code> in the
 <a class="reference external" href="https://docs.scipy.org/doc/numpy-1.13.0/reference/arrays.interface.html#__array_interface__">numpy array interface</a>.</p>
-</div></blockquote>
 </li>
-<li><p class="first"><strong>data</strong>: <cite>(integer, boolean)</cite></p>
-<blockquote>
-<div><p>The <strong>data</strong> is a 2-tuple.  The first element is the data pointer
-as a Python <cite>int</cite> (or <cite>long</cite>).  The data must be device-accessible.
-For zero-size arrays, use <cite>0</cite> here.
-The second element is the read-only flag as a Python <cite>bool</cite>.</p>
+<li><p class="first"><strong>data</strong>: <code class="docutils literal notranslate"><span class="pre">(integer,</span> <span class="pre">boolean)</span></code></p>
+<p>The <strong>data</strong> is a 2-tuple.  The first element is the data pointer
+as a Python <code class="docutils literal notranslate"><span class="pre">int</span></code> (or <code class="docutils literal notranslate"><span class="pre">long</span></code>).  The data must be device-accessible.
+For zero-size arrays, use <code class="docutils literal notranslate"><span class="pre">0</span></code> here.
+The second element is the read-only flag as a Python <code class="docutils literal notranslate"><span class="pre">bool</span></code>.</p>
 <p>Because the user of the interface may or may not be in the same context,
 the most common case is to use <code class="docutils literal notranslate"><span class="pre">cuPointerGetAttribute</span></code> with
 <code class="docutils literal notranslate"><span class="pre">CU_POINTER_ATTRIBUTE_DEVICE_POINTER</span></code> in the CUDA driver API (or the
 equivalent CUDA Runtime API) to retrieve a device pointer that
 is usable in the currently active context.</p>
-</div></blockquote>
 </li>
-<li><p class="first"><strong>version</strong>: <cite>integer</cite></p>
-<blockquote>
-<div><p>An integer for the version of the interface being exported.
+<li><p class="first"><strong>version</strong>: <code class="docutils literal notranslate"><span class="pre">integer</span></code></p>
+<p>An integer for the version of the interface being exported.
 The current version is <em>2</em>.</p>
-</div></blockquote>
 </li>
 </ul>
 <p>The following are optional entries:</p>
 <ul>
 <li><p class="first"><strong>strides</strong>: <code class="docutils literal notranslate"><span class="pre">None</span></code> or <code class="docutils literal notranslate"><span class="pre">(integer,</span> <span class="pre">...)</span></code></p>
-<blockquote>
-<div><p>If <strong>strides</strong> is not given, or it is <code class="docutils literal notranslate"><span class="pre">None</span></code>, the array is in
-C-contiguous layout. Otherwise, a tuple of <cite>int</cite> (or <cite>long</cite>) is explicitly
+<p>If <strong>strides</strong> is not given, or it is <code class="docutils literal notranslate"><span class="pre">None</span></code>, the array is in
+C-contiguous layout. Otherwise, a tuple of <code class="docutils literal notranslate"><span class="pre">int</span></code> (or <code class="docutils literal notranslate"><span class="pre">long</span></code>) is explicitly
 given for representing the number of bytes to skip to access the next
 element at each dimension.</p>
-</div></blockquote>
 </li>
 <li><p class="first"><strong>descr</strong></p>
-<blockquote>
-<div><p>This is for describing more complicated types.  This follows the same
+<p>This is for describing more complicated types.  This follows the same
 specification as in the <a class="reference external" href="https://docs.scipy.org/doc/numpy-1.13.0/reference/arrays.interface.html#__array_interface__">numpy array interface</a>.</p>
-</div></blockquote>
 </li>
 <li><p class="first"><strong>mask</strong>: <code class="docutils literal notranslate"><span class="pre">None</span></code> or object exposing the <code class="docutils literal notranslate"><span class="pre">__cuda_array_interface__</span></code></p>
-<blockquote>
-<div><p>If <code class="docutils literal notranslate"><span class="pre">None</span></code> then all values in <strong>data</strong> are valid. All elements of the mask
+<p>If <code class="docutils literal notranslate"><span class="pre">None</span></code> then all values in <strong>data</strong> are valid. All elements of the mask
 array should be interpreted only as true or not true indicating which
-elements of this array are valid. This has the same definition as <em>mask</em>
+elements of this array are valid. This has the same definition as <code class="docutils literal notranslate"><span class="pre">mask</span></code>
 in the <a class="reference external" href="https://docs.scipy.org/doc/numpy-1.13.0/reference/arrays.interface.html#__array_interface__">numpy array interface</a>.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">Numba does not currently support working with masked CUDA arrays
-and will raise a <cite>NotImplementedError</cite> exception if one is passed
+and will raise a <code class="docutils literal notranslate"><span class="pre">NotImplementedError</span></code> exception if one is passed
 to a GPU function.</p>
 </div>
-</div></blockquote>
 </li>
 </ul>
 <p>Additional information about the data pointer can be retrieved using
@@ -232,6 +219,31 @@ attribute to support masked arrays.</p>
 <p>Versions 0 and 1 of the CUDA Array Interface neither clarified the
 <strong>strides</strong> attribute for C-contiguous arrays nor specified the treatment for
 zero-size arrays.</p>
+</div>
+<div class="section" id="interoperability">
+<h3>3.15.1.3. Interoperability<a class="headerlink" href="#interoperability" title="Permalink to this headline">¶</a></h3>
+<p>The following Python libraries have adopted the CUDA Array Interface:</p>
+<ul class="simple">
+<li>Numba</li>
+<li><a class="reference external" href="https://docs-cupy.chainer.org/en/stable/reference/interoperability.html">CuPy</a></li>
+<li><a class="reference external" href="https://pytorch.org">PyTorch</a></li>
+<li><a class="reference external" href="https://arrow.apache.org/docs/python/generated/pyarrow.cuda.Context.html#pyarrow.cuda.Context.buffer_from_object">PyArrow</a></li>
+<li><a class="reference external" href="https://mpi4py.readthedocs.io/en/latest/overview.html#support-for-cuda-aware-mpi">mpi4py</a></li>
+<li><a class="reference external" href="https://github.com/xnd-project/arrayviews">ArrayViews</a></li>
+<li><a class="reference external" href="https://jax.readthedocs.io/en/latest/index.html">JAX</a></li>
+<li><dl class="first docutils">
+<dt>The RAPIDS stack:</dt>
+<dd><ul class="first last">
+<li><a class="reference external" href="https://rapidsai.github.io/projects/cudf/en/0.11.0/10min-cudf-cupy.html">cuDF</a></li>
+<li><a class="reference external" href="https://docs.rapids.ai/api/cuml/nightly/">cuML</a></li>
+<li><a class="reference external" href="https://github.com/rapidsai/cusignal">cuSignal</a></li>
+<li><a class="reference external" href="https://docs.rapids.ai/api/rmm/stable/">RMM</a></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<p>If your project is not on this list, please feel free to report it on the <a class="reference external" href="https://github.com/numba/numba/issues">Numba issue tracker</a>.</p>
 </div>
 </div>
 </div>
