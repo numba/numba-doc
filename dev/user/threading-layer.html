@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>1.15. The Threading Layers &#8212; Numba 0.49.0.dev0+357.ga441336-py3.7-linux-x86_64.egg documentation</title>
+    <title>1.15. The Threading Layers &#8212; Numba 0.49.0.dev0+511.gf3ca34d-py3.7-linux-x86_64.egg documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/numba-docs.css" />
@@ -85,6 +85,11 @@
 </ul>
 </li>
 <li><a class="reference internal" href="#extra-notes">1.15.3. Extra notes</a></li>
+<li><a class="reference internal" href="#setting-the-number-of-threads">1.15.4. Setting the Number of Threads</a><ul>
+<li><a class="reference internal" href="#example-of-limiting-the-number-of-threads">1.15.4.1. Example of Limiting the Number of Threads</a></li>
+<li><a class="reference internal" href="#api-reference">1.15.4.2. API Reference</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -311,6 +316,157 @@ error message to <code class="docutils literal notranslate"><span class="pre">ST
 <li>On OSX, the <code class="docutils literal notranslate"><span class="pre">intel-openmp</span></code> package is required to enable the OpenMP based
 threading layer.</li>
 </ul>
+</div>
+<div class="section" id="setting-the-number-of-threads">
+<span id="id1"></span><h2>1.15.4. Setting the Number of Threads<a class="headerlink" href="#setting-the-number-of-threads" title="Permalink to this headline">¶</a></h2>
+<p>The number of threads used by numba is based on the number of CPU cores
+available (see <a class="reference internal" href="#numba.config.NUMBA_DEFAULT_NUM_THREADS" title="numba.config.NUMBA_DEFAULT_NUM_THREADS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numba.config.NUMBA_DEFAULT_NUM_THREADS</span></code></a>), but it can be
+overridden with the <span class="target" id="index-0"></span><a class="reference internal" href="../reference/envvars.html#envvar-NUMBA_NUM_THREADS"><code class="xref std std-envvar docutils literal notranslate"><span class="pre">NUMBA_NUM_THREADS</span></code></a> environment variable.</p>
+<p>The total number of threads that numba launches is in the variable
+<a class="reference internal" href="#numba.config.NUMBA_NUM_THREADS" title="numba.config.NUMBA_NUM_THREADS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numba.config.NUMBA_NUM_THREADS</span></code></a>.</p>
+<p>For some use cases, it may be desirable to set the number of threads to a
+lower value, so that numba can be used with higher level parallelism.</p>
+<p>The number of threads can be set dynamically at runtime using
+<a class="reference internal" href="#numba.set_num_threads" title="numba.set_num_threads"><code class="xref py py-func docutils literal notranslate"><span class="pre">numba.set_num_threads()</span></code></a>. Note that <a class="reference internal" href="#numba.set_num_threads" title="numba.set_num_threads"><code class="xref py py-func docutils literal notranslate"><span class="pre">set_num_threads()</span></code></a> only allows
+setting the number of threads to a smaller value than
+<a class="reference internal" href="#numba.config.NUMBA_NUM_THREADS" title="numba.config.NUMBA_NUM_THREADS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NUMBA_NUM_THREADS</span></code></a>. Numba always launches
+<a class="reference internal" href="#numba.config.NUMBA_NUM_THREADS" title="numba.config.NUMBA_NUM_THREADS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numba.config.NUMBA_NUM_THREADS</span></code></a> threads, but <a class="reference internal" href="#numba.set_num_threads" title="numba.set_num_threads"><code class="xref py py-func docutils literal notranslate"><span class="pre">set_num_threads()</span></code></a>
+causes it to mask out unused threads so they aren’t used in computations.</p>
+<p>The current number of threads used by numba can be accessed with
+<a class="reference internal" href="#numba.get_num_threads" title="numba.get_num_threads"><code class="xref py py-func docutils literal notranslate"><span class="pre">numba.get_num_threads()</span></code></a>. Both functions work inside of a jitted
+function.</p>
+<div class="section" id="example-of-limiting-the-number-of-threads">
+<span id="numba-threading-layer-thread-masking"></span><h3>1.15.4.1. Example of Limiting the Number of Threads<a class="headerlink" href="#example-of-limiting-the-number-of-threads" title="Permalink to this headline">¶</a></h3>
+<p>In this example, suppose the machine we are running on has 8 cores (so
+<a class="reference internal" href="#numba.config.NUMBA_NUM_THREADS" title="numba.config.NUMBA_NUM_THREADS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numba.config.NUMBA_NUM_THREADS</span></code></a> would be <code class="docutils literal notranslate"><span class="pre">8</span></code>). Suppose we want to run
+some code with <code class="docutils literal notranslate"><span class="pre">&#64;njit(parallel=True)</span></code>, but we also want to run our code
+concurrently in 4 different processes. With the default number of threads,
+each Python process would run 8 threads, for a total in 4*8 = 32 threads,
+which is oversubscription for our 8 cores. We should rather limit each process
+to 2 threads, so that the total will be 4*2 = 8, which matches our number of
+physical cores.</p>
+<p>There are two ways to do this. One is to set the <span class="target" id="index-1"></span><a class="reference internal" href="../reference/envvars.html#envvar-NUMBA_NUM_THREADS"><code class="xref std std-envvar docutils literal notranslate"><span class="pre">NUMBA_NUM_THREADS</span></code></a>
+environment variable to <code class="docutils literal notranslate"><span class="pre">2</span></code>.</p>
+<div class="code bash highlight-default notranslate"><div class="highlight"><pre><span></span>$ NUMBA_NUM_THREADS=2 python ourcode.py
+</pre></div>
+</div>
+<p>However, there are two downsides to this approach:</p>
+<ol class="arabic simple">
+<li><span class="target" id="index-2"></span><a class="reference internal" href="../reference/envvars.html#envvar-NUMBA_NUM_THREADS"><code class="xref std std-envvar docutils literal notranslate"><span class="pre">NUMBA_NUM_THREADS</span></code></a> must be set before Numba is imported, and
+ideally before Python is launched. As soon as Numba is imported the
+environment variable is read and that number of threads is locked in as the
+number of threads Numba launches.</li>
+<li>If we want to later increase the number of threads used by the process, we
+cannot. <span class="target" id="index-3"></span><a class="reference internal" href="../reference/envvars.html#envvar-NUMBA_NUM_THREADS"><code class="xref std std-envvar docutils literal notranslate"><span class="pre">NUMBA_NUM_THREADS</span></code></a> sets the <em>maximum</em> number of threads
+that are launched for a process. Calling <a class="reference internal" href="#numba.set_num_threads" title="numba.set_num_threads"><code class="xref py py-func docutils literal notranslate"><span class="pre">set_num_threads()</span></code></a> with a
+value greater than <a class="reference internal" href="#numba.config.NUMBA_NUM_THREADS" title="numba.config.NUMBA_NUM_THREADS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numba.config.NUMBA_NUM_THREADS</span></code></a> results in an
+error.</li>
+</ol>
+<p>The advantage of this approach is that we can do it from outside of the
+process without changing the code.</p>
+<p>Another approach is to use the <a class="reference internal" href="#numba.set_num_threads" title="numba.set_num_threads"><code class="xref py py-func docutils literal notranslate"><span class="pre">numba.set_num_threads()</span></code></a> function in our code</p>
+<div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">numba</span> <span class="k">import</span> <span class="n">njit</span><span class="p">,</span> <span class="n">set_num_threads</span>
+
+<span class="nd">@njit</span><span class="p">(</span><span class="n">parallel</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">func</span><span class="p">():</span>
+    <span class="o">...</span>
+
+<span class="n">set_num_threads</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">func</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>If we call <code class="docutils literal notranslate"><span class="pre">set_num_threads(2)</span></code> before executing our parallel code, it has
+the same effect as calling the process with <code class="docutils literal notranslate"><span class="pre">NUMBA_NUM_THREADS=2</span></code>, in that
+the parallel code will only execute on 2 threads. However, we can later call
+<code class="docutils literal notranslate"><span class="pre">set_num_threads(8)</span></code> to increase the number of threads back to the default
+size. And we do not have to worry about setting it before Numba gets imported.
+It only needs to be called before the parallel function is run.</p>
+</div>
+<div class="section" id="api-reference">
+<h3>1.15.4.2. API Reference<a class="headerlink" href="#api-reference" title="Permalink to this headline">¶</a></h3>
+<dl class="data">
+<dt id="numba.config.NUMBA_NUM_THREADS">
+<code class="descclassname">numba.config.</code><code class="descname">NUMBA_NUM_THREADS</code><a class="headerlink" href="#numba.config.NUMBA_NUM_THREADS" title="Permalink to this definition">¶</a></dt>
+<dd><p>The total (maximum) number of threads launched by numba.</p>
+<p>Defaults to <a class="reference internal" href="#numba.config.NUMBA_DEFAULT_NUM_THREADS" title="numba.config.NUMBA_DEFAULT_NUM_THREADS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numba.config.NUMBA_DEFAULT_NUM_THREADS</span></code></a>, but can be
+overridden with the <span class="target" id="index-4"></span><a class="reference internal" href="../reference/envvars.html#envvar-NUMBA_NUM_THREADS"><code class="xref std std-envvar docutils literal notranslate"><span class="pre">NUMBA_NUM_THREADS</span></code></a> environment variable.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="numba.config.NUMBA_DEFAULT_NUM_THREADS">
+<code class="descclassname">numba.config.</code><code class="descname">NUMBA_DEFAULT_NUM_THREADS</code><a class="headerlink" href="#numba.config.NUMBA_DEFAULT_NUM_THREADS" title="Permalink to this definition">¶</a></dt>
+<dd><p>The number of CPU cores on the system (as determined by
+<code class="docutils literal notranslate"><span class="pre">multiprocessing.cpu_count()</span></code>). This is the default value for
+<a class="reference internal" href="#numba.config.NUMBA_NUM_THREADS" title="numba.config.NUMBA_NUM_THREADS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numba.config.NUMBA_NUM_THREADS</span></code></a> unless the
+<span class="target" id="index-5"></span><a class="reference internal" href="../reference/envvars.html#envvar-NUMBA_NUM_THREADS"><code class="xref std std-envvar docutils literal notranslate"><span class="pre">NUMBA_NUM_THREADS</span></code></a> environment variable is set.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.set_num_threads">
+<code class="descclassname">numba.</code><code class="descname">set_num_threads</code><span class="sig-paren">(</span><em>n</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.set_num_threads" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the number of threads to use for parallel execution.</p>
+<p>By default, all <a class="reference internal" href="#numba.config.NUMBA_NUM_THREADS" title="numba.config.NUMBA_NUM_THREADS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numba.config.NUMBA_NUM_THREADS</span></code></a> threads are used.</p>
+<p>This functionality works by masking out threads that are not used.
+Therefore, the number of threads <em>n</em> must be less than or equal to
+<a class="reference internal" href="#numba.config.NUMBA_NUM_THREADS" title="numba.config.NUMBA_NUM_THREADS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NUMBA_NUM_THREADS</span></code></a>, the total number of threads that are launched.
+See its documentation for more details.</p>
+<p>This function can be used inside of a jitted function.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>n: The number of threads. Must be between 1 and NUMBA_NUM_THREADS.</strong></dt>
+<dd></dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<dl class="last docutils">
+<dt><a class="reference internal" href="#numba.get_num_threads" title="numba.get_num_threads"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_num_threads</span></code></a>, <a class="reference internal" href="#numba.config.NUMBA_NUM_THREADS" title="numba.config.NUMBA_NUM_THREADS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numba.config.NUMBA_NUM_THREADS</span></code></a></dt>
+<dd></dd>
+<dt><a class="reference internal" href="#numba.config.NUMBA_DEFAULT_NUM_THREADS" title="numba.config.NUMBA_DEFAULT_NUM_THREADS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numba.config.NUMBA_DEFAULT_NUM_THREADS</span></code></a>, <span class="target" id="index-6"></span><a class="reference internal" href="../reference/envvars.html#envvar-NUMBA_NUM_THREADS"><code class="xref std std-envvar docutils literal notranslate"><span class="pre">NUMBA_NUM_THREADS</span></code></a></dt>
+<dd></dd>
+</dl>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="numba.get_num_threads">
+<code class="descclassname">numba.</code><code class="descname">get_num_threads</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#numba.get_num_threads" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the number of threads used for parallel execution.</p>
+<p>By default (if <a class="reference internal" href="#numba.set_num_threads" title="numba.set_num_threads"><code class="xref py py-func docutils literal notranslate"><span class="pre">set_num_threads()</span></code></a> is never called), all
+<a class="reference internal" href="#numba.config.NUMBA_NUM_THREADS" title="numba.config.NUMBA_NUM_THREADS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numba.config.NUMBA_NUM_THREADS</span></code></a> threads are used.</p>
+<p>This number is less than or equal to the total number of threads that are
+launched, <a class="reference internal" href="#numba.config.NUMBA_NUM_THREADS" title="numba.config.NUMBA_NUM_THREADS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numba.config.NUMBA_NUM_THREADS</span></code></a>.</p>
+<p>This function can be used inside of a jitted function.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
+<dt>The number of threads.</dt>
+<dd></dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<dl class="last docutils">
+<dt><a class="reference internal" href="#numba.set_num_threads" title="numba.set_num_threads"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_num_threads</span></code></a>, <a class="reference internal" href="#numba.config.NUMBA_NUM_THREADS" title="numba.config.NUMBA_NUM_THREADS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numba.config.NUMBA_NUM_THREADS</span></code></a></dt>
+<dd></dd>
+<dt><a class="reference internal" href="#numba.config.NUMBA_DEFAULT_NUM_THREADS" title="numba.config.NUMBA_DEFAULT_NUM_THREADS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numba.config.NUMBA_DEFAULT_NUM_THREADS</span></code></a>, <span class="target" id="index-7"></span><a class="reference internal" href="../reference/envvars.html#envvar-NUMBA_NUM_THREADS"><code class="xref std std-envvar docutils literal notranslate"><span class="pre">NUMBA_NUM_THREADS</span></code></a></dt>
+<dd></dd>
+</dl>
+</div>
+</dd></dl>
+
+</div>
 </div>
 </div>
 
