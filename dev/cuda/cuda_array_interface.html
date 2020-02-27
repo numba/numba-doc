@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>3.15. CUDA Array Interface (Version 2) &#8212; Numba 0.49.0.dev0+635.g0f2f216-py3.7-linux-x86_64.egg documentation</title>
+    <title>3.15. CUDA Array Interface (Version 2) &#8212; Numba 0.49.0.dev0+659.ga4c4a8d-py3.7-linux-x86_64.egg documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/numba-docs.css" />
@@ -79,9 +79,12 @@
       aria-labelledby="dLabelLocalToc"><ul>
 <li><a class="reference internal" href="#">3.15. CUDA Array Interface (Version 2)</a><ul>
 <li><a class="reference internal" href="#python-interface-specification">3.15.1. Python Interface Specification</a><ul>
-<li><a class="reference internal" href="#differences-with-cuda-array-interface-version-0">3.15.1.1. Differences with CUDA Array Interface (Version 0)</a></li>
-<li><a class="reference internal" href="#differences-with-cuda-array-interface-version-1">3.15.1.2. Differences with CUDA Array Interface (Version 1)</a></li>
-<li><a class="reference internal" href="#interoperability">3.15.1.3. Interoperability</a></li>
+<li><a class="reference internal" href="#lifetime-management">3.15.1.1. Lifetime management</a></li>
+<li><a class="reference internal" href="#lifetime-management-in-numba">3.15.1.2. Lifetime management in Numba</a></li>
+<li><a class="reference internal" href="#pointer-attributes">3.15.1.3. Pointer Attributes</a></li>
+<li><a class="reference internal" href="#differences-with-cuda-array-interface-version-0">3.15.1.4. Differences with CUDA Array Interface (Version 0)</a></li>
+<li><a class="reference internal" href="#differences-with-cuda-array-interface-version-1">3.15.1.5. Differences with CUDA Array Interface (Version 1)</a></li>
+<li><a class="reference internal" href="#interoperability">3.15.1.6. Interoperability</a></li>
 </ul>
 </li>
 </ul>
@@ -201,6 +204,49 @@ to a GPU function.</p>
 </div>
 </li>
 </ul>
+<div class="section" id="lifetime-management">
+<h3>3.15.1.1. Lifetime management<a class="headerlink" href="#lifetime-management" title="Permalink to this headline">¶</a></h3>
+<p>Obtaining the value of the <code class="docutils literal notranslate"><span class="pre">__cuda_array_interface__</span></code> property of any object
+has no effect on the lifetime of the object from which it was created. In
+particular, note that the interface has no slot for the owner of the data.</p>
+<p>It is therefore imperative for a consumer to retain a reference to the object
+owning the data for as long as they make use of the data.</p>
+</div>
+<div class="section" id="lifetime-management-in-numba">
+<h3>3.15.1.2. Lifetime management in Numba<a class="headerlink" href="#lifetime-management-in-numba" title="Permalink to this headline">¶</a></h3>
+<p>Numba provides two mechanisms for creating device arrays. Which to use depends
+on whether the created device array should maintain the life of the object from
+which it is created:</p>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">as_cuda_array</span></code>: This creates a device array that holds a reference to the
+owning object. As long as a reference to the device array is held, its
+underlying data will also be kept alive, even if all other references to the
+original owning object have been dropped.</li>
+<li><code class="docutils literal notranslate"><span class="pre">from_cuda_array_interface</span></code>: This creates a device array with no reference
+to the owning object by default. The owning object, or some other object to
+be considered the owner can be passed in the <code class="docutils literal notranslate"><span class="pre">owner</span></code> parameter.</li>
+</ul>
+<p>The interfaces of these functions are:</p>
+<dl class="method">
+<dt id="numba.cuda.as_cuda_array">
+<code class="descclassname">cuda.</code><code class="descname">as_cuda_array</code><span class="sig-paren">(</span><em>obj</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.cuda.as_cuda_array" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a DeviceNDArray from any object that implements
+the <a class="reference internal" href="#cuda-array-interface"><span class="std std-ref">cuda array interface</span></a>.</p>
+<p>A view of the underlying GPU buffer is created.  No copying of the data
+is done.  The resulting DeviceNDArray will acquire a reference from <cite>obj</cite>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.from_cuda_array_interface">
+<code class="descclassname">cuda.</code><code class="descname">from_cuda_array_interface</code><span class="sig-paren">(</span><em>desc</em>, <em>owner=None</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.cuda.from_cuda_array_interface" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a DeviceNDArray from a cuda-array-interface description.
+The <em>owner</em> is the owner of the underlying memory.
+The resulting DeviceNDArray will acquire a reference from it.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="pointer-attributes">
+<h3>3.15.1.3. Pointer Attributes<a class="headerlink" href="#pointer-attributes" title="Permalink to this headline">¶</a></h3>
 <p>Additional information about the data pointer can be retrieved using
 <code class="docutils literal notranslate"><span class="pre">cuPointerGetAttribute</span></code> or <code class="docutils literal notranslate"><span class="pre">cudaPointerGetAttributes</span></code>.  Such information
 include:</p>
@@ -209,19 +255,20 @@ include:</p>
 <li>is the pointer host-accessible?</li>
 <li>is the pointer a managed memory?</li>
 </ul>
+</div>
 <div class="section" id="differences-with-cuda-array-interface-version-0">
-<h3>3.15.1.1. Differences with CUDA Array Interface (Version 0)<a class="headerlink" href="#differences-with-cuda-array-interface-version-0" title="Permalink to this headline">¶</a></h3>
+<h3>3.15.1.4. Differences with CUDA Array Interface (Version 0)<a class="headerlink" href="#differences-with-cuda-array-interface-version-0" title="Permalink to this headline">¶</a></h3>
 <p>Version 0 of the CUDA Array Interface did not have the optional <strong>mask</strong>
 attribute to support masked arrays.</p>
 </div>
 <div class="section" id="differences-with-cuda-array-interface-version-1">
-<h3>3.15.1.2. Differences with CUDA Array Interface (Version 1)<a class="headerlink" href="#differences-with-cuda-array-interface-version-1" title="Permalink to this headline">¶</a></h3>
+<h3>3.15.1.5. Differences with CUDA Array Interface (Version 1)<a class="headerlink" href="#differences-with-cuda-array-interface-version-1" title="Permalink to this headline">¶</a></h3>
 <p>Versions 0 and 1 of the CUDA Array Interface neither clarified the
 <strong>strides</strong> attribute for C-contiguous arrays nor specified the treatment for
 zero-size arrays.</p>
 </div>
 <div class="section" id="interoperability">
-<h3>3.15.1.3. Interoperability<a class="headerlink" href="#interoperability" title="Permalink to this headline">¶</a></h3>
+<h3>3.15.1.6. Interoperability<a class="headerlink" href="#interoperability" title="Permalink to this headline">¶</a></h3>
 <p>The following Python libraries have adopted the CUDA Array Interface:</p>
 <ul class="simple">
 <li>Numba</li>
