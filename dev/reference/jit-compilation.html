@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>2.2. Just-in-Time compilation &#8212; Numba 0.49.0.dev0+659.ga4c4a8d-py3.7-linux-x86_64.egg documentation</title>
+    <title>2.2. Just-in-Time compilation &#8212; Numba 0.49.0.dev0+919.gafd5c67-py3.7-linux-x86_64.egg documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/numba-docs.css" />
@@ -163,7 +163,7 @@ local variable names to <a class="reference internal" href="types.html#numba-typ
 <ul class="simple">
 <li>If one or more signatures are given in <em>signature</em>, a specialization is
 compiled for each of them.  Calling the decorated function will then try
-to choose the best matching signature, and raise a <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TypeError" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">TypeError</span></code></a> if
+to choose the best matching signature, and raise a <code class="xref py py-class docutils literal notranslate"><span class="pre">TypeError</span></code> if
 no appropriate conversion is available for the function arguments.  If
 converting succeeds, the compiled machine code is executed with the
 converted arguments and the return value is converted back according to
@@ -181,7 +181,7 @@ mode</span></a>. If not possible, compilation will raise an error.</p>
 <p>If true, <em>forceobj</em> forces the function to be compiled in <a class="reference internal" href="../glossary.html#term-object-mode"><span class="xref std std-term">object
 mode</span></a>.  Since object mode is slower than nopython mode, this is mostly
 useful for testing purposes.</p>
-<p>If true, <em>nogil</em> tries to release the <a class="reference external" href="https://docs.python.org/3/glossary.html#term-global-interpreter-lock" title="(in Python v3.8)"><span class="xref std std-term">global interpreter lock</span></a>
+<p>If true, <em>nogil</em> tries to release the <span class="xref std std-term">global interpreter lock</span>
 inside the compiled function.  The GIL will only be released if Numba can
 compile the function in <a class="reference internal" href="../glossary.html#term-nopython-mode"><span class="xref std std-term">nopython mode</span></a>, otherwise a compilation
 warning will be printed.</p>
@@ -332,6 +332,61 @@ notebook, the returned object can be plot inlined.</p>
 
 <span class="c1"># opens the CFG in system default application</span>
 <span class="n">foo</span><span class="o">.</span><span class="n">inspect_cfg</span><span class="p">(</span><span class="n">foo</span><span class="o">.</span><span class="n">signatures</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">display</span><span class="p">(</span><span class="n">view</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="Dispatcher.inspect_disasm_cfg">
+<code class="descname">inspect_disasm_cfg</code><span class="sig-paren">(</span><em>signature=None</em><span class="sig-paren">)</span><a class="headerlink" href="#Dispatcher.inspect_disasm_cfg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a dictionary keying compiled function signatures to the
+control-flow graph of the disassembly of the underlying compiled <code class="docutils literal notranslate"><span class="pre">ELF</span></code>
+object.  If the signature keyword is specified a control-flow graph
+corresponding to that individual signature is returned. This function is
+execution environment aware and will produce SVG output in Jupyter
+notebooks and ASCII in terminals.</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@njit</span>
+<span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">2</span>
+
+<span class="n">foo</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">foo</span><span class="o">.</span><span class="n">inspect_disasm_cfg</span><span class="p">(</span><span class="n">signature</span><span class="o">=</span><span class="n">foo</span><span class="o">.</span><span class="n">signatures</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+</pre></div>
+</div>
+<p>Gives:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>[0x08000040]&gt;  # method.__main__.foo_241_long_long (int64_t arg1, int64_t arg3);
+ ─────────────────────────────────────────────────────────────────────┐
+│  0x8000040                                                          │
+│ ; arg3 ; [02] -r-x section size 279 named .text                     │
+│   ;-- section..text:                                                │
+│   ;-- .text:                                                        │
+│   ;-- __main__::foo$241(long long):                                 │
+│   ;-- rip:                                                          │
+│ 25: method.__main__.foo_241_long_long (int64_t arg1, int64_t arg3); │
+│ ; arg int64_t arg1 @ rdi                                            │
+│ ; arg int64_t arg3 @ rdx                                            │
+│ ; 2                                                                 │
+│ cmp rdx, 2                                                          │
+│ jg 0x800004f                                                        │
+└─────────────────────────────────────────────────────────────────────┘
+        f t
+        │ │
+        │ └──────────────────────────────┐
+        └──┐                             │
+           │                             │
+    ┌─────────────────────────┐   ┌─────────────────────────┐
+    │  0x8000046              │   │  0x800004f              │
+    │ ; arg3                  │   │ ; arg3                  │
+    │ inc rdx                 │   │ add rdx, 2              │
+    │ ; arg3                  │   │ ; arg3                  │
+    │ mov qword [rdi], rdx    │   │ mov qword [rdi], rdx    │
+    │ xor eax, eax            │   │ xor eax, eax            │
+    │ ret                     │   │ ret                     │
+    └─────────────────────────┘   └─────────────────────────┘
 </pre></div>
 </div>
 </dd></dl>
@@ -629,8 +684,8 @@ only minimal type checking will happen when passing it to <a class="reference ex
 <dl class="attribute">
 <dt id="CFunc.ctypes">
 <code class="descname">ctypes</code><a class="headerlink" href="#CFunc.ctypes" title="Permalink to this definition">¶</a></dt>
-<dd><p>A <a class="reference external" href="https://docs.python.org/3/library/ctypes.html#module-ctypes" title="(in Python v3.8)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">ctypes</span></code></a> callback instance, as if it were created using
-<a class="reference external" href="https://docs.python.org/3/library/ctypes.html#ctypes.CFUNCTYPE" title="(in Python v3.8)"><code class="xref py py-func docutils literal notranslate"><span class="pre">ctypes.CFUNCTYPE()</span></code></a>.</p>
+<dd><p>A <code class="xref py py-mod docutils literal notranslate"><span class="pre">ctypes</span></code> callback instance, as if it were created using
+<code class="xref py py-func docutils literal notranslate"><span class="pre">ctypes.CFUNCTYPE()</span></code>.</p>
 </dd></dl>
 
 <dl class="attribute">

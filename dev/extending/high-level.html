@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>6.1. High-level extension API &#8212; Numba 0.49.0.dev0+659.ga4c4a8d-py3.7-linux-x86_64.egg documentation</title>
+    <title>6.1. High-level extension API &#8212; Numba 0.49.0.dev0+919.gafd5c67-py3.7-linux-x86_64.egg documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/numba-docs.css" />
@@ -145,7 +145,7 @@ runtime arguments.  It should return a callable representing the
 implementation is compiled by Numba as if it were a normal function
 decorated with <code class="docutils literal notranslate"><span class="pre">&#64;jit</span></code>.  Additional options to <code class="docutils literal notranslate"><span class="pre">&#64;jit</span></code> can be passed as
 dictionary using the <code class="docutils literal notranslate"><span class="pre">jit_options</span></code> argument.</p>
-<p>For example, let’s pretend Numba doesn’t support the <a class="reference external" href="https://docs.python.org/3/library/functions.html#len" title="(in Python v3.8)"><code class="xref py py-func docutils literal notranslate"><span class="pre">len()</span></code></a> function
+<p>For example, let’s pretend Numba doesn’t support the <code class="xref py py-func docutils literal notranslate"><span class="pre">len()</span></code> function
 on tuples yet.  Here is how to implement it using <code class="docutils literal notranslate"><span class="pre">&#64;overload</span></code>:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">numba</span> <span class="k">import</span> <span class="n">types</span>
 <span class="kn">from</span> <span class="nn">numba.extending</span> <span class="k">import</span> <span class="n">overload</span>
@@ -159,17 +159,17 @@ on tuples yet.  Here is how to implement it using <code class="docutils literal 
        <span class="k">return</span> <span class="n">len_impl</span>
 </pre></div>
 </div>
-<p>You might wonder, what happens if <a class="reference external" href="https://docs.python.org/3/library/functions.html#len" title="(in Python v3.8)"><code class="xref py py-func docutils literal notranslate"><span class="pre">len()</span></code></a> is called with something
+<p>You might wonder, what happens if <code class="xref py py-func docutils literal notranslate"><span class="pre">len()</span></code> is called with something
 else than a tuple? If a function decorated with <code class="docutils literal notranslate"><span class="pre">&#64;overload</span></code> doesn’t
 return anything (i.e. returns None), other definitions are tried until
-one succeeds.  Therefore, multiple libraries may overload <a class="reference external" href="https://docs.python.org/3/library/functions.html#len" title="(in Python v3.8)"><code class="xref py py-func docutils literal notranslate"><span class="pre">len()</span></code></a>
+one succeeds.  Therefore, multiple libraries may overload <code class="xref py py-func docutils literal notranslate"><span class="pre">len()</span></code>
 for different types without conflicting with each other.</p>
 </div>
 <div class="section" id="implementing-methods">
 <h2>6.1.2. Implementing methods<a class="headerlink" href="#implementing-methods" title="Permalink to this headline">¶</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">&#64;overload_method</span></code> decorator similarly allows implementing a
 method on a type well-known to Numba. The following example implements
-the <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.take.html#numpy.ndarray.take" title="(in NumPy v1.17)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">take()</span></code></a> method on Numpy arrays:</p>
+the <code class="xref py py-meth docutils literal notranslate"><span class="pre">take()</span></code> method on Numpy arrays:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@overload_method</span><span class="p">(</span><span class="n">types</span><span class="o">.</span><span class="n">Array</span><span class="p">,</span> <span class="s1">&#39;take&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">array_take</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">indices</span><span class="p">):</span>
    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">indices</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">Array</span><span class="p">):</span>
@@ -189,7 +189,7 @@ the <a class="reference external" href="https://docs.scipy.org/doc/numpy/referen
 attribute (or property) on a type.  Only reading the attribute is
 possible; writable attributes are only supported through the
 <a class="reference internal" href="low-level.html#low-level-extending"><span class="std std-ref">low-level API</span></a>.</p>
-<p>The following example implements the <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.nbytes.html#numpy.ndarray.nbytes" title="(in NumPy v1.17)"><code class="xref py py-attr docutils literal notranslate"><span class="pre">nbytes</span></code></a> attribute
+<p>The following example implements the <code class="xref py py-attr docutils literal notranslate"><span class="pre">nbytes</span></code> attribute
 on Numpy arrays:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@overload_attribute</span><span class="p">(</span><span class="n">types</span><span class="o">.</span><span class="n">Array</span><span class="p">,</span> <span class="s1">&#39;nbytes&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">array_nbytes</span><span class="p">(</span><span class="n">arr</span><span class="p">):</span>
@@ -203,7 +203,7 @@ on Numpy arrays:</p>
 <span id="cython-support"></span><h2>6.1.4. Importing Cython Functions<a class="headerlink" href="#importing-cython-functions" title="Permalink to this headline">¶</a></h2>
 <p>The function <code class="docutils literal notranslate"><span class="pre">get_cython_function_address</span></code> obtains the address of a
 C function in a Cython extension module. The address can be used to
-access the C function via a <a class="reference external" href="https://docs.python.org/3/library/ctypes.html#ctypes.CFUNCTYPE" title="(in Python v3.8)"><code class="xref py py-func docutils literal notranslate"><span class="pre">ctypes.CFUNCTYPE()</span></code></a> callback, thus
+access the C function via a <code class="xref py py-func docutils literal notranslate"><span class="pre">ctypes.CFUNCTYPE()</span></code> callback, thus
 allowing use of the C function inside a Numba jitted function. For
 example, suppose that you have the file <code class="docutils literal notranslate"><span class="pre">foo.pyx</span></code>:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">libc.math</span> <span class="n">cimport</span> <span class="n">exp</span>
