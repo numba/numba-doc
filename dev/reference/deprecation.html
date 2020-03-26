@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>2.11. Deprecation Notices &mdash; Numba 0.49.0.dev0+983.g029c197-py3.7-linux-x86_64.egg documentation</title>
+  <title>2.11. Deprecation Notices &mdash; Numba 0.49.0.dev0+995.gd0c7923-py3.7-linux-x86_64.egg documentation</title>
   
 
   
@@ -488,6 +488,12 @@
 <li class="toctree-l4"><a class="reference internal" href="#id2">2.11.3.2. Example(s) of the impact</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#id3">2.11.3.3. Schedule</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#id4">2.11.3.4. Recommendations</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#change-of-jitclass-location">2.11.4. Change of jitclass location</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id5">2.11.4.1. Example(s) of the impact</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id6">2.11.4.2. Recommendations</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id7">2.11.4.3. Schedule</a></li>
 </ul>
 </li>
 </ul>
@@ -1322,8 +1328,8 @@ cycle.</p>
 <p>This feature will be removed with respect to this schedule:</p>
 <ul class="simple">
 <li>Pending-deprecation warnings will be issued in version 0.44.0</li>
-<li>Deprecation warnings and replacements will be issued in version 0.49.0</li>
-<li>Support will be removed in version 0.50.0</li>
+<li>Deprecation warnings and replacements will be issued in version 0.50.0</li>
+<li>Support will be removed in version 0.51.0</li>
 </ul>
 </div>
 <div class="section" id="recommendations">
@@ -1442,6 +1448,37 @@ benefit to having the <code class="docutils literal notranslate"><span class="pr
 is benefit to having the <code class="docutils literal notranslate"><span class="pre">&#64;jit</span></code> decorator present, then to be future proof
 supply the keyword argument <code class="docutils literal notranslate"><span class="pre">forceobj=True</span></code> to ensure the function is always
 compiled in <a class="reference internal" href="../glossary.html#term-object-mode"><span class="xref std std-term">object mode</span></a>.</p>
+</div>
+</div>
+<div class="section" id="change-of-jitclass-location">
+<h2>2.11.4. Change of jitclass location<a class="headerlink" href="#change-of-jitclass-location" title="Permalink to this headline">¶</a></h2>
+<p>Between versions 0.48 and 0.49 Numba underwent a large amount of refactoring.
+One of the decisions made by the core developers as part of this refactoring was
+to move <code class="docutils literal notranslate"><span class="pre">numba.jitclass</span></code> to a new location <code class="docutils literal notranslate"><span class="pre">numba.experimental.jitclass</span></code>.
+This is to help reinforce expectations over the behaviour and support for
+certain features by deliberately placing them in an <code class="docutils literal notranslate"><span class="pre">experimental</span></code> submodule.</p>
+<div class="section" id="id5">
+<h3>2.11.4.1. Example(s) of the impact<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">jitclass</span></code> decorator has historically been available via
+<code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">numba</span> <span class="pre">import</span> <span class="pre">jitclass</span></code>, any code using this import location will in
+future need to be updated to <code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">numba.experimental</span> <span class="pre">import</span> <span class="pre">jitclass</span></code>.</p>
+</div>
+<div class="section" id="id6">
+<h3>2.11.4.2. Recommendations<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<p>Simply update imports as follows:</p>
+<ul class="simple">
+<li>Change <code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">numba</span> <span class="pre">import</span> <span class="pre">jitclass</span></code> to
+<code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">numba.experimental</span> <span class="pre">import</span> <span class="pre">jitclass</span></code></li>
+</ul>
+</div>
+<div class="section" id="id7">
+<h3>2.11.4.3. Schedule<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<p>This feature will be moved with respect to this schedule:</p>
+<ul class="simple">
+<li>Deprecation warnings will be issued in version 0.49.0</li>
+<li>Support for importing from <code class="docutils literal notranslate"><span class="pre">numba.jitclass</span></code> will be removed in version
+0.51.0.</li>
+</ul>
 </div>
 </div>
 </div>
