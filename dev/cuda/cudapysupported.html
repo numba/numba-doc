@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>3.5. Supported Python features in CUDA Python &mdash; Numba 0.50.0.dev0-py3.7-linux-x86_64.egg documentation</title>
+  <title>3.5. Supported Python features in CUDA Python &mdash; Numba 0.50.0.dev0+4.g1e2dc49-py3.7-linux-x86_64.egg documentation</title>
   
 
   
@@ -1266,6 +1266,12 @@ fashion.</p>
 <code class="docutils literal notranslate"><span class="pre">debug=True</span></code> is passed to the <a class="reference internal" href="../cuda-reference/kernel.html#numba.cuda.jit" title="numba.cuda.jit"><code class="xref py py-func docutils literal notranslate"><span class="pre">numba.cuda.jit()</span></code></a> decorator. This is
 similar to the behavior of the <code class="docutils literal notranslate"><span class="pre">assert</span></code> keyword in CUDA C/C++, which is
 ignored unless compiling with device debug turned on.</p>
+<p>Printing of strings, integers, and floats is supported, but printing is an
+asynchronous operation - in order to ensure that all output is printed after a
+kernel launch, it is necessary to call <a class="reference internal" href="../cuda-reference/host.html#numba.cuda.synchronize" title="numba.cuda.synchronize"><code class="xref py py-func docutils literal notranslate"><span class="pre">numba.cuda.synchronize()</span></code></a>. Eliding
+the call to <code class="docutils literal notranslate"><span class="pre">synchronize</span></code> is acceptable, but output from a kernel may appear
+during other later driver operations (e.g. subsequent kernel launches, memory
+transfers, etc.), or fail to appear before the program execution completes.</p>
 </div>
 </div>
 <div class="section" id="built-in-types">
