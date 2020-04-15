@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Release Notes &mdash; Numba 0.50.0.dev0+102.g5dbed9d-py3.7-linux-x86_64.egg documentation</title>
+  <title>Release Notes &mdash; Numba 0.50.0.dev0+105.g6006214-py3.7-linux-x86_64.egg documentation</title>
   
 
   
@@ -1299,12 +1299,16 @@ iterating over 2D arrays (#5115), also fixed some compiler warnings due to
 missing (void) in #5222. Also helped improved the “shim” and associated
 warnings in #5485, #5488, #5498 and partly #5532.</li>
 <li>Ethan Pronovost fixed a problem with the shim erroneously warning for jitclass
-use in #5454.</li>
+use in #5454 and also prevented illegal return values in jitclass <code class="docutils literal notranslate"><span class="pre">__init__</span></code>
+in #5505.</li>
 <li>Gabriel Majeri added SciPy 2019 talks to the docs in #5106.</li>
 <li>Graham Markall changed the Numba HTML documentation theme to resolve a number
 of long standing issues in #5346. Also contributed were a large number of CUDA
 enhancements and fixes, namely:<ul>
+<li>#5519: CUDA: Silence the test suite - Fix #4809, remove autojit, delete
+prints</li>
 <li>#5443: Fix #5196: Docs: assert in CUDA only enabled for debug</li>
+<li>#5436: Fix #5408: test_set_registers_57 fails on Maxwell</li>
 <li>#5423: Fix #5421: Add notes on printing in CUDA kernels</li>
 <li>#5400: Fix #4954, and some other small CUDA testsuite fixes</li>
 <li>#5328: NBEP 7: External Memory Management Plugin Interface</li>
@@ -1326,6 +1330,7 @@ RNG seed correctly in #3897/#5310.</li>
 requirements.txt in #5150.</li>
 <li>Ivan Butygin helped fix an issue with parfors sequential lowering in
 #5114/#5250.</li>
+<li>Jacques Gaudin fixed a bug for Python &gt;= 3.8 in <code class="docutils literal notranslate"><span class="pre">numba</span> <span class="pre">-s</span></code> in #5548.</li>
 <li>Jim Pivarski added some hints for debugging entry points in #5280.</li>
 <li>John Kirkham added <code class="docutils literal notranslate"><span class="pre">numpy.dtype</span></code> coercion for the <code class="docutils literal notranslate"><span class="pre">dtype</span></code> argument to CUDA
 device arrays in #5252.</li>
@@ -1340,7 +1345,7 @@ requiring the context in #5189.</li>
 <li>Mike Williams fixed some issues with NumPy records and <code class="docutils literal notranslate"><span class="pre">getitem</span></code> in the CUDA
 simulator in #5343.</li>
 <li>Pearu Peterson added experimental support for first-class function types in
-#5287 (and fixes in #5473/#5429).</li>
+#5287 (and fixes in #5459, #5473/#5429, and #5557).</li>
 <li>Ravi Teja Gutta added support for <code class="docutils literal notranslate"><span class="pre">np.flip</span></code> in #4376/#5313.</li>
 <li>Rohit Sanjay fixed an issue with type refinement for unicode input supplied to
 typed-list <code class="docutils literal notranslate"><span class="pre">extend()</span></code> (#5295) and fixed unicode <code class="docutils literal notranslate"><span class="pre">.strip()</span></code> to strip all
@@ -1365,6 +1370,7 @@ implemented a Numba IR Lexer and added highlighting to Numba IR dumps in
 <li>PR #5182: Add getitem for Record type when index is StringLiteral</li>
 <li>PR #5185: extract code-gen utilities from closures</li>
 <li>PR #5197: Refactor Numba, part I</li>
+<li>PR #5210: Remove more unsupported Python versions from build tooling.</li>
 <li>PR #5212: Adds support for viewing the CFG of the ELF disassembly.</li>
 <li>PR #5227: Immutable typed-list</li>
 <li>PR #5231: Added support for <code class="docutils literal notranslate"><span class="pre">np.asarray</span></code> to be used with
@@ -1372,6 +1378,7 @@ implemented a Numba IR Lexer and added highlighting to Numba IR dumps in
 <li>PR #5235: Added property <code class="docutils literal notranslate"><span class="pre">dtype</span></code> to <code class="docutils literal notranslate"><span class="pre">numba.typed.List</span></code></li>
 <li>PR #5272: Refactor parfor: split up ParforPass</li>
 <li>PR #5281: Make IR ir.Del free until legalized.</li>
+<li>PR #5287: First-class function type</li>
 <li>PR #5293: np.isnat</li>
 <li>PR #5294: Create typed-list from iterable</li>
 <li>PR #5295: refine typed-list on unicode input to extend</li>
@@ -1387,11 +1394,10 @@ implemented a Numba IR Lexer and added highlighting to Numba IR dumps in
 <li>PR #5352: Add shim to accommodate refactoring.</li>
 <li>PR #5356: implement allocated parameter in njit</li>
 <li>PR #5369: Make test ordering more consistent across feature availability</li>
-<li>PR #5210: Remove more unsupported Python versions from build tooling.</li>
 <li>PR #5428: Wip/deprecate jitclass location</li>
-<li>PR #5287: First-class function type</li>
 <li>PR #5441: Additional changes to first class function</li>
 <li>PR #5455: Move to llvmlite 0.32.*</li>
+<li>PR #5457: implement repr for untyped lists</li>
 </ul>
 <p>Fixes:</p>
 <ul class="simple">
@@ -1427,14 +1433,21 @@ recursive type locking.</li>
 <li>PR #5432: Fix code causing compiler warnings.</li>
 <li>PR #5445: Remove undefined variable</li>
 <li>PR #5454: Don’t warn for numba.experimental.jitclass</li>
+<li>PR #5459: Fixes issue 5448</li>
 <li>PR #5480: Fix for #5477, literal_unroll KeyError searching for getitems</li>
 <li>PR #5485: Show the offending module in “no direct replacement” error message</li>
 <li>PR #5488: Add missing <code class="docutils literal notranslate"><span class="pre">numba.config</span></code> shim</li>
 <li>PR #5495: Fix missing null initializer for variable after phi strip</li>
 <li>PR #5498: Make the shim deprecation warnings work on python 3.6 too</li>
+<li>PR #5505: Better error message if __init__ returns value</li>
 <li>PR #5527: Attempt to fix #5518</li>
 <li>PR #5529: PR #5473 continued</li>
 <li>PR #5532: Make <code class="docutils literal notranslate"><span class="pre">numba.&lt;mod&gt;</span></code> available without an import</li>
+<li>PR #5542: Fixes RC2 module shim bug</li>
+<li>PR #5548: Fix #5537 Removed reference to <code class="docutils literal notranslate"><span class="pre">platform.linux_distribution</span></code></li>
+<li>PR #5555: Fix #5515 by reverting changes to ArrayAnalysis</li>
+<li>PR #5557: First-class function call cannot use keyword arguments</li>
+<li>PR #5568: Add skip to entrypoint test on windows</li>
 </ul>
 <p>CUDA Enhancements/Fixes:</p>
 <ul class="simple">
@@ -1452,6 +1465,9 @@ recursive type locking.</li>
 <li>PR #5328: NBEP 7: External Memory Management Plugin Interface</li>
 <li>PR #5343: Fix cuda spoof</li>
 <li>PR #5400: Fix #4954, and some other small CUDA testsuite fixes</li>
+<li>PR #5436: Fix #5408: test_set_registers_57 fails on Maxwell</li>
+<li>PR #5519: CUDA: Silence the test suite - Fix #4809, remove autojit, delete
+prints</li>
 </ul>
 <p>Documentation Updates:</p>
 <ul class="simple">
@@ -1486,10 +1502,10 @@ documentation</li>
 </ul>
 <p>Authors:</p>
 <ul class="simple">
-<li>Arik Funke</li>
 <li>Aaron Meurer</li>
 <li>Andreas Sodeur</li>
 <li>Antonio Russo</li>
+<li>Arik Funke</li>
 <li>Eric Wieser</li>
 <li>Ethan Pronovost</li>
 <li>Gabriel Majeri</li>
@@ -1499,6 +1515,7 @@ documentation</li>
 <li>hdf</li>
 <li>Henry Schreiner</li>
 <li>Ivan Butygin</li>
+<li>Jacques Gaudin</li>
 <li>Jim Pivarski</li>
 <li>John Kirkham</li>
 <li>Leo Fang</li>
