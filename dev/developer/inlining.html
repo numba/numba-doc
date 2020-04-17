@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Notes on Inlining &mdash; Numba 0.50.0.dev0+109.g1f9d82f-py3.7-linux-x86_64.egg documentation</title>
+  <title>Notes on Inlining &mdash; Numba 0.50.0.dev0+121.gd66dc92-py3.7-linux-x86_64.egg documentation</title>
   
 
   
@@ -983,6 +983,7 @@
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Notes on Inlining</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#example-using-numba-jit">Example using <code class="docutils literal notranslate"><span class="pre">numba.jit()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#example-using-numba-extending-overload">Example using <code class="docutils literal notranslate"><span class="pre">numba.extending.overload()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#using-a-function-to-limit-the-inlining-depth-of-a-recursive-function">Using a function to limit the inlining depth of a recursive function</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="environment.html">Environment Object</a><ul>
@@ -1317,6 +1318,10 @@ the information from the callee.</p>
 inline, this essentially permitting custom inlining rules (typical use might
 be cost models).</p>
 </li>
+<li><p class="first">Recursive functions with <code class="docutils literal notranslate"><span class="pre">inline='always'</span></code> will result in a non-terminating
+compilation. If you wish to avoid this, supply a function to limit the
+recursion depth (see below).</p>
+</li>
 </ul>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
@@ -1622,6 +1627,33 @@ the argument was an <code class="docutils literal notranslate"><span class="pre"
 <li>That dead code elimination has not been performed and as a result there are
 superfluous statements present in the IR.</li>
 </ol>
+</div>
+<div class="section" id="using-a-function-to-limit-the-inlining-depth-of-a-recursive-function">
+<h2>Using a function to limit the inlining depth of a recursive function<a class="headerlink" href="#using-a-function-to-limit-the-inlining-depth-of-a-recursive-function" title="Permalink to this headline">¶</a></h2>
+<p>When using recursive inlines, you can terminate the compilation by using
+a cost model.</p>
+<div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">numba</span> <span class="k">import</span> <span class="n">njit</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="k">class</span> <span class="nc">CostModel</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_inlines</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_count</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_max_inlines</span> <span class="o">=</span> <span class="n">max_inlines</span>
+
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">expr</span><span class="p">,</span> <span class="n">caller</span><span class="p">,</span> <span class="n">callee</span><span class="p">):</span>
+        <span class="n">ret</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_count</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_inlines</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_count</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">ret</span>
+
+<span class="nd">@njit</span><span class="p">(</span><span class="n">inline</span><span class="o">=</span><span class="n">CostModel</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
+<span class="k">def</span> <span class="nf">factorial</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">n</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">n</span> <span class="o">*</span> <span class="n">factorial</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="n">factorial</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
 </div>
 </div>
 
