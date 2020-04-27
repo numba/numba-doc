@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Notes on Numba’s threading implementation &mdash; Numba 0.50.0.dev0+142.g0bc8904-py3.7-linux-x86_64.egg documentation</title>
+  <title>Notes on Numba’s threading implementation &mdash; Numba 0.50.0.dev0+155.g1873621-py3.7-linux-x86_64.egg documentation</title>
   
 
   
@@ -1261,11 +1261,11 @@ function in the threading library that performs the parallel execution is the
 execute the parallel tasks.</p>
 <p>The relevant source files referenced in this document are</p>
 <ul>
-<li><p class="first"><code class="docutils literal notranslate"><span class="pre">numba/npyufunc/tbbpool.cpp</span></code></p>
+<li><p class="first"><code class="docutils literal notranslate"><span class="pre">numba/np/ufunc/tbbpool.cpp</span></code></p>
 </li>
-<li><p class="first"><code class="docutils literal notranslate"><span class="pre">numba/npyufunc/omppool.cpp</span></code></p>
+<li><p class="first"><code class="docutils literal notranslate"><span class="pre">numba/np/ufunc/omppool.cpp</span></code></p>
 </li>
-<li><p class="first"><code class="docutils literal notranslate"><span class="pre">numba/npyufunc/workqueue.c</span></code></p>
+<li><p class="first"><code class="docutils literal notranslate"><span class="pre">numba/np/ufunc/workqueue.c</span></code></p>
 <p>These files contain the TBB, OpenMP, and workqueue threadpool
 implementations, respectively. Each includes the functions
 <code class="docutils literal notranslate"><span class="pre">set_num_threads()</span></code>, <code class="docutils literal notranslate"><span class="pre">get_num_threads()</span></code>, and <code class="docutils literal notranslate"><span class="pre">get_thread_id()</span></code>, as
@@ -1273,13 +1273,13 @@ well as the relevant logic for thread masking in their respective
 schedulers. Note that the basic thread local variable logic is duplicated in
 each of these files, and not shared between them.</p>
 </li>
-<li><p class="first"><code class="docutils literal notranslate"><span class="pre">numba/npyufunc/parallel.py</span></code></p>
+<li><p class="first"><code class="docutils literal notranslate"><span class="pre">numba/np/ufunc/parallel.py</span></code></p>
 <p>This file contains the Python and JIT compatible wrappers for
 <code class="docutils literal notranslate"><span class="pre">set_num_threads()</span></code>, <code class="docutils literal notranslate"><span class="pre">get_num_threads()</span></code>, and <code class="docutils literal notranslate"><span class="pre">get_thread_id()</span></code>, as
 well as the code that loads the above libraries into Python and launches the
 threadpool.</p>
 </li>
-<li><p class="first"><code class="docutils literal notranslate"><span class="pre">numba/npyufunc/parfor.py</span></code></p>
+<li><p class="first"><code class="docutils literal notranslate"><span class="pre">numba/parfors/parfor_lowering.py</span></code></p>
 <p>This file contains the main logic for generating code for the parallel
 backend. The thread mask is accessed in this file in the code that generates
 scheduler code, and passed to the relevant backend scheduler function (see
@@ -1289,7 +1289,7 @@ below).</p>
 <div class="section" id="thread-masking">
 <h2>Thread masking<a class="headerlink" href="#thread-masking" title="Permalink to this headline">¶</a></h2>
 <p>As part of its design, Numba never launches new threads beyond the threads
-that are launched initially with <code class="docutils literal notranslate"><span class="pre">numba.npyufunc.parallel._launch_threads()</span></code>
+that are launched initially with <code class="docutils literal notranslate"><span class="pre">numba.np.ufunc.parallel._launch_threads()</span></code>
 when the first parallel execution is run. This is due to the way threads were
 already implemented in Numba prior to thread masking being implemented. This
 restriction was kept to keep the design simple, although it could be removed
@@ -1396,7 +1396,7 @@ propagation into child processes, see <code class="docutils literal notranslate"
 <h4>Thread ID<a class="headerlink" href="#thread-id" title="Permalink to this headline">¶</a></h4>
 <p>A private <code class="docutils literal notranslate"><span class="pre">get_thread_id()</span></code> function was added to each threading backend,
 which returns a unique ID for each thread. This can be accessed from Python by
-<code class="docutils literal notranslate"><span class="pre">numba.npyufunc.parallel._get_thread_id()</span></code> (it can also be used inside a
+<code class="docutils literal notranslate"><span class="pre">numba.np.ufunc.parallel._get_thread_id()</span></code> (it can also be used inside a
 JIT compiled function). The thread ID function is useful for testing that the
 thread masking behavior is correct, but it should not be used outside of the
 tests. For example, one can call <code class="docutils literal notranslate"><span class="pre">set_num_threads(4)</span></code> and then collect all
@@ -1440,7 +1440,7 @@ behavior shouldn’t be relied upon (for instance, if propagating exceptions).</
 <span class="c1"># Pass num_threads through to the appropriate backend function here</span>
 </pre></div>
 </div>
-<p>See the code in <code class="docutils literal notranslate"><span class="pre">numba/npyufunc/parfor.py</span></code>.</p>
+<p>See the code in <code class="docutils literal notranslate"><span class="pre">numba/parfors/parfor_lowering.py</span></code>.</p>
 <p>The guard against <code class="docutils literal notranslate"><span class="pre">num_threads</span></code> being &lt;= 0 is not strictly necessary, but it
 can protect against accidentally incorrect behavior in case the thread masking
 logic contains a bug.</p>
