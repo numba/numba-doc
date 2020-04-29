@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Creating C callbacks with @cfunc &mdash; Numba 0.50.0.dev0+158.g01310bd-py3.7-linux-x86_64.egg documentation</title>
+  <title>Creating C callbacks with @cfunc &mdash; Numba 0.50.0.dev0+164.gb2e25bd-py3.7-linux-x86_64.egg documentation</title>
   
 
   
@@ -1355,16 +1355,21 @@ assumed to be laid out in C order.  If the data is laid out in Fortran order,
 <p>For applications that have a lot of state, it is useful to pass data in C
 structures.  To simplify the interoperability with C code, numba can convert
 a <code class="docutils literal notranslate"><span class="pre">cffi</span></code> type into a numba <code class="docutils literal notranslate"><span class="pre">Record</span></code> type using
-<code class="docutils literal notranslate"><span class="pre">numba.cffi_support.map_type</span></code>:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">numba</span> <span class="k">import</span> <span class="n">cffi_support</span>
+<code class="docutils literal notranslate"><span class="pre">numba.core.typing.cffi_utils.map_type</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">numba.core.typing</span> <span class="k">import</span> <span class="n">cffi_utils</span>
 
-<span class="n">nbtype</span> <span class="o">=</span> <span class="n">cffi_support</span><span class="o">.</span><span class="n">map_type</span><span class="p">(</span><span class="n">cffi_type</span><span class="p">,</span> <span class="n">use_record_dtype</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">nbtype</span> <span class="o">=</span> <span class="n">cffi_utils</span><span class="o">.</span><span class="n">map_type</span><span class="p">(</span><span class="n">cffi_type</span><span class="p">,</span> <span class="n">use_record_dtype</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last"><strong>use_record_dtype=True</strong> is needed otherwise pointers to C
 structures are returned as void pointers.</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">From v0.49 the <code class="docutils literal notranslate"><span class="pre">numba.cffi_support</span></code> module has been phased out
+in favour of <code class="docutils literal notranslate"><span class="pre">numba.core.typing.cffi_utils</span></code></p>
 </div>
 <p>For example:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cffi</span> <span class="k">import</span> <span class="n">FFI</span>
@@ -1387,7 +1392,7 @@ structures are returned as void pointers.</p>
 <span class="n">ffi</span><span class="o">.</span><span class="n">cdef</span><span class="p">(</span><span class="n">src</span><span class="p">)</span>
 
 <span class="c1"># Get the function signature from *my_func*</span>
-<span class="n">sig</span> <span class="o">=</span> <span class="n">cffi_support</span><span class="o">.</span><span class="n">map_type</span><span class="p">(</span><span class="n">ffi</span><span class="o">.</span><span class="n">typeof</span><span class="p">(</span><span class="s1">&#39;my_func&#39;</span><span class="p">),</span> <span class="n">use_record_dtype</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">sig</span> <span class="o">=</span> <span class="n">cffi_utils</span><span class="o">.</span><span class="n">map_type</span><span class="p">(</span><span class="n">ffi</span><span class="o">.</span><span class="n">typeof</span><span class="p">(</span><span class="s1">&#39;my_func&#39;</span><span class="p">),</span> <span class="n">use_record_dtype</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 <span class="c1"># Make the cfunc</span>
 <span class="kn">from</span> <span class="nn">numba</span> <span class="k">import</span> <span class="n">cfunc</span><span class="p">,</span> <span class="n">carray</span>
