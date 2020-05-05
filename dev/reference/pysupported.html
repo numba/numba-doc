@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Supported Python features &mdash; Numba 0.50.0.dev0+179.g86e600d-py3.7-linux-x86_64.egg documentation</title>
+  <title>Supported Python features &mdash; Numba 0.50.0.dev0+186.gff24fb1-py3.7-linux-x86_64.egg documentation</title>
   
 
   
@@ -1273,7 +1273,7 @@ Below is a quick reference for the support level of Python constructs.</p>
 </ul>
 <p><strong>Partially supported</strong> constructs:</p>
 <ul class="simple">
-<li>exceptions: <code class="docutils literal notranslate"><span class="pre">try</span> <span class="pre">..</span> <span class="pre">except</span></code>, <code class="docutils literal notranslate"><span class="pre">raise</span></code>
+<li>exceptions: <code class="docutils literal notranslate"><span class="pre">try</span> <span class="pre">..</span> <span class="pre">except</span></code>, <code class="docutils literal notranslate"><span class="pre">raise</span></code>, <code class="docutils literal notranslate"><span class="pre">else</span></code> and <code class="docutils literal notranslate"><span class="pre">finally</span></code>
 (See details in this <a class="reference internal" href="#pysupported-exception-handling"><span class="std std-ref">section</span></a>)</li>
 <li>context manager:
 <code class="docutils literal notranslate"><span class="pre">with</span></code> (only support <a class="reference internal" href="../user/withobjmode.html#with-objmode"><span class="std std-ref">numba.objmode()</span></a>)</li>
@@ -1410,10 +1410,32 @@ use-case would look like:</p>
    <span class="k">return</span> <span class="n">error_code</span>
 </pre></div>
 </div>
-<p>The <code class="docutils literal notranslate"><span class="pre">finally</span></code> block and the <code class="docutils literal notranslate"><span class="pre">else</span></code> block of a <code class="docutils literal notranslate"><span class="pre">try</span> <span class="pre">..</span> <span class="pre">except</span></code> are
+</div>
+<div class="section" id="try-except-else-finally">
+<h4><code class="docutils literal notranslate"><span class="pre">try</span> <span class="pre">..</span> <span class="pre">except</span> <span class="pre">..</span> <span class="pre">else</span> <span class="pre">..</span> <span class="pre">finally</span></code><a class="headerlink" href="#try-except-else-finally" title="Permalink to this headline">¶</a></h4>
+<p>The <code class="docutils literal notranslate"><span class="pre">else</span></code> block and the <code class="docutils literal notranslate"><span class="pre">finally</span></code> block of a <code class="docutils literal notranslate"><span class="pre">try</span> <span class="pre">..</span> <span class="pre">except</span></code> are
+supported:</p>
+<blockquote>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nd">@jit</span><span class="p">(</span><span class="n">nopython</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="gp">... </span><span class="k">def</span> <span class="nf">foo</span><span class="p">():</span>
+<span class="gp">... </span>    <span class="k">try</span><span class="p">:</span>
+<span class="gp">... </span>        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;main block&#39;</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+<span class="gp">... </span>        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;handler block&#39;</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="k">else</span><span class="p">:</span>
+<span class="gp">... </span>        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;else block&#39;</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="k">finally</span><span class="p">:</span>
+<span class="gp">... </span>        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;final block&#39;</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">foo</span><span class="p">()</span>
+<span class="go">main block</span>
+<span class="go">else block</span>
+<span class="go">final block</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>The <code class="docutils literal notranslate"><span class="pre">try</span> <span class="pre">..</span> <span class="pre">finally</span></code> construct without the <code class="docutils literal notranslate"><span class="pre">except</span></code> clause is also
 supported.</p>
-<p>The <code class="docutils literal notranslate"><span class="pre">try</span> <span class="pre">..</span> <span class="pre">finally</span></code> construct without the <code class="docutils literal notranslate"><span class="pre">except</span></code> is currently
-<strong>unsupported</strong>.</p>
 </div>
 </div>
 </div>
