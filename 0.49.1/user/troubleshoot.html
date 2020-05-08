@@ -1,0 +1,2462 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Troubleshooting and tips &mdash; Numba 0.49.1-py3.6-macosx-10.7-x86_64.egg documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/numba-blue-icon-rgb.svg"/>
+  
+  
+  
+    <link rel="canonical" href="http://numba.pydata.org/numba-doc/latest/index.htmluser/troubleshoot.html"/>
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/rtd-overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Frequently Asked Questions" href="faq.html" />
+    <link rel="prev" title="Command line interface" href="cli.html" /> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Numba
+          
+
+          
+            
+            <img src="../_static/numba-white-icon-rgb.svg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.49
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">For all users</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">User Manual</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="5minguide.html">A ~5 minute guide to Numba</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="5minguide.html#how-do-i-get-it">How do I get it?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="5minguide.html#will-numba-work-for-my-code">Will Numba work for my code?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="5minguide.html#what-is-nopython-mode">What is <code class="docutils literal notranslate"><span class="pre">nopython</span></code> mode?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="5minguide.html#how-to-measure-the-performance-of-numba">How to measure the performance of Numba?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="5minguide.html#how-fast-is-it">How fast is it?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="5minguide.html#how-does-numba-work">How does Numba work?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="5minguide.html#other-things-of-interest">Other things of interest:</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="5minguide.html#gpu-targets">GPU targets:</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installing.html">Installation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="installing.html#compatibility">Compatibility</a></li>
+<li class="toctree-l3"><a class="reference internal" href="installing.html#installing-using-conda-on-x86-x86-64-power-platforms">Installing using conda on x86/x86_64/POWER Platforms</a></li>
+<li class="toctree-l3"><a class="reference internal" href="installing.html#installing-using-pip-on-x86-x86-64-platforms">Installing using pip on x86/x86_64 Platforms</a></li>
+<li class="toctree-l3"><a class="reference internal" href="installing.html#enabling-amd-rocm-gpu-support">Enabling AMD ROCm GPU Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="installing.html#installing-on-linux-armv7-platforms">Installing on Linux ARMv7 Platforms</a></li>
+<li class="toctree-l3"><a class="reference internal" href="installing.html#installing-on-linux-armv8-aarch64-platforms">Installing on Linux ARMv8 (AArch64) Platforms</a></li>
+<li class="toctree-l3"><a class="reference internal" href="installing.html#installing-from-source">Installing from source</a></li>
+<li class="toctree-l3"><a class="reference internal" href="installing.html#dependency-list">Dependency List</a></li>
+<li class="toctree-l3"><a class="reference internal" href="installing.html#checking-your-installation">Checking your installation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="jit.html">Compiling Python code with <code class="docutils literal notranslate"><span class="pre">&#64;jit</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="jit.html#basic-usage">Basic usage</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="jit.html#lazy-compilation">Lazy compilation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="jit.html#eager-compilation">Eager compilation</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="jit.html#calling-and-inlining-other-functions">Calling and inlining other functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jit.html#signature-specifications">Signature specifications</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jit.html#compilation-options">Compilation options</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="jit.html#nopython"><code class="docutils literal notranslate"><span class="pre">nopython</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="jit.html#nogil"><code class="docutils literal notranslate"><span class="pre">nogil</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="jit.html#cache"><code class="docutils literal notranslate"><span class="pre">cache</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="jit.html#parallel"><code class="docutils literal notranslate"><span class="pre">parallel</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="generated-jit.html">Flexible specializations with <code class="docutils literal notranslate"><span class="pre">&#64;generated_jit</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated-jit.html#example">Example</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated-jit.html#compilation-options">Compilation options</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="vectorize.html">Creating NumPy universal functions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="vectorize.html#the-vectorize-decorator">The <code class="docutils literal notranslate"><span class="pre">&#64;vectorize</span></code> decorator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="vectorize.html#the-guvectorize-decorator">The <code class="docutils literal notranslate"><span class="pre">&#64;guvectorize</span></code> decorator</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="vectorize.html#overwriting-input-values">Overwriting input values</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="vectorize.html#dynamic-universal-functions">Dynamic universal functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="jitclass.html">Compiling Python classes with <code class="docutils literal notranslate"><span class="pre">&#64;jitclass</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="jitclass.html#basic-usage">Basic usage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jitclass.html#specifying-numba-typed-containers-as-class-members">Specifying <code class="docutils literal notranslate"><span class="pre">numba.typed</span></code> containers as class members</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jitclass.html#support-operations">Support operations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jitclass.html#limitations">Limitations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jitclass.html#the-decorator-jitclass">The decorator: <code class="docutils literal notranslate"><span class="pre">&#64;jitclass</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cfunc.html">Creating C callbacks with <code class="docutils literal notranslate"><span class="pre">&#64;cfunc</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cfunc.html#basic-usage">Basic usage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cfunc.html#example">Example</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cfunc.html#dealing-with-pointers-and-array-memory">Dealing with pointers and array memory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cfunc.html#handling-c-structures">Handling C structures</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cfunc.html#with-cffi">With CFFI</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cfunc.html#with-numba-types-record-make-c-struct">With <code class="docutils literal notranslate"><span class="pre">numba.types.Record.make_c_struct</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cfunc.html#full-example">Full example</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cfunc.html#signature-specification">Signature specification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cfunc.html#compilation-options">Compilation options</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pycc.html">Compiling code ahead of time</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pycc.html#overview">Overview</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pycc.html#benefits">Benefits</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pycc.html#limitations">Limitations</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pycc.html#usage">Usage</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pycc.html#standalone-example">Standalone example</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pycc.html#distutils-integration">Distutils integration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pycc.html#signature-syntax">Signature syntax</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="parallel.html">Automatic parallelization with <code class="docutils literal notranslate"><span class="pre">&#64;jit</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="parallel.html#supported-operations">Supported Operations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="parallel.html#explicit-parallel-loops">Explicit Parallel Loops</a></li>
+<li class="toctree-l3"><a class="reference internal" href="parallel.html#examples">Examples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="parallel.html#diagnostics">Diagnostics</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="parallel.html#the-parallel-diagnostics-report-sections">The parallel diagnostics report sections</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="stencil.html">Using the <code class="docutils literal notranslate"><span class="pre">&#64;stencil</span></code> decorator</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="stencil.html#basic-usage">Basic usage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="stencil.html#stencil-parameters">Stencil Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="stencil.html#kernel-shape-inference-and-border-handling">Kernel shape inference and border handling</a></li>
+<li class="toctree-l3"><a class="reference internal" href="stencil.html#stencil-decorator-options">Stencil decorator options</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="stencil.html#neighborhood"><code class="docutils literal notranslate"><span class="pre">neighborhood</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="stencil.html#func-or-mode"><code class="docutils literal notranslate"><span class="pre">func_or_mode</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="stencil.html#cval"><code class="docutils literal notranslate"><span class="pre">cval</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="stencil.html#standard-indexing"><code class="docutils literal notranslate"><span class="pre">standard_indexing</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="stencil.html#stencilfunc"><code class="docutils literal notranslate"><span class="pre">StencilFunc</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="stencil.html#stencil-invocation-options">Stencil invocation options</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="stencil.html#out"><code class="docutils literal notranslate"><span class="pre">out</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="withobjmode.html">Callback into the Python Interpreter from within JIT’ed code</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="withobjmode.html#the-objmode-context-manager">The <code class="docutils literal notranslate"><span class="pre">objmode</span></code> context-manager</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="jit-module.html">Automatic module jitting with <code class="docutils literal notranslate"><span class="pre">jit_module</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="jit-module.html#example-usage">Example usage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jit-module.html#api">API</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="performance-tips.html">Performance Tips</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="performance-tips.html#no-python-mode-vs-object-mode">No Python mode vs Object mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="performance-tips.html#loops">Loops</a></li>
+<li class="toctree-l3"><a class="reference internal" href="performance-tips.html#fastmath">Fastmath</a></li>
+<li class="toctree-l3"><a class="reference internal" href="performance-tips.html#parallel-true">Parallel=True</a></li>
+<li class="toctree-l3"><a class="reference internal" href="performance-tips.html#intel-svml">Intel SVML</a></li>
+<li class="toctree-l3"><a class="reference internal" href="performance-tips.html#linear-algebra">Linear algebra</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="threading-layer.html">The Threading Layers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="threading-layer.html#which-threading-layers-are-available">Which threading layers are available?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="threading-layer.html#setting-the-threading-layer">Setting the threading layer</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="threading-layer.html#selecting-a-threading-layer-for-safe-parallel-execution">Selecting a threading layer for safe parallel execution</a></li>
+<li class="toctree-l4"><a class="reference internal" href="threading-layer.html#selecting-a-named-threading-layer">Selecting a named threading layer</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="threading-layer.html#extra-notes">Extra notes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="threading-layer.html#setting-the-number-of-threads">Setting the Number of Threads</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="threading-layer.html#example-of-limiting-the-number-of-threads">Example of Limiting the Number of Threads</a></li>
+<li class="toctree-l4"><a class="reference internal" href="threading-layer.html#api-reference">API Reference</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cli.html">Command line interface</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cli.html#usage">Usage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli.html#help">Help</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli.html#system-information">System information</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli.html#debugging">Debugging</a></li>
+</ul>
+</li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Troubleshooting and tips</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#what-to-compile">What to compile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#my-code-doesn-t-compile">My code doesn’t compile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#my-code-has-a-type-unification-problem">My code has a type unification problem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#my-code-has-an-untyped-list-problem">My code has an untyped list problem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#the-compiled-code-is-too-slow">The compiled code is too slow</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#disabling-jit-compilation">Disabling JIT compilation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#debugging-jit-compiled-code-with-gdb">Debugging JIT compiled code with GDB</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#example-debug-usage">Example debug usage</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#globally-override-debug-setting">Globally override debug setting</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#using-numba-s-direct-gdb-bindings-in-nopython-mode">Using Numba’s direct <code class="docutils literal notranslate"><span class="pre">gdb</span></code> bindings in <code class="docutils literal notranslate"><span class="pre">nopython</span></code>  mode</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#set-up">Set up</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#basic-gdb-support">Basic <code class="docutils literal notranslate"><span class="pre">gdb</span></code> support</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#running-with-gdb-enabled">Running with <code class="docutils literal notranslate"><span class="pre">gdb</span></code> enabled</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#adding-breakpoints-to-code">Adding breakpoints to code</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#debugging-in-parallel-regions">Debugging in parallel regions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#using-the-gdb-command-language">Using the <code class="docutils literal notranslate"><span class="pre">gdb</span></code> command language</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#how-does-the-gdb-binding-work">How does the <code class="docutils literal notranslate"><span class="pre">gdb</span></code> binding work?</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#debugging-cuda-python-code">Debugging CUDA Python code</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#using-the-simulator">Using the simulator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#debug-info">Debug Info</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="faq.html">Frequently Asked Questions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="faq.html#programming">Programming</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="faq.html#can-i-pass-a-function-as-an-argument-to-a-jitted-function">Can I pass a function as an argument to a jitted function?</a></li>
+<li class="toctree-l4"><a class="reference internal" href="faq.html#numba-doesn-t-seem-to-care-when-i-modify-a-global-variable">Numba doesn’t seem to care when I modify a global variable</a></li>
+<li class="toctree-l4"><a class="reference internal" href="faq.html#can-i-debug-a-jitted-function">Can I debug a jitted function?</a></li>
+<li class="toctree-l4"><a class="reference internal" href="faq.html#how-can-i-create-a-fortran-ordered-array">How can I create a Fortran-ordered array?</a></li>
+<li class="toctree-l4"><a class="reference internal" href="faq.html#how-can-i-increase-integer-width">How can I increase integer width?</a></li>
+<li class="toctree-l4"><a class="reference internal" href="faq.html#how-can-i-tell-if-parallel-true-worked">How can I tell if <code class="docutils literal notranslate"><span class="pre">parallel=True</span></code> worked?</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="faq.html#performance">Performance</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="faq.html#does-numba-inline-functions">Does Numba inline functions?</a></li>
+<li class="toctree-l4"><a class="reference internal" href="faq.html#does-numba-vectorize-array-computations-simd">Does Numba vectorize array computations (SIMD)?</a></li>
+<li class="toctree-l4"><a class="reference internal" href="faq.html#why-my-loop-is-not-vectorized">Why my loop is not vectorized?</a></li>
+<li class="toctree-l4"><a class="reference internal" href="faq.html#does-numba-automatically-parallelize-code">Does Numba automatically parallelize code?</a></li>
+<li class="toctree-l4"><a class="reference internal" href="faq.html#can-numba-speed-up-short-running-functions">Can Numba speed up short-running functions?</a></li>
+<li class="toctree-l4"><a class="reference internal" href="faq.html#there-is-a-delay-when-jit-compiling-a-complicated-function-how-can-i-improve-it">There is a delay when JIT-compiling a complicated function, how can I improve it?</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="faq.html#gpu-programming">GPU Programming</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="faq.html#how-do-i-work-around-the-cuda-intialized-before-forking-error">How do I work around the <code class="docutils literal notranslate"><span class="pre">CUDA</span> <span class="pre">intialized</span> <span class="pre">before</span> <span class="pre">forking</span></code> error?</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="faq.html#integration-with-other-utilities">Integration with other utilities</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="faq.html#can-i-freeze-an-application-which-uses-numba">Can I “freeze” an application which uses Numba?</a></li>
+<li class="toctree-l4"><a class="reference internal" href="faq.html#i-get-errors-when-running-a-script-twice-under-spyder">I get errors when running a script twice under Spyder</a></li>
+<li class="toctree-l4"><a class="reference internal" href="faq.html#why-does-numba-complain-about-the-current-locale">Why does Numba complain about the current locale?</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="faq.html#miscellaneous">Miscellaneous</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="faq.html#where-does-the-project-name-numba-come-from">Where does the project name “Numba” come from?</a></li>
+<li class="toctree-l4"><a class="reference internal" href="faq.html#how-do-i-reference-cite-acknowledge-numba-in-other-work">How do I reference/cite/acknowledge Numba in other work?</a></li>
+<li class="toctree-l4"><a class="reference internal" href="faq.html#other-related-papers">Other related papers</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html">Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="examples.html#mandelbrot">Mandelbrot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples.html#moving-average">Moving average</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples.html#multi-threading">Multi-threading</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="talks.html">Talks and Tutorials</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="talks.html#talks-on-numba">Talks on Numba</a></li>
+<li class="toctree-l3"><a class="reference internal" href="talks.html#talks-on-applications-of-numba">Talks on Applications of Numba</a></li>
+<li class="toctree-l3"><a class="reference internal" href="talks.html#tutorials">Tutorials</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/index.html">Reference Manual</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../reference/types.html">Types and signatures</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../reference/types.html#rationale">Rationale</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/types.html#signatures">Signatures</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/types.html#basic-types">Basic types</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../reference/types.html#numbers">Numbers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/types.html#arrays">Arrays</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/types.html#functions">Functions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/types.html#miscellaneous-types">Miscellaneous Types</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/types.html#advanced-types">Advanced types</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../reference/types.html#inference">Inference</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/types.html#numpy-scalars">Numpy scalars</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/types.html#id1">Arrays</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/types.html#optional-types">Optional types</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/jit-compilation.html">Just-in-Time compilation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../reference/jit-compilation.html#jit-functions">JIT functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/jit-compilation.html#generated-jit-functions">Generated JIT functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/jit-compilation.html#dispatcher-objects">Dispatcher objects</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/jit-compilation.html#vectorized-functions-ufuncs-and-dufuncs">Vectorized functions (ufuncs and DUFuncs)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/jit-compilation.html#c-callbacks">C callbacks</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/aot-compilation.html">Ahead-of-Time compilation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/utils.html">Utilities</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../reference/utils.html#dealing-with-pointers">Dealing with pointers</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/envvars.html">Environment variables</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../reference/envvars.html#jit-flags">Jit flags</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/envvars.html#debugging">Debugging</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/envvars.html#compilation-options">Compilation options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/envvars.html#caching-options">Caching options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/envvars.html#gpu-support">GPU support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/envvars.html#threading-control">Threading Control</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/pysupported.html">Supported Python features</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../reference/pysupported.html#language">Language</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../reference/pysupported.html#constructs">Constructs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/pysupported.html#functions">Functions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/pysupported.html#generators">Generators</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/pysupported.html#exception-handling">Exception handling</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/pysupported.html#built-in-types">Built-in types</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../reference/pysupported.html#int-bool">int, bool</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/pysupported.html#float-complex">float, complex</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/pysupported.html#str">str</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/pysupported.html#tuple">tuple</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/pysupported.html#homogeneous-tuples">homogeneous tuples</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/pysupported.html#heterogeneous-tuples">heterogeneous tuples</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/pysupported.html#list">list</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/pysupported.html#set">set</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/pysupported.html#none">None</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/pysupported.html#bytes-bytearray-memoryview">bytes, bytearray, memoryview</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/pysupported.html#built-in-functions">Built-in functions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../reference/pysupported.html#hashing">Hashing</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/pysupported.html#standard-library-modules">Standard library modules</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../reference/pysupported.html#array"><code class="docutils literal notranslate"><span class="pre">array</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/pysupported.html#cmath"><code class="docutils literal notranslate"><span class="pre">cmath</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/pysupported.html#collections"><code class="docutils literal notranslate"><span class="pre">collections</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/pysupported.html#ctypes"><code class="docutils literal notranslate"><span class="pre">ctypes</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/pysupported.html#enum"><code class="docutils literal notranslate"><span class="pre">enum</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/pysupported.html#math"><code class="docutils literal notranslate"><span class="pre">math</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/pysupported.html#operator"><code class="docutils literal notranslate"><span class="pre">operator</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/pysupported.html#functools"><code class="docutils literal notranslate"><span class="pre">functools</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/pysupported.html#random"><code class="docutils literal notranslate"><span class="pre">random</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/pysupported.html#heapq"><code class="docutils literal notranslate"><span class="pre">heapq</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/pysupported.html#third-party-modules">Third-party modules</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../reference/pysupported.html#cffi"><code class="docutils literal notranslate"><span class="pre">cffi</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/numpysupported.html">Supported NumPy features</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../reference/numpysupported.html#scalar-types">Scalar types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/numpysupported.html#array-types">Array types</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../reference/numpysupported.html#array-access">Array access</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/numpysupported.html#attributes">Attributes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/numpysupported.html#calculation">Calculation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/numpysupported.html#other-methods">Other methods</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/numpysupported.html#functions">Functions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../reference/numpysupported.html#linear-algebra">Linear algebra</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/numpysupported.html#reductions">Reductions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/numpysupported.html#other-functions">Other functions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/numpysupported.html#literal-arrays">Literal arrays</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/numpysupported.html#modules">Modules</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../reference/numpysupported.html#random"><code class="docutils literal notranslate"><span class="pre">random</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/numpysupported.html#stride-tricks"><code class="docutils literal notranslate"><span class="pre">stride_tricks</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/numpysupported.html#standard-ufuncs">Standard ufuncs</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../reference/numpysupported.html#limitations">Limitations</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/numpysupported.html#math-operations">Math operations</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/numpysupported.html#trigonometric-functions">Trigonometric functions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/numpysupported.html#bit-twiddling-functions">Bit-twiddling functions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/numpysupported.html#comparison-functions">Comparison functions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/numpysupported.html#floating-functions">Floating functions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/numpysupported.html#datetime-functions">Datetime functions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/pysemantics.html">Deviations from Python Semantics</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../reference/pysemantics.html#exceptions-and-memory-allocation">Exceptions and Memory Allocation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/pysemantics.html#integer-width">Integer width</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/pysemantics.html#boolean-inversion">Boolean inversion</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/pysemantics.html#global-and-closure-variables">Global and closure variables</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/fpsemantics.html">Floating-point pitfalls</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../reference/fpsemantics.html#precision-and-accuracy">Precision and accuracy</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../reference/fpsemantics.html#math-library-implementations">Math library implementations</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/fpsemantics.html#linear-algebra">Linear algebra</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/fpsemantics.html#mixed-types-operations">Mixed-types operations</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/fpsemantics.html#warnings-and-errors">Warnings and errors</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/python27-eol.html">Python 2.7 End of Life Plan</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../reference/python27-eol.html#timeline">Timeline</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/deprecation.html">Deprecation Notices</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../reference/deprecation.html#suppressing-deprecation-warnings">Suppressing Deprecation warnings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/deprecation.html#deprecation-of-reflection-for-list-and-set-types">Deprecation of reflection for List and Set types</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../reference/deprecation.html#reason-for-deprecation">Reason for deprecation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/deprecation.html#example-s-of-the-impact">Example(s) of the impact</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/deprecation.html#schedule">Schedule</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/deprecation.html#recommendations">Recommendations</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/deprecation.html#expected-replacement">Expected Replacement</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/deprecation.html#deprecation-of-object-mode-fall-back-behaviour-when-using-jit">Deprecation of <span class="xref std std-term">object mode</span> <cite>fall-back</cite> behaviour when using <code class="docutils literal notranslate"><span class="pre">&#64;jit</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../reference/deprecation.html#id1">Reason for deprecation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/deprecation.html#id2">Example(s) of the impact</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/deprecation.html#id3">Schedule</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/deprecation.html#id4">Recommendations</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/deprecation.html#change-of-jitclass-location">Change of jitclass location</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../reference/deprecation.html#id5">Example(s) of the impact</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/deprecation.html#id6">Recommendations</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/deprecation.html#id7">Schedule</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">For CUDA users</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../cuda/index.html">Numba for CUDA GPUs</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../cuda/overview.html">Overview</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../cuda/overview.html#terminology">Terminology</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../cuda/overview.html#programming-model">Programming model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../cuda/overview.html#requirements">Requirements</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../cuda/overview.html#supported-gpus">Supported GPUs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cuda/overview.html#software">Software</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../cuda/overview.html#missing-cuda-features">Missing CUDA Features</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../cuda/kernels.html">Writing CUDA Kernels</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../cuda/kernels.html#introduction">Introduction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../cuda/kernels.html#kernel-declaration">Kernel declaration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../cuda/kernels.html#kernel-invocation">Kernel invocation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../cuda/kernels.html#choosing-the-block-size">Choosing the block size</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cuda/kernels.html#multi-dimensional-blocks-and-grids">Multi-dimensional blocks and grids</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../cuda/kernels.html#thread-positioning">Thread positioning</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../cuda/kernels.html#absolute-positions">Absolute positions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cuda/kernels.html#further-reading">Further Reading</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../cuda/memory.html">Memory management</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../cuda/memory.html#data-transfer">Data transfer</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../cuda/memory.html#device-arrays">Device arrays</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../cuda/memory.html#pinned-memory">Pinned memory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../cuda/memory.html#streams">Streams</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../cuda/memory.html#shared-memory-and-thread-synchronization">Shared memory and thread synchronization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../cuda/memory.html#local-memory">Local memory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../cuda/memory.html#constant-memory">Constant memory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../cuda/memory.html#deallocation-behavior">Deallocation Behavior</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../cuda/device-functions.html">Writing Device Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cuda/cudapysupported.html">Supported Python features in CUDA Python</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../cuda/cudapysupported.html#language">Language</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../cuda/cudapysupported.html#execution-model">Execution Model</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cuda/cudapysupported.html#constructs">Constructs</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../cuda/cudapysupported.html#built-in-types">Built-in types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../cuda/cudapysupported.html#built-in-functions">Built-in functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../cuda/cudapysupported.html#standard-library-modules">Standard library modules</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../cuda/cudapysupported.html#cmath"><code class="docutils literal notranslate"><span class="pre">cmath</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cuda/cudapysupported.html#math"><code class="docutils literal notranslate"><span class="pre">math</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cuda/cudapysupported.html#operator"><code class="docutils literal notranslate"><span class="pre">operator</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../cuda/cudapysupported.html#numpy-support">Numpy support</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../cuda/intrinsics.html">Supported Atomic Operations</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../cuda/intrinsics.html#example">Example</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../cuda/random.html">Random Number Generation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../cuda/random.html#example">Example</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../cuda/device-management.html">Device management</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../cuda/device-management.html#device-selection">Device Selection</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../cuda/device-management.html#the-device-list">The Device List</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cuda/examples.html">Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../cuda/examples.html#matrix-multiplication">Matrix multiplication</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../cuda/simulator.html">Debugging CUDA Python with the the CUDA Simulator</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../cuda/simulator.html#using-the-simulator">Using the simulator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../cuda/simulator.html#supported-features">Supported features</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../cuda/reduction.html">GPU Reduction</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../cuda/reduction.html#reduce"><code class="docutils literal notranslate"><span class="pre">&#64;reduce</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../cuda/reduction.html#class-reduce">class Reduce</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../cuda/ufunc.html">CUDA Ufuncs and Generalized Ufuncs</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../cuda/ufunc.html#example-basic-example">Example: Basic Example</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../cuda/ufunc.html#example-calling-device-functions">Example: Calling Device Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../cuda/ufunc.html#generalized-cuda-ufuncs">Generalized CUDA ufuncs</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../cuda/ipc.html">Sharing CUDA Memory</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../cuda/ipc.html#sharing-between-process">Sharing between process</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../cuda/ipc.html#export-device-array-to-another-process">Export device array to another process</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cuda/ipc.html#import-ipc-memory-from-another-process">Import IPC memory from another process</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../cuda/cuda_array_interface.html">CUDA Array Interface (Version 2)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../cuda/cuda_array_interface.html#python-interface-specification">Python Interface Specification</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../cuda/cuda_array_interface.html#lifetime-management">Lifetime management</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cuda/cuda_array_interface.html#lifetime-management-in-numba">Lifetime management in Numba</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cuda/cuda_array_interface.html#pointer-attributes">Pointer Attributes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cuda/cuda_array_interface.html#differences-with-cuda-array-interface-version-0">Differences with CUDA Array Interface (Version 0)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cuda/cuda_array_interface.html#differences-with-cuda-array-interface-version-1">Differences with CUDA Array Interface (Version 1)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cuda/cuda_array_interface.html#interoperability">Interoperability</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../cuda/external-memory.html">External Memory Management (EMM) Plugin interface</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../cuda/external-memory.html#overview-of-external-memory-management">Overview of External Memory Management</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../cuda/external-memory.html#effects-on-deallocation-strategies">Effects on Deallocation Strategies</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cuda/external-memory.html#management-of-other-objects">Management of other objects</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cuda/external-memory.html#asynchronous-allocation-and-deallocation">Asynchronous allocation and deallocation</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../cuda/external-memory.html#implementing-an-emm-plugin">Implementing an EMM Plugin</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../cuda/external-memory.html#the-host-only-cuda-memory-manager">The Host-Only CUDA Memory Manager</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../cuda/external-memory.html#classes-and-structures-of-returned-objects">Classes and structures of returned objects</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../cuda/external-memory.html#memory-pointers">Memory Pointers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cuda/external-memory.html#memory-info">Memory Info</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cuda/external-memory.html#ipc">IPC</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../cuda/external-memory.html#setting-the-emm-plugin">Setting the EMM Plugin</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../cuda/external-memory.html#environment-variable">Environment variable</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cuda/external-memory.html#function">Function</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../cuda/faq.html">CUDA Frequently Asked Questions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../cuda/faq.html#nvprof-reports-no-kernels-were-profiled">nvprof reports “No kernels were profiled”</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../cuda-reference/index.html">CUDA Python Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../cuda-reference/host.html">CUDA Host API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../cuda-reference/host.html#device-management">Device Management</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../cuda-reference/host.html#device-detection-and-enquiry">Device detection and enquiry</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cuda-reference/host.html#context-management">Context management</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cuda-reference/host.html#id1">Device management</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../cuda-reference/host.html#measurement">Measurement</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../cuda-reference/host.html#profiling">Profiling</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cuda-reference/host.html#events">Events</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../cuda-reference/host.html#stream-management">Stream Management</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../cuda-reference/kernel.html">CUDA Kernel API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../cuda-reference/kernel.html#kernel-declaration">Kernel declaration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../cuda-reference/kernel.html#intrinsic-attributes-and-functions">Intrinsic Attributes and Functions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../cuda-reference/kernel.html#thread-indexing">Thread Indexing</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cuda-reference/kernel.html#memory-management">Memory Management</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cuda-reference/kernel.html#synchronization-and-atomic-operations">Synchronization and Atomic Operations</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cuda-reference/kernel.html#memory-fences">Memory Fences</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cuda-reference/kernel.html#warp-intrinsics">Warp Intrinsics</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cuda-reference/kernel.html#integer-intrinsics">Integer Intrinsics</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cuda-reference/kernel.html#floating-point-intrinsics">Floating Point Intrinsics</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cuda-reference/kernel.html#control-flow-instructions">Control Flow Instructions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../cuda-reference/memory.html">Memory Management</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../cuda-reference/memory.html#device-objects">Device Objects</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">For ROCm users</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../roc/index.html">Numba for AMD ROC GPUs</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../roc/overview.html">Overview</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../roc/overview.html#terminology">Terminology</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../roc/overview.html#requirements">Requirements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../roc/overview.html#installation">Installation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../roc/kernels.html">Writing HSA Kernels</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../roc/kernels.html#introduction">Introduction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../roc/kernels.html#introduction-for-cuda-programmers">Introduction for CUDA Programmers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../roc/kernels.html#kernel-declaration">Kernel declaration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../roc/kernels.html#kernel-invocation">Kernel invocation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../roc/kernels.html#choosing-the-workgroup-size">Choosing the workgroup size</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../roc/kernels.html#multi-dimensional-workgroup-and-grid">Multi-dimensional workgroup and grid</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../roc/kernels.html#workitem-positioning">WorkItem positioning</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../roc/memory.html">Memory management</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../roc/memory.html#data-transfer">Data transfer</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../roc/memory.html#device-arrays">Device arrays</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../roc/memory.html#data-registration">Data Registration</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../roc/memory.html#streams">Streams</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../roc/memory.html#shared-memory-and-thread-synchronization">Shared memory and thread synchronization</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../roc/device-functions.html">Writing Device Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../roc/intrinsics.html">Supported Atomic Operations</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../roc/intrinsics.html#example">Example</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../roc/device-management.html">The Agents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../roc/ufunc.html">ROC Ufuncs and Generalized Ufuncs</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../roc/ufunc.html#basic-roc-ufunc-example">Basic ROC UFunc Example</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../roc/ufunc.html#calling-device-functions-from-roc-ufuncs">Calling Device Functions from ROC UFuncs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../roc/ufunc.html#generalized-roc-ufuncs">Generalized ROC ufuncs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../roc/ufunc.html#async-execution-a-chunk-at-a-time">Async execution: A Chunk at a Time</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../roc/examples.html">Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../roc/examples.html#matrix-multiplication">Matrix multiplication</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">For advanced users &amp; developers</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../extending/index.html">Extending Numba</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../extending/high-level.html">High-level extension API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../extending/high-level.html#implementing-functions">Implementing functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../extending/high-level.html#implementing-methods">Implementing methods</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../extending/high-level.html#implementing-attributes">Implementing attributes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../extending/high-level.html#importing-cython-functions">Importing Cython Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../extending/high-level.html#implementing-intrinsics">Implementing intrinsics</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../extending/low-level.html">Low-level extension API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../extending/low-level.html#typing">Typing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../extending/low-level.html#lowering">Lowering</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../extending/low-level.html#native-operations">Native operations</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../extending/low-level.html#constants">Constants</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../extending/low-level.html#boxing-and-unboxing">Boxing and unboxing</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../extending/interval-example.html">Example: an interval type</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../extending/interval-example.html#extending-the-typing-layer">Extending the typing layer</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../extending/interval-example.html#creating-a-new-numba-type">Creating a new Numba type</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../extending/interval-example.html#type-inference-for-python-values">Type inference for Python values</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../extending/interval-example.html#type-inference-for-operations">Type inference for operations</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../extending/interval-example.html#extending-the-lowering-layer">Extending the lowering layer</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../extending/interval-example.html#defining-the-data-model-for-native-intervals">Defining the data model for native intervals</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../extending/interval-example.html#exposing-data-model-attributes">Exposing data model attributes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../extending/interval-example.html#exposing-a-property">Exposing a property</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../extending/interval-example.html#implementing-the-constructor">Implementing the constructor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../extending/interval-example.html#boxing-and-unboxing">Boxing and unboxing</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../extending/interval-example.html#using-it">Using it</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../extending/interval-example.html#conclusion">Conclusion</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../extending/overloading-guide.html">A guide to using <code class="docutils literal notranslate"><span class="pre">&#64;overload</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../extending/overloading-guide.html#concrete-example">Concrete Example</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../extending/overloading-guide.html#implementing-overload-for-numpy-functions">Implementing <code class="docutils literal notranslate"><span class="pre">&#64;overload</span></code> for NumPy functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../extending/entrypoints.html">Registering Extensions with Entry Points</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../extending/entrypoints.html#adding-support-for-the-init-entry-point">Adding Support for the “Init” Entry Point</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../extending/entrypoints.html#testing-your-entry-point">Testing your Entry Point</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../developer/index.html">Developer Manual</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../developer/contributing.html">Contributing to Numba</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../developer/contributing.html#communication">Communication</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../developer/contributing.html#mailing-list">Mailing-list</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../developer/contributing.html#real-time-chat">Real-time Chat</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../developer/contributing.html#weekly-meetings">Weekly Meetings</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../developer/contributing.html#bug-tracker">Bug tracker</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../developer/contributing.html#getting-set-up">Getting set up</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../developer/contributing.html#build-environment">Build environment</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../developer/contributing.html#building-numba">Building Numba</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../developer/contributing.html#running-tests">Running tests</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../developer/contributing.html#development-rules">Development rules</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../developer/contributing.html#code-reviews">Code reviews</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../developer/contributing.html#coding-conventions">Coding conventions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../developer/contributing.html#stability">Stability</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../developer/contributing.html#platform-support">Platform support</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../developer/contributing.html#documentation">Documentation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../developer/contributing.html#main-documentation">Main documentation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../developer/contributing.html#web-site-homepage">Web site homepage</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../developer/repomap.html">A Map of the Numba Repository</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../developer/repomap.html#support-files">Support Files</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../developer/repomap.html#build-and-packaging">Build and Packaging</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../developer/repomap.html#continuous-integration">Continuous Integration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../developer/repomap.html#documentation-examples">Documentation / Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../developer/repomap.html#numba-source-code">Numba Source Code</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../developer/repomap.html#public-api">Public API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../developer/repomap.html#dispatching">Dispatching</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../developer/repomap.html#compiler-pipeline">Compiler Pipeline</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../developer/repomap.html#type-management">Type Management</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../developer/repomap.html#compiled-extensions">Compiled Extensions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../developer/repomap.html#misc-support">Misc Support</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../developer/repomap.html#core-python-data-types">Core Python Data Types</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../developer/repomap.html#math">Math</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../developer/repomap.html#parallelaccelerator">ParallelAccelerator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../developer/repomap.html#stencil">Stencil</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../developer/repomap.html#debugging-support">Debugging Support</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../developer/repomap.html#type-signatures-cpu">Type Signatures (CPU)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../developer/repomap.html#target-implementations-cpu">Target Implementations (CPU)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../developer/repomap.html#ufunc-compiler-and-runtime">Ufunc Compiler and Runtime</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../developer/repomap.html#unit-tests-cpu">Unit Tests (CPU)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../developer/repomap.html#command-line-utilities">Command Line Utilities</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../developer/repomap.html#cuda-gpu-target">CUDA GPU Target</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../developer/repomap.html#rocm-gpu-target">ROCm GPU Target</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../developer/architecture.html">Numba architecture</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../developer/architecture.html#introduction">Introduction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../developer/architecture.html#compiler-architecture">Compiler architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../developer/architecture.html#contexts">Contexts</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../developer/architecture.html#compiler-stages">Compiler stages</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../developer/architecture.html#stage-1-analyze-bytecode">Stage 1: Analyze bytecode</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../developer/architecture.html#stage-2-generate-the-numba-ir">Stage 2: Generate the Numba IR</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../developer/architecture.html#stage-3-macro-expansion">Stage 3: Macro expansion</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../developer/architecture.html#stage-4-rewrite-untyped-ir">Stage 4: Rewrite untyped IR</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../developer/architecture.html#stage-5-infer-types">Stage 5: Infer types</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../developer/architecture.html#stage-6a-rewrite-typed-ir">Stage 6a: Rewrite typed IR</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../developer/architecture.html#stage-6b-perform-automatic-parallelization">Stage 6b: Perform Automatic Parallelization</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../developer/architecture.html#stage-7a-generate-nopython-llvm-ir">Stage 7a: Generate nopython LLVM IR</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../developer/architecture.html#stage-7b-generate-object-mode-llvm-ir">Stage 7b: Generate object mode LLVM IR</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../developer/architecture.html#stage-8-compile-llvm-ir-to-machine-code">Stage 8: Compile LLVM IR to machine code</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../developer/dispatching.html">Polymorphic dispatching</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../developer/dispatching.html#requirements">Requirements</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../developer/dispatching.html#compile-time-vs-run-time">Compile-time vs. run-time</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../developer/dispatching.html#type-resolution">Type resolution</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../developer/dispatching.html#typecodes">Typecodes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../developer/dispatching.html#hard-coded-fast-paths">Hard-coded fast paths</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../developer/dispatching.html#fingerprint-based-typecode-cache">Fingerprint-based typecode cache</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../developer/dispatching.html#summary">Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../developer/dispatching.html#specialization-selection">Specialization selection</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../developer/dispatching.html#implicit-conversion-rules">Implicit conversion rules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../developer/dispatching.html#candidates-and-best-match">Candidates and best match</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../developer/dispatching.html#implementation">Implementation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../developer/dispatching.html#id1">Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../developer/dispatching.html#miscellaneous">Miscellaneous</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../developer/generators.html">Notes on generators</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../developer/generators.html#terminology">Terminology</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../developer/generators.html#function-analysis">Function analysis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../developer/generators.html#the-generator-structure">The generator structure</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../developer/generators.html#layout">Layout</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../developer/generators.html#allocation">Allocation</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../developer/generators.html#compiling-to-native-code">Compiling to native code</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../developer/generators.html#the-next-function">The next() function</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../developer/numba-runtime.html">Notes on Numba Runtime</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../developer/numba-runtime.html#memory-management">Memory Management</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../developer/numba-runtime.html#cooperating-with-cpython">Cooperating with CPython</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../developer/numba-runtime.html#compiler-side-cooperation">Compiler-side Cooperation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../developer/numba-runtime.html#optimizations">Optimizations</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../developer/numba-runtime.html#quirks">Quirks</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../developer/numba-runtime.html#debugging-leaks">Debugging Leaks</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../developer/numba-runtime.html#debugging-leaks-in-c">Debugging Leaks in C</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../developer/numba-runtime.html#recursion-support">Recursion Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../developer/numba-runtime.html#using-the-nrt-from-c-code">Using the NRT from C code</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../developer/numba-runtime.html#future-plan">Future Plan</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../developer/rewrites.html">Using the Numba Rewrite Pass for Fun and Optimization</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../developer/rewrites.html#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../developer/rewrites.html#rewriting-passes">Rewriting Passes</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../developer/rewrites.html#the-rewrite-base-class">The <code class="xref py py-class docutils literal notranslate"><span class="pre">Rewrite</span></code> Base Class</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../developer/rewrites.html#subclassing-rewrite">Subclassing <code class="xref py py-class docutils literal notranslate"><span class="pre">Rewrite</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../developer/rewrites.html#overloading-rewrite-match">Overloading <code class="xref py py-func docutils literal notranslate"><span class="pre">Rewrite.match()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../developer/rewrites.html#overloading-rewrite-apply">Overloading <code class="xref py py-func docutils literal notranslate"><span class="pre">Rewrite.apply()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../developer/rewrites.html#the-rewrite-registry">The Rewrite Registry</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../developer/rewrites.html#case-study-array-expressions">Case study: Array Expressions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../developer/rewrites.html#the-rewritearrayexprs-match-method">The <code class="xref py py-func docutils literal notranslate"><span class="pre">RewriteArrayExprs.match()</span></code> method</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../developer/rewrites.html#the-rewritearrayexprs-apply-method">The <code class="xref py py-func docutils literal notranslate"><span class="pre">RewriteArrayExprs.apply()</span></code> method</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../developer/rewrites.html#the-lower-array-expr-function">The <code class="xref py py-func docutils literal notranslate"><span class="pre">_lower_array_expr()</span></code> function</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../developer/rewrites.html#conclusions-and-caveats">Conclusions and Caveats</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../developer/live_variable_analysis.html">Live Variable Analysis</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../developer/live_variable_analysis.html#notes-on-behavior-of-the-live-variable-analysis">Notes on behavior of the live variable analysis</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../developer/live_variable_analysis.html#variable-deleted-before-definition">Variable deleted before definition</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../developer/listings.html">Listings</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../developer/listings.html#new-style-listings">New style listings</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../developer/autogen_builtins_listing.html">Listings for builtins</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../developer/autogen_math_listing.html">Listings for math</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../developer/autogen_cmath_listing.html">Listings for cmath</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../developer/autogen_numpy_listing.html">Listings for numpy</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../developer/listings.html#old-style-listings">Old style listings</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../developer/autogen_lower_listing.html">Lowering Listing</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../developer/stencil.html">Notes on stencils</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../developer/stencil.html#the-stencil-decorator">The stencil decorator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../developer/stencil.html#handling-the-three-modes">Handling the three modes</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../developer/stencil.html#outside-jit-context">Outside jit context</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../developer/stencil.html#jit-without-parallel-true">Jit without <code class="docutils literal notranslate"><span class="pre">parallel=True</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../developer/stencil.html#jit-with-parallel-true">Jit with <code class="docutils literal notranslate"><span class="pre">parallel=True</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../developer/stencil.html#creating-the-stencil-function">Creating the stencil function</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../developer/stencil.html#exceptions-raised">Exceptions raised</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../developer/custom_pipeline.html">Customizing the Compiler</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../developer/custom_pipeline.html#implementing-a-compiler-pass">Implementing a compiler pass</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../developer/custom_pipeline.html#compiler-pass-classes">Compiler pass classes</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../developer/custom_pipeline.html#debugging-compiler-passes">Debugging compiler passes</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../developer/custom_pipeline.html#observing-ir-changes">Observing IR Changes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../developer/custom_pipeline.html#pass-execution-times">Pass execution times</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../developer/inlining.html">Notes on Inlining</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../developer/inlining.html#example-using-numba-jit">Example using <code class="xref py py-func docutils literal notranslate"><span class="pre">numba.jit()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../developer/inlining.html#example-using-numba-extending-overload">Example using <code class="xref py py-func docutils literal notranslate"><span class="pre">numba.extending.overload()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../developer/environment.html">Environment Object</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../developer/environment.html#the-implementation">The Implementation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../developer/environment.html#serialization">Serialization</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../developer/environment.html#usage">Usage</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../developer/hashing.html">Notes on Hashing</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../developer/hashing.html#the-implementation">The Implementation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../developer/hashing.html#unicode-hash-cache-differences">Unicode hash cache differences</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../developer/hashing.html#the-accommodation-of-pythonhashseed">The accommodation of <code class="docutils literal notranslate"><span class="pre">PYTHONHASHSEED</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../developer/caching.html">Notes on Caching</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../developer/caching.html#the-implementation">The Implementation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../developer/caching.html#requirements-for-cacheability">Requirements for Cacheability</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../developer/caching.html#features-compatible-with-caching">Features Compatible with Caching</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../developer/caching.html#caching-limitations">Caching Limitations</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../developer/caching.html#cache-sharing">Cache Sharing</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../developer/caching.html#cache-clearing">Cache Clearing</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../developer/caching.html#related-environment-variables">Related Environment Variables</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../developer/threading_implementation.html">Notes on Numba’s threading implementation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../developer/threading_implementation.html#thread-masking">Thread masking</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../developer/threading_implementation.html#programming-model">Programming model</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../developer/threading_implementation.html#the-implementation">The Implementation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../developer/threading_implementation.html#caveats">Caveats</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../developer/threading_implementation.html#use-in-code-generation">Use in Code Generation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../developer/literal.html">Notes on Literal Types</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../developer/literal.html#literal-type"><code class="docutils literal notranslate"><span class="pre">Literal</span></code> Type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../developer/literal.html#specifying-for-literal-typing">Specifying for Literal Typing</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../developer/literal.html#code-example">Code Example</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../developer/literal.html#internal-details">Internal Details</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../developer/literal.html#inside-extensions">Inside Extensions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../developer/debugging.html">Notes on Debugging</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../developer/debugging.html#memcheck">Memcheck</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../developer/roadmap.html">Numba Project Roadmap</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../developer/roadmap.html#short-term-2019h1">Short Term: 2019H1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../developer/roadmap.html#medium-term-2019h2">Medium Term: 2019H2</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../developer/roadmap.html#long-term-2020-and-beyond">Long Term: 2020 and beyond</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../proposals/index.html">Numba Enhancement Proposals</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../proposals/index.html#implemented-proposals">Implemented proposals</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../proposals/integer-typing.html">NBEP 1: Changes in integer typing</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../proposals/integer-typing.html#current-semantics">Current semantics</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../proposals/integer-typing.html#proposal-predictable-width-conserving-typing">Proposal: predictable width-conserving typing</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../proposals/integer-typing.html#proposal-impact">Proposal impact</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../proposals/external-memory-management.html">NBEP 7: CUDA External Memory Management Plugins</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../proposals/external-memory-management.html#background-and-goals">Background and goals</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../proposals/external-memory-management.html#requirements">Requirements</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../proposals/external-memory-management.html#interface-for-plugin-developers">Interface for Plugin developers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../proposals/external-memory-management.html#example-implementation-a-rapids-memory-manager-rmm-plugin">Example implementation - A RAPIDS Memory Manager (RMM) Plugin</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../proposals/external-memory-management.html#numba-internal-changes">Numba internal changes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../proposals/external-memory-management.html#prototyping-experimental-implementation">Prototyping / experimental implementation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../proposals/index.html#other-proposals">Other proposals</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../proposals/extension-points.html">NBEP 2: Extension points</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../proposals/extension-points.html#high-level-api">High-level API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../proposals/extension-points.html#typing">Typing</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../proposals/extension-points.html#code-generation">Code generation</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../proposals/jit-classes.html">NBEP 3: JIT Classes</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../proposals/jit-classes.html#introduction">Introduction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../proposals/jit-classes.html#proposal-jit-classes">Proposal: jit-classes</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../proposals/cfunc.html">NBEP 4: Defining C callbacks</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../proposals/cfunc.html#basic-usage">Basic usage</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../proposals/cfunc.html#passing-array-data">Passing array data</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../proposals/cfunc.html#error-handling">Error handling</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../proposals/cfunc.html#deferred-topics">Deferred topics</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../proposals/type-inference.html">NBEP 5: Type Inference</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../proposals/type-inference.html#introduction">Introduction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../proposals/type-inference.html#numba-type-semantic">Numba Type Semantic</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../proposals/type-inference.html#type-inference">Type Inference</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../proposals/typing_recursion.html">NBEP 6: Typing Recursion</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../proposals/typing_recursion.html#introduction">Introduction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../proposals/typing_recursion.html#the-current-state">The Current State</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../proposals/typing_recursion.html#the-solution">The Solution</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../proposals/typing_recursion.html#limitations">Limitations</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release-notes.html">Release Notes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../release-notes.html#version-0-49-1-may-7-2020">Version 0.49.1 (May 7, 2020)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../release-notes.html#version-0-49-0-apr-16-2020">Version 0.49.0 (Apr 16, 2020)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../release-notes.html#version-0-48-0-jan-27-2020">Version 0.48.0 (Jan 27, 2020)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../release-notes.html#version-0-47-0-jan-2-2020">Version 0.47.0  (Jan 2, 2020)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../release-notes.html#version-0-46-0">Version 0.46.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../release-notes.html#version-0-45-1">Version 0.45.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../release-notes.html#version-0-45-0">Version 0.45.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../release-notes.html#version-0-44-1">Version 0.44.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../release-notes.html#version-0-44-0">Version 0.44.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../release-notes.html#version-0-43-1">Version 0.43.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../release-notes.html#version-0-43-0">Version 0.43.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../release-notes.html#version-0-42-1">Version 0.42.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../release-notes.html#version-0-42-0">Version 0.42.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../release-notes.html#version-0-41-0">Version 0.41.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../release-notes.html#version-0-40-1">Version 0.40.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../release-notes.html#version-0-40-0">Version 0.40.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../release-notes.html#version-0-39-0">Version 0.39.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../release-notes.html#version-0-38-1">Version 0.38.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../release-notes.html#version-0-38-0">Version 0.38.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../release-notes.html#version-0-37-0">Version 0.37.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../release-notes.html#version-0-36-2">Version 0.36.2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../release-notes.html#version-0-36-1">Version 0.36.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../release-notes.html#version-0-35-0">Version 0.35.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../release-notes.html#version-0-34-0">Version 0.34.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../release-notes.html#version-0-33-0">Version 0.33.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../release-notes.html#version-0-32-0">Version 0.32.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../release-notes.html#version-0-31-0">Version 0.31.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../release-notes.html#version-0-30-1">Version 0.30.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../release-notes.html#version-0-30-0">Version 0.30.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../release-notes.html#version-0-29-0">Version 0.29.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../release-notes.html#version-0-28-1">Version 0.28.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../release-notes.html#version-0-28-0">Version 0.28.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../release-notes.html#version-0-27-0">Version 0.27.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../release-notes.html#version-0-26-0">Version 0.26.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../release-notes.html#version-0-25-0">Version 0.25.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../release-notes.html#version-0-24-0">Version 0.24.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../release-notes.html#version-0-23-1">Version 0.23.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../release-notes.html#version-0-23-0">Version 0.23.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../release-notes.html#version-0-22-1">Version 0.22.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../release-notes.html#version-0-22-0">Version 0.22.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../release-notes.html#version-0-21-0">Version 0.21.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../release-notes.html#version-0-20-0">Version 0.20.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../release-notes.html#version-0-19-2">Version 0.19.2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../release-notes.html#version-0-19-1">Version 0.19.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../release-notes.html#version-0-19-0">Version 0.19.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../release-notes.html#version-0-18-2">Version 0.18.2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../release-notes.html#version-0-18-1">Version 0.18.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../release-notes.html#version-0-17-0">Version 0.17.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../release-notes.html#version-0-16-0">Version 0.16.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../release-notes.html#version-0-15-1">Version 0.15.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../release-notes.html#version-0-15">Version 0.15</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../release-notes.html#version-0-14">Version 0.14</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../release-notes.html#version-0-13-4">Version 0.13.4</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../release-notes.html#version-0-13-3">Version 0.13.3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../release-notes.html#version-0-13-2">Version 0.13.2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../release-notes.html#version-0-13-1">Version 0.13.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../release-notes.html#version-0-13">Version 0.13</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../release-notes.html#version-0-12-2">Version 0.12.2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../release-notes.html#version-0-12-1">Version 0.12.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../release-notes.html#version-0-12">Version 0.12</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../release-notes.html#version-0-11">Version 0.11</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../release-notes.html#version-0-10">Version 0.10</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../release-notes.html#version-0-9">Version 0.9</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../release-notes.html#version-0-8">Version 0.8</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../release-notes.html#version-0-7-2">Version 0.7.2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../release-notes.html#version-0-7-1">Version 0.7.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../release-notes.html#version-0-7">Version 0.7</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../release-notes.html#version-0-6-1">Version 0.6.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../release-notes.html#version-0-6">Version 0.6</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../release-notes.html#version-0-5">Version 0.5</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../release-notes.html#version-0-4">Version 0.4</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../release-notes.html#version-0-3-2">Version 0.3.2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../release-notes.html#version-0-3">Version 0.3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../release-notes.html#version-0-2">Version 0.2</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Numba</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content style-external-links">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">User Manual</a> &raquo;</li>
+        
+      <li>Troubleshooting and tips</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/user/troubleshoot.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="troubleshooting-and-tips">
+<span id="numba-troubleshooting"></span><h1>Troubleshooting and tips<a class="headerlink" href="#troubleshooting-and-tips" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="what-to-compile">
+<span id="id1"></span><h2>What to compile<a class="headerlink" href="#what-to-compile" title="Permalink to this headline">¶</a></h2>
+<p>The general recommendation is that you should only try to compile the
+critical paths in your code.  If you have a piece of performance-critical
+computational code amongst some higher-level code, you may factor out
+the performance-critical code in a separate function and compile the
+separate function with Numba.  Letting Numba focus on that small piece
+of performance-critical code has several advantages:</p>
+<ul class="simple">
+<li><p>it reduces the risk of hitting unsupported features;</p></li>
+<li><p>it reduces the compilation times;</p></li>
+<li><p>it allows you to evolve the higher-level code which is outside of the
+compiled function much easier.</p></li>
+</ul>
+</div>
+<div class="section" id="my-code-doesn-t-compile">
+<span id="code-doesnt-compile"></span><h2>My code doesn’t compile<a class="headerlink" href="#my-code-doesn-t-compile" title="Permalink to this headline">¶</a></h2>
+<p>There can be various reasons why Numba cannot compile your code, and raises
+an error instead.  One common reason is that your code relies on an
+unsupported Python feature, especially in <a class="reference internal" href="../glossary.html#term-nopython-mode"><span class="xref std std-term">nopython mode</span></a>.
+Please see the list of <a class="reference internal" href="../reference/pysupported.html#pysupported"><span class="std std-ref">Supported Python features</span></a>.  If you find something that
+is listed there and still fails compiling, please
+<a class="reference internal" href="../developer/contributing.html#report-numba-bugs"><span class="std std-ref">report a bug</span></a>.</p>
+<p>When Numba tries to compile your code it first tries to work out the types of
+all the variables in use, this is so it can generate a type specific
+implementation of your code that can be compiled down to machine code. A common
+reason for Numba failing to compile (especially in <a class="reference internal" href="../glossary.html#term-nopython-mode"><span class="xref std std-term">nopython mode</span></a>) is a
+type inference failure, essentially Numba cannot work out what the type of all
+the variables in your code should be.</p>
+<p>For example, let’s consider this trivial function:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@jit</span><span class="p">(</span><span class="n">nopython</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
+</pre></div>
+</div>
+<p>If you call it with two numbers, Numba is able to infer the types properly:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="go">    3</span>
+</pre></div>
+</div>
+<p>If however you call it with a tuple and a number, Numba is unable to say
+what the result of adding a tuple and number is, and therefore compilation
+errors out:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; f(1, (2,))
+Traceback (most recent call last):
+File &quot;&lt;stdin&gt;&quot;, line 1, in &lt;module&gt;
+File &quot;&lt;path&gt;/numba/numba/dispatcher.py&quot;, line 339, in _compile_for_args
+    reraise(type(e), e, None)
+File &quot;&lt;path&gt;/numba/numba/six.py&quot;, line 658, in reraise
+    raise value.with_traceback(tb)
+numba.errors.TypingError: Failed at nopython (nopython frontend)
+Invalid use of + with parameters (int64, tuple(int64 x 1))
+Known signatures:
+* (int64, int64) -&gt; int64
+* (int64, uint64) -&gt; int64
+* (uint64, int64) -&gt; int64
+* (uint64, uint64) -&gt; uint64
+* (float32, float32) -&gt; float32
+* (float64, float64) -&gt; float64
+* (complex64, complex64) -&gt; complex64
+* (complex128, complex128) -&gt; complex128
+* (uint16,) -&gt; uint64
+* (uint8,) -&gt; uint64
+* (uint64,) -&gt; uint64
+* (uint32,) -&gt; uint64
+* (int16,) -&gt; int64
+* (int64,) -&gt; int64
+* (int8,) -&gt; int64
+* (int32,) -&gt; int64
+* (float32,) -&gt; float32
+* (float64,) -&gt; float64
+* (complex64,) -&gt; complex64
+* (complex128,) -&gt; complex128
+* parameterized
+[1] During: typing of intrinsic-call at &lt;stdin&gt; (3)
+
+File &quot;&lt;stdin&gt;&quot;, line 3:
+</pre></div>
+</div>
+<p>The error message helps you find out what went wrong:
+“Invalid use of + with parameters (int64, tuple(int64 x 1))” is to be
+interpreted as “Numba encountered an addition of variables typed as integer
+and 1-tuple of integer, respectively, and doesn’t know about any such
+operation”.</p>
+<p>Note that if you allow object mode:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@jit</span>
+<span class="k">def</span> <span class="nf">g</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
+</pre></div>
+</div>
+<p>compilation will succeed and the compiled function will raise at runtime as
+Python would do:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">g</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,))</span>
+<span class="gt">Traceback (most recent call last):</span>
+  File <span class="nb">&quot;&lt;stdin&gt;&quot;</span>, line <span class="m">1</span>, in <span class="n">&lt;module&gt;</span>
+<span class="gr">TypeError</span>: <span class="n">unsupported operand type(s) for +: &#39;int&#39; and &#39;tuple&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="my-code-has-a-type-unification-problem">
+<h2>My code has a type unification problem<a class="headerlink" href="#my-code-has-a-type-unification-problem" title="Permalink to this headline">¶</a></h2>
+<p>Another common reason for Numba not being able to compile your code is that it
+cannot statically determine the return type of a function. The most likely
+cause of this is the return type depending on a value that is available only at
+runtime. Again, this is most often problematic when using
+<a class="reference internal" href="../glossary.html#term-nopython-mode"><span class="xref std std-term">nopython mode</span></a>. The concept of type unification is simply trying to find
+a type in which two variables could safely be represented. For example a 64 bit
+float and a 64 bit complex number could both be represented in a 128 bit complex
+number.</p>
+<p>As an example of type unification failure, this function has a return type that
+is determined at runtime based on the value of <cite>x</cite>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">In</span> <span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="kn">from</span> <span class="nn">numba</span> <span class="k">import</span> <span class="n">jit</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">2</span><span class="p">]:</span> <span class="nd">@jit</span><span class="p">(</span><span class="n">nopython</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="o">...</span><span class="p">:</span> <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="o">...</span><span class="p">:</span>     <span class="k">if</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">10</span><span class="p">:</span>
+<span class="o">...</span><span class="p">:</span>         <span class="k">return</span> <span class="p">(</span><span class="mi">1</span><span class="p">,)</span>
+<span class="o">...</span><span class="p">:</span>     <span class="k">else</span><span class="p">:</span>
+<span class="o">...</span><span class="p">:</span>         <span class="k">return</span> <span class="mi">1</span>
+<span class="o">...</span><span class="p">:</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">3</span><span class="p">]:</span> <span class="n">f</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Trying to execute this function, errors out as follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">TypingError</span><span class="p">:</span> <span class="n">Failed</span> <span class="n">at</span> <span class="n">nopython</span> <span class="p">(</span><span class="n">nopython</span> <span class="n">frontend</span><span class="p">)</span>
+<span class="n">Can</span><span class="s1">&#39;t unify return type from the following types: tuple(int64 x 1), int64</span>
+<span class="n">Return</span> <span class="n">of</span><span class="p">:</span> <span class="n">IR</span> <span class="n">name</span> <span class="s1">&#39;$8.2&#39;</span><span class="p">,</span> <span class="nb">type</span> <span class="s1">&#39;(int64 x 1)&#39;</span><span class="p">,</span> <span class="n">location</span><span class="p">:</span>
+<span class="n">File</span> <span class="s2">&quot;&lt;ipython-input-2-51ef1cc64bea&gt;&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">4</span><span class="p">:</span>
+<span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="o">&lt;</span><span class="n">source</span> <span class="n">elided</span><span class="o">&gt;</span>
+    <span class="k">if</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">10</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">(</span><span class="mi">1</span><span class="p">,)</span>
+        <span class="o">^</span>
+<span class="n">Return</span> <span class="n">of</span><span class="p">:</span> <span class="n">IR</span> <span class="n">name</span> <span class="s1">&#39;$12.2&#39;</span><span class="p">,</span> <span class="nb">type</span> <span class="s1">&#39;int64&#39;</span><span class="p">,</span> <span class="n">location</span><span class="p">:</span>
+<span class="n">File</span> <span class="s2">&quot;&lt;ipython-input-2-51ef1cc64bea&gt;&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">6</span><span class="p">:</span>
+<span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="o">&lt;</span><span class="n">source</span> <span class="n">elided</span><span class="o">&gt;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">1</span>
+</pre></div>
+</div>
+<p>The error message “Can’t unify return type from the following types:
+tuple(int64 x 1), int64” should be read as “Numba cannot find a type that
+can safely represent a 1-tuple of integer and an integer”.</p>
+</div>
+<div class="section" id="my-code-has-an-untyped-list-problem">
+<span id="code-has-untyped-list"></span><h2>My code has an untyped list problem<a class="headerlink" href="#my-code-has-an-untyped-list-problem" title="Permalink to this headline">¶</a></h2>
+<p>As <a class="reference internal" href="#code-doesnt-compile"><span class="std std-ref">noted previously</span></a> the first part of Numba
+compiling your code involves working out what the types of all the variables
+are. In the case of lists, a list must contain items that are of the same type
+or can be empty if the type can be inferred from some later operation. What is
+not possible is to have a list which is defined as empty and has no inferable
+type (i.e. an untyped list).</p>
+<p>For example, this is using a list of a known type:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">numba</span> <span class="k">import</span> <span class="n">jit</span>
+<span class="nd">@jit</span><span class="p">(</span><span class="n">nopython</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">f</span><span class="p">():</span>
+    <span class="k">return</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span> <span class="c1"># this list is defined on construction with `int` type</span>
+</pre></div>
+</div>
+<p>This is using an empty list, but the type can be inferred:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">numba</span> <span class="k">import</span> <span class="n">jit</span>
+<span class="nd">@jit</span><span class="p">(</span><span class="n">nopython</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="n">tmp</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1"># defined empty</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+        <span class="n">tmp</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="c1"># list type can be inferred from the type of `i`</span>
+    <span class="k">return</span> <span class="n">tmp</span>
+</pre></div>
+</div>
+<p>This is using an empty list and the type cannot be inferred:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">numba</span> <span class="k">import</span> <span class="n">jit</span>
+<span class="nd">@jit</span><span class="p">(</span><span class="n">nopython</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="n">tmp</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1"># defined empty</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">tmp</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="c1"># ERROR: the type of `tmp` is unknown</span>
+</pre></div>
+</div>
+<p>Whilst slightly contrived, if you need an empty list and the type cannot be
+inferred but you know what type you want the list to be, this “trick” can be
+used to instruct the typing mechanism:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">numba</span> <span class="k">import</span> <span class="n">jit</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="nd">@jit</span><span class="p">(</span><span class="n">nopython</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="c1"># define empty list, but instruct that the type is np.complex64</span>
+    <span class="n">tmp</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">complex64</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">)]</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">tmp</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="c1"># the type of `tmp` is known, but it is still empty</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="the-compiled-code-is-too-slow">
+<h2>The compiled code is too slow<a class="headerlink" href="#the-compiled-code-is-too-slow" title="Permalink to this headline">¶</a></h2>
+<p>The most common reason for slowness of a compiled JIT function is that
+compiling in <a class="reference internal" href="../glossary.html#term-nopython-mode"><span class="xref std std-term">nopython mode</span></a> has failed and the Numba compiler has
+fallen back to <a class="reference internal" href="../glossary.html#term-object-mode"><span class="xref std std-term">object mode</span></a>.  <a class="reference internal" href="../glossary.html#term-object-mode"><span class="xref std std-term">object mode</span></a> currently provides
+little to no speedup compared to regular Python interpretation, and its
+main point is to allow an internal optimization known as
+<a class="reference internal" href="../glossary.html#term-loop-lifting"><span class="xref std std-term">loop-lifting</span></a>: this optimization will allow to compile inner
+loops in <a class="reference internal" href="../glossary.html#term-nopython-mode"><span class="xref std std-term">nopython mode</span></a> regardless of what code surrounds those
+inner loops.</p>
+<p>To find out if type inference succeeded on your function, you can use
+the <a class="reference internal" href="../reference/jit-compilation.html#Dispatcher.inspect_types" title="Dispatcher.inspect_types"><code class="xref py py-meth docutils literal notranslate"><span class="pre">inspect_types()</span></code></a> method on the compiled function.</p>
+<p>For example, let’s take the following function:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@jit</span>
+<span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">a</span> <span class="o">+</span> <span class="nb">float</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">s</span>
+</pre></div>
+</div>
+<p>When called with numbers, this function should be fast as Numba is able
+to convert number types to floating-point numbers.  Let’s see:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="go">3.0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="o">.</span><span class="n">inspect_types</span><span class="p">()</span>
+<span class="go">f (int64, int64)</span>
+<span class="go">--------------------------------------------------------------------------------</span>
+<span class="go"># --- LINE 7 ---</span>
+
+<span class="go">@jit</span>
+
+<span class="go"># --- LINE 8 ---</span>
+
+<span class="go">def f(a, b):</span>
+
+<span class="go">    # --- LINE 9 ---</span>
+<span class="go">    # label 0</span>
+<span class="go">    #   a.1 = a  :: int64</span>
+<span class="go">    #   del a</span>
+<span class="go">    #   b.1 = b  :: int64</span>
+<span class="go">    #   del b</span>
+<span class="go">    #   $0.2 = global(float: &lt;class &#39;float&#39;&gt;)  :: Function(&lt;class &#39;float&#39;&gt;)</span>
+<span class="go">    #   $0.4 = call $0.2(b.1, )  :: (int64,) -&gt; float64</span>
+<span class="go">    #   del b.1</span>
+<span class="go">    #   del $0.2</span>
+<span class="go">    #   $0.5 = a.1 + $0.4  :: float64</span>
+<span class="go">    #   del a.1</span>
+<span class="go">    #   del $0.4</span>
+<span class="go">    #   s = $0.5  :: float64</span>
+<span class="go">    #   del $0.5</span>
+
+<span class="go">    s = a + float(b)</span>
+
+<span class="go">    # --- LINE 10 ---</span>
+<span class="go">    #   $0.7 = cast(value=s)  :: float64</span>
+<span class="go">    #   del s</span>
+<span class="go">    #   return $0.7</span>
+
+<span class="go">    return s</span>
+</pre></div>
+</div>
+<p>Without trying to understand too much of the Numba intermediate representation,
+it is still visible that all variables and temporary values have had their
+types inferred properly: for example <em>a</em> has the type <code class="docutils literal notranslate"><span class="pre">int64</span></code>, <em>$0.5</em> has
+the type <code class="docutils literal notranslate"><span class="pre">float64</span></code>, etc.</p>
+<p>However, if <em>b</em> is passed as a string, compilation will fall back on object
+mode as the float() constructor with a string is currently not supported
+by Numba:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;2&quot;</span><span class="p">)</span>
+<span class="go">3.0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="o">.</span><span class="n">inspect_types</span><span class="p">()</span>
+<span class="go">[... snip annotations for other signatures, see above ...]</span>
+<span class="go">================================================================================</span>
+<span class="go">f (int64, str)</span>
+<span class="go">--------------------------------------------------------------------------------</span>
+<span class="go"># --- LINE 7 ---</span>
+
+<span class="go">@jit</span>
+
+<span class="go"># --- LINE 8 ---</span>
+
+<span class="go">def f(a, b):</span>
+
+<span class="go">    # --- LINE 9 ---</span>
+<span class="go">    # label 0</span>
+<span class="go">    #   a.1 = a  :: pyobject</span>
+<span class="go">    #   del a</span>
+<span class="go">    #   b.1 = b  :: pyobject</span>
+<span class="go">    #   del b</span>
+<span class="go">    #   $0.2 = global(float: &lt;class &#39;float&#39;&gt;)  :: pyobject</span>
+<span class="go">    #   $0.4 = call $0.2(b.1, )  :: pyobject</span>
+<span class="go">    #   del b.1</span>
+<span class="go">    #   del $0.2</span>
+<span class="go">    #   $0.5 = a.1 + $0.4  :: pyobject</span>
+<span class="go">    #   del a.1</span>
+<span class="go">    #   del $0.4</span>
+<span class="go">    #   s = $0.5  :: pyobject</span>
+<span class="go">    #   del $0.5</span>
+
+<span class="go">    s = a + float(b)</span>
+
+<span class="go">    # --- LINE 10 ---</span>
+<span class="go">    #   $0.7 = cast(value=s)  :: pyobject</span>
+<span class="go">    #   del s</span>
+<span class="go">    #   return $0.7</span>
+
+<span class="go">    return s</span>
+</pre></div>
+</div>
+<p>Here we see that all variables end up typed as <code class="docutils literal notranslate"><span class="pre">pyobject</span></code>.  This means
+that the function was compiled in object mode and values are passed
+around as generic Python objects, without Numba trying to look into them
+to reason about their raw values.  This is a situation you want to avoid
+when caring about the speed of your code.</p>
+<p>If a function fails to compile in <code class="docutils literal notranslate"><span class="pre">nopython</span></code> mode warnings will be emitted
+with explanation as to why compilation failed. For example with the <code class="docutils literal notranslate"><span class="pre">f()</span></code>
+function above (slightly edited for documentation purposes):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="go">3.0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;2&quot;</span><span class="p">)</span>
+<span class="go">example.py:7: NumbaWarning:</span>
+<span class="go">Compilation is falling back to object mode WITH looplifting enabled because Function &quot;f&quot; failed type inference due to: Invalid use of Function(&lt;class &#39;float&#39;&gt;) with argument(s) of type(s): (unicode_type)</span>
+<span class="go">* parameterized</span>
+<span class="go">In definition 0:</span>
+<span class="go">    TypeError: float() only support for numbers</span>
+<span class="go">    raised from &lt;path&gt;/numba/typing/builtins.py:880</span>
+<span class="go">In definition 1:</span>
+<span class="go">    TypeError: float() only support for numbers</span>
+<span class="go">    raised from &lt;path&gt;/numba/typing/builtins.py:880</span>
+<span class="go">This error is usually caused by passing an argument of a type that is unsupported by the named function.</span>
+<span class="go">[1] During: resolving callee type: Function(&lt;class &#39;float&#39;&gt;)</span>
+<span class="go">[2] During: typing of call at example.py (9)</span>
+
+
+<span class="go">File &quot;example.py&quot;, line 9:</span>
+<span class="go">def f(a, b):</span>
+<span class="go">    s = a + float(b)</span>
+<span class="go">    ^</span>
+
+<span class="go">&lt;path&gt;/numba/compiler.py:722: NumbaWarning: Function &quot;f&quot; was compiled in object mode without forceobj=True.</span>
+
+<span class="go">File &quot;example.py&quot;, line 8:</span>
+<span class="go">@jit</span>
+<span class="go">def f(a, b):</span>
+<span class="go">^</span>
+
+<span class="go">3.0</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="disabling-jit-compilation">
+<h2>Disabling JIT compilation<a class="headerlink" href="#disabling-jit-compilation" title="Permalink to this headline">¶</a></h2>
+<p>In order to debug code, it is possible to disable JIT compilation, which makes
+the <code class="docutils literal notranslate"><span class="pre">jit</span></code> decorator (and the <code class="docutils literal notranslate"><span class="pre">njit</span></code> decorator) act as if
+they perform no operation, and the invocation of decorated functions calls the
+original Python function instead of a compiled version. This can be toggled by
+setting the <span class="target" id="index-0"></span><a class="reference internal" href="../reference/envvars.html#envvar-NUMBA_DISABLE_JIT"><code class="xref std std-envvar docutils literal notranslate"><span class="pre">NUMBA_DISABLE_JIT</span></code></a> enviroment variable to <code class="docutils literal notranslate"><span class="pre">1</span></code>.</p>
+<p>When this mode is enabled, the <code class="docutils literal notranslate"><span class="pre">vectorize</span></code> and <code class="docutils literal notranslate"><span class="pre">guvectorize</span></code> decorators will
+still result in compilation of a ufunc, as there is no straightforward pure
+Python implementation of these functions.</p>
+</div>
+<div class="section" id="debugging-jit-compiled-code-with-gdb">
+<span id="debugging-jit-compiled-code"></span><h2>Debugging JIT compiled code with GDB<a class="headerlink" href="#debugging-jit-compiled-code-with-gdb" title="Permalink to this headline">¶</a></h2>
+<p>Setting the <code class="docutils literal notranslate"><span class="pre">debug</span></code> keyword argument in the <code class="docutils literal notranslate"><span class="pre">jit</span></code> decorator
+(e.g. <code class="docutils literal notranslate"><span class="pre">&#64;jit(debug=True)</span></code>) enables the emission of debug info in the jitted
+code.  To debug, GDB version 7.0 or above is required.  Currently, the following
+debug info is available:</p>
+<ul class="simple">
+<li><p>Function name will be shown in the backtrace.  But, no type information.</p></li>
+<li><p>Source location (filename and line number) is available.  For example,
+user can set break point by the absolute filename and line number;
+e.g. <code class="docutils literal notranslate"><span class="pre">break</span> <span class="pre">/path/to/myfile.py:6</span></code>.</p></li>
+<li><p>Local variables in the current function can be shown with <code class="docutils literal notranslate"><span class="pre">info</span> <span class="pre">locals</span></code>.</p></li>
+<li><p>Type of variable with <code class="docutils literal notranslate"><span class="pre">whatis</span> <span class="pre">myvar</span></code>.</p></li>
+<li><p>Value of variable with <code class="docutils literal notranslate"><span class="pre">print</span> <span class="pre">myvar</span></code> or <code class="docutils literal notranslate"><span class="pre">display</span> <span class="pre">myvar</span></code>.</p>
+<ul>
+<li><p>Simple numeric types, i.e. int, float and double, are shown in their
+native representation.  But, integers are assumed to be signed.</p></li>
+<li><p>Other types are shown as sequence of bytes.</p></li>
+</ul>
+</li>
+</ul>
+<p>Known issues:</p>
+<ul class="simple">
+<li><p>Stepping depends heavily on optimization level.</p>
+<ul>
+<li><p>At full optimization (equivalent to O3), most of the variables are
+optimized out.</p></li>
+<li><p>With no optimization (e.g. <code class="docutils literal notranslate"><span class="pre">NUMBA_OPT=0</span></code>), source location jumps around
+when stepping through the code.</p></li>
+<li><p>At O1 optimization (e.g. <code class="docutils literal notranslate"><span class="pre">NUMBA_OPT=1</span></code>), stepping is stable but some
+variables are optimized out.</p></li>
+</ul>
+</li>
+<li><p>Memory consumption increases significantly with debug info enabled.
+The compiler emits extra information (<a class="reference external" href="http://www.dwarfstd.org/">DWARF</a>)
+along with the instructions.  The emitted object code can be 2x bigger with
+debug info.</p></li>
+</ul>
+<p>Internal details:</p>
+<ul>
+<li><p>Since Python semantics allow variables to bind to value of different types,
+Numba internally creates multiple versions of the variable for each type.
+So for code like:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="mi">1</span>         <span class="c1"># type int</span>
+<span class="n">x</span> <span class="o">=</span> <span class="mf">2.3</span>       <span class="c1"># type float</span>
+<span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="c1"># type 3-tuple of int</span>
+</pre></div>
+</div>
+<p>Each assignments will store to a different variable name.  In the debugger,
+the variables will be <code class="docutils literal notranslate"><span class="pre">x</span></code>, <code class="docutils literal notranslate"><span class="pre">x$1</span></code> and <code class="docutils literal notranslate"><span class="pre">x$2</span></code>.  (In the Numba IR, they are
+<code class="docutils literal notranslate"><span class="pre">x</span></code>, <code class="docutils literal notranslate"><span class="pre">x.1</span></code> and <code class="docutils literal notranslate"><span class="pre">x.2</span></code>.)</p>
+</li>
+<li><p>When debug is enabled, inlining of the function is disabled.</p></li>
+</ul>
+<div class="section" id="example-debug-usage">
+<h3>Example debug usage<a class="headerlink" href="#example-debug-usage" title="Permalink to this headline">¶</a></h3>
+<p>The python source:</p>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">njit</span>
+
+<span class="nd">@njit</span><span class="p">(</span><span class="n">debug</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">a</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">a</span> <span class="o">*</span> <span class="mf">2.34</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+
+<span class="n">r</span><span class="o">=</span> <span class="n">foo</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+<p>In the terminal:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll">$ NUMBA_OPT=1 gdb -q python
+</span>Reading symbols from python...done.
+(gdb) break /home/user/chk_debug.py:5
+No source file named /home/user/chk_debug.py.
+Make breakpoint pending on future shared library load? (y or [n]) y
+
+Breakpoint 1 (/home/user/chk_debug.py:5) pending.
+<span class="hll">(gdb) run chk_debug.py
+</span>Starting program: /home/user/miniconda/bin/python chk_debug.py
+...
+Breakpoint 1, __main__::foo$241(long long) () at chk_debug.py:5
+5         b = a + 1
+<span class="hll">(gdb) n
+</span>6         c = a * 2.34
+<span class="hll">(gdb) bt
+</span>#0  __main__::foo$241(long long) () at chk_debug.py:6
+#1  0x00007ffff7fec47c in cpython::__main__::foo$241(long long) ()
+#2  0x00007fffeb7976e2 in call_cfunc (locals=0x0, kws=0x0, args=0x7fffeb486198,
+...
+<span class="hll">(gdb) info locals
+</span>a = 0
+d = &lt;error reading variable d (DWARF-2 expression error: `DW_OP_stack_value&#39; operations must be used either alone or in conjunction with DW_OP_piece or DW_OP_bit_piece.)&gt;
+c = 0
+b = 124
+<span class="hll">(gdb) whatis b
+</span>type = i64
+<span class="hll">(gdb) whatis d
+</span>type = {i64, i64, double}
+<span class="hll">(gdb) print b
+</span>$2 = 124
+</pre></div>
+</div>
+</div>
+<div class="section" id="globally-override-debug-setting">
+<h3>Globally override debug setting<a class="headerlink" href="#globally-override-debug-setting" title="Permalink to this headline">¶</a></h3>
+<p>It is possible to enable debug for the full application by setting environment
+variable <code class="docutils literal notranslate"><span class="pre">NUMBA_DEBUGINFO=1</span></code>.  This sets the default value of the <code class="docutils literal notranslate"><span class="pre">debug</span></code>
+option in <code class="docutils literal notranslate"><span class="pre">jit</span></code>.  Debug can be turned off on individual functions by setting
+<code class="docutils literal notranslate"><span class="pre">debug=False</span></code>.</p>
+<p>Beware that enabling debug info significantly increases the memory consumption
+for each compiled function.  For large application, this may cause out-of-memory
+error.</p>
+</div>
+</div>
+<div class="section" id="using-numba-s-direct-gdb-bindings-in-nopython-mode">
+<h2>Using Numba’s direct <code class="docutils literal notranslate"><span class="pre">gdb</span></code> bindings in <code class="docutils literal notranslate"><span class="pre">nopython</span></code>  mode<a class="headerlink" href="#using-numba-s-direct-gdb-bindings-in-nopython-mode" title="Permalink to this headline">¶</a></h2>
+<p>Numba (version 0.42.0 and later) has some additional functions relating to
+<code class="docutils literal notranslate"><span class="pre">gdb</span></code> support for CPUs that make it easier to debug programs. All the <code class="docutils literal notranslate"><span class="pre">gdb</span></code>
+related functions described in the following work in the same manner
+irrespective of whether they are called from the standard CPython interpreter or
+code compiled in either <a class="reference internal" href="../glossary.html#term-nopython-mode"><span class="xref std std-term">nopython mode</span></a> or <a class="reference internal" href="../glossary.html#term-object-mode"><span class="xref std std-term">object mode</span></a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This feature is experimental!</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This feature does unexpected things if used from Jupyter or
+alongside the <code class="docutils literal notranslate"><span class="pre">pdb</span></code> module. It’s behaviour is harmless, just hard
+to predict!</p>
+</div>
+<div class="section" id="set-up">
+<h3>Set up<a class="headerlink" href="#set-up" title="Permalink to this headline">¶</a></h3>
+<p>Numba’s <code class="docutils literal notranslate"><span class="pre">gdb</span></code> related functions make use of a <code class="docutils literal notranslate"><span class="pre">gdb</span></code> binary, the location and
+name of this binary can be configured via the <span class="target" id="index-1"></span><a class="reference internal" href="../reference/envvars.html#envvar-NUMBA_GDB_BINARY"><code class="xref std std-envvar docutils literal notranslate"><span class="pre">NUMBA_GDB_BINARY</span></code></a>
+environment variable if desired.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Numba’s <code class="docutils literal notranslate"><span class="pre">gdb</span></code> support requires the ability for <code class="docutils literal notranslate"><span class="pre">gdb</span></code> to attach to
+another process. On some systems (notably Ubuntu Linux) default
+security restrictions placed on <code class="docutils literal notranslate"><span class="pre">ptrace</span></code> prevent this from being
+possible. This restriction is enforced at the system level by the
+Linux security module <cite>Yama</cite>. Documentation for this module and the
+security implications of making changes to its behaviour can be found
+in the <a class="reference external" href="https://www.kernel.org/doc/Documentation/admin-guide/LSM/Yama.rst">Linux Kernel documentation</a>.
+The <a class="reference external" href="https://wiki.ubuntu.com/Security/Features#ptrace">Ubuntu Linux security documentation</a>
+discusses how to adjust the behaviour of <cite>Yama</cite> on with regards to
+<code class="docutils literal notranslate"><span class="pre">ptrace_scope</span></code> so as to permit the required behaviour.</p>
+</div>
+</div>
+<div class="section" id="basic-gdb-support">
+<h3>Basic <code class="docutils literal notranslate"><span class="pre">gdb</span></code> support<a class="headerlink" href="#basic-gdb-support" title="Permalink to this headline">¶</a></h3>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Calling <code class="xref py py-func docutils literal notranslate"><span class="pre">numba.gdb()</span></code> and/or <code class="xref py py-func docutils literal notranslate"><span class="pre">numba.gdb_init()</span></code> more than
+once in the same program is not advisable, unexpected things may
+happen. If multiple breakpoints are desired within a program,
+launch <code class="docutils literal notranslate"><span class="pre">gdb</span></code> once via <code class="xref py py-func docutils literal notranslate"><span class="pre">numba.gdb()</span></code> or <code class="xref py py-func docutils literal notranslate"><span class="pre">numba.gdb_init()</span></code>
+and then use <code class="xref py py-func docutils literal notranslate"><span class="pre">numba.gdb_breakpoint()</span></code> to register additional
+breakpoint locations.</p>
+</div>
+<p>The most simple function for adding <code class="docutils literal notranslate"><span class="pre">gdb</span></code> support is <code class="xref py py-func docutils literal notranslate"><span class="pre">numba.gdb()</span></code>, which,
+at the call location, will:</p>
+<ul class="simple">
+<li><p>launch <code class="docutils literal notranslate"><span class="pre">gdb</span></code> and attach it to the running process.</p></li>
+<li><p>create a breakpoint at the site of the <code class="xref py py-func docutils literal notranslate"><span class="pre">numba.gdb()</span></code> function call, the
+attached <code class="docutils literal notranslate"><span class="pre">gdb</span></code> will pause execution here awaiting user input.</p></li>
+</ul>
+<p>use of this functionality is best motivated by example, continuing with the
+example used above:</p>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">njit</span><span class="p">,</span> <span class="n">gdb</span>
+
+<span class="nd">@njit</span><span class="p">(</span><span class="n">debug</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">a</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="n">gdb</span><span class="p">()</span> <span class="c1"># instruct Numba to attach gdb at this location and pause execution</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">a</span> <span class="o">*</span> <span class="mf">2.34</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+
+<span class="n">r</span><span class="o">=</span> <span class="n">foo</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+<p>In the terminal (<code class="docutils literal notranslate"><span class="pre">...</span></code> on a line by itself indicates output that is not
+presented for brevity):</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll">$ NUMBA_OPT=0 python demo_gdb.py
+</span>Attaching to PID: 27157
+GNU gdb (GDB) Red Hat Enterprise Linux 8.0.1-36.el7
+...
+Attaching to process 27157
+...
+Reading symbols from &lt;elided for brevity&gt; ...done.
+0x00007f0380c31550 in __nanosleep_nocancel () at ../sysdeps/unix/syscall-template.S:81
+81      T_PSEUDO (SYSCALL_SYMBOL, SYSCALL_NAME, SYSCALL_NARGS)
+Breakpoint 1 at 0x7f036ac388f0: file numba/_helperlib.c, line 1090.
+Continuing.
+
+Breakpoint 1, numba_gdb_breakpoint () at numba/_helperlib.c:1090
+1090    }
+<span class="hll">(gdb) s
+</span>Single stepping until exit from function _ZN5numba7targets8gdb_hook8hook_gdb12$3clocals$3e8impl$242E5Tuple,
+which has no line number information.
+__main__::foo$241(long long) () at demo_gdb.py:7
+7           c = a * 2.34
+<span class="hll">(gdb) l
+</span>2
+3       @njit(debug=True)
+4       def foo(a):
+5           b = a + 1
+6           gdb() # instruct Numba to attach gdb at this location and pause execution
+7           c = a * 2.34
+8           d = (a, b, c)
+9           print(a, b, c, d)
+10
+11      r= foo(123)
+<span class="hll">(gdb) p a
+</span>$1 = 123
+<span class="hll">(gdb) p b
+</span>$2 = 124
+<span class="hll">(gdb) p c
+</span>$3 = 0
+<span class="hll">(gdb) n
+</span>8           d = (a, b, c)
+<span class="hll">(gdb) p c
+</span>$4 = 287.81999999999999
+</pre></div>
+</div>
+<p>It can be seen in the above example that execution of the code is paused at the
+location of the <code class="docutils literal notranslate"><span class="pre">gdb()</span></code> function call at end of the <code class="docutils literal notranslate"><span class="pre">numba_gdb_breakpoint</span></code>
+function (this is the Numba internal symbol registered as breakpoint with
+<code class="docutils literal notranslate"><span class="pre">gdb</span></code>). Issuing a <code class="docutils literal notranslate"><span class="pre">step</span></code> at this point moves to the stack frame of the
+compiled Python source. From there, it can be seen that the variables <code class="docutils literal notranslate"><span class="pre">a</span></code> and
+<code class="docutils literal notranslate"><span class="pre">b</span></code> have been evaluated but <code class="docutils literal notranslate"><span class="pre">c</span></code> has not, as demonstrated by printing their
+values, this is precisely as expected given the location of the <code class="docutils literal notranslate"><span class="pre">gdb()</span></code> call.
+Issuing a <code class="docutils literal notranslate"><span class="pre">next</span></code> then evaluates line <code class="docutils literal notranslate"><span class="pre">7</span></code> and <code class="docutils literal notranslate"><span class="pre">c</span></code> is assigned a value as
+demonstrated by the final print.</p>
+</div>
+<div class="section" id="running-with-gdb-enabled">
+<h3>Running with <code class="docutils literal notranslate"><span class="pre">gdb</span></code> enabled<a class="headerlink" href="#running-with-gdb-enabled" title="Permalink to this headline">¶</a></h3>
+<p>The functionality provided by <code class="xref py py-func docutils literal notranslate"><span class="pre">numba.gdb()</span></code> (launch and attach <code class="docutils literal notranslate"><span class="pre">gdb</span></code> to
+the executing process and pause on a breakpoint) is also available as two
+separate functions:</p>
+<ul class="simple">
+<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">numba.gdb_init()</span></code> this function injects code at the call site to launch
+and attach <code class="docutils literal notranslate"><span class="pre">gdb</span></code> to the executing process but does not pause execution.</p></li>
+<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">numba.gdb_breakpoint()</span></code> this function injects code at the call site that
+will call the special <code class="docutils literal notranslate"><span class="pre">numba_gdb_breakpoint</span></code> function that is registered as
+a breakpoint in Numba’s <code class="docutils literal notranslate"><span class="pre">gdb</span></code> support. This is demonstrated in the next
+section.</p></li>
+</ul>
+<p>This functionality enables more complex debugging capabilities. Again, motivated
+by example, debugging a ‘segfault’ (memory access violation signalling
+<code class="docutils literal notranslate"><span class="pre">SIGSEGV</span></code>):</p>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15</pre></div></td><td class="code"><div class="highlight"><pre><span></span>  <span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">njit</span><span class="p">,</span> <span class="n">gdb_init</span>
+  <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+  <span class="nd">@njit</span><span class="p">(</span><span class="n">debug</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+  <span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
+      <span class="n">gdb_init</span><span class="p">()</span> <span class="c1"># instruct Numba to attach gdb at this location, but not to pause execution</span>
+      <span class="n">b</span> <span class="o">=</span> <span class="n">a</span> <span class="o">+</span> <span class="mi">1</span>
+      <span class="n">c</span> <span class="o">=</span> <span class="n">a</span> <span class="o">*</span> <span class="mf">2.34</span>
+      <span class="n">d</span> <span class="o">=</span> <span class="n">c</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="c1"># access an address that is a) invalid b) out of the page</span>
+      <span class="k">print</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+
+  <span class="n">bad_index</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mf">1e9</span><span class="p">)</span> <span class="c1"># this index is invalid</span>
+  <span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+  <span class="n">r</span> <span class="o">=</span> <span class="n">foo</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">bad_index</span><span class="p">)</span>
+  <span class="k">print</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+<p>In the terminal (<code class="docutils literal notranslate"><span class="pre">...</span></code> on a line by itself indicates output that is not
+presented for brevity):</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll">$ python demo_gdb_segfault.py
+</span>Attaching to PID: 5444
+GNU gdb (GDB) Red Hat Enterprise Linux 8.0.1-36.el7
+...
+Attaching to process 5444
+...
+Reading symbols from &lt;elided for brevity&gt; ...done.
+0x00007f8d8010a550 in __nanosleep_nocancel () at ../sysdeps/unix/syscall-template.S:81
+81      T_PSEUDO (SYSCALL_SYMBOL, SYSCALL_NAME, SYSCALL_NARGS)
+Breakpoint 1 at 0x7f8d6a1118f0: file numba/_helperlib.c, line 1090.
+Continuing.
+
+0x00007fa7b810a41f in __main__::foo$241(Array&lt;long long, 1, C, mutable, aligned&gt;, long long) () at demo_gdb_segfault.py:9
+9           d = c[index] # access an address that is a) invalid b) out of the page
+<span class="hll">(gdb) p index
+</span>$1 = 1000000000
+<span class="hll">(gdb) p c
+</span>$2 = &quot;p\202\017\364\371U\000\000\000\000\000\000\000\000\000\000\n\000\000\000\000\000\000\000\b\000\000\000\000\000\000\000\240\202\017\364\371U\000\000\n\000\000\000\000\000\000\000\b\000\000\000\000\000\000&quot;
+<span class="hll">(gdb) whatis c
+</span>type = {i8*, i8*, i64, i64, double*, [1 x i64], [1 x i64]}
+<span class="hll">(gdb) x /32xb c
+</span>0x7ffd56195068: 0x70    0x82    0x0f    0xf4    0xf9    0x55    0x00    0x00
+0x7ffd56195070: 0x00    0x00    0x00    0x00    0x00    0x00    0x00    0x00
+0x7ffd56195078: 0x0a    0x00    0x00    0x00    0x00    0x00    0x00    0x00
+0x7ffd56195080: 0x08    0x00    0x00    0x00    0x00    0x00    0x00    0x00
+</pre></div>
+</div>
+<p>In the <code class="docutils literal notranslate"><span class="pre">gdb</span></code> output it can be noted that the <code class="docutils literal notranslate"><span class="pre">numba_gdb_breakpoint</span></code> function
+was registered as a breakpoint (its symbol is in <code class="docutils literal notranslate"><span class="pre">numba/_helperlib.c</span></code>),
+that a <code class="docutils literal notranslate"><span class="pre">SIGSEGV</span></code> signal was caught, and the line in which the access violation
+occurred is printed.</p>
+<p>Continuing the example as a debugging session demonstration, first <code class="docutils literal notranslate"><span class="pre">index</span></code>
+can be printed, and it is evidently 1e9. Printing <code class="docutils literal notranslate"><span class="pre">c</span></code> gives a lot of bytes, so
+the type needs looking up. The type of <code class="docutils literal notranslate"><span class="pre">c</span></code> shows the layout for the array
+<code class="docutils literal notranslate"><span class="pre">c</span></code> based on its <code class="docutils literal notranslate"><span class="pre">DataModel</span></code> (look in the Numba source
+<code class="docutils literal notranslate"><span class="pre">numba.datamodel.models</span></code> for the layouts, the <code class="docutils literal notranslate"><span class="pre">ArrayModel</span></code> is presented
+below for ease).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">ArrayModel</span><span class="p">(</span><span class="n">StructModel</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dmm</span><span class="p">,</span> <span class="n">fe_type</span><span class="p">):</span>
+        <span class="n">ndim</span> <span class="o">=</span> <span class="n">fe_type</span><span class="o">.</span><span class="n">ndim</span>
+        <span class="n">members</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">(</span><span class="s1">&#39;meminfo&#39;</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">MemInfoPointer</span><span class="p">(</span><span class="n">fe_type</span><span class="o">.</span><span class="n">dtype</span><span class="p">)),</span>
+            <span class="p">(</span><span class="s1">&#39;parent&#39;</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">pyobject</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;nitems&#39;</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">intp</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;itemsize&#39;</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">intp</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">CPointer</span><span class="p">(</span><span class="n">fe_type</span><span class="o">.</span><span class="n">dtype</span><span class="p">)),</span>
+            <span class="p">(</span><span class="s1">&#39;shape&#39;</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">UniTuple</span><span class="p">(</span><span class="n">types</span><span class="o">.</span><span class="n">intp</span><span class="p">,</span> <span class="n">ndim</span><span class="p">)),</span>
+            <span class="p">(</span><span class="s1">&#39;strides&#39;</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">UniTuple</span><span class="p">(</span><span class="n">types</span><span class="o">.</span><span class="n">intp</span><span class="p">,</span> <span class="n">ndim</span><span class="p">)),</span>
+        <span class="p">]</span>
+</pre></div>
+</div>
+<p>The type inspected from <code class="docutils literal notranslate"><span class="pre">gdb</span></code>
+(<code class="docutils literal notranslate"><span class="pre">type</span> <span class="pre">=</span> <span class="pre">{i8*,</span> <span class="pre">i8*,</span> <span class="pre">i64,</span> <span class="pre">i64,</span> <span class="pre">double*,</span> <span class="pre">[1</span> <span class="pre">x</span> <span class="pre">i64],</span> <span class="pre">[1</span> <span class="pre">x</span> <span class="pre">i64]}</span></code>) corresponds
+directly to the members of the <code class="docutils literal notranslate"><span class="pre">ArrayModel</span></code>. Given the segfault came from an
+invalid access it would be informative to check the number of items in the array
+and compare that to the index requested.</p>
+<p>Examining the memory of <code class="docutils literal notranslate"><span class="pre">c</span></code>, (<code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">/32xb</span> <span class="pre">c</span></code>), the first 16 bytes are the two
+<code class="docutils literal notranslate"><span class="pre">i8*</span></code> corresponding to the <code class="docutils literal notranslate"><span class="pre">meminfo</span></code> pointer and the <code class="docutils literal notranslate"><span class="pre">parent</span></code>
+<code class="docutils literal notranslate"><span class="pre">pyobject</span></code>. The next two groups of 8 bytes are <code class="docutils literal notranslate"><span class="pre">i64</span></code>/<code class="docutils literal notranslate"><span class="pre">intp</span></code> types
+corresponding to <code class="docutils literal notranslate"><span class="pre">nitems</span></code> and <code class="docutils literal notranslate"><span class="pre">itemsize</span></code> respectively. Evidently their
+values are <code class="docutils literal notranslate"><span class="pre">0x0a</span></code> and <code class="docutils literal notranslate"><span class="pre">0x08</span></code>, this makes sense as the input array <code class="docutils literal notranslate"><span class="pre">a</span></code> has
+10 elements and is of type <code class="docutils literal notranslate"><span class="pre">int64</span></code> which is 8 bytes wide. It’s therefore clear
+that the segfault comes from an invalid access of index <code class="docutils literal notranslate"><span class="pre">1000000000</span></code> in an
+array containing <code class="docutils literal notranslate"><span class="pre">10</span></code> items.</p>
+</div>
+<div class="section" id="adding-breakpoints-to-code">
+<h3>Adding breakpoints to code<a class="headerlink" href="#adding-breakpoints-to-code" title="Permalink to this headline">¶</a></h3>
+<p>The next example demonstrates using multiple breakpoints that are defined
+through the invocation of the <code class="xref py py-func docutils literal notranslate"><span class="pre">numba.gdb_breakpoint()</span></code> function:</p>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">njit</span><span class="p">,</span> <span class="n">gdb_init</span><span class="p">,</span> <span class="n">gdb_breakpoint</span>
+
+<span class="nd">@njit</span><span class="p">(</span><span class="n">debug</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
+    <span class="n">gdb_init</span><span class="p">()</span> <span class="c1"># instruct Numba to attach gdb at this location</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">a</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="n">gdb_breakpoint</span><span class="p">()</span> <span class="c1"># instruct gdb to break at this location</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">a</span> <span class="o">*</span> <span class="mf">2.34</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
+    <span class="n">gdb_breakpoint</span><span class="p">()</span> <span class="c1"># and to break again at this location</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+
+<span class="n">r</span><span class="o">=</span> <span class="n">foo</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+<p>In the terminal (<code class="docutils literal notranslate"><span class="pre">...</span></code> on a line by itself indicates output that is not
+presented for brevity):</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll">$ NUMBA_OPT=0 python demo_gdb_breakpoints.py
+</span>Attaching to PID: 20366
+GNU gdb (GDB) Red Hat Enterprise Linux 8.0.1-36.el7
+...
+Attaching to process 20366
+Reading symbols from &lt;elided for brevity&gt; ...done.
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library &quot;/lib64/libthread_db.so.1&quot;.
+Reading symbols from /lib64/libc.so.6...Reading symbols from /usr/lib/debug/usr/lib64/libc-2.17.so.debug...done.
+0x00007f631db5e550 in __nanosleep_nocancel () at ../sysdeps/unix/syscall-template.S:81
+81      T_PSEUDO (SYSCALL_SYMBOL, SYSCALL_NAME, SYSCALL_NARGS)
+Breakpoint 1 at 0x7f6307b658f0: file numba/_helperlib.c, line 1090.
+Continuing.
+
+Breakpoint 1, numba_gdb_breakpoint () at numba/_helperlib.c:1090
+1090    }
+<span class="hll">(gdb) step
+</span>__main__::foo$241(long long) () at demo_gdb_breakpoints.py:8
+8           c = a * 2.34
+<span class="hll">(gdb) l
+</span>3       @njit(debug=True)
+4       def foo(a):
+5           gdb_init() # instruct Numba to attach gdb at this location
+6           b = a + 1
+7           gdb_breakpoint() # instruct gdb to break at this location
+8           c = a * 2.34
+9           d = (a, b, c)
+10          gdb_breakpoint() # and to break again at this location
+11          print(a, b, c, d)
+12
+<span class="hll">(gdb) p b
+</span>$1 = 124
+<span class="hll">(gdb) p c
+</span>$2 = 0
+<span class="hll">(gdb) continue
+</span>Continuing.
+
+Breakpoint 1, numba_gdb_breakpoint () at numba/_helperlib.c:1090
+1090    }
+<span class="hll">(gdb) step
+</span>11          print(a, b, c, d)
+<span class="hll">(gdb) p c
+</span>$3 = 287.81999999999999
+</pre></div>
+</div>
+<p>From the <code class="docutils literal notranslate"><span class="pre">gdb</span></code> output it can be seen that execution paused at line 8 as a
+breakpoint was hit, and after a <code class="docutils literal notranslate"><span class="pre">continue</span></code> was issued, it broke again at line
+11 where the next breakpoint was hit.</p>
+</div>
+<div class="section" id="debugging-in-parallel-regions">
+<h3>Debugging in parallel regions<a class="headerlink" href="#debugging-in-parallel-regions" title="Permalink to this headline">¶</a></h3>
+<p>The follow example is quite involved, it executes with <code class="docutils literal notranslate"><span class="pre">gdb</span></code> instrumentation
+from the outset as per the example above, but it also uses threads and makes use
+of the breakpoint functionality. Further, the last iteration of the parallel
+section calls the function <code class="docutils literal notranslate"><span class="pre">work</span></code>, which is actually just a binding to
+<code class="docutils literal notranslate"><span class="pre">glibc</span></code>’s <code class="docutils literal notranslate"><span class="pre">free(3)</span></code> in this case, but could equally be some involved
+function that is presenting a segfault for unknown reasons.</p>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29</pre></div></td><td class="code"><div class="highlight"><pre><span></span>  <span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">njit</span><span class="p">,</span> <span class="n">prange</span><span class="p">,</span> <span class="n">gdb_init</span><span class="p">,</span> <span class="n">gdb_breakpoint</span>
+  <span class="kn">import</span> <span class="nn">ctypes</span>
+
+  <span class="k">def</span> <span class="nf">get_free</span><span class="p">():</span>
+      <span class="n">lib</span> <span class="o">=</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">cdll</span><span class="o">.</span><span class="n">LoadLibrary</span><span class="p">(</span><span class="s1">&#39;libc.so.6&#39;</span><span class="p">)</span>
+      <span class="n">free_binding</span> <span class="o">=</span> <span class="n">lib</span><span class="o">.</span><span class="n">free</span>
+      <span class="n">free_binding</span><span class="o">.</span><span class="n">argtypes</span> <span class="o">=</span> <span class="p">[</span><span class="n">ctypes</span><span class="o">.</span><span class="n">c_void_p</span><span class="p">,]</span>
+      <span class="n">free_binding</span><span class="o">.</span><span class="n">restype</span> <span class="o">=</span> <span class="bp">None</span>
+      <span class="k">return</span> <span class="n">free_binding</span>
+
+  <span class="n">work</span> <span class="o">=</span> <span class="n">get_free</span><span class="p">()</span>
+
+  <span class="nd">@njit</span><span class="p">(</span><span class="n">debug</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">parallel</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+  <span class="k">def</span> <span class="nf">foo</span><span class="p">():</span>
+      <span class="n">gdb_init</span><span class="p">()</span> <span class="c1"># instruct Numba to attach gdb at this location, but not to pause execution</span>
+      <span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span>
+      <span class="n">n</span> <span class="o">=</span> <span class="mi">9</span>
+      <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">prange</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+          <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">3</span> <span class="ow">and</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">8</span><span class="p">:</span> <span class="c1"># iterations 4, 5, 6, 7 will break here</span>
+              <span class="n">gdb_breakpoint</span><span class="p">()</span>
+
+          <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">8</span><span class="p">:</span> <span class="c1"># last iteration segfaults</span>
+              <span class="n">work</span><span class="p">(</span><span class="mh">0xBADADD</span><span class="p">)</span>
+
+          <span class="n">counter</span> <span class="o">+=</span> <span class="mi">1</span>
+      <span class="k">return</span> <span class="n">counter</span>
+
+  <span class="n">r</span> <span class="o">=</span> <span class="n">foo</span><span class="p">()</span>
+  <span class="k">print</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+<p>In the terminal (<code class="docutils literal notranslate"><span class="pre">...</span></code> on a line by itself indicates output that is not
+presented for brevity), note the setting of <code class="docutils literal notranslate"><span class="pre">NUMBA_NUM_THREADS</span></code> to 4 to ensure
+that there are 4 threads running in the parallel section:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll">$ NUMBA_NUM_THREADS=4 NUMBA_OPT=0 python demo_gdb_threads.py
+</span>Attaching to PID: 21462
+...
+Attaching to process 21462
+[New LWP 21467]
+[New LWP 21468]
+[New LWP 21469]
+[New LWP 21470]
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library &quot;/lib64/libthread_db.so.1&quot;.
+0x00007f59ec31756d in nanosleep () at ../sysdeps/unix/syscall-template.S:81
+81      T_PSEUDO (SYSCALL_SYMBOL, SYSCALL_NAME, SYSCALL_NARGS)
+Breakpoint 1 at 0x7f59d631e8f0: file numba/_helperlib.c, line 1090.
+Continuing.
+[Switching to Thread 0x7f59d1fd1700 (LWP 21470)]
+
+Thread 5 &quot;python&quot; hit Breakpoint 1, numba_gdb_breakpoint () at numba/_helperlib.c:1090
+1090    }
+<span class="hll">(gdb) info threads
+</span>Id   Target Id         Frame
+1    Thread 0x7f59eca2f740 (LWP 21462) &quot;python&quot; pthread_cond_wait@@GLIBC_2.3.2 ()
+    at ../nptl/sysdeps/unix/sysv/linux/x86_64/pthread_cond_wait.S:185
+2    Thread 0x7f59d37d4700 (LWP 21467) &quot;python&quot; pthread_cond_wait@@GLIBC_2.3.2 ()
+    at ../nptl/sysdeps/unix/sysv/linux/x86_64/pthread_cond_wait.S:185
+3    Thread 0x7f59d2fd3700 (LWP 21468) &quot;python&quot; pthread_cond_wait@@GLIBC_2.3.2 ()
+    at ../nptl/sysdeps/unix/sysv/linux/x86_64/pthread_cond_wait.S:185
+4    Thread 0x7f59d27d2700 (LWP 21469) &quot;python&quot; numba_gdb_breakpoint () at numba/_helperlib.c:1090
+* 5    Thread 0x7f59d1fd1700 (LWP 21470) &quot;python&quot; numba_gdb_breakpoint () at numba/_helperlib.c:1090
+<span class="hll">(gdb) thread apply 2-5 info locals
+</span>
+Thread 2 (Thread 0x7f59d37d4700 (LWP 21467)):
+No locals.
+
+Thread 3 (Thread 0x7f59d2fd3700 (LWP 21468)):
+No locals.
+
+Thread 4 (Thread 0x7f59d27d2700 (LWP 21469)):
+No locals.
+
+Thread 5 (Thread 0x7f59d1fd1700 (LWP 21470)):
+sched$35 = &#39;\000&#39; &lt;repeats 55 times&gt;
+counter__arr = &#39;\000&#39; &lt;repeats 16 times&gt;, &quot;\001\000\000\000\000\000\000\000\b\000\000\000\000\000\000\000\370B]\&quot;hU\000\000\001&quot;, &#39;\000&#39; &lt;repeats 14 times&gt;
+counter = 0
+<span class="hll">(gdb) continue
+</span>Continuing.
+[Switching to Thread 0x7f59d27d2700 (LWP 21469)]
+
+Thread 4 &quot;python&quot; hit Breakpoint 1, numba_gdb_breakpoint () at numba/_helperlib.c:1090
+1090    }
+<span class="hll">(gdb) continue
+</span>Continuing.
+[Switching to Thread 0x7f59d1fd1700 (LWP 21470)]
+
+Thread 5 &quot;python&quot; hit Breakpoint 1, numba_gdb_breakpoint () at numba/_helperlib.c:1090
+1090    }
+<span class="hll">(gdb) continue
+</span>Continuing.
+[Switching to Thread 0x7f59d27d2700 (LWP 21469)]
+
+Thread 4 &quot;python&quot; hit Breakpoint 1, numba_gdb_breakpoint () at numba/_helperlib.c:1090
+1090    }
+<span class="hll">(gdb) continue
+</span>Continuing.
+
+Thread 5 &quot;python&quot; received signal SIGSEGV, Segmentation fault.
+[Switching to Thread 0x7f59d1fd1700 (LWP 21470)]
+__GI___libc_free (mem=0xbadadd) at malloc.c:2935
+2935      if (chunk_is_mmapped(p))                       /* release mmapped memory. */
+<span class="hll">(gdb) bt
+</span>#0  __GI___libc_free (mem=0xbadadd) at malloc.c:2935
+#1  0x00007f59d37ded84 in $3cdynamic$3e::__numba_parfor_gufunc__0x7ffff80a61ae3e31$244(Array&lt;unsigned long long, 1, C, mutable, aligned&gt;, Array&lt;long long, 1, C, mutable, aligned&gt;) () at &lt;string&gt;:24
+#2  0x00007f59d17ce326 in __gufunc__._ZN13$3cdynamic$3e45__numba_parfor_gufunc__0x7ffff80a61ae3e31$244E5ArrayIyLi1E1C7mutable7alignedE5ArrayIxLi1E1C7mutable7alignedE ()
+#3  0x00007f59d37d7320 in thread_worker ()
+from &lt;path&gt;/numba/numba/npyufunc/workqueue.cpython-37m-x86_64-linux-gnu.so
+#4  0x00007f59ec626e25 in start_thread (arg=0x7f59d1fd1700) at pthread_create.c:308
+#5  0x00007f59ec350bad in clone () at ../sysdeps/unix/sysv/linux/x86_64/clone.S:113
+</pre></div>
+</div>
+<p>In the output it can be seen that there are 4 threads launched and that they all
+break at the breakpoint, further that <code class="docutils literal notranslate"><span class="pre">Thread</span> <span class="pre">5</span></code> receives a signal <code class="docutils literal notranslate"><span class="pre">SIGSEGV</span></code>
+and that back tracing shows that it came from <code class="docutils literal notranslate"><span class="pre">__GI___libc_free</span></code> with the
+invalid address in <code class="docutils literal notranslate"><span class="pre">mem</span></code>, as expected.</p>
+</div>
+<div class="section" id="using-the-gdb-command-language">
+<h3>Using the <code class="docutils literal notranslate"><span class="pre">gdb</span></code> command language<a class="headerlink" href="#using-the-gdb-command-language" title="Permalink to this headline">¶</a></h3>
+<p>Both the <code class="xref py py-func docutils literal notranslate"><span class="pre">numba.gdb()</span></code> and <code class="xref py py-func docutils literal notranslate"><span class="pre">numba.gdb_init()</span></code> functions accept unlimited
+string arguments which will be passed directly to <code class="docutils literal notranslate"><span class="pre">gdb</span></code> as command line
+arguments when it initializes, this makes it easy to set breakpoints on other
+functions and perform repeated debugging tasks without having to manually type
+them every time. For example, this code runs with <code class="docutils literal notranslate"><span class="pre">gdb</span></code> attached and sets a
+breakpoint on <code class="docutils literal notranslate"><span class="pre">_dgesdd</span></code> (say for example the arguments passed to the LAPACK’s
+double precision divide and conqueror SVD function need debugging).</p>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19</pre></div></td><td class="code"><div class="highlight"><pre><span></span>  <span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">njit</span><span class="p">,</span> <span class="n">gdb</span>
+  <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+  <span class="nd">@njit</span><span class="p">(</span><span class="n">debug</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+  <span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
+      <span class="c1"># instruct Numba to attach gdb at this location and on launch, switch</span>
+      <span class="c1"># breakpoint pending on , and then set a breakpoint on the function</span>
+      <span class="c1"># _dgesdd, continue execution, and once the breakpoint is hit, backtrace</span>
+      <span class="n">gdb</span><span class="p">(</span><span class="s1">&#39;-ex&#39;</span><span class="p">,</span> <span class="s1">&#39;set breakpoint pending on&#39;</span><span class="p">,</span>
+          <span class="s1">&#39;-ex&#39;</span><span class="p">,</span> <span class="s1">&#39;b dgesdd_&#39;</span><span class="p">,</span>
+          <span class="s1">&#39;-ex&#39;</span><span class="p">,</span><span class="s1">&#39;c&#39;</span><span class="p">,</span>
+          <span class="s1">&#39;-ex&#39;</span><span class="p">,</span><span class="s1">&#39;bt&#39;</span><span class="p">)</span>
+      <span class="n">b</span> <span class="o">=</span> <span class="n">a</span> <span class="o">+</span> <span class="mi">10</span>
+      <span class="n">u</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">vh</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">svd</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+      <span class="k">return</span> <span class="n">s</span> <span class="c1"># just return singular values</span>
+
+  <span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">70.</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span>
+  <span class="n">r</span> <span class="o">=</span> <span class="n">foo</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+  <span class="k">print</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+<p>In the terminal (<code class="docutils literal notranslate"><span class="pre">...</span></code> on a line by itself indicates output that is not
+presented for brevity), note that no interaction is required to break and
+backtrace:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll">$ NUMBA_OPT=0 python demo_gdb_args.py
+</span>Attaching to PID: 22300
+GNU gdb (GDB) Red Hat Enterprise Linux 8.0.1-36.el7
+...
+Attaching to process 22300
+Reading symbols from &lt;py_env&gt;/bin/python3.7...done.
+0x00007f652305a550 in __nanosleep_nocancel () at ../sysdeps/unix/syscall-template.S:81
+81      T_PSEUDO (SYSCALL_SYMBOL, SYSCALL_NAME, SYSCALL_NARGS)
+Breakpoint 1 at 0x7f650d0618f0: file numba/_helperlib.c, line 1090.
+Continuing.
+
+Breakpoint 1, numba_gdb_breakpoint () at numba/_helperlib.c:1090
+1090    }
+Breakpoint 2 at 0x7f65102322e0 (2 locations)
+Continuing.
+
+Breakpoint 2, 0x00007f65182be5f0 in mkl_lapack.dgesdd_ ()
+from &lt;py_env&gt;/lib/python3.7/site-packages/numpy/core/../../../../libmkl_rt.so
+#0  0x00007f65182be5f0 in mkl_lapack.dgesdd_ ()
+from &lt;py_env&gt;/lib/python3.7/site-packages/numpy/core/../../../../libmkl_rt.so
+#1  0x00007f650d065b71 in numba_raw_rgesdd (kind=kind@entry=100 &#39;d&#39;, jobz=&lt;optimized out&gt;, jobz@entry=65 &#39;A&#39;, m=m@entry=10,
+    n=n@entry=7, a=a@entry=0x561c6fbb20c0, lda=lda@entry=10, s=0x561c6facf3a0, u=0x561c6fb680e0, ldu=10, vt=0x561c6fd375c0,
+    ldvt=7, work=0x7fff4c926c30, lwork=-1, iwork=0x7fff4c926c40, info=0x7fff4c926c20) at numba/_lapack.c:1277
+#2  0x00007f650d06768f in numba_ez_rgesdd (ldvt=7, vt=0x561c6fd375c0, ldu=10, u=0x561c6fb680e0, s=0x561c6facf3a0, lda=10,
+    a=0x561c6fbb20c0, n=7, m=10, jobz=65 &#39;A&#39;, kind=&lt;optimized out&gt;) at numba/_lapack.c:1307
+#3  numba_ez_gesdd (kind=&lt;optimized out&gt;, jobz=&lt;optimized out&gt;, m=10, n=7, a=0x561c6fbb20c0, lda=10, s=0x561c6facf3a0,
+    u=0x561c6fb680e0, ldu=10, vt=0x561c6fd375c0, ldvt=7) at numba/_lapack.c:1477
+#4  0x00007f650a3147a3 in numba::targets::linalg::svd_impl::$3clocals$3e::svd_impl$243(Array&lt;double, 2, C, mutable, aligned&gt;, omitted$28default$3d1$29) ()
+#5  0x00007f650a1c0489 in __main__::foo$241(Array&lt;double, 2, C, mutable, aligned&gt;) () at demo_gdb_args.py:15
+#6  0x00007f650a1c2110 in cpython::__main__::foo$241(Array&lt;double, 2, C, mutable, aligned&gt;) ()
+#7  0x00007f650cd096a4 in call_cfunc ()
+from &lt;path&gt;/numba/numba/_dispatcher.cpython-37m-x86_64-linux-gnu.so
+...
+</pre></div>
+</div>
+</div>
+<div class="section" id="how-does-the-gdb-binding-work">
+<h3>How does the <code class="docutils literal notranslate"><span class="pre">gdb</span></code> binding work?<a class="headerlink" href="#how-does-the-gdb-binding-work" title="Permalink to this headline">¶</a></h3>
+<p>For advanced users and debuggers of Numba applications it’s important to know
+some of the internal implementation details of the outlined <code class="docutils literal notranslate"><span class="pre">gdb</span></code> bindings.
+The <code class="xref py py-func docutils literal notranslate"><span class="pre">numba.gdb()</span></code> and <code class="xref py py-func docutils literal notranslate"><span class="pre">numba.gdb_init()</span></code> functions work by injecting the
+following into the function’s LLVM IR:</p>
+<ul class="simple">
+<li><p>At the call site of the function first inject a call to <code class="docutils literal notranslate"><span class="pre">getpid(3)</span></code> to get
+the PID of the executing process and store this for use later, then inject a
+<code class="docutils literal notranslate"><span class="pre">fork(3)</span></code> call:</p>
+<ul>
+<li><p>In the parent:</p>
+<ul>
+<li><p>Inject a call <code class="docutils literal notranslate"><span class="pre">sleep(3)</span></code> (hence the pause whilst <code class="docutils literal notranslate"><span class="pre">gdb</span></code> loads).</p></li>
+<li><p>Inject a call to the <code class="docutils literal notranslate"><span class="pre">numba_gdb_breakpoint</span></code> function (only
+<code class="xref py py-func docutils literal notranslate"><span class="pre">numba.gdb()</span></code> does this).</p></li>
+</ul>
+</li>
+<li><p>In the child:</p>
+<ul>
+<li><p>Inject a call to <code class="docutils literal notranslate"><span class="pre">execl(3)</span></code> with the arguments
+<code class="docutils literal notranslate"><span class="pre">numba.config.GDB_BINARY</span></code>, the <code class="docutils literal notranslate"><span class="pre">attach</span></code> command and the PID recorded
+earlier. Numba has a special <code class="docutils literal notranslate"><span class="pre">gdb</span></code> command file that contains
+instructions to break on the symbol <code class="docutils literal notranslate"><span class="pre">numba_gdb_breakpoint</span></code> and then
+<code class="docutils literal notranslate"><span class="pre">finish</span></code>, this is to make sure that the program stops on the
+breakpoint but the frame it stops in is the compiled Python frame (or
+one <code class="docutils literal notranslate"><span class="pre">step</span></code> away from, depending on optimisation). This command file is
+also added to the arguments and finally and any user specified arguments
+are added.</p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>At the call site of a <code class="xref py py-func docutils literal notranslate"><span class="pre">numba.gdb_breakpoint()</span></code> a call is injected to the
+special <code class="docutils literal notranslate"><span class="pre">numba_gdb_breakpoint</span></code> symbol, which is already registered and
+instrumented as a place to break and <code class="docutils literal notranslate"><span class="pre">finish</span></code> immediately.</p>
+<p>As a result of this, a e.g. <code class="xref py py-func docutils literal notranslate"><span class="pre">numba.gdb()</span></code> call will cause a fork in the
+program, the parent will sleep whilst the child launches <code class="docutils literal notranslate"><span class="pre">gdb</span></code> and attaches it
+to the parent and tells the parent to continue. The launched <code class="docutils literal notranslate"><span class="pre">gdb</span></code> has the
+<code class="docutils literal notranslate"><span class="pre">numba_gdb_breakpoint</span></code> symbol registered as a breakpoint and when the parent
+continues and stops sleeping it will immediately call <code class="docutils literal notranslate"><span class="pre">numba_gdb_breakpoint</span></code>
+on which the child will break. Additional <code class="xref py py-func docutils literal notranslate"><span class="pre">numba.gdb_breakpoint()</span></code> calls
+create calls to the registered breakpoint hence the program will also break at
+these locations.</p>
+</div>
+</div>
+<div class="section" id="debugging-cuda-python-code">
+<h2>Debugging CUDA Python code<a class="headerlink" href="#debugging-cuda-python-code" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="using-the-simulator">
+<h3>Using the simulator<a class="headerlink" href="#using-the-simulator" title="Permalink to this headline">¶</a></h3>
+<p>CUDA Python code can be run in the Python interpreter using the CUDA Simulator,
+allowing it to be debugged with the Python debugger or with print statements. To
+enable the CUDA simulator, set the environment variable
+<span class="target" id="index-2"></span><a class="reference internal" href="../reference/envvars.html#envvar-NUMBA_ENABLE_CUDASIM"><code class="xref std std-envvar docutils literal notranslate"><span class="pre">NUMBA_ENABLE_CUDASIM</span></code></a> to 1. For more information on the CUDA Simulator,
+see <a class="reference internal" href="../cuda/simulator.html#simulator"><span class="std std-ref">the CUDA Simulator documentation</span></a>.</p>
+</div>
+<div class="section" id="debug-info">
+<h3>Debug Info<a class="headerlink" href="#debug-info" title="Permalink to this headline">¶</a></h3>
+<p>By setting the <code class="docutils literal notranslate"><span class="pre">debug</span></code> argument to <code class="docutils literal notranslate"><span class="pre">cuda.jit</span></code> to <code class="docutils literal notranslate"><span class="pre">True</span></code>
+(<code class="docutils literal notranslate"><span class="pre">&#64;cuda.jit(debug=True)</span></code>), Numba will emit source location in the compiled
+CUDA code.  Unlike the CPU target, only filename and line information are
+available, but no variable type information is emitted.  The information
+is sufficient to debug memory error with
+<a class="reference external" href="http://docs.nvidia.com/cuda/cuda-memcheck/index.html">cuda-memcheck</a>.</p>
+<p>For example, given the following cuda python code:</p>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">cuda</span>
+
+<span class="nd">@cuda.jit</span><span class="p">(</span><span class="n">debug</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">arr</span><span class="p">):</span>
+    <span class="n">arr</span><span class="p">[</span><span class="n">cuda</span><span class="o">.</span><span class="n">threadIdx</span><span class="o">.</span><span class="n">x</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+
+<span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span>
+<span class="n">foo</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">32</span><span class="p">](</span><span class="n">arr</span><span class="p">)</span>   <span class="c1"># more threads than array elements</span>
+</pre></div>
+</td></tr></table></div>
+<p>We can use <code class="docutils literal notranslate"><span class="pre">cuda-memcheck</span></code> to find the memory error:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ cuda-memcheck python chk_cuda_debug.py
+========= CUDA-MEMCHECK
+========= Invalid __global__ write of size 8
+=========     at 0x00000148 in /home/user/chk_cuda_debug.py:6:cudapy::__main__::foo$241(Array&lt;__int64, int=1, C, mutable, aligned&gt;)
+=========     by thread (31,0,0) in block (0,0,0)
+=========     Address 0x500a600f8 is out of bounds
+...
+=========
+========= Invalid __global__ write of size 8
+=========     at 0x00000148 in /home/user/chk_cuda_debug.py:6:cudapy::__main__::foo$241(Array&lt;__int64, int=1, C, mutable, aligned&gt;)
+=========     by thread (30,0,0) in block (0,0,0)
+=========     Address 0x500a600f0 is out of bounds
+...
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="faq.html" class="btn btn-neutral float-right" title="Frequently Asked Questions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="cli.html" class="btn btn-neutral" title="Command line interface" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2012-2020, Anaconda, Inc. and others
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+
+  
+
+  <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
