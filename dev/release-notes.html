@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Release Notes &mdash; Numba 0.50.0.dev0+236.g64fbf2b-py3.7-linux-x86_64.egg documentation</title>
+  <title>Release Notes &mdash; Numba 0.52.0.dev0-py3.7-linux-x86_64.egg documentation</title>
   
 
   
@@ -17,7 +17,7 @@
   
   
   
-    <link rel="canonical" href="http://numba.pydata.org/numba-doc/latest/index.htmlrelease-notes.html"/>
+    <link rel="canonical" href="https://numba.pydata.org/numba-doc/latest/index.htmlrelease-notes.html"/>
   
 
   
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                0.50
+                0.52
               </div>
             
           
@@ -114,7 +114,10 @@
 <li class="toctree-l3"><a class="reference internal" href="user/installing.html#enabling-amd-rocm-gpu-support">Enabling AMD ROCm GPU Support</a></li>
 <li class="toctree-l3"><a class="reference internal" href="user/installing.html#installing-on-linux-armv7-platforms">Installing on Linux ARMv7 Platforms</a></li>
 <li class="toctree-l3"><a class="reference internal" href="user/installing.html#installing-on-linux-armv8-aarch64-platforms">Installing on Linux ARMv8 (AArch64) Platforms</a></li>
-<li class="toctree-l3"><a class="reference internal" href="user/installing.html#installing-from-source">Installing from source</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user/installing.html#installing-from-source">Installing from source</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="user/installing.html#build-time-environment-variables-and-configuration-of-optional-components">Build time environment variables and configuration of optional components</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="user/installing.html#dependency-list">Dependency List</a></li>
 <li class="toctree-l3"><a class="reference internal" href="user/installing.html#checking-your-installation">Checking your installation</a></li>
 </ul>
@@ -393,6 +396,8 @@
 <li class="toctree-l4"><a class="reference internal" href="reference/pysupported.html#heterogeneous-tuples">heterogeneous tuples</a></li>
 <li class="toctree-l4"><a class="reference internal" href="reference/pysupported.html#list">list</a></li>
 <li class="toctree-l4"><a class="reference internal" href="reference/pysupported.html#set">set</a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference/pysupported.html#typed-dict">Typed Dict</a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference/pysupported.html#heterogeneous-literal-string-key-dictionary">Heterogeneous Literal String Key Dictionary</a></li>
 <li class="toctree-l4"><a class="reference internal" href="reference/pysupported.html#none">None</a></li>
 <li class="toctree-l4"><a class="reference internal" href="reference/pysupported.html#bytes-bytearray-memoryview">bytes, bytearray, memoryview</a></li>
 </ul>
@@ -454,6 +459,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="reference/pysemantics.html">Deviations from Python Semantics</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference/pysemantics.html#bounds-checking">Bounds Checking</a></li>
 <li class="toctree-l3"><a class="reference internal" href="reference/pysemantics.html#exceptions-and-memory-allocation">Exceptions and Memory Allocation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="reference/pysemantics.html#integer-width">Integer width</a></li>
 <li class="toctree-l3"><a class="reference internal" href="reference/pysemantics.html#boolean-inversion">Boolean inversion</a></li>
@@ -495,6 +501,11 @@
 <li class="toctree-l4"><a class="reference internal" href="reference/deprecation.html#id5">Example(s) of the impact</a></li>
 <li class="toctree-l4"><a class="reference internal" href="reference/deprecation.html#id6">Recommendations</a></li>
 <li class="toctree-l4"><a class="reference internal" href="reference/deprecation.html#id7">Schedule</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="reference/deprecation.html#deprecation-of-the-target-kwarg">Deprecation of the target kwarg</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="reference/deprecation.html#id8">Recommendations</a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference/deprecation.html#id9">Schedule</a></li>
 </ul>
 </li>
 </ul>
@@ -585,8 +596,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="cuda/reduction.html">GPU Reduction</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="cuda/reduction.html#reduce"><code class="docutils literal notranslate"><span class="pre">&#64;reduce</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="cuda/reduction.html#class-reduce">class Reduce</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cuda/reduction.html#the-reduce-class">The Reduce class</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="cuda/ufunc.html">CUDA Ufuncs and Generalized Ufuncs</a><ul>
@@ -624,6 +634,7 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="cuda/external-memory.html#implementing-an-emm-plugin">Implementing an EMM Plugin</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="cuda/external-memory.html#the-host-only-cuda-memory-manager">The Host-Only CUDA Memory Manager</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cuda/external-memory.html#the-ipc-handle-mixin">The IPC Handle Mixin</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="cuda/external-memory.html#classes-and-structures-of-returned-objects">Classes and structures of returned objects</a><ul>
@@ -653,16 +664,19 @@
 <li class="toctree-l4"><a class="reference internal" href="cuda-reference/host.html#id1">Device management</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="cuda-reference/host.html#compilation">Compilation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="cuda-reference/host.html#measurement">Measurement</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="cuda-reference/host.html#profiling">Profiling</a></li>
 <li class="toctree-l4"><a class="reference internal" href="cuda-reference/host.html#events">Events</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="cuda-reference/host.html#stream-management">Stream Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cuda-reference/host.html#runtime">Runtime</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="cuda-reference/kernel.html">CUDA Kernel API</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="cuda-reference/kernel.html#kernel-declaration">Kernel declaration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cuda-reference/kernel.html#dispatcher-objects">Dispatcher objects</a></li>
 <li class="toctree-l3"><a class="reference internal" href="cuda-reference/kernel.html#intrinsic-attributes-and-functions">Intrinsic Attributes and Functions</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="cuda-reference/kernel.html#thread-indexing">Thread Indexing</a></li>
 <li class="toctree-l4"><a class="reference internal" href="cuda-reference/kernel.html#memory-management">Memory Management</a></li>
@@ -743,6 +757,12 @@
 <li class="toctree-l3"><a class="reference internal" href="extending/high-level.html#implementing-attributes">Implementing attributes</a></li>
 <li class="toctree-l3"><a class="reference internal" href="extending/high-level.html#importing-cython-functions">Importing Cython Functions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="extending/high-level.html#implementing-intrinsics">Implementing intrinsics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="extending/high-level.html#implementing-mutable-structures">Implementing mutable structures</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="extending/high-level.html#defining-a-structref">Defining a StructRef</a></li>
+<li class="toctree-l4"><a class="reference internal" href="extending/high-level.html#defining-a-method-on-structref">Defining a method on StructRef</a></li>
+<li class="toctree-l4"><a class="reference internal" href="extending/high-level.html#module-numba.experimental.structref"><code class="docutils literal notranslate"><span class="pre">numba.experimental.structref</span></code> API Reference</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="extending/low-level.html">Low-level extension API</a><ul>
@@ -789,8 +809,8 @@
 <li class="toctree-l1"><a class="reference internal" href="developer/index.html">Developer Manual</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="developer/contributing.html">Contributing to Numba</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="developer/contributing.html#communication">Communication</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="developer/contributing.html#mailing-list">Mailing-list</a></li>
 <li class="toctree-l4"><a class="reference internal" href="developer/contributing.html#real-time-chat">Real-time Chat</a></li>
+<li class="toctree-l4"><a class="reference internal" href="developer/contributing.html#mailing-list">Mailing-list</a></li>
 <li class="toctree-l4"><a class="reference internal" href="developer/contributing.html#weekly-meetings">Weekly Meetings</a></li>
 <li class="toctree-l4"><a class="reference internal" href="developer/contributing.html#bug-tracker">Bug tracker</a></li>
 </ul>
@@ -819,7 +839,7 @@
 <li class="toctree-l3"><a class="reference internal" href="developer/repomap.html#support-files">Support Files</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="developer/repomap.html#build-and-packaging">Build and Packaging</a></li>
 <li class="toctree-l4"><a class="reference internal" href="developer/repomap.html#continuous-integration">Continuous Integration</a></li>
-<li class="toctree-l4"><a class="reference internal" href="developer/repomap.html#documentation-examples">Documentation / Examples</a></li>
+<li class="toctree-l4"><a class="reference internal" href="developer/repomap.html#documentation">Documentation</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="developer/repomap.html#numba-source-code">Numba Source Code</a><ul>
@@ -1102,7 +1122,10 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="glossary.html">Glossary</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Release Notes</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#version-0-50-0">Version 0.50.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#version-0-52-0">Version 0.52.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#version-0-51-0-august-12-2020">Version 0.51.0 (August 12, 2020)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#version-0-50-1-jun-24-2020">Version 0.50.1 (Jun 24, 2020)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#version-0-50-0-jun-10-2020">Version 0.50.0 (Jun 10, 2020)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#version-0-49-1-may-7-2020">Version 0.49.1 (May 7, 2020)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#version-0-49-0-apr-16-2020">Version 0.49.0 (Apr 16, 2020)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#version-0-48-0-jan-27-2020">Version 0.48.0 (Jan 27, 2020)</a></li>
@@ -1245,9 +1268,421 @@
             
   <div class="section" id="release-notes">
 <h1>Release Notes<a class="headerlink" href="#release-notes" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="version-0-50-0">
-<h2>Version 0.50.0<a class="headerlink" href="#version-0-50-0" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="version-0-52-0">
+<h2>Version 0.52.0<a class="headerlink" href="#version-0-52-0" title="Permalink to this headline">¶</a></h2>
 <p>In development</p>
+</div>
+<div class="section" id="version-0-51-0-august-12-2020">
+<h2>Version 0.51.0 (August 12, 2020)<a class="headerlink" href="#version-0-51-0-august-12-2020" title="Permalink to this headline">¶</a></h2>
+<p>This release continues to add new features to Numba and also contains a
+significant number of bug fixes and stability improvements.</p>
+<p>Highlights of core feature changes include:</p>
+<ul class="simple">
+<li>The compilation chain is now based on LLVM 10 (Valentin Haenel).</li>
+<li>Numba has internally switched to prefer non-literal types over literal ones so
+as to reduce function over-specialisation, this with view of speeding up
+compile times (Siu Kwan Lam).</li>
+<li>On the CUDA target: Support for CUDA Toolkit 11, Ampere, and Compute
+Capability 8.0; Printing of <code class="docutils literal notranslate"><span class="pre">SASS</span></code> code for kernels; Callbacks to Python
+functions can be inserted into CUDA streams, and streams are async awaitable;
+Atomic <code class="docutils literal notranslate"><span class="pre">nanmin</span></code> and <code class="docutils literal notranslate"><span class="pre">nanmax</span></code> functions are added; Fixes for various
+miscompilations and segfaults. (mostly Graham Markall; call backs on
+streams by Peter Würtz).</li>
+</ul>
+<p>Intel also kindly sponsored research and development that lead to some exciting
+new features:</p>
+<ul class="simple">
+<li>Support for heterogeneous immutable lists and heterogeneous immutable string
+key dictionaries. Also optional initial/construction value capturing for all
+lists and dictionaries containing literal values (Stuart Archibald).</li>
+<li>A new pass-by-reference mutable structure extension type <code class="docutils literal notranslate"><span class="pre">StructRef</span></code> (Siu
+Kwan Lam).</li>
+<li>Object mode blocks are now cacheable, with the side effect of numerous bug
+fixes and performance improvements in caching. This also permits caching of
+functions defined in closures (Siu Kwan Lam).</li>
+</ul>
+<p>Deprecations to note:</p>
+<p>To align with other targets, the <code class="docutils literal notranslate"><span class="pre">argtypes</span></code> and <code class="docutils literal notranslate"><span class="pre">restypes</span></code> kwargs to
+<code class="docutils literal notranslate"><span class="pre">&#64;cuda.jit</span></code> are now deprecated, the <code class="docutils literal notranslate"><span class="pre">bind</span></code> kwarg is also deprecated.
+Further the <code class="docutils literal notranslate"><span class="pre">target</span></code> kwarg to the <code class="docutils literal notranslate"><span class="pre">numba.jit</span></code> decorator family is
+deprecated.</p>
+<p>General Enhancements:</p>
+<ul class="simple">
+<li>PR #5463: Add str(int) impl</li>
+<li>PR #5526: Impl. np.asarray(literal)</li>
+<li>PR #5619: Add support for multi-output ufuncs</li>
+<li>PR #5711: Division with timedelta input</li>
+<li>PR #5763: Support minlength argument to np.bincount</li>
+<li>PR #5779: Return zero array from np.dot when the arguments are empty.</li>
+<li>PR #5796: Add implementation for np.positive</li>
+<li>PR #5849: Setitem for records when index is StringLiteral, including literal
+unroll</li>
+<li>PR #5856: Add support for conversion of inplace_binop to parfor.</li>
+<li>PR #5893: Allocate 1D iteration space one at a time for more even
+distribution.</li>
+<li>PR #5922: Reduce objmode and unpickling overhead</li>
+<li>PR #5944: re-enable OpenMP in wheels</li>
+<li>PR #5946: Implement literal dictionaries and lists.</li>
+<li>PR #5956: Update numba_sysinfo.py</li>
+<li>PR #5978: Add structref as a mutable struct that is pass-by-ref</li>
+<li>PR #5980: Deprecate target kwarg for numba.jit.</li>
+<li>PR #6058: Add prefer_literal option to overload API</li>
+</ul>
+<p>Fixes:</p>
+<ul class="simple">
+<li>PR #5674: Fix #3955. Allow <cite>with objmode</cite> to be cached</li>
+<li>PR #5724: Initialize process lock lazily to prevent multiprocessing issue</li>
+<li>PR #5783: Make np.divide and np.remainder code more similar</li>
+<li>PR #5808: Fix 5665 Block jit(nopython=True, forceobj=True) and suppress
+njit(forceobj=True)</li>
+<li>PR #5834: Fix the is operator on Ellipsis</li>
+<li>PR #5838: Ensure <code class="docutils literal notranslate"><span class="pre">Dispatcher.__eq__</span></code> always returns a bool</li>
+<li>PR #5841: cleanup: Use PythonAPI.bool_from_bool in more places</li>
+<li>PR #5862: Do not leak loop iteration variables into the numba.np.npyimpl
+namespace</li>
+<li>PR #5869: Update repomap</li>
+<li>PR #5879: Fix erroneous input mutation in linalg routines</li>
+<li>PR #5882: Type check function in jit decorator</li>
+<li>PR #5925: Use np.inf and -np.inf for max and min float values respectively.</li>
+<li>PR #5935: Fix default arguments with multiprocessing</li>
+<li>PR #5952: Fix “Internal error … local variable ‘errstr’ referenced before
+assignment during BoundFunction(…)”</li>
+<li>PR #5962: Fix SVML tests with LLVM 10 and AVX512</li>
+<li>PR #5972: fix flake8 for numba/runtests.py</li>
+<li>PR #5995: Update setup.py with new llvmlite versions</li>
+<li>PR #5996: Set lower bound for llvmlite to 0.33</li>
+<li>PR #6004: Fix problem in branch pruning with LiteralStrKeyDict</li>
+<li>PR #6017: Fixing up numba_do_raise</li>
+<li>PR #6028: Fix #6023</li>
+<li>PR #6031: Continue 5821</li>
+<li>PR #6035: Fix overspecialize of literal</li>
+<li>PR #6046: Fixes statement reordering bug in maximize fusion step.</li>
+<li>PR #6056: Fix issue on invalid inlining of non-empty build_list by
+inline_arraycall</li>
+<li>PR #6057: fix aarch64/python_3.8 failure on master</li>
+<li>PR #6070: Fix overspecialized containers</li>
+<li>PR #6071: Remove f-strings in setup.py</li>
+<li>PR #6072: Fix for #6005</li>
+<li>PR #6073: Fixes invalid C prototype in helper function.</li>
+<li>PR #6078: Duplicate NumPy’s PyArray_DescrCheck macro</li>
+<li>PR #6081: Fix issue with cross drive use and relpath.</li>
+<li>PR #6083: Fix bug in initial value unify.</li>
+</ul>
+<p>CUDA Enhancements/Fixes:</p>
+<ul class="simple">
+<li>PR #5359: Remove special-casing of 0d arrays</li>
+<li>PR #5709: CUDA: Refactoring of cuda.jit and kernel / dispatcher abstractions</li>
+<li>PR #5732: CUDA Docs: document <code class="docutils literal notranslate"><span class="pre">forall</span></code> method of kernels</li>
+<li>PR #5745: CUDA stream callbacks and async awaitable streams</li>
+<li>PR #5761: Add implmentation for int types for isnan and isinf for CUDA</li>
+<li>PR #5819: Add support for CUDA 11 and Ampere / CC 8.0</li>
+<li>PR #5826: CUDA: Add function to get SASS for kernels</li>
+<li>PR #5846: CUDA: Allow disabling NVVM optimizations, and fix debug issues</li>
+<li>PR #5851: CUDA EMM enhancements - add default get_ipc_handle implementation,
+skip a test conditionally</li>
+<li>PR #5852: CUDA: Fix <code class="docutils literal notranslate"><span class="pre">cuda.test()</span></code></li>
+<li>PR #5857: CUDA docs: Add notes on resetting the EMM plugin</li>
+<li>PR #5859: CUDA: Fix reduce docs and style improvements</li>
+<li>PR #6016: Fixes change of list spelling in a cuda test.</li>
+<li>PR #6020: CUDA: Fix #5820, adding atomic nanmin / nanmax</li>
+<li>PR #6030: CUDA: Don’t optimize IR before sending it to NVVM</li>
+<li>PR #6052: Fix dtype for atomic_add_double testsuite</li>
+<li>PR #6080: CUDA: Prevent auto-upgrade of atomic intrinsics</li>
+</ul>
+<p>Documentation Updates:</p>
+<ul class="simple">
+<li>PR #5782: Host docs on Read the Docs</li>
+<li>PR #5830: doc: Mention that caching uses pickle</li>
+<li>PR #5963: Fix broken link to numpy ufunc signature docs</li>
+<li>PR #5975: restructure communication section</li>
+<li>PR #5981: Document bounds-checking behavior in python deviations page</li>
+<li>PR #5993: Docs for structref</li>
+<li>PR #6008: Small fix so bullet points are rendered by sphinx</li>
+<li>PR #6013: emphasize cuda kernel functions are asynchronous</li>
+<li>PR #6036: Update deprecation doc from numba.errors to numba.core.errors</li>
+<li>PR #6062: Change references to numba.pydata.org to https</li>
+</ul>
+<p>CI updates:</p>
+<ul class="simple">
+<li>PR #5850: Updates the “New Issue” behaviour to better redirect users.</li>
+<li>PR #5940: Add discourse badge</li>
+<li>PR #5960: Setting mypy on CI</li>
+</ul>
+<p>Enhancements from user contributed PRs (with thanks!):</p>
+<ul class="simple">
+<li>Aisha Tammy added the ability to switch off TBB support at compile time in
+#5821 (continued in #6031 by Stuart Archibald).</li>
+<li>Alexander Stiebing fixed a reference before assignment bug in #5952.</li>
+<li>Alexey Kozlov fixed a bug in tuple getitem for literals in #6028.</li>
+<li>Andrew Eckart updated the repomap in #5869, added support for Read the Docs
+in #5782, fixed a bug in the <code class="docutils literal notranslate"><span class="pre">np.dot</span></code> implementation to correctly handle
+empty arrays in #5779 and added support for <code class="docutils literal notranslate"><span class="pre">minlength</span></code> to <code class="docutils literal notranslate"><span class="pre">np.bincount</span></code>
+in #5763.</li>
+<li><code class="docutils literal notranslate"><span class="pre">&#64;bitsisbits</span></code> updated <code class="docutils literal notranslate"><span class="pre">numba_sysinfo.py</span></code> to handle HSA agents correctly in
+#5956.</li>
+<li>Daichi Suzuo Fixed a bug in the threading backend initialisation sequence such
+that it is now correctly a lazy lock in #5724.</li>
+<li>Eric Wieser contributed a number of patches, particularly in enhancing and
+improving the <code class="docutils literal notranslate"><span class="pre">ufunc</span></code> capabilities:<ul>
+<li>#5359: Remove special-casing of 0d arrays</li>
+<li>#5834: Fix the is operator on Ellipsis</li>
+<li>#5619: Add support for multi-output ufuncs</li>
+<li>#5841: cleanup: Use PythonAPI.bool_from_bool in more places</li>
+<li>#5862: Do not leak loop iteration variables into the numba.np.npyimpl
+namespace</li>
+<li>#5838: Ensure <code class="docutils literal notranslate"><span class="pre">Dispatcher.__eq__</span></code> always returns a bool</li>
+<li>#5830: doc: Mention that caching uses pickle</li>
+<li>#5783: Make np.divide and np.remainder code more similar</li>
+</ul>
+</li>
+<li>Ethan Pronovost added a guard to prevent the common mistake of applying a jit
+decorator to the same function twice in #5881.</li>
+<li>Graham Markall contributed many patches to the CUDA target, as follows:<ul>
+<li>#6052: Fix dtype for atomic_add_double tests</li>
+<li>#6030: CUDA: Don’t optimize IR before sending it to NVVM</li>
+<li>#5846: CUDA: Allow disabling NVVM optimizations, and fix debug issues</li>
+<li>#5826: CUDA: Add function to get SASS for kernels</li>
+<li>#5851: CUDA EMM enhancements - add default get_ipc_handle implementation,
+skip a test conditionally</li>
+<li>#5709: CUDA: Refactoring of cuda.jit and kernel / dispatcher abstractions</li>
+<li>#5819: Add support for CUDA 11 and Ampere / CC 8.0</li>
+<li>#6020: CUDA: Fix #5820, adding atomic nanmin / nanmax</li>
+<li>#5857: CUDA docs: Add notes on resetting the EMM plugin</li>
+<li>#5859: CUDA: Fix reduce docs and style improvements</li>
+<li>#5852: CUDA: Fix <code class="docutils literal notranslate"><span class="pre">cuda.test()</span></code></li>
+<li>#5732: CUDA Docs: document <code class="docutils literal notranslate"><span class="pre">forall</span></code> method of kernels</li>
+</ul>
+</li>
+<li>Guilherme Leobas added support for <code class="docutils literal notranslate"><span class="pre">str(int)</span></code> in #5463 and
+<code class="docutils literal notranslate"><span class="pre">np.asarray(literal</span> <span class="pre">value)`</span></code> in #5526.</li>
+<li>Hameer Abbasi deprecated the <code class="docutils literal notranslate"><span class="pre">target</span></code> kwarg for <code class="docutils literal notranslate"><span class="pre">numba.jit</span></code> in #5980.</li>
+<li>Hannes Pahl added a badge to the Numba github page linking to the new
+discourse forum in #5940 and also fixed a bug that permitted illegal
+combinations of flags to be passed into <code class="docutils literal notranslate"><span class="pre">&#64;jit</span></code> in #5808.</li>
+<li>Kayran Schmidt emphasized that CUDA kernel functions are asynchronous in the
+documentation in #6013.</li>
+<li>Leonardo Uieda fixed a broken link to the NumPy ufunc signature docs in #5963.</li>
+<li>Lucio Fernandez-Arjona added mypy to CI and started adding type annotations to
+the code base in #5960, also fixed a (de)serialization problem on the
+dispatcher in #5935, improved the undefined variable error message in #5876,
+added support for division with timedelta input in #5711 and implemented
+<code class="docutils literal notranslate"><span class="pre">setitem</span></code> for records when the index is a <code class="docutils literal notranslate"><span class="pre">StringLiteral</span></code> in #5849.</li>
+<li>Ludovic Tiako documented Numba’s bounds-checking behavior in the python
+deviations page in #5981.</li>
+<li>Matt Roeschke changed all <code class="docutils literal notranslate"><span class="pre">http</span></code> references <code class="docutils literal notranslate"><span class="pre">https</span></code> in #6062.</li>
+<li><code class="docutils literal notranslate"><span class="pre">&#64;niteya-shah</span></code> implemented <code class="docutils literal notranslate"><span class="pre">isnan</span></code> and <code class="docutils literal notranslate"><span class="pre">isinf</span></code> for integer types on the
+CUDA target in #5761 and implemented <code class="docutils literal notranslate"><span class="pre">np.positive</span></code> in #5796.</li>
+<li>Peter Würtz added CUDA stream callbacks and async awaitable streams in #5745.</li>
+<li><code class="docutils literal notranslate"><span class="pre">&#64;rht</span></code> fixed an invalid import referred to in the deprecation documentation
+in #6036.</li>
+<li>Sergey Pokhodenko updated the SVML tests for LLVM 10 in #5962.</li>
+<li>Shyam Saladi fixed a Sphinx rendering bug in #6008.</li>
+</ul>
+<p>Authors:</p>
+<ul class="simple">
+<li>Aisha Tammy</li>
+<li>Alexander Stiebing</li>
+<li>Alexey Kozlov</li>
+<li>Andrew Eckart</li>
+<li><code class="docutils literal notranslate"><span class="pre">&#64;bitsisbits</span></code></li>
+<li>Daichi Suzuo</li>
+<li>Eric Wieser</li>
+<li>Ethan Pronovost</li>
+<li>Graham Markall</li>
+<li>Guilherme Leobas</li>
+<li>Hameer Abbasi</li>
+<li>Hannes Pahl</li>
+<li>Kayran Schmidt</li>
+<li>Kozlov, Alexey</li>
+<li>Leonardo Uieda</li>
+<li>Lucio Fernandez-Arjona</li>
+<li>Ludovic Tiako</li>
+<li>Matt Roeschke</li>
+<li><code class="docutils literal notranslate"><span class="pre">&#64;niteya-shah</span></code></li>
+<li>Peter Würtz</li>
+<li>Sergey Pokhodenko</li>
+<li>Shyam Saladi</li>
+<li><code class="docutils literal notranslate"><span class="pre">&#64;rht</span></code></li>
+<li>Siu Kwan Lam (core dev)</li>
+<li>Stuart Archibald (core dev)</li>
+<li>Todd A. Anderson (core dev)</li>
+<li>Valentin Haenel (core dev)</li>
+</ul>
+</div>
+<div class="section" id="version-0-50-1-jun-24-2020">
+<h2>Version 0.50.1 (Jun 24, 2020)<a class="headerlink" href="#version-0-50-1-jun-24-2020" title="Permalink to this headline">¶</a></h2>
+<p>This is a bugfix release for 0.50.0, it fixes a critical bug in error reporting
+and a number of other smaller issues:</p>
+<ul class="simple">
+<li>PR #5861: Added except for possible Windows get_terminal_size exception</li>
+<li>PR #5876: Improve undefined variable error message</li>
+<li>PR #5884: Update the deprecation notices for 0.50.1</li>
+<li>PR #5889: Fixes literally not forcing re-dispatch for inline=’always’</li>
+<li>PR #5912: Fix bad attr access on certain typing templates breaking exceptions.</li>
+<li>PR #5918: Fix cuda test due to #5876</li>
+</ul>
+<p>Authors:</p>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">&#64;pepping_dore</span></code></li>
+<li>Lucio Fernandez-Arjona</li>
+<li>Siu Kwan Lam (core dev)</li>
+<li>Stuart Archibald (core dev)</li>
+</ul>
+</div>
+<div class="section" id="version-0-50-0-jun-10-2020">
+<h2>Version 0.50.0 (Jun 10, 2020)<a class="headerlink" href="#version-0-50-0-jun-10-2020" title="Permalink to this headline">¶</a></h2>
+<p>This is a more usual release in comparison to the others that have been made in
+the last six months. It comprises the result of a number of maintenance tasks
+along with some new features and a lot of bug fixes.</p>
+<p>Highlights of core feature changes include:</p>
+<ul class="simple">
+<li>The compilation chain is now based on LLVM 9.</li>
+<li>The error handling and reporting system has been improved to reduce the size
+of error messages, and also improve quality and specificity.</li>
+<li>The CUDA target has more stream constructors available and a new function for
+compiling to PTX without linking and loading the code to a device. Further,
+the macro-based system for describing CUDA threads and blocks has been
+replaced with standard typing and lowering implementations, for improved
+debugging and extensibility.</li>
+</ul>
+<p>IMPORTANT: The backwards compatibility shim, that was present in 0.49.x to
+accommodate the refactoring of Numba’s internals, has been removed. If a module
+is imported from a moved location an <code class="docutils literal notranslate"><span class="pre">ImportError</span></code> will occur.</p>
+<p>General Enhancements:</p>
+<ul class="simple">
+<li>PR #5060: Enables np.sum for timedelta64</li>
+<li>PR #5225: Adjust interpreter to make conditionals predicates via bool() call.</li>
+<li>PR #5506: Jitclass static methods</li>
+<li>PR #5580: Revert shim</li>
+<li>PR #5591: Fix #5525 Add figure for total memory to <code class="docutils literal notranslate"><span class="pre">numba</span> <span class="pre">-s</span></code> output.</li>
+<li>PR #5616: Simplify the ufunc kernel registration</li>
+<li>PR #5617: Remove /examples from the Numba repo.</li>
+<li>PR #5673: Fix inliners to run all passes on IR and clean up correctly.</li>
+<li>PR #5700: Make it easier to understand type inference: add SSA dump, use for
+<code class="docutils literal notranslate"><span class="pre">DEBUG_TYPEINFER</span></code></li>
+<li>PR #5702: Fixes for LLVM 9</li>
+<li>PR #5722: Improve error messages.</li>
+<li>PR #5758: Support NumPy 1.18</li>
+</ul>
+<p>Fixes:</p>
+<ul class="simple">
+<li>PR #5390: add error handling for lookup_module</li>
+<li>PR #5464: Jitclass drops annotations to avoid error</li>
+<li>PR #5478: Fix #5471. Issue with omitted type not recognized as literal value.</li>
+<li>PR #5517: Fix numba.typed.List extend for singleton and empty iterable</li>
+<li>PR #5549: Check type getitem</li>
+<li>PR #5568: Add skip to entrypoint test on windows</li>
+<li>PR #5581: Revert #5568</li>
+<li>PR #5602: Fix segfault caused by pop from numba.typed.List</li>
+<li>PR #5645: Fix SSA redundant CFG computation</li>
+<li>PR #5686: Fix issue with SSA not minimal</li>
+<li>PR #5689: Fix bug in unified_function_type (issue 5685)</li>
+<li>PR #5694: Skip part of slice array analysis if any part is not analyzable.</li>
+<li>PR #5697: Fix usedef issue with parfor loopnest variables.</li>
+<li>PR #5705: A fix for cases where SSA looks like a reduction variable.</li>
+<li>PR #5714: Fix bug in test</li>
+<li>PR #5717: Initialise Numba extensions ahead of any compilation starting.</li>
+<li>PR #5721: Fix array iterator layout.</li>
+<li>PR #5738: Unbreak master on buildfarm</li>
+<li>PR #5757: Force LLVM to use ZMM registers for vectorization.</li>
+<li>PR #5764: fix flake8 errors</li>
+<li>PR #5768: Interval example: fix import</li>
+<li>PR #5781: Moving record array examples to a test module</li>
+<li>PR #5791: Fix up no cgroups problem</li>
+<li>PR #5795: Restore refct removal pass and make it strict</li>
+<li>PR #5807: Skip failing test on POWER8 due to PPC CTR Loop problem.</li>
+<li>PR #5812: Fix side issue from #5792, &#64;overload inliner cached IR being
+mutated.</li>
+<li>PR #5815: Pin llvmlite to 0.33</li>
+<li>PR #5833: Fixes the source location appearing incorrectly in error messages.</li>
+</ul>
+<p>CUDA Enhancements/Fixes:</p>
+<ul class="simple">
+<li>PR #5347: CUDA: Provide more stream constructors</li>
+<li>PR #5388: CUDA: Fix OOB write in test_round{f4,f8}</li>
+<li>PR #5437: Fix #5429: Exception using <code class="docutils literal notranslate"><span class="pre">.get_ipc_handle(...)</span></code> on array from
+<code class="docutils literal notranslate"><span class="pre">as_cuda_array(...)</span></code></li>
+<li>PR #5481: CUDA: Replace macros with typing and lowering implementations</li>
+<li>PR #5556: CUDA: Make atomic semantics match Python / NumPy, and fix #5458</li>
+<li>PR #5558: CUDA: Only release primary ctx if retained</li>
+<li>PR #5561: CUDA: Add function for compiling to PTX (+ other small fixes)</li>
+<li>PR #5573: CUDA: Skip tests under cuda-memcheck that hang it</li>
+<li>PR #5578: Implement math.modf for CUDA target</li>
+<li>PR #5704: CUDA Eager compilation: Fix max_registers kwarg</li>
+<li>PR #5718: CUDA lib path tests: unset CUDA_PATH when CUDA_HOME unset</li>
+<li>PR #5800: Fix LLVM 9 IR for NVVM</li>
+<li>PR #5803: CUDA Update expected error messages to fix #5797</li>
+</ul>
+<p>Documentation Updates:</p>
+<ul class="simple">
+<li>PR #5546: DOC: Add documentation about cost model to inlining notes.</li>
+<li>PR #5653: Update doc with respect to try-finally case</li>
+</ul>
+<p>Enhancements from user contributed PRs (with thanks!):</p>
+<ul class="simple">
+<li>Elias Kuthe fixed in issue with imports in the Interval example in #5768</li>
+<li>Eric Wieser Simplified the ufunc kernel registration mechanism in #5616</li>
+<li>Ethan Pronovost patched a problem with <code class="docutils literal notranslate"><span class="pre">__annotations__</span></code> in <code class="docutils literal notranslate"><span class="pre">jitclass</span></code> in
+#5464, fixed a bug that lead to infinite loops in Numba’s <code class="docutils literal notranslate"><span class="pre">Type.__getitem__</span></code>
+in #5549, fixed a bug in <code class="docutils literal notranslate"><span class="pre">np.arange</span></code> testing in #5714 and added support for
+<code class="docutils literal notranslate"><span class="pre">&#64;staticmethod</span></code> to <code class="docutils literal notranslate"><span class="pre">jitclass</span></code> in #5506.</li>
+<li>Gabriele Gemmi implemented <code class="docutils literal notranslate"><span class="pre">math.modf</span></code> for the CUDA target in #5578</li>
+<li>Graham Markall contributed many patches, largely to the CUDA target, as
+follows:<ul>
+<li>#5347: CUDA: Provide more stream constructors</li>
+<li>#5388: CUDA: Fix OOB write in test_round{f4,f8}</li>
+<li>#5437: Fix #5429: Exception using <code class="docutils literal notranslate"><span class="pre">.get_ipc_handle(...)</span></code> on array from
+<code class="docutils literal notranslate"><span class="pre">as_cuda_array(...)</span></code></li>
+<li>#5481: CUDA: Replace macros with typing and lowering implementations</li>
+<li>#5556: CUDA: Make atomic semantics match Python / NumPy, and fix #5458</li>
+<li>#5558: CUDA: Only release primary ctx if retained</li>
+<li>#5561: CUDA: Add function for compiling to PTX (+ other small fixes)</li>
+<li>#5573: CUDA: Skip tests under cuda-memcheck that hang it</li>
+<li>#5648: Unset the memory manager after EMM Plugin tests</li>
+<li>#5700: Make it easier to understand type inference: add SSA dump, use for
+<code class="docutils literal notranslate"><span class="pre">DEBUG_TYPEINFER</span></code></li>
+<li>#5704: CUDA Eager compilation: Fix max_registers kwarg</li>
+<li>#5718: CUDA lib path tests: unset CUDA_PATH when CUDA_HOME unset</li>
+<li>#5800: Fix LLVM 9 IR for NVVM</li>
+<li>#5803: CUDA Update expected error messages to fix #5797</li>
+</ul>
+</li>
+<li>Guilherme Leobas updated the documentation surrounding try-finally in #5653</li>
+<li>Hameer Abbasi added documentation about the cost model to the notes on
+inlining in #5546</li>
+<li>Jacques Gaudin rewrote <code class="docutils literal notranslate"><span class="pre">numba</span> <span class="pre">-s</span></code> to produce and consume a dictionary of
+output about the current system in #5591</li>
+<li>James Bourbeau Updated min/argmin and max/argmax to handle non-leading nans
+(via #5758)</li>
+<li>Lucio Fernandez-Arjona moved the record array examples to a test module in
+#5781 and added <code class="docutils literal notranslate"><span class="pre">np.timedelta64</span></code> handling to <code class="docutils literal notranslate"><span class="pre">np.sum</span></code> in #5060</li>
+<li>Pearu Peterson Fixed a bug in unified_function_type in #5689</li>
+<li>Sergey Pokhodenko fixed an issue impacting LLVM 10 regarding vectorization
+widths on Intel SkyLake processors in #5757</li>
+<li>Shan Sikdar added error handling for <code class="docutils literal notranslate"><span class="pre">lookup_module</span></code> in #5390</li>
+<li>&#64;toddrme2178 add CI testing for NumPy 1.18 (via #5758)</li>
+</ul>
+<p>Authors:</p>
+<ul class="simple">
+<li>Elias Kuthe</li>
+<li>Eric Wieser</li>
+<li>Ethan Pronovost</li>
+<li>Gabriele Gemmi</li>
+<li>Graham Markall</li>
+<li>Guilherme Leobas</li>
+<li>Hameer Abbasi</li>
+<li>Jacques Gaudin</li>
+<li>James Bourbeau</li>
+<li>Lucio Fernandez-Arjona</li>
+<li>Pearu Peterson</li>
+<li>Sergey Pokhodenko</li>
+<li>Shan Sikdar</li>
+<li>Siu Kwan Lam (core dev)</li>
+<li>Stuart Archibald (core dev)</li>
+<li>Todd A. Anderson (core dev)</li>
+<li><code class="docutils literal notranslate"><span class="pre">&#64;toddrme2178</span></code></li>
+<li>Valentin Haenel (core dev)</li>
+</ul>
 </div>
 <div class="section" id="version-0-49-1-may-7-2020">
 <h2>Version 0.49.1 (May 7, 2020)<a class="headerlink" href="#version-0-49-1-may-7-2020" title="Permalink to this headline">¶</a></h2>
@@ -3708,7 +4143,7 @@ dependency.</p>
 <div class="section" id="version-0-28-0">
 <h2>Version 0.28.0<a class="headerlink" href="#version-0-28-0" title="Permalink to this headline">¶</a></h2>
 <p>Amongst other improvements, this version improves again the level of
-support for linear algebra – functions from the <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/routines.linalg.html#module-numpy.linalg" title="(in NumPy v1.17)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">numpy.linalg</span></code></a>
+support for linear algebra – functions from the <a class="reference external" href="https://numpy.org/doc/stable/reference/routines.linalg.html#module-numpy.linalg" title="(in NumPy v1.19)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">numpy.linalg</span></code></a>
 module.  Also, our random generator is now guaranteed to be thread-safe
 and fork-safe.</p>
 <p>Improvements:</p>
