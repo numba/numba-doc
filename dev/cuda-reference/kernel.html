@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>CUDA Kernel API &mdash; Numba 0.52.0.dev0+40.gb9efc83-py3.7-linux-x86_64.egg documentation</title>
+  <title>CUDA Kernel API &mdash; Numba 0.52.0.dev0+42.g4c250bc-py3.7-linux-x86_64.egg documentation</title>
   
 
   
@@ -1383,6 +1383,39 @@ post-call cleanup work to.</li>
 will be passed in turn to the next right-most <cite>extension</cite>. After all
 the extensions have been called, the resulting <cite>(ty, val)</cite> will be
 passed into Numba’s default argument marshalling logic.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="numba.cuda.compiler.Dispatcher.forall">
+<code class="descname">forall</code><span class="sig-paren">(</span><em>self</em>, <em>ntasks</em>, <em>tpb=0</em>, <em>stream=0</em>, <em>sharedmem=0</em><span class="sig-paren">)</span><a class="headerlink" href="#numba.cuda.compiler.Dispatcher.forall" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a 1D-configured kernel for a given number of tasks.</p>
+<p>This assumes that:</p>
+<ul class="simple">
+<li>the kernel maps the Global Thread ID <code class="docutils literal notranslate"><span class="pre">cuda.grid(1)</span></code> to tasks on a
+1-1 basis.</li>
+<li>the kernel checks that the Global Thread ID is upper-bounded by
+<code class="docutils literal notranslate"><span class="pre">ntasks</span></code>, and does nothing if it is not.</li>
+</ul>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>ntasks</strong> – The number of tasks.</li>
+<li><strong>tpb</strong> – The size of a block. An appropriate value is chosen if this
+parameter is not supplied.</li>
+<li><strong>stream</strong> – The stream on which the configured kernel will be
+launched.</li>
+<li><strong>sharedmem</strong> – The number of bytes of dynamic shared memory required
+by the kernel.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A configured kernel, ready to launch on a set of arguments.</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
