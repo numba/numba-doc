@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Numba architecture &mdash; Numba 0.52.0.dev0+136.gd89678b-py3.7-linux-x86_64.egg documentation</title>
+  <title>Numba architecture &mdash; Numba 0.52.0.dev0+162.gf88c3c5-py3.7-linux-x86_64.egg documentation</title>
   
 
   
@@ -873,14 +873,13 @@
 <li class="toctree-l3"><a class="reference internal" href="#compiler-stages">Compiler stages</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#stage-1-analyze-bytecode">Stage 1: Analyze bytecode</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#stage-2-generate-the-numba-ir">Stage 2: Generate the Numba IR</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#stage-3-macro-expansion">Stage 3: Macro expansion</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#stage-4-rewrite-untyped-ir">Stage 4: Rewrite untyped IR</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#stage-5-infer-types">Stage 5: Infer types</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#stage-6a-rewrite-typed-ir">Stage 6a: Rewrite typed IR</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#stage-6b-perform-automatic-parallelization">Stage 6b: Perform Automatic Parallelization</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#stage-7a-generate-nopython-llvm-ir">Stage 7a: Generate nopython LLVM IR</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#stage-7b-generate-object-mode-llvm-ir">Stage 7b: Generate object mode LLVM IR</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#stage-8-compile-llvm-ir-to-machine-code">Stage 8: Compile LLVM IR to machine code</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#stage-3-rewrite-untyped-ir">Stage 3: Rewrite untyped IR</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#stage-4-infer-types">Stage 4: Infer types</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#stage-5a-rewrite-typed-ir">Stage 5a: Rewrite typed IR</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#stage-5b-perform-automatic-parallelization">Stage 5b: Perform Automatic Parallelization</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#stage-6a-generate-nopython-llvm-ir">Stage 6a: Generate nopython LLVM IR</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#stage-6b-generate-object-mode-llvm-ir">Stage 6b: Generate object mode LLVM IR</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#stage-7-compile-llvm-ir-to-machine-code">Stage 7: Compile LLVM IR to machine code</a></li>
 </ul>
 </li>
 </ul>
@@ -1487,40 +1486,8 @@ some are not.  For tracked objects, a dereference operation is emitted;
 otherwise, the instruction is an no-op.
 In <a class="reference internal" href="../glossary.html#term-object-mode"><span class="xref std std-term">object mode</span></a> each variable contains an owned reference to a PyObject.</p>
 </div>
-<div class="section" id="stage-3-macro-expansion">
-<h3>Stage 3: Macro expansion<a class="headerlink" href="#stage-3-macro-expansion" title="Permalink to this headline">¶</a></h3>
-<p>Now that the function has been translated into the Numba IR, macro expansion can
-be performed. Macro expansion converts specific attributes that are known to
-Numba into IR nodes representing function calls. This is initiated in the
-<code class="docutils literal notranslate"><span class="pre">numba.compiler.translate_stage</span></code> function, and is implemented in
-<code class="docutils literal notranslate"><span class="pre">numba.macro</span></code>.</p>
-<p>Examples of attributes that are macro-expanded include the CUDA intrinsics for
-grid, block and thread dimensions and indices. For example, the assignment to
-<code class="docutils literal notranslate"><span class="pre">tx</span></code> in the following function:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@cuda</span><span class="o">.</span><span class="n">jit</span><span class="p">(</span><span class="n">argtypes</span><span class="o">=</span><span class="p">[</span><span class="n">f4</span><span class="p">[:]])</span>
-<span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
-    <span class="n">tx</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">threadIdx</span><span class="o">.</span><span class="n">x</span>
-</pre></div>
-</div>
-<p>has the following representation after translation to Numba IR:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$0.1 = global(cuda: &lt;module &#39;numba.cuda&#39; from &#39;...&#39;&gt;) [&#39;$0.1&#39;]
-$0.2 = getattr(value=$0.1, attr=threadIdx) [&#39;$0.1&#39;, &#39;$0.2&#39;]
-del $0.1                                 []
-$0.3 = getattr(value=$0.2, attr=x)       [&#39;$0.2&#39;, &#39;$0.3&#39;]
-del $0.2                                 []
-tx = $0.3                                [&#39;$0.3&#39;, &#39;tx&#39;]
-</pre></div>
-</div>
-<p>After macro expansion, the <code class="docutils literal notranslate"><span class="pre">$0.3</span> <span class="pre">=</span> <span class="pre">getattr(value=$0.2,</span> <span class="pre">attr=x)</span></code> IR node is
-translated into:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$0.3 = call tid.x(, )                    [&#39;$0.3&#39;]
-</pre></div>
-</div>
-<p>which represents an instance of the <code class="docutils literal notranslate"><span class="pre">Intrinsic</span></code> IR node for calling the
-<code class="docutils literal notranslate"><span class="pre">tid.x</span></code> intrinsic function.</p>
-</div>
-<div class="section" id="stage-4-rewrite-untyped-ir">
-<span id="rewrite-untyped-ir"></span><h3>Stage 4: Rewrite untyped IR<a class="headerlink" href="#stage-4-rewrite-untyped-ir" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="stage-3-rewrite-untyped-ir">
+<span id="rewrite-untyped-ir"></span><h3>Stage 3: Rewrite untyped IR<a class="headerlink" href="#stage-3-rewrite-untyped-ir" title="Permalink to this headline">¶</a></h3>
 <p>Before running type inference, it may be desired to run certain
 transformations on the Numba IR.  One such example is to detect <code class="docutils literal notranslate"><span class="pre">raise</span></code>
 statements which have an implicitly constant argument, so as to
@@ -1552,14 +1519,13 @@ ____________________________________________________________
 </pre></div>
 </div>
 </div>
-<div class="section" id="stage-5-infer-types">
-<span id="arch-type-inference"></span><h3>Stage 5: Infer types<a class="headerlink" href="#stage-5-infer-types" title="Permalink to this headline">¶</a></h3>
-<p>Now that the Numba IR has been generated and macro-expanded, type analysis
-can be performed.  The types of the function arguments can be taken either
-from the explicit function signature given in the <code class="docutils literal notranslate"><span class="pre">&#64;jit</span></code> decorator
-(such as <code class="docutils literal notranslate"><span class="pre">&#64;jit('float64(float64,</span> <span class="pre">float64)')</span></code>), or they can be taken from
-the types of the actual function arguments if compilation is happening
-when the function is first called.</p>
+<div class="section" id="stage-4-infer-types">
+<span id="arch-type-inference"></span><h3>Stage 4: Infer types<a class="headerlink" href="#stage-4-infer-types" title="Permalink to this headline">¶</a></h3>
+<p>Now that the Numba IR has been generated, type analysis can be performed.  The
+types of the function arguments can be taken either from the explicit function
+signature given in the <code class="docutils literal notranslate"><span class="pre">&#64;jit</span></code> decorator (such as <code class="docutils literal notranslate"><span class="pre">&#64;jit('float64(float64,</span>
+<span class="pre">float64)')</span></code>), or they can be taken from the types of the actual function
+arguments if compilation is happening when the function is first called.</p>
 <p>The type inference engine is found in <code class="docutils literal notranslate"><span class="pre">numba.typeinfer</span></code>.  Its job is to
 assign a type to every intermediate variable in the Numba IR.  The result of
 this pass can be seen by setting the <span class="target" id="index-1"></span><a class="reference internal" href="../reference/envvars.html#envvar-NUMBA_DUMP_ANNOTATION"><code class="xref std std-envvar docutils literal notranslate"><span class="pre">NUMBA_DUMP_ANNOTATION</span></code></a>
@@ -1593,8 +1559,8 @@ intermediate variables, it will label every variable as type <code class="docuti
 fall back to object mode.  Type inference can fail when unsupported Python
 types, language features, or functions are used in the function body.</p>
 </div>
-<div class="section" id="stage-6a-rewrite-typed-ir">
-<span id="rewrite-typed-ir"></span><h3>Stage 6a: Rewrite typed IR<a class="headerlink" href="#stage-6a-rewrite-typed-ir" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="stage-5a-rewrite-typed-ir">
+<span id="rewrite-typed-ir"></span><h3>Stage 5a: Rewrite typed IR<a class="headerlink" href="#stage-5a-rewrite-typed-ir" title="Permalink to this headline">¶</a></h3>
 <p>This pass’s purpose is to perform any high-level optimizations that still
 require, or could at least benefit from, Numba IR type information.</p>
 <p>One example of a problem domain that isn’t as easily optimized once
@@ -1654,8 +1620,8 @@ ______________________________________________________________________
 ufunc-like function that is inlined into a single loop that only
 allocates a single result array.</p>
 </div>
-<div class="section" id="stage-6b-perform-automatic-parallelization">
-<span id="parallel-accelerator"></span><h3>Stage 6b: Perform Automatic Parallelization<a class="headerlink" href="#stage-6b-perform-automatic-parallelization" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="stage-5b-perform-automatic-parallelization">
+<span id="parallel-accelerator"></span><h3>Stage 5b: Perform Automatic Parallelization<a class="headerlink" href="#stage-5b-perform-automatic-parallelization" title="Permalink to this headline">¶</a></h3>
 <p>This pass is only performed if the <code class="docutils literal notranslate"><span class="pre">parallel</span></code> option in the <a class="reference internal" href="../reference/jit-compilation.html#numba.jit" title="numba.jit"><code class="xref py py-func docutils literal notranslate"><span class="pre">jit()</span></code></a>
 decorator is set to <code class="docutils literal notranslate"><span class="pre">True</span></code>.  This pass finds parallelism implicit in the
 semantics of operations in the Numba IR and replaces those operations
@@ -1769,7 +1735,7 @@ same as <cite>range</cite>.</p>
 <dt>Numpy to parfor</dt>
 <dd><p class="first">In this sub-pass, Numpy functions such as <code class="docutils literal notranslate"><span class="pre">ones</span></code>, <code class="docutils literal notranslate"><span class="pre">zeros</span></code>, <code class="docutils literal notranslate"><span class="pre">dot</span></code>, most
 of the random number generating functions, arrayexprs (from Section
-<a class="reference internal" href="#rewrite-typed-ir"><span class="std std-ref">Stage 6a: Rewrite typed IR</span></a>), and Numpy reductions are converted to parfors.
+<a class="reference internal" href="#rewrite-typed-ir"><span class="std std-ref">Stage 5a: Rewrite typed IR</span></a>), and Numpy reductions are converted to parfors.
 Generally, this conversion creates the loop nest list, whose length is equal
 to the number of dimensions of the left-hand side of the assignment
 instruction in the IR.  The number and size of the dimensions of the
@@ -1854,7 +1820,7 @@ Fusion can be disabled by setting <code class="docutils literal notranslate"><sp
 </li>
 <li><dl class="first docutils">
 <dt>Push call objects and compute parfor parameters</dt>
-<dd><p class="first">In the lowering phase described in Section <a class="reference internal" href="#lowering"><span class="std std-ref">Stage 7a: Generate nopython LLVM IR</span></a>, each parfor
+<dd><p class="first">In the lowering phase described in Section <a class="reference internal" href="#lowering"><span class="std std-ref">Stage 6a: Generate nopython LLVM IR</span></a>, each parfor
 becomes a separate function executed in parallel in <code class="docutils literal notranslate"><span class="pre">guvectorize</span></code>
 (<a class="reference internal" href="../user/vectorize.html#guvectorize"><span class="std std-ref">The &#64;guvectorize decorator</span></a>) style.  Since parfors may use variables defined
 previously in a function, when those parfors become separate functions,
@@ -1869,7 +1835,7 @@ instruction to the function variable into the parfor body so that those do
 not need to be passed as parameters.</p>
 <p>To see the intermediate IR between the above sub-passes and other debugging
 information, set the <span class="target" id="index-5"></span><a class="reference internal" href="../reference/envvars.html#envvar-NUMBA_DEBUG_ARRAY_OPT"><code class="xref std std-envvar docutils literal notranslate"><span class="pre">NUMBA_DEBUG_ARRAY_OPT</span></code></a> environment variable to
-1. For the example in Section <a class="reference internal" href="#rewrite-typed-ir"><span class="std std-ref">Stage 6a: Rewrite typed IR</span></a>, the following IR with
+1. For the example in Section <a class="reference internal" href="#rewrite-typed-ir"><span class="std std-ref">Stage 5a: Rewrite typed IR</span></a>, the following IR with
 a parfor is generated during this stage:</p>
 <div class="last highlight-default notranslate"><div class="highlight"><pre><span></span>______________________________________________________________________
 label 0:
@@ -1913,8 +1879,8 @@ ______________________________________________________________________
 <blockquote>
 <div></div></blockquote>
 </div>
-<div class="section" id="stage-7a-generate-nopython-llvm-ir">
-<span id="lowering"></span><h3>Stage 7a: Generate nopython LLVM IR<a class="headerlink" href="#stage-7a-generate-nopython-llvm-ir" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="stage-6a-generate-nopython-llvm-ir">
+<span id="lowering"></span><h3>Stage 6a: Generate nopython LLVM IR<a class="headerlink" href="#stage-6a-generate-nopython-llvm-ir" title="Permalink to this headline">¶</a></h3>
 <p>If type inference succeeds in finding a Numba type for every intermediate
 variable, then Numba can (potentially) generate specialized native code.  This
 process is called <a class="reference internal" href="../glossary.html#term-lowering"><span class="xref std std-term">lowering</span></a>.  The Numba IR tree is translated into
@@ -1968,14 +1934,14 @@ generated above quite significantly:</p>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>If created during <a class="reference internal" href="#parallel-accelerator"><span class="std std-ref">Stage 6b: Perform Automatic Parallelization</span></a>, parfor operations are
+<p>If created during <a class="reference internal" href="#parallel-accelerator"><span class="std std-ref">Stage 5b: Perform Automatic Parallelization</span></a>, parfor operations are
 lowered in the following manner.  First, instructions in the parfor’s init
 block are lowered into the existing function using the normal lowering code.
 Second, the loop body of the parfor is turned into a separate GUFunc.
 Third, code is emitted for the current function to call the parallel GUFunc.</p>
 <p>To create a GUFunc from the parfor body, the signature of the GUFunc is
 created by taking the parfor parameters as identified in step 9 of
-Stage <a class="reference internal" href="#parallel-accelerator"><span class="std std-ref">Stage 6b: Perform Automatic Parallelization</span></a> and adding to that a special <cite>schedule</cite>
+Stage <a class="reference internal" href="#parallel-accelerator"><span class="std std-ref">Stage 5b: Perform Automatic Parallelization</span></a> and adding to that a special <cite>schedule</cite>
 parameter, across which the GUFunc will be parallelized.  The schedule
 parameter is in effect a static schedule mapping portions of the parfor
 iteration space to Numba threads and so the length of the schedule
@@ -2016,7 +1982,7 @@ prevented.  Code is also inserted into the main
 function after the parallel GUFunc has returned that does a reduction
 across this smaller reduction array and this final reduction value is
 then stored into the original scalar reduction variable.</p>
-<p>The GUFunc corresponding to the example from Section <a class="reference internal" href="#parallel-accelerator"><span class="std std-ref">Stage 6b: Perform Automatic Parallelization</span></a>
+<p>The GUFunc corresponding to the example from Section <a class="reference internal" href="#parallel-accelerator"><span class="std std-ref">Stage 5b: Perform Automatic Parallelization</span></a>
 can be seen below:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>______________________________________________________________________
 label 0:
@@ -2056,8 +2022,8 @@ ______________________________________________________________________
 </pre></div>
 </div>
 </div>
-<div class="section" id="stage-7b-generate-object-mode-llvm-ir">
-<h3>Stage 7b: Generate object mode LLVM IR<a class="headerlink" href="#stage-7b-generate-object-mode-llvm-ir" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="stage-6b-generate-object-mode-llvm-ir">
+<h3>Stage 6b: Generate object mode LLVM IR<a class="headerlink" href="#stage-6b-generate-object-mode-llvm-ir" title="Permalink to this headline">¶</a></h3>
 <p>If type inference fails to find Numba types for all values inside a function,
 the function will be compiled in object mode.  The generated LLVM will be
 significantly longer, as the compiled code will need to make calls to the
@@ -2139,8 +2105,8 @@ function.  Loop-lifting helps improve the performance of functions that
 need to access uncompilable code (such as I/O or plotting code) but still
 contain a time-intensive section of compilable code.</p>
 </div>
-<div class="section" id="stage-8-compile-llvm-ir-to-machine-code">
-<h3>Stage 8: Compile LLVM IR to machine code<a class="headerlink" href="#stage-8-compile-llvm-ir-to-machine-code" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="stage-7-compile-llvm-ir-to-machine-code">
+<h3>Stage 7: Compile LLVM IR to machine code<a class="headerlink" href="#stage-7-compile-llvm-ir-to-machine-code" title="Permalink to this headline">¶</a></h3>
 <p>In both <a class="reference internal" href="../glossary.html#term-object-mode"><span class="xref std std-term">object mode</span></a> and <a class="reference internal" href="../glossary.html#term-nopython-mode"><span class="xref std std-term">nopython mode</span></a>, the generated LLVM IR
 is compiled by the LLVM JIT compiler and the machine code is loaded into
 memory.  A Python wrapper is also created (defined in
