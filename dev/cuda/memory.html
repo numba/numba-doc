@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Memory management &mdash; Numba 0.52.0.dev0+162.gf88c3c5-py3.7-linux-x86_64.egg documentation</title>
+  <title>Memory management &mdash; Numba 0.52.0.dev0+173.g46f663c-py3.7-linux-x86_64.egg documentation</title>
   
 
   
@@ -549,6 +549,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#pinned-memory">Pinned memory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mapped-memory">Mapped memory</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#streams">Streams</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#shared-memory-and-thread-synchronization">Shared memory and thread synchronization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#local-memory">Local memory</a></li>
@@ -1288,7 +1289,8 @@ transfer:</p>
 <dl class="function">
 <dt>
 <code class="descclassname">numba.cuda.</code><code class="descname">device_array_like</code><span class="sig-paren">(</span><em>ary</em>, <em>stream=0</em><span class="sig-paren">)</span></dt>
-<dd><p>Call cuda.devicearray() with information from the array.</p>
+<dd><p>Call <a class="reference internal" href="../cuda-reference/memory.html#numba.cuda.device_array" title="numba.cuda.device_array"><code class="xref py py-func docutils literal notranslate"><span class="pre">device_array()</span></code></a> with information from
+the array.</p>
 </dd></dl>
 
 <dl class="function">
@@ -1420,8 +1422,53 @@ synchronous: the function returns after the copy is finished.</p>
 <dl class="function">
 <dt>
 <code class="descclassname">numba.cuda.</code><code class="descname">pinned_array</code><span class="sig-paren">(</span><em>shape</em>, <em>dtype=np.float</em>, <em>strides=None</em>, <em>order='C'</em><span class="sig-paren">)</span></dt>
-<dd><p>Allocate a np.ndarray with a buffer that is pinned (pagelocked).
-Similar to np.empty().</p>
+<dd><p>Allocate an <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a> with a buffer that is pinned
+(pagelocked).  Similar to <a class="reference internal" href="../developer/autogen_numpy_listing.html#numpy.empty" title="numpy.empty"><code class="xref py py-func docutils literal notranslate"><span class="pre">np.empty()</span></code></a>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="descclassname">numba.cuda.</code><code class="descname">pinned_array_like</code><span class="sig-paren">(</span><em>ary</em><span class="sig-paren">)</span></dt>
+<dd><p>Call <a class="reference internal" href="../cuda-reference/memory.html#numba.cuda.pinned_array" title="numba.cuda.pinned_array"><code class="xref py py-func docutils literal notranslate"><span class="pre">pinned_array()</span></code></a> with the information
+from the array.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="mapped-memory">
+<h2>Mapped memory<a class="headerlink" href="#mapped-memory" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt>
+<code class="descclassname">numba.cuda.</code><code class="descname">mapped</code><span class="sig-paren">(</span><em>*arylist</em>, <em>**kws</em><span class="sig-paren">)</span></dt>
+<dd><p>A context manager for temporarily mapping a sequence of host ndarrays.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="descclassname">numba.cuda.</code><code class="descname">mapped_array</code><span class="sig-paren">(</span><em>shape</em>, <em>dtype=np.float</em>, <em>strides=None</em>, <em>order='C'</em>, <em>stream=0</em>, <em>portable=False</em>, <em>wc=False</em><span class="sig-paren">)</span></dt>
+<dd><p>Allocate a mapped ndarray with a buffer that is pinned and mapped on
+to the device. Similar to np.empty()</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>portable</strong> – a boolean flag to allow the allocated device memory to be
+usable in multiple devices.</li>
+<li><strong>wc</strong> – a boolean flag to enable writecombined allocation which is faster
+to write by the host and to read by the device, but slower to
+write by the host and slower to write by the device.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="descclassname">numba.cuda.</code><code class="descname">mapped_array_like</code><span class="sig-paren">(</span><em>ary</em>, <em>stream=0</em>, <em>portable=False</em>, <em>wc=False</em><span class="sig-paren">)</span></dt>
+<dd><p>Call <a class="reference internal" href="../cuda-reference/memory.html#numba.cuda.mapped_array" title="numba.cuda.mapped_array"><code class="xref py py-func docutils literal notranslate"><span class="pre">mapped_array()</span></code></a> with the information
+from the array.</p>
 </dd></dl>
 
 </div>
