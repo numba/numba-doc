@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Deprecation Notices &mdash; Numba 0.52.0.dev0+256.g38ecdf9-py3.7-linux-x86_64.egg documentation</title>
+  <title>Deprecation Notices &mdash; Numba 0.52.0.dev0+265.g5b9d29b-py3.7-linux-x86_64.egg documentation</title>
   
 
   
@@ -40,7 +40,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Numba for CUDA GPUs" href="../cuda/index.html" />
-    <link rel="prev" title="Python 2.7 End of Life Plan" href="python27-eol.html" /> 
+    <link rel="prev" title="Floating-point pitfalls" href="fpsemantics.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -477,10 +477,6 @@
 <li class="toctree-l3"><a class="reference internal" href="fpsemantics.html#warnings-and-errors">Warnings and errors</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="python27-eol.html">Python 2.7 End of Life Plan</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="python27-eol.html#timeline">Timeline</a></li>
-</ul>
-</li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Deprecation Notices</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#suppressing-deprecation-warnings">Suppressing Deprecation warnings</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#deprecation-of-reflection-for-list-and-set-types">Deprecation of reflection for List and Set types</a><ul>
@@ -498,15 +494,9 @@
 <li class="toctree-l4"><a class="reference internal" href="#id4">Recommendations</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#change-of-jitclass-location">Change of jitclass location</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#id5">Example(s) of the impact</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id6">Recommendations</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id7">Schedule</a></li>
-</ul>
-</li>
 <li class="toctree-l3"><a class="reference internal" href="#deprecation-of-the-target-kwarg">Deprecation of the target kwarg</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#id8">Recommendations</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id9">Schedule</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id5">Recommendations</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id6">Schedule</a></li>
 </ul>
 </li>
 </ul>
@@ -1489,51 +1479,20 @@ supply the keyword argument <code class="docutils literal notranslate"><span cla
 compiled in <a class="reference internal" href="../glossary.html#term-object-mode"><span class="xref std std-term">object mode</span></a>.</p>
 </div>
 </div>
-<div class="section" id="change-of-jitclass-location">
-<h2>Change of jitclass location<a class="headerlink" href="#change-of-jitclass-location" title="Permalink to this headline">¶</a></h2>
-<p>Between versions 0.48 and 0.49 Numba underwent a large amount of refactoring.
-One of the decisions made by the core developers as part of this refactoring was
-to move <code class="docutils literal notranslate"><span class="pre">numba.jitclass</span></code> to a new location <code class="docutils literal notranslate"><span class="pre">numba.experimental.jitclass</span></code>.
-This is to help reinforce expectations over the behaviour and support for
-certain features by deliberately placing them in an <code class="docutils literal notranslate"><span class="pre">experimental</span></code> submodule.</p>
-<div class="section" id="id5">
-<h3>Example(s) of the impact<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
-<p>The <code class="docutils literal notranslate"><span class="pre">jitclass</span></code> decorator has historically been available via
-<code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">numba</span> <span class="pre">import</span> <span class="pre">jitclass</span></code>, any code using this import location will in
-future need to be updated to <code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">numba.experimental</span> <span class="pre">import</span> <span class="pre">jitclass</span></code>.</p>
-</div>
-<div class="section" id="id6">
-<h3>Recommendations<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
-<p>Simply update imports as follows:</p>
-<ul class="simple">
-<li>Change <code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">numba</span> <span class="pre">import</span> <span class="pre">jitclass</span></code> to
-<code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">numba.experimental</span> <span class="pre">import</span> <span class="pre">jitclass</span></code></li>
-</ul>
-</div>
-<div class="section" id="id7">
-<h3>Schedule<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
-<p>This feature will be moved with respect to this schedule:</p>
-<ul class="simple">
-<li>Deprecation warnings will be issued in version 0.49.0</li>
-<li>Support for importing from <code class="docutils literal notranslate"><span class="pre">numba.jitclass</span></code> will be removed in version
-0.52.0.</li>
-</ul>
-</div>
-</div>
 <div class="section" id="deprecation-of-the-target-kwarg">
 <h2>Deprecation of the target kwarg<a class="headerlink" href="#deprecation-of-the-target-kwarg" title="Permalink to this headline">¶</a></h2>
 <p>There have been a number of users attempting to use the <code class="docutils literal notranslate"><span class="pre">target</span></code> keyword
 argument that’s meant for internal use only. We are deprecating this argument,
 as alternative solutions are available to achieve the same behaviour.</p>
-<div class="section" id="id8">
-<h3>Recommendations<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id5">
+<h3>Recommendations<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
 <p>Update the <code class="docutils literal notranslate"><span class="pre">jit</span></code> decorator as follows:</p>
 <ul class="simple">
 <li>Change <code class="docutils literal notranslate"><span class="pre">&#64;numba.jit(...,</span> <span class="pre">target='cuda')</span></code> to <code class="docutils literal notranslate"><span class="pre">numba.cuda.jit(...)</span></code>.</li>
 </ul>
 </div>
-<div class="section" id="id9">
-<h3>Schedule<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id6">
+<h3>Schedule<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
 <p>This feature will be moved with respect to this schedule:</p>
 <ul class="simple">
 <li>Deprecation warnings will be issued in 0.51.0.</li>
@@ -1554,7 +1513,7 @@ as alternative solutions are available to achieve the same behaviour.</p>
         <a href="../cuda/index.html" class="btn btn-neutral float-right" title="Numba for CUDA GPUs" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="python27-eol.html" class="btn btn-neutral float-left" title="Python 2.7 End of Life Plan" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="fpsemantics.html" class="btn btn-neutral float-left" title="Floating-point pitfalls" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
