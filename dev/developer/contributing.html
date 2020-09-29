@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Contributing to Numba &mdash; Numba 0.52.0.dev0+270.g079855d-py3.7-linux-x86_64.egg documentation</title>
+  <title>Contributing to Numba &mdash; Numba 0.52.0.dev0+274.g626b40e-py3.7-linux-x86_64.egg documentation</title>
   
 
   
@@ -818,6 +818,8 @@
 <li class="toctree-l4"><a class="reference internal" href="#coding-conventions">Coding conventions</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#stability">Stability</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#platform-support">Platform support</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#continuous-integration-testing">Continuous integration testing</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#things-that-help-with-pull-requests">Things that help with pull requests</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#documentation">Documentation</a><ul>
@@ -1325,8 +1327,8 @@ your work.  When your work is ready, you should submit it as a pull
 request from the Github interface.</p>
 <p>If you want, you can submit a pull request even when you haven’t finished
 working.  This can be useful to gather feedback, or to stress your changes
-against the <a class="reference internal" href="#travis-ci"><span class="std std-ref">continuous integration</span></a> platform.  In this
-case, please prepend <code class="docutils literal notranslate"><span class="pre">[WIP]</span></code> to your pull request’s title.</p>
+against the <a class="reference internal" href="#continuous-integration-testing"><span class="std std-ref">continuous integration</span></a>
+platform.  In this case, please prepend <code class="docutils literal notranslate"><span class="pre">[WIP]</span></code> to your pull request’s title.</p>
 <div class="section" id="build-environment">
 <span id="buildenv"></span><h3>Build environment<a class="headerlink" href="#build-environment" title="Permalink to this headline">¶</a></h3>
 <p>Numba has a number of dependencies (mostly <a class="reference external" href="http://www.numpy.org/">NumPy</a>
@@ -1523,18 +1525,66 @@ on all supported platforms (see below).  This also means that a pull request
 also needs to pass the test suite before it is merged in.</p>
 </div>
 <div class="section" id="platform-support">
-<span id="travis-ci"></span><h3>Platform support<a class="headerlink" href="#platform-support" title="Permalink to this headline">¶</a></h3>
+<span id="id1"></span><h3>Platform support<a class="headerlink" href="#platform-support" title="Permalink to this headline">¶</a></h3>
 <p>Every commit to the master branch is automatically tested on all of the
-platforms Numba supports.  This includes ARMv7, ARMv8, POWER8, as well as both
+platforms Numba supports. This includes ARMv7, ARMv8, POWER8, as well as both
 AMD and NVIDIA GPUs.  The build system however is internal to Anaconda, so we
-also use <a class="reference external" href="https://travis-ci.org/numba/numba">Travis CI</a> and
-<a class="reference external" href="https://dev.azure.com/numba/numba/_build">Azure</a> to provide public continuous
-integration information for as many combinations as can be supported by the
-service.  Travis CI automatically tests all pull requests on OS X and Linux, as
-well as a sampling of different Python and NumPy versions, Azure does the same
-but also includes Windows.  If you see problems on platforms you are unfamiliar
-with, feel free to ask for help in your pull request.  The Numba core developers
-can help diagnose cross-platform compatibility issues.</p>
+also use <a class="reference external" href="https://dev.azure.com/numba/numba/_build">Azure</a> to provide public
+continuous integration information for as many combinations as can be supported
+by the service.  Azure CI automatically tests all pull requests on Windows, OS X
+and Linux, as well as a sampling of different Python and NumPy versions. If you
+see problems on platforms you are unfamiliar with, feel free to ask for help in
+your pull request. The Numba core developers can help diagnose cross-platform
+compatibility issues. Also see the <a class="reference internal" href="#continuous-integration-testing"><span class="std std-ref">continuous integration</span></a> section on how public CI is implemented.</p>
+</div>
+<div class="section" id="continuous-integration-testing">
+<span id="id2"></span><h3>Continuous integration testing<a class="headerlink" href="#continuous-integration-testing" title="Permalink to this headline">¶</a></h3>
+<p>The Numba test suite causes CI systems a lot of grief:</p>
+<ol class="arabic simple">
+<li>It’s huge, 9000+ tests.</li>
+<li>In part because of 1. and that compilers are pretty involved, the test suite
+takes a long time to run.</li>
+<li>There’s sections of the test suite that are deliberately designed to stress
+systems almost to the point of failure (tests which concurrently compile and
+execute with threads and fork processes etc).</li>
+<li>The combination of things that Numba has to test well exceeds the capacity of
+any public CI system, (Python versions x NumPy versions x Operating systems
+x Architectures x feature libraries (e.g. SVML) x threading backends
+(e.g. OpenMP, TBB)) and then there’s CUDA and ROCm too and all their version
+variants.</li>
+</ol>
+<p>As a result of the above, public CI is implemented as follows:</p>
+<ol class="arabic simple">
+<li>The combination of OS x Python x NumPy x Various Features in the testing
+matrix is designed to give a good indicative result for whether “this pull
+request is probably ok”.</li>
+<li>When public CI runs it:<ol class="arabic">
+<li>Looks for files that contain tests that have been altered by the proposed
+change and runs these on the whole testing matrix.</li>
+<li>Runs a subset of the test suite on each part of the testing matrix. i.e.
+slice the test suite up by the number of combinations in the testing
+matrix and each combination runs one chunk. This is done for speed,
+because public CI cannot cope with the load else.</li>
+</ol>
+</li>
+</ol>
+<p>If a pull request is changing CUDA or ROCm code (which cannot be tested on
+Public CI as there’s no hardware) or it is making changes to something that the
+core developers consider risky, then it will also be run on the Numba farm just
+to make sure. The Numba project’s private build and test farm will actually
+exercise all the applicable tests on all the combinations noted above on real
+hardware!</p>
+</div>
+<div class="section" id="things-that-help-with-pull-requests">
+<h3>Things that help with pull requests<a class="headerlink" href="#things-that-help-with-pull-requests" title="Permalink to this headline">¶</a></h3>
+<p>Even with the mitigating design above public CI can get overloaded which causes
+a backlog of builds. It’s therefore really helpful when opening pull requests if
+you can limit the frequency of pushing changes. Ideally, please squash commits
+to reduce the number of patches and/or push as infrequently as possible. Also,
+once a pull request review has started, please don’t rebase/force push/squash
+or do anything that rewrites history of the reviewed code as GitHub cannot track
+this and it makes it very hard for reviewers to see what has changed.</p>
+<p>The core developers thank everyone for their cooperation with the above!</p>
 </div>
 </div>
 <div class="section" id="documentation">
